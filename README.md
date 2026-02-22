@@ -248,6 +248,30 @@ Exact reproduction requires access to the target repositories at the commit SHAs
 
 ---
 
+## Reproducibility
+
+This repository contains everything needed to verify our claims and reproduce the experimental methodology:
+
+- **Pre-registered protocols** with sealed group assignments (`label-map.json` timestamps predate all scoring)
+- **Exact delegate prompts** preserved as the first message in each `raw/*.jsonl` session log
+- **Full conversation traces** (4,179 messages across 28 session logs) for auditing agent behavior
+- **Per-criterion scoring justifications** in `scores.json`, not just aggregate numbers
+
+To reproduce with different tasks or models, follow the protocols in `experiments/*/protocol.md` and substitute your target issue and model. The recipe (`recipe/goose-coder-v4.1.0.yaml`) defines the full agent architecture.
+
+### Software Versions
+
+| Component | Version |
+|---|---|
+| Goose | 1.25.0 |
+| Orchestrator model | Claude Sonnet 4.6 (`claude-sonnet-4-6@default`) |
+| Delegate model | Claude Haiku 4.5 (`claude-haiku-4-5@20251001`) |
+| Provider | GCP Vertex AI |
+
+For questions about the methodology or data, open an issue on this repository.
+
+---
+
 ## Citation
 
 ```bibtex
