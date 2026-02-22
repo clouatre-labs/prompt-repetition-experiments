@@ -2,7 +2,7 @@
 
 **Pre-registered protocol -- locked before any delegates were spawned.**
 
-Originally filed as a private GitHub issue on 2026-02-20. This is the second experiment in the prompt repetition series, designed to address the ceiling effect observed in [Experiment 1](../exp1-fastmcp-refactor/protocol.md).
+This is the second experiment in the prompt repetition series, designed to address the ceiling effect observed in [Experiment 1](../exp1-fastmcp-refactor/protocol.md).
 
 ---
 

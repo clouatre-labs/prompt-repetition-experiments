@@ -2,8 +2,6 @@
 
 **Pre-registered protocol -- locked before any delegates were spawned.**
 
-Originally filed as a private GitHub issue on 2026-02-20.
-
 ---
 
 ## Context
