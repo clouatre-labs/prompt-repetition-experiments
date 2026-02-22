@@ -1,0 +1,179 @@
+{
+  "run_id": "scout-run-05",
+  "group": "control",
+  "started_at": "2026-02-20T22:16:41Z",
+  "finished_at": "2026-02-20T22:26:15Z",
+  "session_id": "exp229",
+  "lens": "scout",
+  "relevant_files": [
+    {
+      "path": "crates/aptu-core/src/security/scanner.rs",
+      "line_range": "1-305",
+      "role": "Main entry point; orchestrates pattern detection for PR diffs"
+    },
+    {
+      "path": "crates/aptu-core/src/security/patterns.rs",
+      "line_range": "1-200",
+      "role": "PatternEngine; loads 14 regex patterns from JSON and applies them line-by-line"
+    },
+    {
+      "path": "crates/aptu-core/src/security/patterns.json",
+      "line_range": "1-end",
+      "role": "Pattern definitions; 14 regex rules for SQL injection, XSS, secrets, crypto, etc."
+    },
+    {
+      "path": "crates/aptu-core/src/security/types.rs",
+      "line_range": "1-150",
+      "role": "Data structures; Finding, PatternDefinition, Severity, Confidence"
+    },
+    {
+      "path": "crates/aptu-core/src/security/detection.rs",
+      "line_range": "1-150",
+      "role": "Heuristics for when to trigger security scans"
+    },
+    {
+      "path": "crates/aptu-core/src/security/validator.rs",
+      "line_range": "1-end",
+      "role": "Post-processing findings (false positive reduction)"
+    },
+    {
+      "path": "tests/security_integration.rs",
+      "line_range": "1-end",
+      "role": "Integration tests; documents multi-line limitation in test_multi_line_vulnerability_not_detected"
+    },
+    {
+      "path": "Cargo.toml",
+      "line_range": "1-end",
+      "role": "Workspace dependencies; currently no tree-sitter crates"
+    }
+  ],
+  "conventions": {
+    "commits": "Conventional commits with DCO sign-off (--signoff -S). All recent commits are chore(deps) via Renovabot.",
+    "testing": "AAA pattern with unit tests co-located in each module via #[cfg(test)] mod tests. Integration tests in tests/ directory. Security scanner has comprehensive test coverage including multi-line limitation.",
+    "linting": "Rust tooling: cargo clippy, cargo fmt. GitHub Actions for CI. Project uses Rust 1.92.0.",
+    "error_handling": "thiserror for library error types; anyhow for error propagation. Pattern validation returns Result<ValidatedFinding>."
+  },
+  "patterns": [
+    "Regex-based line-by-line scanning in PatternEngine",
+    "Pattern definitions loaded from embedded JSON; deserialized at startup",
+    "SecurityScanner parses unified diff format to identify added/modified lines",
+    "Finding struct with severity/confidence and source location",
+    "Post-scan validation for false positive reduction",
+    "Async orchestration with tokio runtime"
+  ],
+  "related_issues": [
+    {
+      "number": 735,
+      "title": "Document multi-line vulnerability limitation in SecurityScanner",
+      "relevance": "Defines the problem that tree-sitter would solve"
+    },
+    {
+      "number": 736,
+      "title": "Add test_multi_line_vulnerability_not_detected to document regex limitation",
+      "relevance": "Test case explicitly documents the known limitation; merged; provides test anchor"
+    }
+  ],
+  "constraints": [
+    "Must maintain async/Tokio runtime compatibility",
+    "FFI support via uniffi required (aptu-ffi crate must remain functional)",
+    "Multiple crates in workspace: aptu-core (main), aptu-ffi, aptu-mcp; changes must not break FFI boundary",
+    "Tree-sitter grammar crates add binary size and compile-time complexity",
+    "Pattern rewrite requires domain expertise (14 patterns x 6+ languages)",
+    "Current regex patterns operate on diffs; AST-based approach needs diff-to-AST conversion strategy"
+  ],
+  "test_coverage": "Comprehensive. Each security module has unit tests. SecurityScanner has 4 integration tests: (1) hardcoded secrets, (2) SQL injection, (3) safe patterns, (4) multi-line limitation. The multi-line test explicitly documents regex limitations and serves as anchor for tree-sitter evaluation.",
+  "library_findings": [
+    {
+      "library": "tree-sitter",
+      "version": "0.24+",
+      "relevant_api": "Parser::new(), Query::new(), QueryCursor::exec(). Parses source to Tree; queries use S-expression syntax for AST matching.",
+      "notes": "Core library; language-agnostic parser. Minimal dependencies. Used by semgrep, ast-grep, cargo-semver-checks."
+    },
+    {
+      "library": "tree-sitter-rust",
+      "version": "0.23+",
+      "relevant_api": "Language grammar for Rust; loaded via language(). Enables AST parsing of .rs files.",
+      "notes": "Required for Rust pattern detection. Grammar crates are lightweight (~100KB compiled)."
+    },
+    {
+      "library": "tree-sitter-python",
+      "version": "0.23+",
+      "relevant_api": "Language grammar for Python",
+      "notes": "Required for .py files. Maintained by tree-sitter org."
+    },
+    {
+      "library": "tree-sitter-javascript",
+      "version": "0.23+",
+      "relevant_api": "Language grammar for JavaScript/TypeScript",
+      "notes": "Covers both .js and .ts. Single grammar handles both languages."
+    },
+    {
+      "library": "regex",
+      "version": "1.0+ (already in Cargo.toml)",
+      "relevant_api": "Regex::new(), is_match()",
+      "notes": "Already used in patterns.rs for git URL parsing. Can remain for simple patterns."
+    }
+  ],
+  "approaches": [
+    {
+      "name": "Hybrid: Tree-sitter for multi-line, regex for simple patterns",
+      "description": "Keep existing regex engine for simple, single-line patterns (11 patterns). Add tree-sitter scanner for 3 patterns requiring data-flow: SQL injection, command injection, path traversal. Extend PatternDefinition JSON with optional 'query' field. Add AstScanner struct parallel to PatternEngine. SecurityScanner dispatches to both engines.",
+      "pros": [
+        "Incremental adoption; lower risk",
+        "Reuses existing test infrastructure",
+        "Immediate value: solves SQL injection and command injection multi-line cases",
+        "Minimal binary size increase (only needed grammars)",
+        "Simpler query syntax learning curve than full migration"
+      ],
+      "cons": [
+        "Maintains two scanning engines; code duplication in Finding generation",
+        "Pattern coverage incomplete (only ~3/14 patterns)",
+        "Diff-to-AST conversion still needed; adds complexity",
+        "Future patterns still require regex->query conversion work"
+      ],
+      "complexity": "medium",
+      "files_touched": 5
+    },
+    {
+      "name": "Full migration: Rewrite all 14 patterns as tree-sitter queries",
+      "description": "Migrate PatternEngine to use tree-sitter queries for all 14 patterns across 6+ languages. Replace JSON regex field with TSQuery. Add language detection from file extension. Orchestrate query execution via QueryCursor. Remove regex dependency from patterns module.",
+      "pros": [
+        "Unified architecture; single scanner engine",
+        "Full multi-line vulnerability detection",
+        "Language-aware (understands syntax context)",
+        "Better long-term maintainability",
+        "Easier to add new patterns (write TSQuery instead of regex)"
+      ],
+      "cons": [
+        "High effort: 14 patterns x 6 languages = ~84 query conversions (not 14)",
+        "Learning curve steep (TSQuery S-expression syntax unfamiliar to most maintainers)",
+        "Requires domain expertise in each language's grammar",
+        "Data-flow/taint tracking requires custom logic beyond queries",
+        "Binary size increase from all grammar crates (~2-3MB)",
+        "Compile time increase (~5-10s for grammar crates)"
+      ],
+      "complexity": "complex",
+      "files_touched": 8
+    },
+    {
+      "name": "Staged migration: Start Rust, prove pattern, expand languages",
+      "description": "Phase 1 (Week 1): Add tree-sitter for Rust only; convert SQL injection pattern to TSQuery. Benchmark performance, validate detection quality. Phase 2 (Week 2-3): Convert remaining patterns for Rust (6 patterns). Phase 3 (Weeks 4+): Add Python, JavaScript grammars and convert patterns incrementally. Keep regex as fallback for unsupported languages.",
+      "pros": [
+        "Reduces risk via staged rollout",
+        "Proof-of-concept on smallest surface (Rust grammar well-maintained)",
+        "Clear gate criteria (perf, detection quality) before expanding",
+        "Maintains regex fallback for unfinished languages",
+        "Team builds query expertise gradually"
+      ],
+      "cons": [
+        "Longest timeline; defers full solution",
+        "Temporary hybrid state for weeks/months",
+        "Multiple rounds of pattern conversion (harder to batch learnings)",
+        "Requires careful feature-flagging or detection dispatch logic during transition"
+      ],
+      "complexity": "medium",
+      "files_touched": 6
+    }
+  ],
+  "recommendation": "Approach 1 (Hybrid) is the right starting point for this spike. Rationale: (1) Issue explicitly suggests spike->evaluate->decide, not full migration; (2) SQL injection and command injection are highest-impact multi-line vulnerabilities; (3) Hybrid keeps scope to 500-800 LOC estimate; (4) Minimal risk to existing FFI boundary and async runtime; (5) Provides concrete data to decide on full migration. After spike: benchmark tree-sitter query performance vs regex on 100+ OSS repos, measure detection quality (false positive reduction), gather maintainer feedback on query syntax learning curve. Use spike results to justify Approach 2 (full migration) in next quarter if ROI is clear."
+}

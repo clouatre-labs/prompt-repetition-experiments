@@ -1,0 +1,151 @@
+{
+  "session_id": "control-2",
+  "lens": "scout",
+  "relevant_files": [
+    {
+      "path": "src/math_mcp/tools/persistence.py",
+      "line_range": "63, 77-78, 141-142",
+      "role": "Primary target: contains id(ctx.lifespan_context) anti-pattern on line 63 and uses lifespan_context.calculation_history on lines 77-78, 141-142"
+    },
+    {
+      "path": "src/math_mcp/tools/calculate.py",
+      "line_range": "61-62",
+      "role": "Secondary target: appends to lifespan_context.calculation_history (no session_id hack, but related pattern)"
+    },
+    {
+      "path": "src/math_mcp/server.py",
+      "line_range": "33-49",
+      "role": "AppContext definition and lifespan setup; shows how calculation_history is initialized"
+    },
+    {
+      "path": "tests/test_persistence.py",
+      "line_range": "50-62, 321-390",
+      "role": "Test fixtures and MCP integration tests; mock_context fixture creates lifespan_context for testing"
+    },
+    {
+      "path": "tests/test_math_operations.py",
+      "line_range": "mock_context fixture",
+      "role": "Additional test fixtures using lifespan_context pattern"
+    },
+    {
+      "path": "src/math_mcp/persistence/workspace.py",
+      "line_range": "80-130",
+      "role": "WorkspaceManager.save_variable receives metadata dict with session_id; stores in persistent workspace"
+    }
+  ],
+  "conventions": {
+    "commits": "Conventional commits with GPG sign-off and DCO: git commit -S --signoff",
+    "testing": "pytest with async support (@pytest.mark.asyncio); AAA pattern (Arrange, Act, Assert); fixtures for isolation; mock contexts for unit tests; 80% coverage requirement",
+    "linting": "ruff check and ruff format; pyright for type checking; Python 3.14+ target",
+    "error_handling": "Try-except with logging; graceful degradation (e.g., corrupted JSON files); optional Context parameter with None fallback"
+  },
+  "patterns": [
+    "Optional Context parameter with SkipValidation: ctx: SkipValidation[Context | None] = None",
+    "Conditional lifespan_context access with cast: if ctx and ctx.lifespan_context: cast(Any, ctx.lifespan_context).calculation_history.append(...)",
+    "Metadata dict passed to workspace manager for persistence",
+    "Mock context in tests with synthetic lifespan_context object",
+    "Async tool functions with ctx.info() logging"
+  ],
+  "related_issues": [
+    {
+      "number": 222,
+      "title": "refactor: replace lifespan_context session ID hack with ctx.set_state",
+      "relevance": "This is the target issue; describes the anti-pattern and desired solution"
+    }
+  ],
+  "constraints": [
+    "ctx must remain optional (Context | None = None) for backward compatibility and non-MCP usage",
+    "Session ID must be stable within a single MCP session (per-client connection scope)",
+    "Must not break existing tests without modification",
+    "Session ID should be UUID-based (not memory address)",
+    "Fallback to None when ctx unavailable",
+    "Do not store non-serializable values via ctx.set_state"
+  ],
+  "test_coverage": "Comprehensive test suite in tests/test_persistence.py covers: (1) Model validation (WorkspaceVariable, WorkspaceData), (2) Storage operations (cross-platform paths, file creation), (3) WorkspaceManager operations (save, load, overwrite, summary), (4) Thread safety with concurrent saves, (5) File corruption recovery, (6) Permission error handling, (7) MCP tool integration (save_calculation, load_variable), (8) Resource access (math://workspace). Tests use mock_context fixture with synthetic lifespan_context. All tests are async-aware.",
+  "library_findings": [
+    {
+      "library": "fastmcp",
+      "version": "3.0 (from pyproject.toml dependency)",
+      "relevant_api": "Context.set_state(key: str, value: Any) and Context.get_state(key: str) -> Any | None",
+      "notes": "FastMCP 3.0 provides session-scoped state management via ctx.set_state/get_state. Session scope is per-client connection (correct for session IDs). Docs: https://gofastmcp.com/servers/context#session-state. The current code misuses lifespan_context (process-wide) for session-scoped data."
+    },
+    {
+      "library": "uuid",
+      "version": "stdlib (Python 3.14+)",
+      "relevant_api": "uuid.uuid4() returns UUID object; str(uuid.uuid4()) returns string representation",
+      "notes": "Standard library module; no import currently in codebase. Will need to add: import uuid"
+    },
+    {
+      "library": "pydantic",
+      "version": "2.x (from pyproject.toml)",
+      "relevant_api": "Pydantic models for WorkspaceVariable, WorkspaceData; model_dump() for serialization",
+      "notes": "Metadata dict (containing session_id) is passed to WorkspaceVariable and stored in JSON. Must be JSON-serializable."
+    }
+  ],
+  "approaches": [
+    {
+      "name": "Approach 1: Minimal Refactor - Replace id() with UUID in persistence.py only",
+      "description": "Replace line 63 in persistence.py: change `id(ctx.lifespan_context)` to `str(uuid.uuid4())` directly. No ctx.set_state/get_state involved. Session ID is generated fresh on each save_calculation call. This is the simplest change but does not use the proper FastMCP API.",
+      "pros": [
+        "Minimal code changes (1 line in persistence.py)",
+        "No need to understand ctx.set_state/get_state API",
+        "No test modifications required",
+        "Removes the memory address anti-pattern immediately",
+        "UUID is stable and unique"
+      ],
+      "cons": [
+        "Does not follow the issue's target pattern (ctx.set_state/get_state)",
+        "Generates new UUID on every save_calculation call (not a true session ID)",
+        "Does not demonstrate proper FastMCP 3.0 pattern to learners",
+        "Session ID is not persistent across requests within same session",
+        "Misleading: metadata still called 'session_id' but is actually a request ID"
+      ],
+      "complexity": "simple",
+      "files_touched": 1
+    },
+    {
+      "name": "Approach 2: Proper FastMCP Pattern - ctx.set_state/get_state in persistence.py",
+      "description": "Implement the target pattern from the issue: on first request in a session, initialize session_id via ctx.set_state(). On subsequent requests, retrieve it via ctx.get_state(). Add helper function to get_or_create_session_id(ctx). Modify persistence.py save_calculation and load_variable to use this helper. Update tests to mock ctx.set_state/get_state. This follows FastMCP 3.0 best practices.",
+      "pros": [
+        "Follows the exact target pattern from issue #222",
+        "Uses proper FastMCP 3.0 API for session-scoped data",
+        "Session ID is stable across all requests within same MCP session",
+        "Demonstrates best practice to learners",
+        "Session ID persists for entire client connection lifetime",
+        "Aligns with FastMCP documentation"
+      ],
+      "cons": [
+        "Requires understanding of ctx.set_state/get_state semantics",
+        "Tests need updates to mock set_state/get_state (async methods)",
+        "Slightly more code: helper function + async calls",
+        "Must handle case where ctx is None (fallback to None session_id)",
+        "Requires import uuid and adding async/await for state operations"
+      ],
+      "complexity": "medium",
+      "files_touched": 2
+    },
+    {
+      "name": "Approach 3: Comprehensive Refactor - Extend to calculate.py + create session helper module",
+      "description": "Create a new module math_mcp/session.py with async helper get_or_create_session_id(ctx). Use ctx.set_state/get_state for session ID management. Apply to both persistence.py (metadata) and calculate.py (history entries). Update AppContext to optionally store session_id. Modify tests to properly mock Context with set_state/get_state. Add docstrings explaining why ctx.set_state is correct. This is the most comprehensive and educational solution.",
+      "pros": [
+        "Centralizes session ID logic in reusable module",
+        "Applies pattern consistently across persistence.py and calculate.py",
+        "Demonstrates DRY principle and module organization",
+        "Excellent learning resource for MCP best practices",
+        "Easier to extend if more session-scoped data needed in future",
+        "Clear separation of concerns",
+        "Inline comments explain why ctx.set_state over lifespan_context"
+      ],
+      "cons": [
+        "Most code changes (new module + updates to 2 tool files + test updates)",
+        "Highest complexity to implement correctly",
+        "Requires careful async/await handling",
+        "More test fixtures needed to mock Context properly",
+        "Potential for introducing bugs if async mocking not done carefully"
+      ],
+      "complexity": "complex",
+      "files_touched": 5
+    }
+  ],
+  "recommendation": "Approach 2 (Proper FastMCP Pattern) is the best balance. It directly addresses the issue's target pattern (ctx.set_state/get_state with UUID), is more maintainable than Approach 1 (which generates new UUIDs on each call), and is less risky than Approach 3 (which spreads changes across more files). The issue explicitly requests the ctx.set_state/get_state pattern, making Approach 1 incomplete. Approach 3 is over-engineered for this specific issue but would be valuable if session management needs to expand. Start with Approach 2: add uuid import, create a helper function get_or_create_session_id(ctx) in persistence.py, update save_calculation and load_variable to use it, update tests to mock set_state/get_state methods."
+}

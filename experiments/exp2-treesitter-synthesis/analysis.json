@@ -1,0 +1,248 @@
+{
+    "experiment": "Experiment 2: Tree-sitter Evaluation",
+    "title": "Scout Instruction Repetition A/B Experiment (aptu#737)",
+    "issue": "clouatre-labs/aptu#737",
+    "model": "claude-haiku-4-5",
+    "date": "2026-02-20",
+    "n_per_group": 5,
+    "control_condition": "x1 Scout instructions (3399 chars)",
+    "treatment_condition": "x2 Scout instructions repeated (6806 chars)",
+    "rubric_version": "1.0",
+    "orchestrator_session": "20260220_43",
+    "repo_head": "95033ead53e7a8ff97d7265dc4e1fd7d35510958",
+    "experiment_start": "2026-02-20T22:14:55Z",
+    "experiment_end": "2026-02-20T22:35:12Z",
+    "data_note": "Session .jsonl logs purged from disk. Per-run message and token counts unrecoverable. SQLite session metadata preserved. Session IDs reconstructed by matching gist start times to sessions.created_at (all within 2-3s delta).",
+    "runs": {
+        "scout-run-01": {
+            "group": "control",
+            "session_id": "20260220_46",
+            "start": "22:15:47Z",
+            "end": "22:35:12Z",
+            "wall_seconds": 1165,
+            "messages": 170,
+            "input_tokens": 852200,
+            "output_tokens": 11568,
+            "bytes": 10637,
+            "total_tokens": 863768
+        },
+        "scout-run-02": {
+            "group": "treatment",
+            "session_id": "20260220_47",
+            "start": "22:16:05Z",
+            "end": "22:30:00Z",
+            "wall_seconds": 835,
+            "messages": 142,
+            "input_tokens": 667135,
+            "output_tokens": 8450,
+            "bytes": 15003,
+            "total_tokens": 675585
+        },
+        "scout-run-03": {
+            "group": "control",
+            "session_id": "20260220_48",
+            "start": "22:16:14Z",
+            "end": "22:22:35Z",
+            "wall_seconds": 381,
+            "messages": 142,
+            "input_tokens": 646611,
+            "output_tokens": 8593,
+            "bytes": 12123,
+            "total_tokens": 655204
+        },
+        "scout-run-04": {
+            "group": "treatment",
+            "session_id": "20260220_49",
+            "start": "22:16:31Z",
+            "end": "22:24:00Z",
+            "wall_seconds": 449,
+            "messages": 138,
+            "input_tokens": 746775,
+            "output_tokens": 8369,
+            "bytes": 9531,
+            "total_tokens": 755144
+        },
+        "scout-run-05": {
+            "group": "control",
+            "session_id": "20260220_50",
+            "start": "22:16:41Z",
+            "end": "22:26:15Z",
+            "wall_seconds": 574,
+            "messages": 139,
+            "input_tokens": 695551,
+            "output_tokens": 8442,
+            "bytes": 9496,
+            "total_tokens": 703993
+        },
+        "scout-run-06": {
+            "group": "treatment",
+            "session_id": "20260220_53",
+            "start": "22:19:30Z",
+            "end": "22:20:00Z",
+            "wall_seconds": 30,
+            "messages": 149,
+            "input_tokens": 819620,
+            "output_tokens": 8365,
+            "bytes": 11123,
+            "total_tokens": 827985
+        },
+        "scout-run-07": {
+            "group": "control",
+            "session_id": "20260220_54",
+            "start": "22:19:39Z",
+            "end": "22:21:00Z",
+            "wall_seconds": 81,
+            "messages": 170,
+            "input_tokens": 817906,
+            "output_tokens": 9018,
+            "bytes": 10561,
+            "total_tokens": 826924
+        },
+        "scout-run-08": {
+            "group": "treatment",
+            "session_id": "20260220_58",
+            "start": "22:23:04Z",
+            "end": "22:30:00Z",
+            "wall_seconds": 416,
+            "messages": 106,
+            "input_tokens": 612122,
+            "output_tokens": 7492,
+            "bytes": 10667,
+            "total_tokens": 619614
+        },
+        "scout-run-09": {
+            "group": "control",
+            "session_id": "20260220_56",
+            "start": "22:20:06Z",
+            "end": "22:25:30Z",
+            "wall_seconds": 324,
+            "messages": 137,
+            "input_tokens": 642422,
+            "output_tokens": 9500,
+            "bytes": 12749,
+            "total_tokens": 651922
+        },
+        "scout-run-10": {
+            "group": "treatment",
+            "session_id": "20260220_57",
+            "start": "22:20:23Z",
+            "end": "22:35:00Z",
+            "wall_seconds": 877,
+            "messages": 158,
+            "input_tokens": 800224,
+            "output_tokens": 8101,
+            "bytes": 9785,
+            "total_tokens": 808325
+        }
+    },
+    "scores": {
+        "control": {
+            "runs": [
+                "run-01",
+                "run-03",
+                "run-05",
+                "run-07",
+                "run-09"
+            ],
+            "scores": [
+                7,
+                7,
+                7,
+                7,
+                7
+            ],
+            "median": 7,
+            "mean": 7.0
+        },
+        "treatment": {
+            "runs": [
+                "run-02",
+                "run-04",
+                "run-06",
+                "run-08",
+                "run-10"
+            ],
+            "scores": [
+                7,
+                7,
+                7,
+                7,
+                7
+            ],
+            "median": 7,
+            "mean": 7.0
+        }
+    },
+    "statistical_test": {
+        "test": "Mann-Whitney U (two-tailed)",
+        "U_statistic": 12.5,
+        "p_value": 1.0,
+        "alpha": 0.05,
+        "result": "fail to reject H0",
+        "note": "Complete ceiling effect: all 10 runs scored 7/7. Test is uninformative."
+    },
+    "conclusion": "No detectable difference between x1 and x2 instruction conditions. The rubric exhibited a complete ceiling effect (100% of runs scored 7/7). The task (aptu#737, tree-sitter evaluation) was not sufficiently discriminating at n=5 per group. Recommended follow-up: (a) design a harder rubric with partial-credit criteria, (b) use a more complex task with less obvious approaches, or (c) increase n to detect smaller effect sizes.",
+    "pre_acknowledged_limitations": [
+        "Low statistical power at n=5 per group",
+        "Single task, single model (haiku-4-5)",
+        "Ceiling effect risk on well-documented tasks"
+    ],
+    "analyzed_at": "2026-02-20T22:35:00Z",
+    "token_analysis": {
+        "source": "goose sessions.db (accumulated_input_tokens, accumulated_output_tokens)",
+        "added_at": "2026-02-22T09:23:00Z",
+        "note": "Token counts were not captured at experiment time. Backfilled from local sessions.db on 2026-02-22.",
+        "output_tokens": {
+            "control": {
+                "values": [
+                    11568,
+                    8593,
+                    8442,
+                    9018,
+                    9500
+                ],
+                "mean": 9424,
+                "median": 9018,
+                "stdev": 1267
+            },
+            "treatment": {
+                "values": [
+                    8450,
+                    8369,
+                    8365,
+                    7492,
+                    8101
+                ],
+                "mean": 8155,
+                "median": 8365,
+                "stdev": 394
+            },
+            "diff_pct": -13.5
+        },
+        "messages": {
+            "control": {
+                "values": [
+                    170,
+                    142,
+                    139,
+                    170,
+                    137
+                ],
+                "mean": 152,
+                "median": 142
+            },
+            "treatment": {
+                "values": [
+                    142,
+                    138,
+                    149,
+                    106,
+                    158
+                ],
+                "mean": 139,
+                "median": 142
+            },
+            "diff_pct": -8.6
+        }
+    }
+}

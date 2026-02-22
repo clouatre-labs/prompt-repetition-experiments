@@ -1,0 +1,160 @@
+{
+  "run_id": "scout-run-04",
+  "group": "treatment",
+  "started_at": "2026-02-20T22:16:31Z",
+  "finished_at": "2026-02-20T22:24:00Z",
+  "session_id": "exp229",
+  "lens": "scout",
+  "relevant_files": [
+    {
+      "path": "crates/aptu-core/src/security/scanner.rs",
+      "line_range": "1-305",
+      "role": "Main security scanner orchestrator that parses unified diffs and delegates to PatternEngine"
+    },
+    {
+      "path": "crates/aptu-core/src/security/patterns.rs",
+      "line_range": "1-263",
+      "role": "Pattern engine with regex compilation and line-by-line scanning logic"
+    },
+    {
+      "path": "crates/aptu-core/src/security/patterns.json",
+      "line_range": "1-128",
+      "role": "Embedded 14-pattern vulnerability database with CWE mappings"
+    },
+    {
+      "path": "crates/aptu-core/src/security/detection.rs",
+      "line_range": "1-247",
+      "role": "Heuristics for determining when security scans should be triggered"
+    },
+    {
+      "path": "crates/aptu-core/src/security/types.rs",
+      "line_range": "1-179",
+      "role": "Data structures (Finding, Severity, Confidence, PatternDefinition)"
+    },
+    {
+      "path": "crates/aptu-core/tests/security_integration.rs",
+      "line_range": "1-170",
+      "role": "Integration tests with multi-line vulnerability limitation test (#735)"
+    },
+    {
+      "path": "crates/aptu-core/benches/security_scan.rs",
+      "line_range": "1-120",
+      "role": "Performance benchmarks with 10ms target for ~500 LOC samples"
+    }
+  ],
+  "conventions": {
+    "commits": "Conventional commits with GPG signing and DCO sign-off required (git commit -S --signoff)",
+    "testing": "Unit tests embedded in source files; integration tests in crates/aptu-core/tests/; AAA pattern (Arrange-Act-Assert); test fixtures in tests/security_fixtures/",
+    "linting": "Clippy with strict warnings (cargo clippy -- -D warnings); format checks with cargo fmt",
+    "error_handling": "Uses thiserror for structured errors and anyhow for context; LazyLock for singleton initialization; proper Result<T> propagation"
+  },
+  "patterns": [
+    "Lazy static pattern engine initialized once via LazyLock<PatternEngine>",
+    "Line-by-line regex scanning over source content with file extension filtering",
+    "Unified diff parsing to extract added lines and track file paths",
+    "Embedded JSON configuration loaded at compile time with serde deserialization",
+    "Integration tests using fixture files and generated diffs for reproducibility"
+  ],
+  "related_issues": [
+    {
+      "number": 737,
+      "title": "Evaluate tree-sitter for AST-based vulnerability detection",
+      "relevance": "Core issue; proposes moving from regex to tree-sitter to detect multi-line vulnerabilities"
+    },
+    {
+      "number": 735,
+      "title": "Add test documenting SecurityScanner's multi-line limitation",
+      "relevance": "Tests the known limitation that regex-based scanner cannot detect cross-line patterns"
+    }
+  ],
+  "constraints": [
+    "Scanner currently operates line-by-line, cannot correlate data flow across lines",
+    "Pattern database embedded at compile time; pattern changes require recompilation",
+    "Performance target: sub-10ms scan for ~500 LOC diffs (benchmark enforced)",
+    "Multi-language support requires grammar for each language (Rust, Python, JS, Go, etc.)",
+    "SARIF output generation for CI integration (existing validator.rs, sarif.rs modules)"
+  ],
+  "test_coverage": "4 integration tests covering hardcoded secrets, SQL injection, safe patterns, and multi-line limitation. 63 total test functions in security module. Benchmark suite measures regex performance. Fixture-based approach with vulnerable/ and safe/ subdirectories for reproducibility.",
+  "library_findings": [
+    {
+      "library": "tree-sitter",
+      "version": "0.26.5",
+      "relevant_api": "Parser::new(), Tree, Query, QueryCursor for AST traversal and pattern matching",
+      "notes": "Core parsing library; supports S-expression query language for AST matching. Query API enables cross-line pattern detection by traversing syntax tree."
+    },
+    {
+      "library": "tree-sitter-rust",
+      "version": "0.24.0",
+      "relevant_api": "Grammar definition for Rust syntax; pairs with tree-sitter crate for Rust parsing",
+      "notes": "Language grammar crate; required for Rust support. Additional grammars (tree-sitter-python, tree-sitter-c, etc.) needed for multi-language support."
+    },
+    {
+      "library": "regex",
+      "version": "[workspace dependency]",
+      "relevant_api": "Regex::new(), Regex::find() used in line-by-line scanning",
+      "notes": "Current implementation; would be partially replaced by tree-sitter queries for syntax-aware matching while maintaining regex for string literal content matching."
+    }
+  ],
+  "approaches": [
+    {
+      "name": "Hybrid Tree-Sitter Bridge (Recommended)",
+      "description": "Keep regex for string literal/content matching; add tree-sitter for syntactic context (variable flow, function scope, call chains). New module tree_sitter_scanner.rs wraps tree-sitter parser, queries for dangerous function calls (execute(), query(), hash(), etc.), correlates with variable assignments and control flow. Patterns migrate from flat JSON to tree-sitter S-expression queries for cross-line detection. Maintains backwards compatibility by detecting what regex already catches plus multi-line flows.",
+      "pros": [
+        "Enables multi-line vulnerability detection without full rewrite",
+        "Preserves existing test suite and performance baseline",
+        "Can be deployed incrementally: Rust first, then other languages",
+        "Reduces false positives by filtering through syntax context",
+        "Tree-sitter queries are maintainable and readable"
+      ],
+      "cons": [
+        "Adds tree-sitter crate dependency (~500KB); parser binary included",
+        "Learning curve for S-expression query syntax",
+        "Grammar updates lag language evolution slightly",
+        "Still line-aware for regex string content matching (hybrid complexity)"
+      ],
+      "complexity": "medium",
+      "files_touched": 8
+    },
+    {
+      "name": "Full AST-Driven Replacement",
+      "description": "Complete rewrite: PatternEngine becomes TreesitterEngine. All 14 patterns converted to S-expression queries operating on full syntax tree. Scanner.rs parses entire file as AST, executes queries, collects findings with proper node location tracking. Removes regex entirely. Patterns stored as (query_lang, query_string, severity, cwe) tuples in JSON or Rust const.",
+      "pros": [
+        "Pure AST-aware detection; no line-by-line blind spots",
+        "Cleaner mental model: no regex-to-query impedance mismatch",
+        "Easier to implement control-flow-sensitive checks (taint tracking)",
+        "Single parsing pass per file regardless of pattern count",
+        "Future-proof for inter-procedural analysis"
+      ],
+      "cons": [
+        "Breaking change requiring rewrite of 263 lines (patterns.rs) + 305 lines (scanner.rs)",
+        "All 14 patterns must be converted/tested before merging",
+        "Performance regression risk if query execution slower than compiled regex",
+        "Loses zero-copy matching benefits of Regex engine",
+        "Requires test suite rewrite for AST-based assertions"
+      ],
+      "complexity": "complex",
+      "files_touched": 5
+    },
+    {
+      "name": "Gradual Pattern Migration with Feature Flags",
+      "description": "Add tree-sitter as optional feature (default off). New QueryPattern variant alongside RegexPattern in types.rs. PatternEngine loads both regex and query patterns, delegates to appropriate scanner. Phase 1: hardcoded-secrets and sql-injection via tree-sitter queries. Phase 2: remaining patterns migrated over releases. Benchmarks track both implementations side-by-side. Feature flag allows users to opt-in to new detection while maintaining stability.",
+      "pros": [
+        "Zero-risk deployment: new code behind feature flag",
+        "Can measure performance impact before flipping default",
+        "Existing benchmarks remain valid for comparison",
+        "Staged pattern conversion reduces scope per PR",
+        "Users can test new detection on private repos first"
+      ],
+      "cons": [
+        "Doubles maintenance surface area during transition period",
+        "Risk of inconsistent false positive rates between regex/query implementations",
+        "Requires documentation of behavior differences (regex vs. query)",
+        "More complex types.rs and patterns.rs signatures",
+        "Feature flag increases binary size (both implementations compiled)"
+      ],
+      "complexity": "medium",
+      "files_touched": 9
+    }
+  ],
+  "recommendation": "Approach 1 (Hybrid Tree-Sitter Bridge). This balances ambition with pragmatism: enables multi-line detection immediately while preserving the battle-tested regex engine for content matching. Start with Rust grammar (0.24.0), convert 3-4 high-impact patterns (SQL injection, command injection, hardcoded secrets) to tree-sitter queries in a new tree_sitter_scanner.rs module. Run side-by-side with existing engine in tests to verify zero regression. Merge once benchmark confirms <5% performance delta. This unblocks the multi-line limitation (issue #735) without a full rewrite, gives the team time to learn tree-sitter query language, and provides a proven path for adding Python/JavaScript support later. Estimated: 500-700 LOC, 2-3 week spike."
+}

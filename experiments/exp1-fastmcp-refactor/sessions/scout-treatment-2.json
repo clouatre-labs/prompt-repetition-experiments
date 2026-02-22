@@ -1,0 +1,147 @@
+{
+  "session_id": "treatment-2",
+  "lens": "scout",
+  "relevant_files": [
+    {
+      "path": "src/math_mcp/tools/persistence.py",
+      "line_range": "63, 78",
+      "role": "Primary target: uses id(ctx.lifespan_context) for session_id in save_calculation and accesses calculation_history via ctx.lifespan_context"
+    },
+    {
+      "path": "src/math_mcp/tools/calculate.py",
+      "line_range": "61-62",
+      "role": "Secondary target: accesses calculation_history via ctx.lifespan_context in calculate tool"
+    },
+    {
+      "path": "src/math_mcp/server.py",
+      "line_range": "33-49",
+      "role": "Context initialization: AppContext dataclass with calculation_history, app_lifespan async context manager"
+    },
+    {
+      "path": "src/math_mcp/persistence/workspace.py",
+      "line_range": "1-80",
+      "role": "Workspace manager: thread-safe persistence layer that receives metadata including session_id"
+    },
+    {
+      "path": "tests/test_persistence.py",
+      "line_range": "1-50",
+      "role": "Test fixtures: MockContext class with lifespan_context attribute"
+    },
+    {
+      "path": "tests/test_math_operations.py",
+      "line_range": "1-50",
+      "role": "Test patterns: MockContext usage in tool testing"
+    }
+  ],
+  "conventions": {
+    "commits": "Conventional Commits with GPG sign-off: git commit -S --signoff",
+    "testing": "pytest with AAA pattern (Arrange, Act, Assert); one happy path + one edge case per behavior; async tests with @pytest.mark.asyncio",
+    "linting": "ruff check and ruff format; pyright for type checking",
+    "error_handling": "ValueError for validation errors; graceful fallback when ctx is None; type hints with SkipValidation[Context | None]"
+  },
+  "patterns": [
+    "FastMCP 3.0 sub-servers mounted on main server via mcp.mount()",
+    "Tools accept optional Context parameter with SkipValidation to allow None",
+    "Graceful degradation: if ctx is None, skip logging/history but don't fail",
+    "MockContext in tests with lifespan_context attribute containing calculation_history list",
+    "Metadata dicts passed to workspace manager alongside results",
+    "Thread-safe workspace manager with RLock for concurrent access"
+  ],
+  "related_issues": [
+    {
+      "number": 222,
+      "title": "Replace anti-pattern session ID with FastMCP 3.0 ctx.set_state() / ctx.get_state()",
+      "relevance": "Primary issue: refactor to use proper session-scoped state API instead of memory addresses"
+    }
+  ],
+  "constraints": [
+    "Must maintain backward compatibility when ctx is None (graceful fallback)",
+    "FastMCP 3.0 required (already in pyproject.toml: fastmcp>=3.0.0)",
+    "UUID-based session IDs instead of memory addresses",
+    "No breaking changes to workspace persistence format",
+    "All tests must pass after refactoring"
+  ],
+  "test_coverage": "122 unit tests covering persistence, calculations, matrix ops, visualization, and HTTP integration. Tests use MockContext with lifespan_context. No existing tests for set_state/get_state API.",
+  "library_findings": [
+    {
+      "library": "fastmcp",
+      "version": ">=3.0.0",
+      "relevant_api": "Context.set_state(key: str, value: Any) and Context.get_state(key: str, default: Any = None) for session-scoped state management",
+      "notes": "FastMCP 3.0 provides proper session-scoped state storage via set_state/get_state methods. These replace the anti-pattern of using id(ctx.lifespan_context). State is tied to the Context object lifecycle and properly isolated per session."
+    },
+    {
+      "library": "uuid",
+      "version": "stdlib",
+      "relevant_api": "uuid.uuid4() for generating unique session identifiers",
+      "notes": "Standard library module for generating UUIDs. Use uuid.uuid4().hex for compact string representation."
+    },
+    {
+      "library": "pydantic",
+      "version": ">=2.12.0",
+      "relevant_api": "Field validators and type hints for metadata structures",
+      "notes": "Already used for validation. Metadata dicts can be typed with Pydantic models if needed."
+    }
+  ],
+  "approaches": [
+    {
+      "name": "Approach 1: Direct set_state/get_state replacement with UUID generation",
+      "description": "Replace id(ctx.lifespan_context) with ctx.set_state('session_id', uuid.uuid4().hex) in save_calculation. Generate session_id once per context and reuse via ctx.get_state('session_id'). Handle None context by generating ephemeral UUIDs or skipping session tracking. Update calculate.py similarly for calculation_history access.",
+      "pros": [
+        "Minimal code changes (2-3 lines per tool)",
+        "Uses FastMCP 3.0 official API as intended",
+        "UUID is deterministic and collision-free",
+        "Proper session isolation without memory address leaks",
+        "Backward compatible: gracefully handles None context"
+      ],
+      "cons": [
+        "Requires understanding of set_state/get_state lifecycle",
+        "Session ID generation happens on first access (lazy initialization)",
+        "Tests need to mock set_state/get_state methods",
+        "No persistent session ID across server restarts (by design)"
+      ],
+      "complexity": "simple",
+      "files_touched": 2
+    },
+    {
+      "name": "Approach 2: Session ID manager utility with lazy initialization",
+      "description": "Create a SessionManager utility class that wraps set_state/get_state logic. Provides get_session_id(ctx) method that returns existing session_id or generates+stores a new UUID. Use this utility in both persistence.py and calculate.py. Centralizes session logic and makes it testable independently.",
+      "pros": [
+        "DRY principle: session logic in one place",
+        "Easier to test session behavior in isolation",
+        "Flexible: can add session metadata (creation time, client info) later",
+        "Reusable across other tools/sub-servers",
+        "Clear separation of concerns"
+      ],
+      "cons": [
+        "Adds new module/class (more files to maintain)",
+        "Slight indirection in tool code",
+        "Tests need to mock both SessionManager and Context",
+        "More complex than direct replacement"
+      ],
+      "complexity": "medium",
+      "files_touched": 4
+    },
+    {
+      "name": "Approach 3: Comprehensive state migration with metadata versioning",
+      "description": "Refactor to use ctx.set_state() for all session-scoped data: session_id, calculation_history, and any future session state. Add version field to metadata to support future migrations. Update workspace persistence to tag variables with session_id. Provide migration helper to backfill old session_id values (from id() to UUID) in existing workspace files. Update tests to verify state isolation across contexts.",
+      "pros": [
+        "Future-proof: extensible state management pattern",
+        "Metadata versioning enables safe schema evolution",
+        "Proper session isolation: each context has independent state",
+        "Migration path for existing data",
+        "Cleaner architecture: all session state in one place",
+        "Enables multi-session support in future"
+      ],
+      "cons": [
+        "Largest scope: touches persistence layer, tests, and migration logic",
+        "Requires migration script for existing workspaces",
+        "More complex testing (state isolation verification)",
+        "Potential performance impact if state grows large",
+        "Backward compatibility requires careful migration handling"
+      ],
+      "complexity": "complex",
+      "files_touched": 6
+    }
+  ],
+  "recommendation": "Approach 1 (Direct set_state/get_state replacement). It directly addresses the issue with minimal scope, uses FastMCP 3.0's official API, maintains backward compatibility, and is straightforward to test. The lazy initialization pattern (generate UUID on first access) is clean and avoids unnecessary state creation. Approach 2 is worth considering if session management becomes more complex later, but premature abstraction adds overhead now. Approach 3 is over-engineered for the current scope unless you anticipate multi-session features or complex state migrations soon."
+}

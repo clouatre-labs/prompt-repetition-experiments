@@ -1,0 +1,266 @@
+{
+  "experiment": "Experiment 1: FastMCP Session ID Refactor",
+  "title": "Scout Instruction Repetition A/B Experiment (math-mcp-learning-server#222)",
+  "issue": "clouatre-labs/math-mcp-learning-server#222",
+  "model": "claude-haiku-4-5",
+  "date": "2026-02-20",
+  "n_per_group": 5,
+  "control_condition": "x1 Scout instructions",
+  "treatment_condition": "x2 Scout instructions repeated",
+  "rubric_version": "1.0",
+  "orchestrator_session": "20260220_29",
+  "repo_head": "8037696d7ba4f27eac580b45c297cc3f848cd9ec",
+  "runs": {
+    "scout-control-1": {
+      "group": "control",
+      "session_id": "20260220_31",
+      "start": "21:14:39Z",
+      "end": "21:15:30Z",
+      "wall_seconds": 51,
+      "messages": 93,
+      "input_tokens": 482353,
+      "output_tokens": 3476,
+      "bytes": null,
+      "note": "Drift failure: 93 messages, no output file written. File-write instruction appeared only at end of delegate prompt."
+    },
+    "scout-control-2": {
+      "group": "control",
+      "session_id": "20260220_32",
+      "start": "21:14:54Z",
+      "end": "21:16:58Z",
+      "wall_seconds": 124,
+      "messages": 194,
+      "input_tokens": 1008475,
+      "output_tokens": 9166,
+      "bytes": 9504
+    },
+    "scout-control-3": {
+      "group": "control",
+      "session_id": "20260220_33",
+      "start": "21:15:09Z",
+      "end": "21:17:26Z",
+      "wall_seconds": 137,
+      "messages": 213,
+      "input_tokens": 1036688,
+      "output_tokens": 10293,
+      "bytes": 9500
+    },
+    "scout-control-4": {
+      "group": "control",
+      "session_id": "20260220_34",
+      "start": "21:15:24Z",
+      "end": "21:17:47Z",
+      "wall_seconds": 143,
+      "messages": 234,
+      "input_tokens": 1213952,
+      "output_tokens": 10206,
+      "bytes": 9140
+    },
+    "scout-control-5": {
+      "group": "control",
+      "session_id": "20260220_35",
+      "start": "21:15:39Z",
+      "end": "21:18:08Z",
+      "wall_seconds": 149,
+      "messages": 196,
+      "input_tokens": 972091,
+      "output_tokens": 11856,
+      "bytes": 9352
+    },
+    "scout-treatment-1": {
+      "group": "treatment",
+      "session_id": "20260220_36",
+      "start": "21:16:01Z",
+      "end": "21:17:43Z",
+      "wall_seconds": 102,
+      "messages": 138,
+      "input_tokens": 708540,
+      "output_tokens": 7784,
+      "bytes": 10815
+    },
+    "scout-treatment-2": {
+      "group": "treatment",
+      "session_id": "20260220_38",
+      "start": "21:18:55Z",
+      "end": "21:20:31Z",
+      "wall_seconds": 96,
+      "messages": 154,
+      "input_tokens": 873935,
+      "output_tokens": 7333,
+      "bytes": 8130
+    },
+    "scout-treatment-3": {
+      "group": "treatment",
+      "session_id": "20260220_39",
+      "start": "21:19:15Z",
+      "end": "21:20:39Z",
+      "wall_seconds": 84,
+      "messages": 116,
+      "input_tokens": 568629,
+      "output_tokens": 6901,
+      "bytes": 10770
+    },
+    "scout-treatment-4": {
+      "group": "treatment",
+      "session_id": "20260220_40",
+      "start": "21:19:34Z",
+      "end": "21:21:39Z",
+      "wall_seconds": 125,
+      "messages": 198,
+      "input_tokens": 990778,
+      "output_tokens": 9611,
+      "bytes": 10364
+    },
+    "scout-treatment-5": {
+      "group": "treatment",
+      "session_id": "20260220_41",
+      "start": "21:19:52Z",
+      "end": "21:21:01Z",
+      "wall_seconds": 69,
+      "messages": 82,
+      "input_tokens": 482231,
+      "output_tokens": 5541,
+      "bytes": 9473
+    }
+  },
+  "scores": {
+    "control": {
+      "runs": [
+        "control-2",
+        "control-3",
+        "control-4",
+        "control-5"
+      ],
+      "scores": [
+        6,
+        6,
+        5,
+        5
+      ],
+      "median": 5.5,
+      "mean": 5.5,
+      "note": "control-1 excluded (no output file produced)"
+    },
+    "treatment": {
+      "runs": [
+        "treatment-1",
+        "treatment-2",
+        "treatment-3",
+        "treatment-4",
+        "treatment-5"
+      ],
+      "scores": [
+        6,
+        5,
+        6,
+        6,
+        6
+      ],
+      "median": 6,
+      "mean": 5.8
+    }
+  },
+  "statistical_test": {
+    "test": "Fisher's exact test",
+    "p_value": 1.0,
+    "alpha": 0.05,
+    "result": "fail to reject H0",
+    "note": "Degenerate: n=4 vs n=5 with binary outcomes on the only discriminating criterion (C5). 5 of 6 criteria hit ceiling (100% both groups)."
+  },
+  "conclusion": "No detectable difference between x1 and x2 instruction conditions. The rubric exhibited a near-complete ceiling effect (5/6 criteria at 100%). The task (FastMCP session ID refactor) was not sufficiently discriminating at n=4 vs n=5. Treatment scored marginally higher (+0.30) but the delta is noise given sample size.",
+  "pre_acknowledged_limitations": [
+    "Low statistical power at n=4 vs n=5",
+    "Single task, single model (haiku-4-5)",
+    "Near-complete ceiling effect (5/6 criteria at 100%)",
+    "control-1 excluded due to execution artifact (drift failure)"
+  ],
+  "analyzed_at": "2026-02-20T21:22:00Z",
+  "token_analysis": {
+    "source": "goose sessions.db (accumulated_input_tokens, accumulated_output_tokens)",
+    "added_at": "2026-02-22T09:26:00Z",
+    "note": "Message counts backfilled from sessions.db. Token counts were already present from experiment time. control-1 (session 20260220_31) is included in token analysis but was excluded from scoring (scored 0, no usable output).",
+    "output_tokens": {
+      "all_runs": {
+        "control": {
+          "values": [
+            3476,
+            9166,
+            10293,
+            10206,
+            11856
+          ],
+          "mean": 8999,
+          "median": 10206,
+          "stdev": 3234
+        },
+        "treatment": {
+          "values": [
+            7784,
+            7333,
+            6901,
+            9611,
+            5541
+          ],
+          "mean": 7434,
+          "median": 7333,
+          "stdev": 1478
+        },
+        "diff_pct": -17.4
+      },
+      "excluding_control_1": {
+        "note": "control-1 had 3476 output tokens (failed run), skewing control mean down",
+        "control": {
+          "values": [
+            9166,
+            10293,
+            10206,
+            11856
+          ],
+          "mean": 10380,
+          "median": 10250,
+          "stdev": 1109
+        },
+        "treatment": {
+          "values": [
+            7784,
+            7333,
+            6901,
+            9611,
+            5541
+          ],
+          "mean": 7434,
+          "median": 7333,
+          "stdev": 1478
+        },
+        "diff_pct": -28.4
+      }
+    },
+    "messages": {
+      "all_runs": {
+        "control": {
+          "values": [
+            93,
+            194,
+            213,
+            234,
+            196
+          ],
+          "mean": 186,
+          "median": 196
+        },
+        "treatment": {
+          "values": [
+            138,
+            154,
+            116,
+            198,
+            82
+          ],
+          "mean": 138,
+          "median": 138
+        },
+        "diff_pct": -25.8
+      }
+    }
+  }
+}
