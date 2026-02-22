@@ -42,15 +42,27 @@ prompt-repetition-experiments/
       analysis.json      # Aggregated results and per-run metadata
       scores.json        # Blind scorer output with justifications
       label-map.json     # Group assignments (sealed before scoring)
-      sessions/          # Individual delegate session outputs
+      sessions/          # Structured delegate outputs (scored artifacts)
         scout-control-{2..5}.json    # Control group (1 excluded: drift)
         scout-treatment-{1..5}.json  # Treatment group
+      raw/               # Full conversation logs (sanitized)
+        orchestrator.jsonl           # Experiment orchestration (265 messages)
+        scorer.jsonl                 # Blind scoring session
+        scout-control-{1..5}.jsonl   # Control delegate conversations
+        scout-treatment-{1..5}.jsonl # Treatment delegate conversations
     exp2-treesitter-synthesis/
       analysis.json      # Aggregated results and per-run metadata
       scores.json        # Blind scorer output with justifications
       label-map.json     # Group assignments (sealed before scoring)
-      sessions/          # Individual delegate session outputs
+      sessions/          # Structured delegate outputs (scored artifacts)
         scout-run-{01..10}.json      # Blinded run IDs
+      raw/               # Full conversation logs (sanitized)
+        orchestrator.jsonl           # Experiment orchestration (419 messages)
+        scorer.jsonl                 # Blind scoring session
+        setup.jsonl                  # Experiment setup session
+        utility-{1..2}.jsonl         # Utility sessions
+        scout-run-{01..10}.jsonl     # Delegate conversations (blinded)
+        scout-run-08-retry.jsonl     # Retry of run-08
 ```
 
 ## Data Files
@@ -64,7 +76,8 @@ prompt-repetition-experiments/
 - **`analysis.json`** -- Experiment metadata: issue reference, model, dates, per-run timing/token counts, aggregate statistics, and statistical tests.
 - **`scores.json`** -- Blind scorer output: per-criterion binary scores (0/1) with natural-language justifications for each run.
 - **`label-map.json`** -- Group assignments sealed before scoring began. Maps run IDs to control/treatment groups.
-- **`sessions/*.json`** -- Raw delegate session outputs. Each file contains the structured research output produced by one Scout delegate.
+- **`sessions/*.json`** -- Structured delegate outputs. Each file contains the research findings produced by one Scout delegate. These are the artifacts scored by the rubric.
+- **`raw/*.jsonl`** -- Full message-by-message conversation logs exported from Goose's session database. Includes tool calls, intermediate reasoning, and errors. Home directory paths sanitized to `$EXPERIMENTER_HOME`. Orchestrator logs show the 5-delegate concurrency cap in action (batch 1 spawned, cap hit, batch 2 spawned after batch 1 completes).
 
 ## Reproduction
 
