@@ -1,0 +1,125 @@
+{
+  "scored_at": "2026-02-20T21:22:00Z",
+  "scorer": "claude-haiku-4-5-blind",
+  "rubric_version": "1.0",
+  "note": "control-1 excluded from scoring (no output file produced; drift failure at 93 messages)",
+  "scores": [
+    {
+      "run_id": "control-2",
+      "C1": 1, "C2": 1, "C3": 1, "C4": 1, "C5": 1, "C6": 1,
+      "total": 6,
+      "justifications": {
+        "C1": "Session ID persistence correctly identified and addressed.",
+        "C2": "Calculation logic preserved across refactored session handling.",
+        "C3": "Anti-pattern correctly identified in existing implementation.",
+        "C4": "FastMCP API usage correct per documentation.",
+        "C5": "Non-serializable value problem explicitly named.",
+        "C6": "Documentation updates included."
+      }
+    },
+    {
+      "run_id": "control-3",
+      "C1": 1, "C2": 1, "C3": 1, "C4": 1, "C5": 1, "C6": 1,
+      "total": 6,
+      "justifications": {
+        "C1": "Session ID persistence correctly identified and addressed.",
+        "C2": "Calculation logic preserved across refactored session handling.",
+        "C3": "Anti-pattern correctly identified in existing implementation.",
+        "C4": "FastMCP API usage correct per documentation.",
+        "C5": "Non-serializable value problem named; 'must not store' caveat documented.",
+        "C6": "Documentation updates included."
+      }
+    },
+    {
+      "run_id": "control-4",
+      "C1": 1, "C2": 1, "C3": 1, "C4": 1, "C5": 0, "C6": 1,
+      "total": 5,
+      "justifications": {
+        "C1": "Session ID persistence correctly identified and addressed.",
+        "C2": "Calculation logic preserved across refactored session handling.",
+        "C3": "Anti-pattern correctly identified in existing implementation.",
+        "C4": "FastMCP API usage correct per documentation.",
+        "C5": "Mentioned 'serializable' only; did not name the non-serializable value problem or process-restart caveat.",
+        "C6": "Documentation updates included."
+      }
+    },
+    {
+      "run_id": "control-5",
+      "C1": 1, "C2": 1, "C3": 1, "C4": 1, "C5": 0, "C6": 1,
+      "total": 5,
+      "justifications": {
+        "C1": "Session ID persistence correctly identified and addressed.",
+        "C2": "Calculation logic preserved across refactored session handling.",
+        "C3": "Anti-pattern correctly identified in existing implementation.",
+        "C4": "FastMCP API usage correct per documentation.",
+        "C5": "No mention of non-serializable value problem or process-restart instability.",
+        "C6": "Documentation updates included."
+      }
+    },
+    {
+      "run_id": "treatment-1",
+      "C1": 1, "C2": 1, "C3": 1, "C4": 1, "C5": 1, "C6": 1,
+      "total": 6,
+      "justifications": {
+        "C1": "Session ID persistence correctly identified and addressed.",
+        "C2": "Calculation logic preserved across refactored session handling.",
+        "C3": "Anti-pattern correctly identified in existing implementation.",
+        "C4": "FastMCP API usage correct per documentation.",
+        "C5": "Both 'serializable' and 'process restart' caveats documented.",
+        "C6": "Documentation updates included."
+      }
+    },
+    {
+      "run_id": "treatment-2",
+      "C1": 1, "C2": 1, "C3": 1, "C4": 1, "C5": 0, "C6": 1,
+      "total": 5,
+      "justifications": {
+        "C1": "Session ID persistence correctly identified and addressed.",
+        "C2": "Calculation logic preserved across refactored session handling.",
+        "C3": "Anti-pattern correctly identified in existing implementation.",
+        "C4": "FastMCP API usage correct per documentation.",
+        "C5": "No mention of non-serializable value problem or process-restart instability.",
+        "C6": "Documentation updates included."
+      }
+    },
+    {
+      "run_id": "treatment-3",
+      "C1": 1, "C2": 1, "C3": 1, "C4": 1, "C5": 1, "C6": 1,
+      "total": 6,
+      "justifications": {
+        "C1": "Session ID persistence correctly identified and addressed.",
+        "C2": "Calculation logic preserved across refactored session handling.",
+        "C3": "Anti-pattern correctly identified in existing implementation.",
+        "C4": "FastMCP API usage correct per documentation.",
+        "C5": "Non-serializable value problem explicitly named.",
+        "C6": "Documentation updates included."
+      }
+    },
+    {
+      "run_id": "treatment-4",
+      "C1": 1, "C2": 1, "C3": 1, "C4": 1, "C5": 1, "C6": 1,
+      "total": 6,
+      "justifications": {
+        "C1": "Session ID persistence correctly identified and addressed.",
+        "C2": "Calculation logic preserved across refactored session handling.",
+        "C3": "Anti-pattern correctly identified in existing implementation.",
+        "C4": "FastMCP API usage correct per documentation.",
+        "C5": "Non-serializable value problem and process restart caveat both documented.",
+        "C6": "Documentation updates included."
+      }
+    },
+    {
+      "run_id": "treatment-5",
+      "C1": 1, "C2": 1, "C3": 1, "C4": 1, "C5": 1, "C6": 1,
+      "total": 6,
+      "justifications": {
+        "C1": "Session ID persistence correctly identified and addressed.",
+        "C2": "Calculation logic preserved across refactored session handling.",
+        "C3": "Anti-pattern correctly identified in existing implementation.",
+        "C4": "FastMCP API usage correct per documentation.",
+        "C5": "Non-serializable value problem explicitly named.",
+        "C6": "Documentation updates included."
+      }
+    }
+  ]
+}

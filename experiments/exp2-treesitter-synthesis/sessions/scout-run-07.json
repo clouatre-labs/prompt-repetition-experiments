@@ -1,0 +1,172 @@
+{
+  "run_id": "scout-run-07",
+  "group": "control",
+  "started_at": "2026-02-20T22:19:39Z",
+  "finished_at": "2026-02-20T22:21:00Z",
+  "session_id": "exp229",
+  "lens": "scout",
+  "relevant_files": [
+    {
+      "path": "crates/aptu-core/src/security/patterns.rs",
+      "line_range": "1-263",
+      "role": "core pattern matching engine with regex-based detection"
+    },
+    {
+      "path": "crates/aptu-core/src/security/scanner.rs",
+      "line_range": "1-305",
+      "role": "main SecurityScanner that applies patterns to diffs/files"
+    },
+    {
+      "path": "crates/aptu-core/src/security/patterns.json",
+      "line_range": "1-150",
+      "role": "14 embedded regex patterns for vulnerability detection across 9 languages"
+    },
+    {
+      "path": "crates/aptu-core/src/security/detection.rs",
+      "line_range": "1-247",
+      "role": "context-aware scan triggering logic based on files, labels, keywords"
+    },
+    {
+      "path": "crates/aptu-core/src/security/validator.rs",
+      "line_range": "1-382",
+      "role": "SARIF output validation and finding verification"
+    },
+    {
+      "path": "crates/aptu-core/Cargo.toml",
+      "line_range": "1-50",
+      "role": "workspace dependencies including serde, regex, anyhow"
+    },
+    {
+      "path": "Cargo.toml",
+      "line_range": "1-50",
+      "role": "root workspace config with tokio, clap, octocrab"
+    }
+  ],
+  "conventions": {
+    "commits": "Conventional commits with GPG signing and DCO sign-off required per CONTRIBUTING.md",
+    "testing": "AAA pattern with unit tests in modules, integration tests in tests/fixtures/security/, separate vulnerable and safe test cases",
+    "linting": "Cargo fmt, cargo clippy, cargo deny; CI enforced via Justfile recipes",
+    "error_handling": "anyhow::Result used throughout security module; no custom error enums (thiserror not used); errors propagated up with context"
+  },
+  "patterns": [
+    "Line-by-line regex pattern matching applied to code diffs",
+    "Configuration-driven pattern loading from embedded JSON",
+    "Detection engine separates triggering logic (detection.rs) from pattern matching (patterns.rs)",
+    "SARIF output format for integration with GitHub security tab",
+    "Cache-aware scanning to avoid redundant checks"
+  ],
+  "related_issues": [
+    {
+      "number": 735,
+      "title": "test(security): add negative test documenting multi-line detection limitation",
+      "relevance": "Documents the architectural limitation that regex-based line-by-line detection cannot handle vulnerabilities spanning multiple lines (source and sink on different lines)"
+    },
+    {
+      "number": 700,
+      "title": "feat(security): Pattern engine and scanner core",
+      "relevance": "Original implementation of the regex-based pattern engine; foundational for understanding current architecture"
+    },
+    {
+      "number": 702,
+      "title": "feat(security): Cache and allowlist for findings",
+      "relevance": "Performance optimization layer that can work alongside AST-based detection"
+    },
+    {
+      "number": 716,
+      "title": "perf: parallelize security scanning with Rayon",
+      "relevance": "Shows performance is a concern; Rayon parallelization may need refactoring for AST-based approach"
+    }
+  ],
+  "constraints": [
+    "Must support 9 file types: .rs, .js, .ts, .jsx, .tsx, .py, .java, .php, .xml",
+    "Pattern definitions currently in embedded JSON; any new approach must maintain configuration-driven pattern loading",
+    "Existing SARIF output format must be preserved for GitHub integration",
+    "Performance must match or exceed current regex-based scanning (with Rayon parallelization)",
+    "Must integrate with cache and ignore-list systems already in place"
+  ],
+  "test_coverage": "Unit tests in patterns.rs and scanner.rs cover regex matching, line number tracking, multi-file scanning, and diff parsing. Integration tests in tests/fixtures/security/ include deliberately vulnerable code in hardcoded_secrets.rs and sql_injection.rs. Issue #735 explicitly documents the known limitation: multi-line vulnerabilities cannot be detected. Current test suite is line-aware but does not test cross-line detection scenarios.",
+  "library_findings": [
+    {
+      "library": "tree-sitter",
+      "version": "0.26.5",
+      "relevant_api": "Parser, Tree, Query (for pattern matching via S-expression queries), Language loading",
+      "notes": "Stable core library with 3.3M recent downloads. Requires loading language grammars separately (tree-sitter-rust, tree-sitter-python, etc.). Supports custom queries for taint-flow and control-flow analysis. No built-in vulnerability detection; patterns must be authored as S-expression queries."
+    },
+    {
+      "library": "tree-sitter-rust",
+      "version": "0.24.0",
+      "relevant_api": "Grammar definition for Rust AST parsing",
+      "notes": "5.6M downloads. Mature grammar. Available for all target languages (JS, Python, Java, PHP, XML grammars also available on crates.io). Critical: each language needs separate grammar crate or inline build; significant dependency surface area."
+    },
+    {
+      "library": "anyhow",
+      "version": "current in workspace",
+      "relevant_api": "Result<T>, Context trait for error propagation",
+      "notes": "Already used in security module; no changes needed. Compatible with tree-sitter error handling."
+    }
+  ],
+  "approaches": [
+    {
+      "name": "Hybrid Regex + Tree-Sitter Spike (Recommended)",
+      "description": "Implement tree-sitter for Rust SQL injection detection only (as suggested in issue). Keep existing regex engine intact. Add new tree-sitter module (security/ast_patterns.rs) with S-expression queries for taint-flow analysis (user input -> SQL functions). Use tree-sitter-rust grammar. Pattern triggering remains in detection.rs; SecurityScanner routes Rust files to either regex or AST detector based on vulnerability type. Results merged before SARIF output.",
+      "pros": [
+        "Low risk: existing regex engine unchanged, no breaking changes",
+        "Proves AST approach on hardest case (SQL injection with multi-line dataflow)",
+        "Validates tree-sitter library integration and query authoring cost",
+        "Allows incremental rollout to other languages/patterns",
+        "Matches issue's suggested three-step spike approach"
+      ],
+      "cons": [
+        "Dual detection paths create code complexity and testing burden",
+        "S-expression queries are unfamiliar to team; learning curve for 14 pattern conversions",
+        "Each language grammar adds build time and binary size (tree-sitter-python, tree-sitter-js, etc.)",
+        "Taint-flow tracking requires custom query logic; no built-in vulnerability semantics",
+        "Performance trade-off: AST parsing slower than regex but catches multi-line issues"
+      ],
+      "complexity": "medium",
+      "files_touched": 5
+    },
+    {
+      "name": "Full AST Replacement (Greenfield)",
+      "description": "Replace regex engine entirely with tree-sitter. Rewrite all 14 patterns as S-expression queries. Create unified ast_detector.rs module. New Pattern struct wraps tree-sitter queries instead of regex strings. Load all 9 language grammars at startup (or lazy-load per language). Update patterns.json schema to embed S-expression queries alongside metadata. Remove regex dependency from Cargo.toml. Refactor SecurityScanner to use single AST-based path.",
+      "pros": [
+        "Cleaner architecture: single detection path, no dual codepaths",
+        "Full multi-line vulnerability detection across all patterns",
+        "Consistent S-expression query language for all vulnerabilities",
+        "Eliminates regex complexity for edge cases (lookahead, etc.)",
+        "Future-proof: can add control-flow, type-flow analysis on AST"
+      ],
+      "cons": [
+        "High risk: complete rewrite, all 14 patterns must be validated",
+        "Estimated 800-1200 LOC (issue estimates 500-800 for spike; full impl larger)",
+        "9 language grammars increase binary size and build time significantly",
+        "S-expression query authoring requires expertise; steep learning curve",
+        "Performance regression on fast-path (simple patterns become heavier AST ops)",
+        "Requires comprehensive test rewrite; current fixtures may not exercise AST paths adequately"
+      ],
+      "complexity": "complex",
+      "files_touched": 8
+    },
+    {
+      "name": "Extracted Hardcoded Patterns + Regex Optimization (Conservative)",
+      "description": "Keep tree-sitter out; instead, extract hardcoded multi-line detection functions for known hard cases (SQL injection, command injection where source/sink separation is common). Implement custom line-pair analysis in scanner.rs (e.g., scan N lines ahead for context when regex matches). Add heuristic dataflow for common patterns (variable assignment detection). Keep regex as primary engine. Add configuration flag to enable extended detection. No new external dependencies.",
+      "pros": [
+        "Zero new dependencies or learning curve",
+        "Minimal binary size impact",
+        "Faster than AST parsing for typical cases",
+        "Reuses existing test infrastructure",
+        "Can be implemented incrementally per pattern"
+      ],
+      "cons": [
+        "Does not solve underlying problem: regex fundamentally line-oriented",
+        "Heuristics brittle and language-specific (won't generalize across 9 languages)",
+        "Maintenance burden: custom logic for each hard case",
+        "Does not address control-flow or type-flow analysis needs",
+        "Issue explicitly requests tree-sitter evaluation; this approach avoids the core ask"
+      ],
+      "complexity": "simple",
+      "files_touched": 3
+    }
+  ],
+  "recommendation": "Approach 1 (Hybrid Regex + Tree-Sitter Spike) is the optimal starting point. It directly addresses the issue's three-step spike recommendation, mitigates risk by keeping the regex engine intact, and validates the tree-sitter integration cost on the hardest case (multi-line SQL injection with taint-flow). The spike should: (1) Create security/ast_patterns.rs with tree-sitter-rust and tree-sitter crates, (2) author 2-3 S-expression queries for SQL injection taint-flow patterns, (3) benchmark AST parsing vs. regex on the sql_injection test fixture, (4) document query authoring cost and maintainability. Results inform whether full replacement (Approach 2) is justified or whether hybrid approach can cover the critical gaps with acceptable maintenance burden."
+}

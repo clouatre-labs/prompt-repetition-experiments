@@ -1,0 +1,138 @@
+{
+  "session_id": "treatment-5",
+  "lens": "scout",
+  "summary": "Issue #222 requests refactoring the anti-pattern use of id(ctx.lifespan_context) as a session identifier to the proper FastMCP 3.0 API (ctx.set_state/ctx.get_state with UUID). The anti-pattern appears only in persistence.py line 63 and affects session ID metadata tracking. The refactor is straightforward but requires careful handling of async context initialization and backward compatibility.",
+  "relevant_files": [
+    {
+      "path": "src/math_mcp/tools/persistence.py",
+      "line_range": "63, 77-78",
+      "role": "Primary target - contains id(ctx.lifespan_context) anti-pattern in save_calculation() and uses lifespan_context.calculation_history for history tracking"
+    },
+    {
+      "path": "src/math_mcp/tools/calculate.py",
+      "line_range": "61-62",
+      "role": "Secondary target - uses lifespan_context.calculation_history for history tracking (no session_id anti-pattern found here)"
+    },
+    {
+      "path": "src/math_mcp/server.py",
+      "line_range": "37-46",
+      "role": "Context definition - defines AppContext with calculation_history list and lifespan setup"
+    },
+    {
+      "path": "tests/test_persistence.py",
+      "line_range": "55, 344-345, 374, 449-458",
+      "role": "Test coverage - mocks lifespan_context and validates calculation_history behavior"
+    },
+    {
+      "path": "tests/test_math_operations.py",
+      "line_range": "99, 449, 527",
+      "role": "Test coverage - mocks lifespan_context for calculation history tests"
+    }
+  ],
+  "conventions": {
+    "commits": "Conventional commits (feat/fix/docs/test/refactor/perf/chore) with optional body and footer",
+    "testing": "pytest with asyncio_mode=auto; AAA pattern (Arrange, Act, Assert); mock context objects with lifespan_context attribute; 80% coverage minimum",
+    "linting": "ruff check/format with target-version=py314, line-length=100; S307 (eval) ignored for math calculator; S101 (assert) allowed in tests",
+    "error_handling": "ValueError for validation errors; type hints throughout; docstrings with examples; input validation before processing"
+  },
+  "patterns": [
+    "FastMCP sub-server pattern (persistence_mcp, calculate_mcp) for tool organization",
+    "Context optional parameter with SkipValidation type hint (Context | None = None)",
+    "Metadata dictionaries in tool return annotations for educational metadata",
+    "Lifespan context for process-wide calculation history tracking",
+    "History entries with type, timestamp, and operation-specific fields"
+  ],
+  "related_issues": [],
+  "constraints": [
+    "ctx parameter must remain optional (Context | None = None) for backward compatibility",
+    "Session ID must be serializable (UUID string, not memory address)",
+    "ctx.set_state/ctx.get_state is session-scoped (per client connection), not process-scoped",
+    "Must not use ctx.set_state for non-serializable values",
+    "Calculation history tracking (lifespan_context.calculation_history) is separate concern from session ID",
+    "UUID import required (currently not present in codebase)"
+  ],
+  "test_coverage": "Comprehensive: test_persistence.py has 40+ tests covering workspace, file I/O, thread safety, MCP integration; test_math_operations.py tests calculation history with mocked context; all tests use mock lifespan_context with calculation_history list",
+  "library_findings": [
+    {
+      "library": "fastmcp",
+      "version": ">=3.0.0",
+      "relevant_api": "Context.set_state(key, value) / Context.get_state(key) for session-scoped state; both are async methods; Context.lifespan_context for process-scoped data",
+      "notes": "FastMCP 3.0 provides proper session state API. ctx.set_state persists across requests within same MCP session. lifespan_context is process-wide and should not be used for session IDs. UUID should be generated once per session and stored via set_state."
+    },
+    {
+      "library": "uuid",
+      "version": "stdlib (Python 3.14+)",
+      "relevant_api": "uuid.uuid4() returns UUID object; str(uuid.uuid4()) returns serializable string representation",
+      "notes": "Standard library module, no external dependency needed. UUID4 provides cryptographically random identifiers suitable for session IDs. String representation is JSON-serializable."
+    }
+  ],
+  "approaches": [
+    {
+      "name": "Minimal Targeted Refactor (Recommended)",
+      "description": "Replace only the session_id generation in persistence.py line 63. On first request in save_calculation(), check if session_id exists via ctx.get_state(); if not, generate UUID and store via ctx.set_state(). Retrieve session_id for metadata. Keep lifespan_context.calculation_history tracking unchanged. Add inline comment explaining why ctx.set_state is used.",
+      "pros": [
+        "Minimal code change (1 location, ~10 lines)",
+        "Directly addresses the anti-pattern identified in issue",
+        "Maintains backward compatibility (ctx still optional)",
+        "No changes to test infrastructure needed",
+        "Clear separation of concerns: session ID via set_state, history via lifespan_context",
+        "Educational value: demonstrates proper FastMCP 3.0 pattern"
+      ],
+      "cons": [
+        "Leaves lifespan_context.calculation_history as-is (not ideal but functional)",
+        "Session ID only initialized in save_calculation(), not globally",
+        "Requires async context initialization logic (if/await pattern)"
+      ],
+      "complexity": "simple",
+      "files_touched": 1
+    },
+    {
+      "name": "Comprehensive Context Refactor",
+      "description": "Refactor both persistence.py and calculate.py to use ctx.set_state for session ID initialization. Create a helper function get_or_create_session_id(ctx) that handles the async initialization pattern. Replace all id(ctx.lifespan_context) references with this helper. Keep calculation_history tracking via lifespan_context (separate concern). Update tests to mock ctx.set_state/ctx.get_state behavior.",
+      "pros": [
+        "Consistent session ID handling across all tools",
+        "Reusable helper function for future tools",
+        "Cleaner separation of session state from lifespan context",
+        "More testable (helper function can be unit tested)",
+        "Demonstrates best practice pattern for other developers"
+      ],
+      "cons": [
+        "Touches 3 files (persistence.py, calculate.py, new helper or server.py)",
+        "Requires test updates to mock async set_state/get_state",
+        "Slightly more complex async initialization logic",
+        "Helper function adds indirection"
+      ],
+      "complexity": "medium",
+      "files_touched": 3
+    },
+    {
+      "name": "Full State Migration (Elegant but Broader)",
+      "description": "Migrate calculation_history tracking from lifespan_context to ctx.set_state as well. Initialize session state in server.py middleware or context setup. Store calculation_history as JSON-serializable list via ctx.set_state('calculation_history', []). Update all tools to use ctx.get_state('calculation_history') and ctx.set_state to append entries. This unifies session state management under the proper API.",
+      "pros": [
+        "Complete migration to proper FastMCP 3.0 API",
+        "Single source of truth for session state (ctx.set_state)",
+        "Eliminates lifespan_context coupling entirely",
+        "More aligned with MCP architecture (session-scoped data in session state)",
+        "Easier to reason about scope (all session data in one place)",
+        "Better for multi-client scenarios"
+      ],
+      "cons": [
+        "Touches 4+ files (persistence.py, calculate.py, server.py, tests)",
+        "Requires significant test refactoring (mock ctx.set_state/ctx.get_state)",
+        "Breaking change to how history is accessed (requires ctx parameter)",
+        "More complex: requires initialization of history list on first request",
+        "Broader scope than issue #222 requests (scope creep risk)"
+      ],
+      "complexity": "complex",
+      "files_touched": 5
+    }
+  ],
+  "recommendation": "Approach 1 (Minimal Targeted Refactor). The issue explicitly targets only the id(ctx.lifespan_context) anti-pattern in session_id generation (persistence.py line 63). Approach 1 directly solves this with minimal changes, maintains backward compatibility, and demonstrates the proper FastMCP 3.0 pattern without scope creep. The calculation_history tracking via lifespan_context is a separate architectural concern not mentioned in issue #222's acceptance criteria. Approach 2 is reasonable if broader consistency is desired, but Approach 1 better respects the issue's scope and risk profile.",
+  "implementation_notes": {
+    "async_initialization": "Use pattern: if await ctx.get_state('session_id') is None: await ctx.set_state('session_id', str(uuid.uuid4())). Both methods are async.",
+    "fallback_handling": "When ctx is None or unavailable, session_id will be None (acceptable per issue constraints)",
+    "import_required": "Add 'import uuid' to persistence.py",
+    "comment_suggestion": "Add inline comment: '# Use ctx.set_state for session-scoped state (per client connection), not lifespan_context which is process-wide'",
+    "test_strategy": "Existing tests mock ctx with lifespan_context; minimal test changes needed if session_id is only used in metadata (not tested separately). If session_id behavior is tested, mock ctx.get_state/ctx.set_state."
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "repo_head": "95033ead53e7a8ff97d7265dc4e1fd7d35510958",
+  "experiment": "clouatre-labs/aptu#737",
+  "sealed_at": "2026-02-20T17:14:30Z",
+  "assignments": {
+    "scout-run-01": "control",
+    "scout-run-02": "treatment",
+    "scout-run-03": "control",
+    "scout-run-04": "treatment",
+    "scout-run-05": "control",
+    "scout-run-06": "treatment",
+    "scout-run-07": "control",
+    "scout-run-08": "treatment",
+    "scout-run-09": "control",
+    "scout-run-10": "treatment"
+  },
+  "control_group": [
+    "scout-run-01",
+    "scout-run-03",
+    "scout-run-05",
+    "scout-run-07",
+    "scout-run-09"
+  ],
+  "treatment_group": [
+    "scout-run-02",
+    "scout-run-04",
+    "scout-run-06",
+    "scout-run-08",
+    "scout-run-10"
+  ]
+}

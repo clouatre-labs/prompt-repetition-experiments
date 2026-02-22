@@ -1,0 +1,171 @@
+{
+  "run_id": "scout-run-01",
+  "group": "control",
+  "started_at": "2026-02-20T22:15:47Z",
+  "finished_at": "2026-02-20T22:35:12Z",
+  "session_id": "exp229",
+  "lens": "scout",
+  "relevant_files": [
+    {
+      "path": "crates/aptu-core/src/security/scanner.rs",
+      "line_range": "1-150",
+      "role": "Core orchestration for PR diff scanning; currently line-by-line regex matching"
+    },
+    {
+      "path": "crates/aptu-core/src/security/patterns.rs",
+      "line_range": "1-180",
+      "role": "Pattern engine using LazyLock for global regex compilation from embedded JSON"
+    },
+    {
+      "path": "crates/aptu-core/src/security/patterns.json",
+      "line_range": "1-128",
+      "role": "14 embedded regex patterns for hardcoded secrets, SQL injection, XSS, etc."
+    },
+    {
+      "path": "crates/aptu-core/src/security/detection.rs",
+      "line_range": "1-120",
+      "role": "Smart heuristics for triggering scans based on labels, keywords, and file paths"
+    },
+    {
+      "path": "crates/aptu-core/src/security/types.rs",
+      "line_range": "1-80",
+      "role": "Finding, PatternDefinition, and severity/confidence enums"
+    },
+    {
+      "path": "Cargo.toml",
+      "line_range": "1-50",
+      "role": "Workspace dependencies (no tree-sitter present); regex 1.x, tokio, reqwest"
+    },
+    {
+      "path": "tests/security_fixtures/vulnerable/sql_injection.rs",
+      "line_range": "1-50",
+      "role": "Multi-line SQL injection test case (demonstrates regex limitation)"
+    },
+    {
+      "path": "tests/security_fixtures/vulnerable/hardcoded_secrets.rs",
+      "line_range": "1-60",
+      "role": "Hardcoded API key and password test cases"
+    }
+  ],
+  "conventions": {
+    "commits": "Conventional commits required; GPG signed preferred (not enforced in CI); recent activity: dependency updates only",
+    "testing": "Unit tests in same file with #[test] attribute; fixtures in tests/security_fixtures/{vulnerable,safe}/; AAA pattern observed; 11 total scanner+pattern tests",
+    "linting": "Clippy with lint-fix recipe; cargo fmt required; just check runs format+lint+test in sequence",
+    "error_handling": "anyhow for Results; thiserror patterns not observed; LazyLock for initialization errors panics on malformed patterns.json"
+  },
+  "patterns": [
+    "Regex-based line-by-line pattern matching via embedded JSON",
+    "Global lazy-initialized singleton engine for pattern compilation",
+    "Diff parsing with hunk header tracking for accurate line numbers",
+    "File extension filtering per-pattern for performance",
+    "Ignore rules via SecurityConfig for filtering false positives",
+    "Smart detection heuristics (labels, keywords, file paths) to decide if scan is needed"
+  ],
+  "related_issues": [
+    {
+      "number": 735,
+      "title": "test(security): document multi-line detection limitation",
+      "relevance": "Explicitly documents regex scanner cannot detect source+sink on different lines; motivates AST approach"
+    },
+    {
+      "number": 736,
+      "title": "test(security): add negative test documenting multi-line detection limitation",
+      "relevance": "PR or issue adding test cases that fail under current regex approach; validates need for tree-sitter spike"
+    }
+  ],
+  "constraints": [
+    "Current architecture is line-by-line; diff parsing works on added lines only",
+    "PatternEngine is static global singleton; any new backend must integrate into same scan() interface",
+    "14 embedded patterns in JSON require manual translation to tree-sitter queries (Scheme-like syntax learning curve)",
+    "Performance must remain acceptable for large diffs (regex is fast; AST parsing slower)",
+    "Binary size increase from grammar crates must be justified by detection gains",
+    "Must support multiple languages (Rust, Python, JavaScript minimum) per issue scope"
+  ],
+  "test_coverage": "Scanner: 10 tests covering creation, diff parsing, line number tracking, empty diffs, ignored paths. Patterns: 9 tests covering hardcoded secrets, SQL injection, path traversal, weak crypto, file extension filtering, false positives, line accuracy. Fixtures: vulnerable/ has SQL injection and hardcoded secrets; safe/ directory exists. Total: ~19 unit tests + fixture-based integration tests.",
+  "library_findings": [
+    {
+      "library": "tree-sitter",
+      "version": "0.24 (suggested in issue)",
+      "relevant_api": "Parser::new() -> parse() -> Tree; Query syntax via tree-sitter-cli or programmatic API; language-specific grammar crates (tree-sitter-rust, tree-sitter-python, etc.)",
+      "notes": "Not currently in dependencies. Crate provides incremental parsing and query engine. Queries are S-expressions matching AST nodes. Supports captures for variable extraction (e.g., @name). No built-in data-flow analysis; custom logic needed for taint tracking."
+    },
+    {
+      "library": "regex",
+      "version": "1.x (currently used)",
+      "relevant_api": "Regex::new() -> find() on single lines",
+      "notes": "Already integrated. Good for simple patterns; line-by-line limitation documented."
+    },
+    {
+      "library": "serde_json",
+      "version": "1.x",
+      "relevant_api": "from_str::<Vec<PatternDefinition>>() for pattern loading",
+      "notes": "Currently deserializes patterns.json into struct Vec. Works well; no changes needed for hybrid approach."
+    }
+  ],
+  "approaches": [
+    {
+      "name": "Approach A: Hybrid Regex + Tree-Sitter (Recommended)",
+      "description": "Keep regex engine for simple single-line patterns (85% of current rules). Add optional tree-sitter AST engine for multi-line vulnerabilities (data-flow, taint tracking). PatternEngine trait with RegexBackend and AstBackend implementations. New patterns.json field 'backend' specifies which engine to use. Scanner dispatches each pattern to appropriate backend.",
+      "pros": [
+        "Minimal disruption to existing codebase; regex patterns remain unchanged",
+        "Gradual migration: convert high-impact patterns (SQL injection, command injection) first",
+        "Preserves performance for 85% of patterns (regex fastest)",
+        "Reuse existing Finding/PatternDefinition types",
+        "Easy A/B testing: measure detection quality per backend",
+        "Can support multi-language progressively (Rust spike first, then Python)"
+      ],
+      "cons": [
+        "Dual codebase maintenance (regex + AST logic)",
+        "Binary bloat from multiple grammar crates (tree-sitter-rust ~3MB, etc.)",
+        "Complexity in patterns.json schema change",
+        "Tree-sitter query language learning curve for maintainers",
+        "Data-flow logic still custom (tree-sitter doesn't provide taint tracking)"
+      ],
+      "complexity": "medium",
+      "files_touched": 12
+    },
+    {
+      "name": "Approach B: Full AST Migration (Long-term)",
+      "description": "Replace regex engine entirely with tree-sitter queries. Rewrite all 14 patterns as tree-sitter .scm query files. New AstPatternEngine using tree-sitter::Parser + tree-sitter::Query. Patterns loaded from .scm files in embed!() macro. Scanner unchanged; only PatternEngine implementation differs.",
+      "pros": [
+        "Uniform solution; no dual backends to maintain",
+        "Superior detection quality for all patterns (multi-line, context-aware)",
+        "Tree-sitter queries are composable and reusable",
+        "Faster re-parsing on edits (tree-sitter incremental feature) if batching multiple files",
+        "Aligns with industry trend (GitHub CodeQL uses similar AST approach)",
+        "Single pattern format reduces cognitive load"
+      ],
+      "cons": [
+        "High upfront effort: rewrite 14 patterns + 19 tests + test fixtures",
+        "Binary size increase from all grammar crates (~15-20MB total for 5 languages)",
+        "Performance regression for simple patterns (AST parsing slower than regex)",
+        "Steep learning curve for tree-sitter query syntax (S-expressions, captures)",
+        "Risk: tree-sitter grammar bugs or language version mismatches",
+        "No incremental benefit until all patterns migrated"
+      ],
+      "complexity": "complex",
+      "files_touched": 8
+    },
+    {
+      "name": "Approach C: Pluggable Backend Pattern (Future-proof)",
+      "description": "Define PatternBackend trait with implementations: RegexBackend (current), AstBackend (tree-sitter), CustomBackend (hooks for LLVM, semantic analysis). PatternDefinition includes 'backend_type' and backend-specific config (regex string, .scm query, or custom handler). PatternEngine::new(backend) creates engine with chosen backend. No global singleton; scanner accepts engine at construction.",
+      "pros": [
+        "Extensible: accommodates future backends (LLVM IR analysis, semantic analysis)",
+        "No forced migration; teams pick backend per pattern or globally",
+        "Enables research (A/B test backends on same codebase)",
+        "Testability improved: mock backends for unit tests",
+        "Scales to multi-language without duplicate PatternEngine code"
+      ],
+      "cons": [
+        "Over-engineering for current scope (issue only asks for regex vs tree-sitter)",
+        "Added complexity in PatternDefinition and scanning logic",
+        "Requires more upfront design (trait bounds, error handling per backend)",
+        "Harder to reason about performance (multiple implementations)",
+        "Overkill if tree-sitter fully solves the problem"
+      ],
+      "complexity": "complex",
+      "files_touched": 14
+    }
+  ],
+  "recommendation": "Approach A (Hybrid Regex + Tree-Sitter). Rationale: Addresses issue scope (multi-line detection spike) with minimal risk. Start with tree-sitter-rust grammar + one query pattern (SQL injection) to validate approach. Keep regex for 13 existing patterns unchanged. Estimated 500-800 LOC aligns with issue estimate. Clear go/no-go decision after spike: if detection quality + performance acceptable, gradually migrate high-impact patterns; if not, abandon without sunk cost on full rewrite. Hybrid allows parallel development (team A: regex refinements, team B: AST exploration). Preserves binary size and performance for majority of users. Recommend: (1) Add tree-sitter 0.24 + tree-sitter-rust 0.23 to Cargo.toml. (2) Create src/security/ast_backend.rs with Parser + Query logic. (3) Add 'backend' field to PatternDefinition (default: 'regex'). (4) Extend PatternEngine::scan() to dispatch per pattern. (5) Spike: convert SQL injection pattern to .scm query. (6) Test: verify multi-line SQL injection detected in fixtures. (7) Measure: compare false positive rate + performance vs regex baseline."
+}
