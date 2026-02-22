@@ -1,0 +1,118 @@
+{
+  "session_id": "control-4",
+  "lens": "scout",
+  "relevant_files": [
+    {"path": "src/math_mcp/tools/calculate.py", "line_range": "61-62", "role": "Appends to calculation_history via ctx.lifespan_context"},
+    {"path": "src/math_mcp/tools/persistence.py", "line_range": "63,77-78,141-142", "role": "Uses id(ctx.lifespan_context) for session_id and appends to history"},
+    {"path": "src/math_mcp/server.py", "line_range": "33-50", "role": "Defines AppContext dataclass with calculation_history list"},
+    {"path": "tests/test_persistence.py", "line_range": "47-56", "role": "MockContext setup showing current pattern"},
+    {"path": "tests/test_math_operations.py", "line_range": "varies", "role": "Multiple MockContext implementations with lifespan_context attribute"},
+    {"path": "src/math_mcp/persistence/workspace.py", "line_range": "varies", "role": "WorkspaceManager that receives metadata with session_id"}
+  ],
+  "conventions": {
+    "commits": "Conventional commits with GPG sign and DCO sign-off (git commit -S --signoff)",
+    "testing": "pytest with AAA pattern (Arrange, Act, Assert), 80% coverage threshold, unit and integration tests in tests/ directory",
+    "linting": "ruff for lint and format checks, pyright for type checking",
+    "error_handling": "Pydantic validation with Field constraints, ValueError for business logic errors, cast() for type narrowing with Any"
+  },
+  "patterns": [
+    "FastMCP 3.0 sub-servers mounted to main server via mcp.mount()",
+    "Context parameter as SkipValidation[Context | None] in tools to make it optional",
+    "Conditional ctx checks: if ctx and ctx.lifespan_context before accessing",
+    "cast(Any, ctx.lifespan_context) for type narrowing to access calculation_history",
+    "Metadata dictionaries passed to workspace manager with difficulty, topic, session_id",
+    "MockContext classes in tests with lifespan_context attribute and info() method"
+  ],
+  "related_issues": [
+    {"number": 208, "title": "feat: upgrade to FastMCP 3.0", "relevance": "Completed upgrade to FastMCP 3.0; issue #222 is follow-up refactoring to use proper v3 APIs"},
+    {"number": 207, "title": "chore: deprecation cleanup for FastMCP 3.0", "relevance": "Preceded #208; set foundation for using v3 patterns"}
+  ],
+  "constraints": [
+    "Must maintain backward compatibility when ctx is None (tools work without context)",
+    "Session-scoped data must survive across tool calls within a single server session",
+    "Cannot break existing test suite; MockContext must continue to work",
+    "Workspace persistence is separate from session state; session_id is metadata only",
+    "FastMCP 3.0 is the target version; APIs must exist in fastmcp>=3.0.0"
+  ],
+  "test_coverage": "Comprehensive test coverage for persistence (test_persistence.py), math operations (test_math_operations.py), matrix operations, visualization, and HTTP integration. MockContext is used throughout with lifespan_context attribute. Tests verify history appending, metadata storage, and cross-session data access. 80% coverage threshold enforced.",
+  "library_findings": [
+    {
+      "library": "fastmcp",
+      "version": ">=3.0.0",
+      "relevant_api": "Context class with set_state()/get_state() methods for session-scoped data",
+      "notes": "FastMCP 3.0 GA released 2026-02-18. Issue #208 confirms upgrade completed. Context API supports typed state management via set_state/get_state pattern. Current code uses ctx.lifespan_context which is the raw lifespan context object; v3 provides proper state accessors. set_state() stores data keyed by string; get_state() retrieves it. Both methods available on Context instance."
+    },
+    {
+      "library": "pydantic",
+      "version": ">=2.12.0",
+      "relevant_api": "Field constraints (max_length), model_validate(), model_dump()",
+      "notes": "Used for WorkspaceVariable and WorkspaceData models. Provides validation and serialization. No changes needed for this refactor."
+    },
+    {
+      "library": "uuid",
+      "version": "stdlib",
+      "relevant_api": "uuid.uuid4() for generating session IDs",
+      "notes": "Standard library module. Issue #222 explicitly mentions UUID-based session IDs as replacement for id(ctx.lifespan_context)"
+    }
+  ],
+  "approaches": [
+    {
+      "name": "Approach 1: ctx.set_state() / ctx.get_state() with UUID initialization",
+      "description": "Use FastMCP 3.0's native state management API. On first tool call in a session, generate a UUID and store it via ctx.set_state('session_id', uuid_value). Subsequent calls retrieve it via ctx.get_state('session_id'). Replaces id(ctx.lifespan_context) entirely. Changes: (1) Import uuid in persistence.py and calculate.py; (2) Replace line 63 in persistence.py with ctx.set_state() call if not already set, then ctx.get_state(); (3) Update calculate.py history append to use the same pattern; (4) Update MockContext in tests to support set_state/get_state methods.",
+      "pros": [
+        "Uses proper FastMCP 3.0 API designed for session-scoped state",
+        "UUID is deterministic and human-readable (vs memory address)",
+        "Follows framework idioms; maintainers will recognize the pattern",
+        "State is explicitly managed, not relying on object identity",
+        "Cleaner separation: state in Context, history in lifespan_context"
+      ],
+      "cons": [
+        "Requires understanding FastMCP state API behavior (when state is cleared, scope)",
+        "UUID generation adds slight overhead on first call",
+        "Need to handle case where ctx is None (fallback to UUID generation per call)",
+        "Test MockContext must implement set_state/get_state correctly"
+      ],
+      "complexity": "medium",
+      "files_touched": 4
+    },
+    {
+      "name": "Approach 2: UUID stored in AppContext lifespan_context",
+      "description": "Keep using lifespan_context but replace id() with a UUID. In server.py, add a session_id field to AppContext (generated via uuid.uuid4() at startup). Access it via ctx.lifespan_context.session_id instead of id(ctx.lifespan_context). Changes: (1) Add session_id: str field to AppContext dataclass; (2) Initialize it in app_lifespan with uuid.uuid4().hex; (3) Replace line 63 in persistence.py with ctx.lifespan_context.session_id; (4) Update calculate.py similarly; (5) Update MockContext to include session_id field.",
+      "pros": [
+        "Minimal code changes; mostly just replacing id() with .session_id",
+        "UUID is generated once at server startup, not per-call",
+        "Keeps session state co-located with calculation_history in AppContext",
+        "Backward compatible with existing lifespan_context access pattern",
+        "Easier to understand than state API (explicit field vs abstract state store)"
+      ],
+      "cons": [
+        "Still uses lifespan_context directly; doesn't adopt FastMCP 3.0 idioms",
+        "Session ID is tied to server instance lifetime, not request/call scope",
+        "Doesn't leverage framework's state management capabilities",
+        "If server restarts, session ID changes (may break cross-restart session tracking)"
+      ],
+      "complexity": "simple",
+      "files_touched": 4
+    },
+    {
+      "name": "Approach 3: Hybrid - ctx.set_state() for session_id, keep history in lifespan_context",
+      "description": "Use ctx.set_state() only for session_id (the anti-pattern part), keep calculation_history in lifespan_context (which is working fine). On first tool call, check if session_id exists in state; if not, generate UUID and set it. Retrieve session_id via ctx.get_state('session_id'). Changes: (1) Import uuid in persistence.py; (2) Add helper function to get_or_create_session_id(ctx) that calls set_state/get_state; (3) Replace line 63 in persistence.py with call to helper; (4) Keep history appending as-is in calculate.py and persistence.py; (5) Update MockContext to support set_state/get_state.",
+      "pros": [
+        "Surgical fix targeting only the anti-pattern (id() usage)",
+        "Leaves working code (history tracking) untouched",
+        "Adopts FastMCP 3.0 API for the specific problem",
+        "Minimal test changes; history tests still work as-is",
+        "Easier review: focused diff on session_id only"
+      ],
+      "cons": [
+        "Mixes two state management approaches (set_state for ID, lifespan_context for history)",
+        "Slightly less elegant than unified approach",
+        "Session ID scope depends on FastMCP's state lifecycle (unclear if per-call or per-session)",
+        "Helper function adds indirection"
+      ],
+      "complexity": "medium",
+      "files_touched": 3
+    }
+  ],
+  "recommendation": "Approach 1 (ctx.set_state() / ctx.get_state() with UUID) is the best long-term solution. It directly addresses the issue's intent to use FastMCP 3.0's proper API, is maintainable, and follows framework idioms. Approach 2 is acceptable if the team prefers minimal changes and explicit state in AppContext. Approach 3 is a pragmatic middle ground if there's uncertainty about state lifecycle. Recommend Approach 1 with clear documentation of state lifecycle behavior in code comments."
+}

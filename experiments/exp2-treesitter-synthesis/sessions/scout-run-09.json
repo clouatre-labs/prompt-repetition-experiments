@@ -1,0 +1,187 @@
+{
+  "run_id": "scout-run-09",
+  "group": "control",
+  "started_at": "2026-02-20T22:20:06Z",
+  "finished_at": "2026-02-20T22:25:30Z",
+  "session_id": "exp229",
+  "lens": "scout",
+  "relevant_files": [
+    {
+      "path": "crates/aptu-core/src/security/scanner.rs",
+      "line_range": "1-325",
+      "role": "Primary scanner implementation using unified diff parsing; scan_diff() and scan_file() methods process code changes"
+    },
+    {
+      "path": "crates/aptu-core/src/security/patterns.rs",
+      "line_range": "1-263",
+      "role": "Pattern engine; loads 14 regex patterns from patterns.json; filters by file extension; line-by-line scanning"
+    },
+    {
+      "path": "crates/aptu-core/src/security/patterns.json",
+      "line_range": "1-4006",
+      "role": "Configuration file with 14 vulnerability patterns (hardcoded secrets, SQL injection, XSS, command injection, weak crypto, etc.)"
+    },
+    {
+      "path": "crates/aptu-core/src/security/detection.rs",
+      "line_range": "1-247",
+      "role": "Heuristic to determine if PR changes warrant security scanning based on filenames, labels, commit messages"
+    },
+    {
+      "path": "crates/aptu-core/src/security/types.rs",
+      "line_range": "1-179",
+      "role": "Data structures: Finding, PatternDefinition, Severity, Confidence, ValidatedFinding"
+    },
+    {
+      "path": "crates/aptu-core/src/security/validator.rs",
+      "line_range": "1-382",
+      "role": "Post-scan validation and LLM integration for reducing false positives"
+    },
+    {
+      "path": "crates/aptu-core/tests/security_integration.rs",
+      "line_range": "1-500",
+      "role": "Integration tests covering hardcoded secrets, SQL injection, command injection; documents multi-line limitation via test_multi_line_vulnerability_not_detected()"
+    },
+    {
+      "path": "tests/security_fixtures/vulnerable/sql_injection.rs",
+      "line_range": "1-50",
+      "role": "Test fixture demonstrating SQL injection patterns needing multi-line detection"
+    },
+    {
+      "path": "tests/security_fixtures/vulnerable/hardcoded_secrets.rs",
+      "line_range": "1-50",
+      "role": "Test fixture for hardcoded API key and password patterns"
+    },
+    {
+      "path": "Cargo.toml",
+      "line_range": "1-50",
+      "role": "Workspace configuration; version 0.2.15; Rust 1.92.0; no existing tree-sitter or AST dependencies"
+    }
+  ],
+  "conventions": {
+    "commits": "Conventional commits with GPG signing and DCO sign-off enforced via CI",
+    "testing": "Unit tests in module files (8-11 tests per file); integration tests in crates/aptu-core/tests/; fixtures in tests/security_fixtures/vulnerable/ and tests/security_fixtures/safe/; AAA pattern used",
+    "linting": "Clippy lints enforced (all and pedantic level); workspace lints config in Cargo.toml; formatting via cargo fmt",
+    "error_handling": "thiserror for library errors; anyhow for applications; Result<T> return types; custom error types defined in types module"
+  },
+  "patterns": [
+    "Regex-based line-by-line pattern matching in PatternEngine::scan()",
+    "Pattern loading from embedded JSON via include_str!()",
+    "LazyLock static initialization for compiled regex patterns",
+    "File extension filtering before pattern application",
+    "Integration with LLM validator for confidence scoring and false positive reduction",
+    "Unified diff parsing for PR diff scanning",
+    "SARIF output generation for GitHub Code Scanning integration"
+  ],
+  "related_issues": [
+    {
+      "number": 735,
+      "title": "Test case documenting multi-line vulnerability detection limitation",
+      "relevance": "Documents known limitation: regex-based scanner cannot detect vulnerabilities where source and sink are on different lines; directly motivates tree-sitter evaluation"
+    },
+    {
+      "number": 699,
+      "title": "Security-Aware PR Review with SARIF Output",
+      "relevance": "Parent feature for security scanning in aptu pr review; established pattern engine and validator infrastructure; SARIF output format already implemented"
+    },
+    {
+      "number": 438,
+      "title": "OpenSSF Best Practices Silver Badge",
+      "relevance": "Security posture goal; improved vulnerability detection helps meet security criteria"
+    }
+  ],
+  "constraints": [
+    "Scanner must maintain SARIF output compatibility (issue #699)",
+    "Pattern definitions in JSON must remain configurable and human-readable",
+    "False positive rate must not increase (validator is critical to user experience)",
+    "Performance: pattern detection should complete in <500ms per file",
+    "Privacy: all scanning local, no external services except optional LLM validation",
+    "iOS compatible via UniFFI bridge (workspace includes aptu-ffi crate)",
+    "No binary dependencies on external SAST tools; 100% Rust implementation required"
+  ],
+  "test_coverage": "Strong. 56 total unit tests across 8 security modules (58 lines average per module); integration tests cover hardcoded secrets, SQL injection via concat and format, command injection, weak crypto, unsafe deserialization, XXE, insecure TLS, debug mode enabled. Test fixtures include 2 files with intentionally vulnerable code. Known gap documented via test_multi_line_vulnerability_not_detected() - test exists but currently expects failure for multi-line patterns.",
+  "library_findings": [
+    {
+      "library": "tree-sitter",
+      "version": "0.26.5",
+      "relevant_api": "Parser::new(), Parser::parse(), Tree::root_node(), Node::child_by_field_name(), QueryCursor::matches()",
+      "notes": "13.5M+ downloads, actively maintained. Core functionality: immutable AST with lazy parsing support. Requires language-specific parser binaries (tree-sitter-rust available). Incremental parsing allows efficient rescans. S-expression query language for pattern matching. Perfect for data-flow analysis across multiple lines."
+    },
+    {
+      "library": "tree-sitter-rust",
+      "version": "latest",
+      "relevant_api": "Provides Rust language grammar and node types (function_item, call_expression, variable_declaration, binary_operation)",
+      "notes": "Community-maintained parser for Rust. Enables AST traversal of Rust code. Supports querying for specific patterns like function calls, assignments, string concatenations via tree-sitter query syntax."
+    },
+    {
+      "library": "regex",
+      "version": "1.x (workspace dependency)",
+      "relevant_api": "Already used in patterns.rs; Regex::new(), Regex::is_match(), Regex::captures()",
+      "notes": "Can remain for single-line patterns (simple hardcoded secrets, weak crypto identifiers). Not suitable for multi-line data-flow patterns. Good candidate for hybrid approach."
+    }
+  ],
+  "approaches": [
+    {
+      "name": "Hybrid Regex + Tree-Sitter (Recommended)",
+      "description": "Maintain regex engine for simple single-line patterns (hardcoded API keys, passwords, weak crypto hashes, debug mode). Add tree-sitter AST parser for complex multi-line patterns (SQL injection via concatenation/formatting, command injection, data-flow analysis). Create PatternType enum (Regex vs TreeSitterQuery). Extend PatternDefinition with optional tree_sitter_query field. Implement separate detector module for tree-sitter patterns with Node traversal and capture groups. Patterns.json gains optional 'query' field for S-expressions. Detection layer routes patterns to appropriate engine.",
+      "pros": [
+        "Leverages existing regex infrastructure for 5-6 simple patterns (no disruption)",
+        "Tree-sitter handles complex multi-line patterns elegantly without state machines",
+        "Gradual migration path: convert patterns incrementally",
+        "Minimal performance impact: tree-sitter only invoked for files with query-based patterns",
+        "Maintainability: humans can understand both regex and S-expression queries",
+        "Reuses existing SARIF output and validator infrastructure"
+      ],
+      "cons": [
+        "Dual pattern systems increase code complexity (~400-500 LOC)",
+        "Requires learning tree-sitter query syntax; maintenance knowledge split",
+        "Dependency on tree-sitter-rust community parser stability",
+        "Query syntax less familiar to security team than regex; harder to audit patterns"
+      ],
+      "complexity": "medium",
+      "files_touched": 8
+    },
+    {
+      "name": "Full Tree-Sitter Migration",
+      "description": "Replace all regex patterns with tree-sitter AST queries. Rewrite PatternEngine to parse code into AST once, then apply all patterns via tree-sitter query matching. Convert all 14 patterns in patterns.json to S-expression queries. Remove regex dependency from patterns.rs. Single execution path: parse once, query multiple patterns. Introduces tree-sitter::Parser and tree-sitter::QueryCursor as primary scanning mechanism.",
+      "pros": [
+        "Unified code path: single AST parse pass covers all patterns",
+        "More precise than regex: structural matching eliminates false positives from regex edge cases",
+        "Enables sophisticated data-flow analysis (taint tracking source to sink)",
+        "Future-proof for complex patterns (type-aware checks, scope analysis)",
+        "Cleaner architecture: one pattern engine instead of two"
+      ],
+      "cons": [
+        "Large migration: rewrite 14 patterns; estimated 600-800 LOC",
+        "Risk: S-expression syntax unfamiliar to contributors; expert knowledge bottleneck",
+        "AST parsing overhead for simple patterns (MD5/SHA1 detection doesn't need AST)",
+        "Parser memory footprint larger than regex for large files",
+        "Requires robust S-expression pattern library or hand-coded query matching",
+        "Breaking change to patterns.json schema; existing configs obsolete"
+      ],
+      "complexity": "complex",
+      "files_touched": 9
+    },
+    {
+      "name": "Data-Flow Analysis Layer (Advanced)",
+      "description": "Build custom data-flow tracker on top of tree-sitter AST: traverse variable assignments, function calls, and string operations to connect 'source' (user input, network data) to 'sink' (SQL execute, shell command, HTML render). Implement taint propagation via Node visitor pattern. Extend PatternDefinition with source/sink specifications instead of regex. Create flow_analyzer module that walks AST and builds dependency graph. Use tree-sitter for structural foundation; custom logic for taint semantics.",
+      "pros": [
+        "Solves root cause: detects vulnerabilities regardless of line breaks",
+        "Most powerful: finds vulnerabilities regex and simple AST queries miss",
+        "Enables future security features (type-aware checks, scope analysis, interprocedural analysis)",
+        "Clear separation: data-flow logic independent of language syntax",
+        "Educational: provides detailed vulnerability narrative (variable X from Y flows to Z)"
+      ],
+      "cons": [
+        "Highest complexity: 800-1200 LOC estimated",
+        "Significant false positive risk during development (taint over-propagation)",
+        "Requires sophisticated testing to validate data-flow logic",
+        "Performance: full AST traversal and graph construction slower than simple queries",
+        "Maintenance burden: custom data-flow semantics to maintain for Rust",
+        "May be overkill for MVP; incremental approach makes sense"
+      ],
+      "complexity": "complex",
+      "files_touched": 10
+    }
+  ],
+  "recommendation": "Pursue Approach 1 (Hybrid Regex + Tree-Sitter). Rationale: (1) Issue #737 scope is explicit: convert existing 14 patterns, not redesign the entire system. Hybrid approach delivers multi-line detection without architectural disruption. (2) Regex patterns for secrets are mature and performant; no benefit to migrating them. (3) Tree-sitter adds value only for 4-5 complex patterns (SQL injection, command injection, XSS, unsafe deserialization). (4) Incremental conversion reduces risk: validate tree-sitter integration with 2-3 patterns before full migration. (5) Hybrid maintains lowest cognitive load for security team: familiar regex for simple patterns, focused tree-sitter expertise for hard cases. (6) Existing SARIF output and validator infrastructure reuse perfectly without change. Implementation order: (a) add tree-sitter and tree-sitter-rust to Cargo.toml, (b) extend patterns.json schema with optional 'query' field, (c) implement tree_sitter_query detector module, (d) convert sql-injection-concat and sql-injection-format patterns first (most obvious multi-line case), (e) validate with existing fixtures, (f) convert remaining 2-3 complex patterns, (g) deprecate regex for those patterns. Estimated effort: 400-500 LOC, 3-5 days implementation + testing."
+}

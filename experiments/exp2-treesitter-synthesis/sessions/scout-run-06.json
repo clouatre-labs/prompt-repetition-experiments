@@ -1,0 +1,127 @@
+{
+  "run_id": "scout-run-06",
+  "group": "treatment",
+  "started_at": "2026-02-20T22:19:30Z",
+  "finished_at": "2026-02-20T22:20:00Z",
+  "session_id": "exp229",
+  "lens": "scout",
+  "relevant_files": [
+    {"path": "crates/aptu-core/src/security/patterns.rs", "line_range": "1-382", "role": "Pattern loading and regex-based scanning engine"},
+    {"path": "crates/aptu-core/src/security/scanner.rs", "line_range": "1-250", "role": "Main SecurityScanner orchestration and diff parsing"},
+    {"path": "crates/aptu-core/src/security/validator.rs", "line_range": "1-382", "role": "LLM-based validation to reduce false positives"},
+    {"path": "crates/aptu-core/src/security/detection.rs", "line_range": "1-150", "role": "Heuristics to determine when security scanning is needed"},
+    {"path": "crates/aptu-core/src/security/types.rs", "line_range": "1-200", "role": "Type definitions for findings, patterns, severity"},
+    {"path": "crates/aptu-core/tests/security_integration.rs", "line_range": "1-120", "role": "Integration tests with fixtures for vulnerability detection"},
+    {"path": "crates/aptu-core/benches/security_scan.rs", "line_range": "1-115", "role": "Performance benchmarks for scanner"},
+    {"path": "Cargo.toml", "line_range": "1-60", "role": "Workspace dependencies and Rust version (1.92.0)"}
+  ],
+  "conventions": {
+    "commits": "Conventional commits (chore, fix, feat, test, etc.). All commits must be GPG signed with DCO sign-off. Checked HEAD=95033ea (chore: dependency update). No evidence of co-author commits.",
+    "testing": "Unit tests embedded in each module with #[test] attribute. Integration tests in crates/aptu-core/tests/. Test fixtures in tests/security_fixtures/. Pattern: arrange-act-assert. Coverage includes: hardcoded secrets, SQL injection, path traversal, command injection.",
+    "linting": "Uses `just check` which runs: fmt (via rustfmt), lint (via clippy with deny warnings), test. Rust edition 2024, MSRV 1.92.0. Clippy lints in Cargo.toml profile.",
+    "error_handling": "Uses anyhow crate for error handling (found in cache.rs, ignore.rs, patterns.rs, validator.rs). No custom Error enum; relies on context propagation via ? operator."
+  },
+  "patterns": [
+    "Modular architecture with separate concerns: scanner (orchestration), patterns (loading), validator (LLM refinement), detection (heuristics), types (data structures)",
+    "Embedded JSON resource (patterns.json) for pattern definitions loaded at initialization",
+    "Line-by-line regex scanning with diff parsing to track line numbers across multi-file changes",
+    "Integration with LLM validator for false-positive reduction; batched processing with fallback",
+    "Test fixtures approach using include_str! macro for embedded test code",
+    "Heuristic-based skip detection (labels, description keywords, sensitive file paths)"
+  ],
+  "related_issues": [
+    {"number": 735, "title": "test(security): add negative test documenting multi-line detection limitation", "relevance": "Explicitly documents known regex limitation; closed by PR #736. Multi-line vulnerabilities (source/sink on different lines) cannot be detected."},
+    {"number": 736, "title": "PR: Implement multi-line vulnerability detection test", "relevance": "Adds test_multi_line_vulnerability_not_detected() to document architectural limitation and justify need for AST-based solution."},
+    {"number": 737, "title": "Evaluate tree-sitter for AST-based vulnerability detection", "relevance": "Primary issue. Proposes phased migration: spike on Rust SQL injection detection, then evaluate multi-language grammars. Scope ~500-800 LOC, 14 patterns to convert."}
+  ],
+  "constraints": [
+    "Regex-based scanner operates strictly line-by-line; cannot detect vulnerabilities where source and sink are on different lines",
+    "Pattern definitions are embedded JSON (patterns.json) loaded at init; 14 patterns covering CWE/OWASP top categories",
+    "Scanner integrates with LLM validator for confidence refinement; must maintain fallback path if validator unavailable",
+    "Multi-language support required (Rust, Python, JavaScript/TypeScript, Java, PHP detected in patterns)",
+    "Performance-critical for real-time PR scanning; benchmarks exist for safe/vulnerable/diff code paths"
+  ],
+  "test_coverage": "Integration tests verify: hardcoded secrets detection (API keys, passwords), SQL injection (concat/format patterns), and safe patterns produce zero findings. Test fixtures in separate files. Known limitation explicitly tested: multi-line vulnerabilities not detected. Unit tests in each module. Benchmarks available for performance regression detection.",
+  "library_findings": [
+    {
+      "library": "tree-sitter",
+      "version": "0.26.5",
+      "relevant_api": "Parser::new(Language) -> Parser; Parser.parse(source, &tree) -> Tree; Query for pattern matching on AST nodes",
+      "notes": "MSRV requirement: Rust 1.77+. Project has Rust 1.92.0, compatible. Supports incremental parsing. Optional features: bindgen, wasm. Core abstractions: Language (grammar), Parser, Tree, Query (TSQuery for vulnerability pattern matching)."
+    },
+    {
+      "library": "tree-sitter-rust",
+      "version": "0.24.0",
+      "relevant_api": "tree_sitter::Language grammar for Rust. Tree-sitter query language (TSQuery) for pattern matching; captures groups for vulnerability source/sink extraction",
+      "notes": "Grammar crate provides Language binding. No direct API; used as grammar for tree-sitter Parser. Enables syntax-aware parsing of Rust code (source tracking, scopes, function calls)."
+    },
+    {
+      "library": "anyhow (error handling)",
+      "version": "1.0.102+",
+      "relevant_api": "anyhow::Result<T>, anyhow::Context trait for ? operator and context propagation",
+      "notes": "Already used throughout security module. No changes needed; tree-sitter integration can continue using anyhow for error propagation."
+    }
+  ],
+  "approaches": [
+    {
+      "name": "Hybrid Regex + Tree-Sitter Gradual Migration",
+      "description": "Introduce tree-sitter as opt-in layer alongside regex. Add new PatternEngine variant (TreeSitterPatternEngine) that parses AST and applies tree-sitter queries. Migrate patterns one by one: start with multi-line SQL injection (concat source on line N, sink on line N+M). Keep regex fallback for unmigrated patterns. Add feature flag to enable tree-sitter (tree-sitter disabled by default; opt-in during evaluation phase). Modify scanner to dispatch to appropriate engine per pattern.",
+      "pros": [
+        "Zero-disruption rollout; existing regex paths remain stable",
+        "Phased pattern migration reduces risk (1-2 patterns at a time)",
+        "Feature flag allows A/B testing in production",
+        "Backward-compatible; no changes to public API required",
+        "Easy rollback if tree-sitter performance degrades"
+      ],
+      "cons": [
+        "Dual codepaths increase maintenance burden",
+        "Grammar compilation and bundling overhead per language",
+        "May discover API gaps requiring workarounds",
+        "Testing complexity: must verify parity between regex and AST approaches"
+      ],
+      "complexity": "medium",
+      "files_touched": 5
+    },
+    {
+      "name": "Tree-Sitter-First Replacement (Complete Rewrite)",
+      "description": "Replace PatternEngine entirely with tree-sitter-based queries. Convert 14 regex patterns to tree-sitter queries (TSQuery language). Bundle tree-sitter-rust, tree-sitter-sql, tree-sitter-javascript, tree-sitter-python grammars. Rewrite patterns.json to include TSQuery definitions alongside CWE/severity metadata. Implement Language selection logic (detect file extension, select grammar, parse, apply queries). Remove regex dependency from patterns module. Update Scanner to use new engine directly.",
+      "pros": [
+        "Cleaner architecture; single scanning paradigm",
+        "Eliminates multi-line detection blind spot immediately",
+        "Language-aware parsing enables scope-aware checks (function params, return values)",
+        "Potential for better context and reduced false positives",
+        "Enables advanced queries: data flow across expressions, function call chains"
+      ],
+      "cons": [
+        "High complexity; requires rewriting entire PatternEngine module (~382 lines)",
+        "Steep learning curve for tree-sitter query language (TSQuery)",
+        "Significant performance impact initially (AST parsing overhead vs regex)",
+        "Binary size increase due to bundled grammars (~10-20MB estimated)",
+        "Breaking change; impacts all downstream users (CLI, MCP server, FFI)",
+        "Requires extensive testing; no regex fallback"
+      ],
+      "complexity": "complex",
+      "files_touched": 8
+    },
+    {
+      "name": "Spike: Limited Tree-Sitter for Rust Only (SQL Injection PoC)",
+      "description": "Time-boxed research spike (suggested in issue #737): add tree-sitter support for Rust code only. Target single pattern: SQL injection via format!() or concat. Create new submodule (security/tree_sitter_spike.rs). Load tree-sitter-rust grammar, define TSQuery to match format/concat followed by execute/query calls. Integrate into Scanner as secondary detector (run after regex, report only if high confidence). Add spike-specific unit tests. Document findings: query complexity, performance profile, false positive rate. No production commitment; evaluation gate for full migration.",
+      "pros": [
+        "Minimal scope; can complete in 1-2 days",
+        "Low risk; isolated to new spike module",
+        "Real data on tree-sitter API ergonomics and performance",
+        "Demonstrates multi-line detection capability concretely",
+        "Informs decision on full migration without long-term commitment"
+      ],
+      "cons": [
+        "Single-language, single-pattern scope limits generalizability",
+        "Spike code may be discarded (not a path to production unless extended)",
+        "Requires Learning TSQuery syntax (learning overhead)",
+        "No immediate vulnerability detection improvement (spike only)"
+      ],
+      "complexity": "simple",
+      "files_touched": 3
+    }
+  ],
+  "recommendation": "Start with Approach 3 (Spike: Limited Tree-Sitter for Rust Only). Rationale: (1) Issue #737 explicitly suggests this phased approach. (2) Aligns with project's validation-first philosophy (existing LLM validator reduces false positives; spike evaluates AST-aware approach similarly). (3) Minimal risk; isolated to new module. (4) Produces concrete data on tree-sitter feasibility within aptu's architecture (performance, API fit, query complexity). (5) Outcome informs Approach 1 (gradual migration) or Approach 2 (full rewrite) decision. Execute spike with success criteria: (a) Detect multi-line SQL injection in Rust code, (b) Performance within 2x regex baseline, (c) <5% false positive increase over regex baseline (validated by LLM validator), (d) TSQuery complexity <100 lines for proof-of-concept. If spike succeeds, recommend Approach 1 (hybrid migration) for incremental rollout of additional patterns/languages."
+}

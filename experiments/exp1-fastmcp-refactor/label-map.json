@@ -1,0 +1,34 @@
+{
+  "repo": "clouatre-labs/math-mcp-learning-server",
+  "issue": 222,
+  "experiment": "clouatre-labs/math-mcp-learning-server#222",
+  "sealed_at": "2026-02-20T21:14:30Z",
+  "model": "claude-haiku-4-5",
+  "orchestrator_session": "20260220_29",
+  "assignments": {
+    "scout-control-1": "control",
+    "scout-control-2": "control",
+    "scout-control-3": "control",
+    "scout-control-4": "control",
+    "scout-control-5": "control",
+    "scout-treatment-1": "treatment",
+    "scout-treatment-2": "treatment",
+    "scout-treatment-3": "treatment",
+    "scout-treatment-4": "treatment",
+    "scout-treatment-5": "treatment"
+  },
+  "control_group": [
+    "scout-control-1",
+    "scout-control-2",
+    "scout-control-3",
+    "scout-control-4",
+    "scout-control-5"
+  ],
+  "treatment_group": [
+    "scout-treatment-1",
+    "scout-treatment-2",
+    "scout-treatment-3",
+    "scout-treatment-4",
+    "scout-treatment-5"
+  ]
+}

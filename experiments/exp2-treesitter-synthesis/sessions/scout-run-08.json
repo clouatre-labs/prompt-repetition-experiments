@@ -1,0 +1,164 @@
+{
+  "run_id": "scout-run-08",
+  "group": "treatment",
+  "started_at": "2026-02-20T22:23:04Z",
+  "finished_at": "2026-02-20T22:30:00Z",
+  "session_id": "exp229",
+  "lens": "scout",
+  "relevant_files": [
+    {
+      "path": "crates/aptu-core/src/security/scanner.rs",
+      "line_range": "1-300",
+      "role": "Core scanning engine; line-by-line regex matching on file content and diffs"
+    },
+    {
+      "path": "crates/aptu-core/src/security/patterns.rs",
+      "line_range": "1-250",
+      "role": "Pattern engine; lazy-loads and compiles 14 regex patterns from JSON"
+    },
+    {
+      "path": "crates/aptu-core/src/security/patterns.json",
+      "line_range": "1-128",
+      "role": "Pattern database; 14 vulnerability patterns (hardcoded secrets, SQL injection, XSS, etc.)"
+    },
+    {
+      "path": "crates/aptu-core/src/security/types.rs",
+      "line_range": "1-179",
+      "role": "Finding and pattern definition types; serializable for SARIF output"
+    },
+    {
+      "path": "crates/aptu-core/src/security/detection.rs",
+      "line_range": "1-246",
+      "role": "Smart file/PR filtering to decide when to trigger security scans"
+    },
+    {
+      "path": "crates/aptu-core/tests/security_integration.rs",
+      "line_range": "1-100",
+      "role": "Integration tests; includes negative test for multi-line vulnerability limitation"
+    }
+  ],
+  "conventions": {
+    "commits": "Conventional commits (feat, fix, test, docs, chore); GPG signed with DCO sign-off required; no self-as-coauthor",
+    "testing": "Unit tests embedded in modules (#[cfg(test)]); integration tests in crates/aptu-core/tests/; AAA pattern; test file discovery via cargo test",
+    "linting": "cargo clippy with workspace lints; strict pedantic but allows module_name_repetitions, missing_errors_doc, missing_panics_doc; fmt checks enforced",
+    "error_handling": "thiserror for custom errors; anyhow for context in applications; #[must_use] for fallible operations; pattern matching for Result handling"
+  },
+  "patterns": [
+    "Lazy-initialized regex compilation with oncecell/static",
+    "Line-by-line file content scanning with line number tracking",
+    "File extension filtering via PatternDefinition::file_extensions vec",
+    "SARIF report generation for integration with CI/CD",
+    "Finding caching via SecurityValidator with LLM confirmation",
+    "Smart detection logic based on file paths, labels, and description keywords"
+  ],
+  "related_issues": [
+    {
+      "number": 735,
+      "title": "test(security): add negative test documenting multi-line detection limitation",
+      "relevance": "Closed; PR #736 merged; documents known architectural limitation that tree-sitter would address"
+    },
+    {
+      "number": 699,
+      "title": "feat(security): security scanner implementation",
+      "relevance": "Original SecurityScanner implementation; established regex-based baseline"
+    }
+  ],
+  "constraints": [
+    "Regex operates line-by-line; cannot detect vulnerabilities where source and sink span multiple lines",
+    "No AST-aware data-flow analysis; pattern matching is syntactic only",
+    "File extension filtering is whitelist-based; some patterns apply to all files",
+    "Language-agnostic regex patterns lead to false positives in non-intended languages",
+    "14 patterns defined; manual conversion required for any new engine approach"
+  ],
+  "test_coverage": "4 integration tests: (1) hardcoded secrets detection, (2) SQL injection detection, (3) safe patterns validation, (4) multi-line vulnerability negative test documenting known limitation. Unit tests in patterns.rs and types.rs cover serialization, pattern compilation, and Finding structures. Detection module has 10 unit tests for file/label/description filtering logic.",
+  "library_findings": [
+    {
+      "library": "tree-sitter",
+      "version": "0.26.5 (available via crates.io)",
+      "relevant_api": "Parser::new(), Parser::parse(), Query syntax (s-expression format), QueryCursor for pattern matching",
+      "notes": "Core library provides incremental parsing and query API. Used by ast-grep (9k stars), Zed editor, difftastic. Requires language-specific grammar crates (e.g., tree-sitter-rust). Query syntax is s-expression based; learning curve moderate. No data-flow analysis built-in."
+    },
+    {
+      "library": "tree-sitter-rust",
+      "version": "0.23 (example from issue #737)",
+      "relevant_api": "Provides Rust grammar for tree-sitter; integrates with Parser::parse() to build AST",
+      "notes": "Language-specific grammar crate. Would enable Rust-specific queries like `(assignment_expression left: (identifier) @name)`. For multi-language support, need separate crates for Python, JavaScript, Java, PHP (mentioned in patterns.json file_extensions)"
+    },
+    {
+      "library": "semgrep (external tool, not Rust crate)",
+      "version": "N/A (reference: Semgrep.dev)",
+      "relevant_api": "Semantic search via YAML/JSON rules; built on tree-sitter and static analysis; available as CLI, API, or cloud service",
+      "notes": "Industry standard for OSS projects (vs tree-sitter raw API); handles multi-file data-flow; pre-built rule library. Downsides: external dependency, SaaS-first model, learning curve for rule authoring. Considered more heavyweight than in-process solution."
+    }
+  ],
+  "approaches": [
+    {
+      "name": "Hybrid Regex + Tree-Sitter (Targeted)",
+      "description": "Extend SecurityScanner with optional tree-sitter queries for multi-line patterns. Keep existing regex engine for single-line patterns. Add new detection mode: (1) compile tree-sitter query for each pattern that needs AST (new patterns.json field: `tree_sitter_query`), (2) parse file AST on-demand, (3) execute queries and map results back to line numbers. Implement for 1-2 high-impact patterns (e.g., SQL injection with format/concat across lines) as proof-of-concept.",
+      "pros": [
+        "Incremental adoption; no need to rewrite all 14 patterns at once",
+        "Keeps existing regex fast path for simple patterns",
+        "Leverages tree-sitter's incremental parsing for performance",
+        "Can start with Rust grammar; add others later",
+        "Minimal changes to Finding/types structures",
+        "Clear before/after: regex finds line-by-line, tree-sitter finds multi-line"
+      ],
+      "cons": [
+        "Adds tree-sitter + grammar crates as new dependencies (binary size increase ~10-20MB)",
+        "Requires learning tree-sitter query syntax (s-expression format)",
+        "Data-flow analysis still requires custom logic (tree-sitter only provides AST)",
+        "Per-language grammar maintenance burden",
+        "Duplication: patterns expressed in both regex and queries",
+        "Testing complexity: need test cases for both paths"
+      ],
+      "complexity": "medium",
+      "files_touched": 5
+    },
+    {
+      "name": "Full AST Rewrite (Complete Migration)",
+      "description": "Replace regex engine entirely with tree-sitter queries. Rewrite 14 patterns as tree-sitter queries (.scm files). Extend PatternDefinition to support query field. Refactor PatternEngine to support both Query and Regex types. Add AST-aware Finding type that includes matched node ID and AST position. Implement for all supported languages (Rust, Python, JavaScript, Java, PHP). Remove regex dependency.",
+      "pros": [
+        "Language-aware; understands syntax, not just text",
+        "Solves multi-line detection comprehensively",
+        "Queries are more maintainable than regex for complex patterns",
+        "Better false-positive filtering via AST structure",
+        "Cleaner codebase if fully migrated (no dual code paths)"
+      ],
+      "cons": [
+        "Large refactor; touches scanner.rs, patterns.rs, types.rs, patterns.json",
+        "Must rewrite all 14 patterns (non-trivial; requires domain knowledge)",
+        "5+ grammar crates required (tree-sitter-python, -javascript, etc.); maintained separately",
+        "Data-flow analysis still requires custom logic (tree-sitter + custom visitor)",
+        "Breaking change to public API (Finding structure, PatternDefinition)",
+        "Higher maintenance cost (language grammar updates)",
+        "Binary size increase significant"
+      ],
+      "complexity": "complex",
+      "files_touched": 12
+    },
+    {
+      "name": "External Semgrep Integration (Wrapper)",
+      "description": "Integrate semgrep as external CLI tool (or API). SecurityScanner becomes a wrapper: (1) detect when semgrep is available, (2) convert internal patterns.json to semgrep YAML rules, (3) invoke semgrep subprocess with file path, (4) parse semgrep JSON output, (5) map back to Finding types. Keep regex as fallback if semgrep unavailable. Use semgrep for multi-line patterns, regex for simple single-line patterns.",
+      "pros": [
+        "Leverages industry-standard tool with pre-built rule library",
+        "Multi-language support out-of-box (Semgrep supports 30+ languages)",
+        "Data-flow analysis built-in (semgrep's taint tracking)",
+        "No new Rust dependency on tree-sitter (external tool)",
+        "Can integrate with Semgrep cloud for rule updates",
+        "Lower maintenance burden (Semgrep team maintains rules)"
+      ],
+      "cons": [
+        "Runtime dependency: semgrep must be installed (adds friction to deployment)",
+        "Security: trusting external tool with code (though Semgrep is FOSS)",
+        "Performance: subprocess overhead vs in-process tree-sitter",
+        "Licensing: Semgrep has AGPL community edition (check compatibility with Apache 2.0)",
+        "Lock-in: rules tied to Semgrep syntax (harder to migrate away)",
+        "API rate limits if using cloud; latency for cloud-based validation",
+        "Not suitable for embedded scenarios (FFI, MCP server)"
+      ],
+      "complexity": "simple",
+      "files_touched": 3
+    }
+  ],
+  "recommendation": "Approach 1 (Hybrid Regex + Tree-Sitter). Start with targeted spike: add tree-sitter-rust, implement one high-value multi-line pattern (e.g., SQL injection via format/concat), run performance benchmarks and test coverage. This de-risks the decision before committing to full migration (Approach 2) or external integration (Approach 3). The hybrid approach fits aptu's philosophy: lightweight, in-process, Rust-native, zero external dependencies. Once validated with one pattern and one language, proposal for full migration (Approach 2) becomes data-driven. Approach 3 (Semgrep) best avoided for aptu due to FFI/MCP use cases, deployment friction, and licensing concerns. Approach 2 is viable if Approach 1 spike shows negligible overhead and strong detection gains."
+}

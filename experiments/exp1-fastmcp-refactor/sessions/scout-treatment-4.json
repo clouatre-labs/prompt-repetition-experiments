@@ -1,0 +1,158 @@
+{
+  "session_id": "treatment-4",
+  "lens": "scout",
+  "summary": "Issue #222 targets replacing memory address-based session IDs (id(ctx.lifespan_context)) with FastMCP 3.0's proper ctx.set_state()/ctx.get_state() API using UUIDs. Two files affected: persistence.py (1 session_id assignment + 2 history appends) and calculate.py (1 history append). The refactor maintains backward compatibility with optional ctx parameter and requires no test changes.",
+  "relevant_files": [
+    {
+      "path": "src/math_mcp/tools/persistence.py",
+      "line_range": "63, 78, 142",
+      "role": "Primary target - contains id(ctx.lifespan_context) anti-pattern and history appends"
+    },
+    {
+      "path": "src/math_mcp/tools/calculate.py",
+      "line_range": "62",
+      "role": "Secondary target - contains history append using lifespan_context"
+    },
+    {
+      "path": "src/math_mcp/server.py",
+      "line_range": "1-50",
+      "role": "Context - defines AppContext dataclass and app_lifespan manager"
+    },
+    {
+      "path": "src/math_mcp/resources.py",
+      "line_range": "83-104",
+      "role": "Context - accesses calculation history from workspace, not lifespan_context"
+    },
+    {
+      "path": "tests/test_persistence.py",
+      "line_range": "49-62, 100-120",
+      "role": "Test patterns - shows mock_context fixture with lifespan_context attribute"
+    }
+  ],
+  "conventions": {
+    "commits": "Conventional commits with GPG sign and DCO sign-off (git commit -S --signoff)",
+    "testing": "AAA pattern (Arrange, Act, Assert) with pytest; one happy path and one edge case per behavior; fixtures for isolation (temp_workspace, mock_context)",
+    "linting": "ruff for lint/format checks; pyright for type checking; run via 'uv run'",
+    "error_handling": "Graceful fallback when ctx is None; validation errors raised as ValueError; workspace errors logged and return empty workspace"
+  },
+  "patterns": [
+    "Optional Context parameter: ctx: SkipValidation[Context | None] = None",
+    "Conditional context access: if ctx and ctx.lifespan_context: ...",
+    "Type casting for dynamic attributes: cast(Any, ctx.lifespan_context).calculation_history",
+    "Metadata dictionaries in tool responses with annotations",
+    "Thread-safe workspace manager with atomic writes",
+    "Mock context fixture with lifespan_context attribute for testing"
+  ],
+  "related_issues": [
+    {
+      "number": 222,
+      "title": "refactor: replace lifespan_context session ID hack with ctx.set_state",
+      "relevance": "Target issue - describes anti-pattern and required refactor with acceptance criteria"
+    }
+  ],
+  "constraints": [
+    "ctx parameter must remain optional (Context | None = None) for backward compatibility",
+    "Session ID must be generated via ctx.set_state()/ctx.get_state() with UUID, not memory address",
+    "Fallback to None session_id when ctx is unavailable (non-breaking)",
+    "Existing tests must pass unchanged",
+    "Do not store non-serializable values via ctx.set_state()",
+    "Do not use ctx.set_state() for data that must survive process restart (use workspace persistence instead)",
+    "Must not break any existing tool functionality or test expectations"
+  ],
+  "test_coverage": "Tests use mock_context fixture with lifespan_context attribute. Current tests: test_save_calculation_tool, test_save_calculation_validation, test_load_variable_success, test_load_variable_not_found. No tests currently verify session_id generation or ctx.set_state() usage. Tests pass mock_context or None to tool functions. Refactor requires no test changes per acceptance criteria.",
+  "library_findings": [
+    {
+      "library": "fastmcp",
+      "version": ">=3.0.0",
+      "relevant_api": "Context.set_state(key: str, value: Any) -> Awaitable[None]; Context.get_state(key: str) -> Awaitable[Any | None]",
+      "notes": "FastMCP 3.0+ provides session-scoped state management via ctx.set_state/get_state. Session scope persists across requests within same MCP client connection. Proper replacement for memory address-based session IDs. Documentation: https://gofastmcp.com/servers/context#session-state"
+    },
+    {
+      "library": "uuid",
+      "version": "stdlib",
+      "relevant_api": "uuid.uuid4() -> UUID; str(uuid) converts to string representation",
+      "notes": "Standard library module for generating unique identifiers. uuid4() generates random UUIDs suitable for session IDs. Must convert to string for JSON serialization in ctx.set_state()."
+    },
+    {
+      "library": "pydantic",
+      "version": ">=2.12.0",
+      "relevant_api": "Field, SkipValidation type hints for tool parameters",
+      "notes": "Used for tool parameter validation and metadata. SkipValidation decorator skips Pydantic validation on Context parameter."
+    }
+  ],
+  "approaches": [
+    {
+      "name": "Approach 1: Direct ctx.set_state() in save_calculation only",
+      "description": "Replace id(ctx.lifespan_context) with ctx.set_state()/ctx.get_state() UUID only in persistence.py save_calculation() function (line 63). Keep calculate.py and load_variable() unchanged. Generate UUID on first call, retrieve on subsequent calls within same session. Add inline comment explaining session-scoped state.",
+      "pros": [
+        "Minimal scope - only 3 lines changed in one function",
+        "Directly addresses the anti-pattern in metadata",
+        "Low risk of unintended side effects",
+        "Simple to review and test",
+        "Leaves other history appends unchanged (they don't use session_id)"
+      ],
+      "cons": [
+        "Incomplete refactor - leaves calculate.py untouched despite similar pattern",
+        "Inconsistent approach across codebase",
+        "Does not demonstrate full proper pattern for learners",
+        "Doesn't address all uses of lifespan_context (lines 78, 142 in persistence.py still use it for history appends)"
+      ],
+      "complexity": "simple",
+      "files_touched": 1
+    },
+    {
+      "name": "Approach 2: Complete refactor with UUID helper function",
+      "description": "Create a utility function get_session_id(ctx: Context | None) -> str | None that handles UUID generation and retrieval via ctx.set_state()/ctx.get_state(). Use this function in both persistence.py (line 63) and calculate.py (line 62 for history metadata). Keeps history appends (lines 78, 142) unchanged as they don't use session_id. Add docstring explaining session-scoped state and fallback behavior.",
+      "pros": [
+        "Complete refactor of anti-pattern across both files",
+        "DRY principle - single function handles UUID logic",
+        "Reusable for future session-scoped features",
+        "Clear separation of concerns",
+        "Easy to test helper function in isolation",
+        "Demonstrates proper pattern for learners",
+        "Maintains backward compatibility with None fallback"
+      ],
+      "cons": [
+        "Requires creating new utility module or adding to existing module",
+        "Slightly more complex than direct replacement",
+        "Adds one additional function to codebase",
+        "Helper function placement decision needed (utils.py vs inline in server.py)"
+      ],
+      "complexity": "medium",
+      "files_touched": 3
+    },
+    {
+      "name": "Approach 3: Comprehensive refactor with session-scoped calculation history",
+      "description": "Replace memory address session IDs AND refactor calculation_history to use ctx.set_state() instead of lifespan_context. Create get_session_id() helper. In each tool (calculate.py, persistence.py), retrieve session_id via helper, then append history entries to session-scoped list via ctx.set_state('calculation_history', [...]) instead of casting to lifespan_context. Requires initializing empty list on first request. Updates AppContext and app_lifespan if needed.",
+      "pros": [
+        "Most elegant solution - eliminates all lifespan_context usage",
+        "Session-scoped history is more correct semantically (per-client, not process-wide)",
+        "Demonstrates advanced FastMCP patterns for learners",
+        "Cleaner separation: lifespan_context for process state, ctx.set_state for session state",
+        "Enables per-session history isolation",
+        "Future-proof for multi-client scenarios"
+      ],
+      "cons": [
+        "Largest scope - touches 4+ files (calculate.py, persistence.py, resources.py, server.py)",
+        "Requires changes to AppContext and app_lifespan (may break existing patterns)",
+        "More complex logic for history retrieval and appending",
+        "Requires careful testing of session isolation",
+        "May affect resources.py get_calculation_history() which currently reads from workspace",
+        "Higher risk of unintended side effects",
+        "Requires test updates if history retrieval changes"
+      ],
+      "complexity": "complex",
+      "files_touched": 4
+    }
+  ],
+  "recommendation": "Approach 2 (Complete refactor with UUID helper function). This approach directly addresses the issue requirements: removes id(ctx.lifespan_context) anti-pattern from both persistence.py and calculate.py, implements proper ctx.set_state()/ctx.get_state() with UUID, maintains backward compatibility with optional ctx parameter, requires no test changes, and demonstrates the correct pattern for learners. It balances completeness with simplicity - more thorough than Approach 1 (which leaves calculate.py unchanged) but more maintainable than Approach 3 (which over-engineers by refactoring history storage). The helper function approach is DRY, testable, and reusable for future session-scoped features.",
+  "implementation_notes": {
+    "helper_function_location": "Create in src/math_mcp/utils.py or add to src/math_mcp/server.py near AppContext definition",
+    "uuid_import": "import uuid at top of helper module",
+    "async_pattern": "get_session_id() must be async to call ctx.set_state/get_state",
+    "fallback_logic": "Return None if ctx is None or if ctx.get_state() fails",
+    "inline_comment": "Explain that ctx.set_state() is session-scoped (per-client connection), not process-scoped, and is the correct API for session identifiers",
+    "test_updates": "None required per acceptance criteria - existing tests pass unchanged",
+    "backward_compatibility": "session_id field in metadata will be None when ctx unavailable, same as current behavior"
+  }
+}

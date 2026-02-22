@@ -1,0 +1,152 @@
+{
+  "session_id": "treatment-1",
+  "lens": "scout",
+  "relevant_files": [
+    {
+      "path": "src/math_mcp/tools/persistence.py",
+      "line_range": "63, 77-78, 141-142",
+      "role": "Primary: Contains id(ctx.lifespan_context) anti-pattern in save_calculation() and load_variable() tools; also appends to calculation_history via lifespan_context"
+    },
+    {
+      "path": "src/math_mcp/tools/calculate.py",
+      "line_range": "61-62",
+      "role": "Primary: Appends to calculation_history via lifespan_context in calculator tool"
+    },
+    {
+      "path": "src/math_mcp/server.py",
+      "line_range": "33-49",
+      "role": "Context: Defines AppContext dataclass and app_lifespan() that initializes calculation_history; shows lifespan scope is process-wide, not per-session"
+    },
+    {
+      "path": "tests/test_persistence.py",
+      "line_range": "50-62, 321-375",
+      "role": "Testing: Mock context fixture and tests that verify history appending; tests currently check mock_context.lifespan_context.calculation_history"
+    },
+    {
+      "path": "src/math_mcp/resources.py",
+      "line_range": "82-104",
+      "role": "Context: get_calculation_history() resource reads from workspace persistence (not session state), showing distinction between session-scoped and persistent data"
+    }
+  ],
+  "conventions": {
+    "commits": "Conventional commits with GPG sign and DCO sign-off (--signoff); feature branches only, PRs required",
+    "testing": "pytest with async support (@pytest.mark.asyncio); fixtures for isolation (temp_workspace, mock_context); one happy path and one edge case per behavior",
+    "linting": "ruff check and ruff format; pyright for type checking; no manual formatting",
+    "error_handling": "Pydantic Field validation; explicit None checks before accessing context attributes; try/finally for resource cleanup"
+  },
+  "patterns": [
+    "FastMCP 3.0 sub-server composition (mount pattern) with Context parameter injection",
+    "Optional Context parameter with SkipValidation type hint (Context | None = None) for tools",
+    "Lifespan context accessed via cast(Any, ctx.lifespan_context) for type safety when appending history",
+    "Metadata dictionaries passed to workspace manager alongside calculation results",
+    "Async tool functions with await ctx.info() for logging when context available"
+  ],
+  "related_issues": [
+    {
+      "number": 221,
+      "title": "refactor: add ctx.report_progress to statistics tools",
+      "relevance": "Similar FastMCP 3.0 API modernization; shows pattern of using ctx methods for proper scopes"
+    },
+    {
+      "number": 208,
+      "title": "feat: upgrade to FastMCP 3.0",
+      "relevance": "Completed upgrade that introduced Context API; this issue addresses remaining anti-patterns from pre-3.0 code"
+    },
+    {
+      "number": 207,
+      "title": "chore: remove deprecated FastMCP 2.x patterns",
+      "relevance": "Cleanup of deprecated patterns; this issue continues that effort for session-scoped state"
+    }
+  ],
+  "constraints": [
+    "ctx parameter must remain optional (Context | None = None) for backward compatibility when tools called without context",
+    "Session ID must be serializable (UUID string, not object) for ctx.set_state()",
+    "ctx.set_state() is per-session (per client connection), not process-wide; cannot replace lifespan_context for shared state",
+    "Existing tests must pass unchanged; no breaking changes to tool signatures or return values",
+    "Calculation history appending to lifespan_context must be preserved for backward compatibility (tools still update in-memory history)"
+  ],
+  "test_coverage": "122 total tests in project. Persistence tests (test_persistence.py) include: model validation (WorkspaceVariable, WorkspaceData), tool integration (save_calculation, load_variable), thread safety, and history tracking. Mock context fixture simulates lifespan_context with calculation_history list. Tests verify history entries are appended when context provided. No existing tests for session ID generation or ctx.set_state/get_state patterns.",
+  "library_findings": [
+    {
+      "library": "fastmcp",
+      "version": "3.0 (from pyproject.toml)",
+      "relevant_api": "Context.set_state(key: str, value: Any) and Context.get_state(key: str) -> Any | None; session-scoped persistence per client connection",
+      "notes": "FastMCP 3.0 provides proper session-scoped state management via ctx.set_state/get_state. The lifespan parameter in FastMCP() defines process-wide context (shared across all sessions). Context.lifespan_context is the object yielded by lifespan manager, intended for process-wide shared state, not session IDs. Using id(ctx.lifespan_context) conflates these scopes."
+    },
+    {
+      "library": "uuid",
+      "version": "stdlib (Python 3.14+)",
+      "relevant_api": "uuid.uuid4() generates RFC 4122 compliant UUIDs; str(uuid.uuid4()) produces serializable string representation",
+      "notes": "Standard library module, no version constraints. UUID strings are JSON-serializable and suitable for ctx.set_state()."
+    },
+    {
+      "library": "pydantic",
+      "version": "2.x (from pyproject.toml)",
+      "relevant_api": "Field validation, SkipValidation type hint for Context parameter injection",
+      "notes": "Already used throughout codebase for validation and type hints. No new dependencies needed."
+    }
+  ],
+  "approaches": [
+    {
+      "name": "Approach 1: Direct ctx.set_state/get_state Replacement (Minimal, Recommended)",
+      "description": "Replace id(ctx.lifespan_context) with proper session ID generation using ctx.set_state/get_state. In persistence.py save_calculation() (line 63), replace the session_id metadata line with: if ctx and await ctx.get_state('session_id') is None: await ctx.set_state('session_id', str(uuid.uuid4())); session_id = await ctx.get_state('session_id') if ctx else None. Keep lifespan_context history appending unchanged (lines 77-78, 141-142). No changes to calculate.py needed (it doesn't use session_id, only appends to history). Update mock_context fixture in tests to support async get_state/set_state methods. All existing tests pass unchanged.",
+      "pros": [
+        "Minimal code changes (1 file: persistence.py)",
+        "Directly addresses the anti-pattern with FastMCP 3.0 recommended API",
+        "Maintains backward compatibility (ctx optional, falls back to None)",
+        "Preserves in-memory history tracking for existing consumers",
+        "Clear, idiomatic FastMCP 3.0 pattern that educates learners",
+        "No new dependencies"
+      ],
+      "cons": [
+        "Session ID only persists within a single client session (not across restarts)",
+        "Requires async/await in tool function (already async, no issue)",
+        "Mock context in tests needs async method support (minor test refactor)"
+      ],
+      "complexity": "simple",
+      "files_touched": 2
+    },
+    {
+      "name": "Approach 2: Hybrid with Workspace Persistence (More Robust)",
+      "description": "Extend Approach 1 by also persisting session metadata to workspace.json. When session_id is generated via ctx.set_state(), also write it to workspace metadata (new top-level 'sessions' dict in WorkspaceData model). This creates a durable record of session IDs even across process restarts. Modify WorkspaceData model to include sessions: dict[str, dict[str, Any]]. In save_calculation(), after generating session_id, call _workspace_manager.record_session(session_id). Update resources.py get_workspace() to include session metadata in summary. Requires changes to: persistence.py (session generation), persistence/models.py (WorkspaceData schema), persistence/workspace.py (record_session method), resources.py (display sessions).",
+      "pros": [
+        "Session IDs survive process restarts (durable)",
+        "Enables session analytics and audit trails",
+        "Demonstrates multi-layer persistence pattern (session-scoped + persistent)",
+        "Aligns with educational goal of showing proper patterns",
+        "Backward compatible (existing workspace files still load)"
+      ],
+      "cons": [
+        "More files touched (4-5 files)",
+        "Adds complexity to WorkspaceData model and manager",
+        "Requires migration logic for existing workspaces without sessions",
+        "More test updates needed (workspace model tests, integration tests)",
+        "Medium complexity"
+      ],
+      "complexity": "medium",
+      "files_touched": 5
+    },
+    {
+      "name": "Approach 3: Refactor to Eliminate lifespan_context History (Comprehensive Redesign)",
+      "description": "Replace all lifespan_context.calculation_history usage with ctx.set_state('calculation_history', []) and ctx.get_state('calculation_history'). This makes history truly session-scoped and eliminates the anti-pattern entirely. Modify AppContext to remove calculation_history field (no longer needed). In persistence.py and calculate.py, replace all cast(Any, ctx.lifespan_context).calculation_history.append() with: history = await ctx.get_state('calculation_history') or []; history.append(entry); await ctx.set_state('calculation_history', history). Update resources.py get_calculation_history() to read from ctx.get_state() instead of workspace. Requires changes to: server.py (AppContext), persistence.py, calculate.py, resources.py, tests (mock context).",
+      "pros": [
+        "Eliminates all lifespan_context anti-patterns (not just session_id)",
+        "Makes history truly session-scoped (per-client, not process-wide)",
+        "Cleaner separation: session history (ctx.set_state) vs. persistent workspace (WorkspaceManager)",
+        "Demonstrates best practices for all state management patterns",
+        "Educationally comprehensive"
+      ],
+      "cons": [
+        "Most invasive changes (5+ files)",
+        "Changes behavior: history no longer shared across sessions in same process",
+        "Requires significant test refactoring (mock context, fixture updates)",
+        "Breaking change to in-memory history semantics (though not public API)",
+        "Complex to implement correctly with async state management",
+        "Higher risk of regressions"
+      ],
+      "complexity": "complex",
+      "files_touched": 6
+    }
+  ],
+  "recommendation": "Approach 1 (Direct ctx.set_state/get_state Replacement). It directly solves the stated problem with minimal changes, uses the FastMCP 3.0 recommended API, maintains backward compatibility, and serves as a clear educational example. Approach 2 is valuable if session audit trails become a requirement, but adds scope beyond the issue. Approach 3 is architecturally cleaner but introduces breaking changes to history semantics and is higher risk. Start with Approach 1; it can be extended to Approach 2 later if needed."
+}

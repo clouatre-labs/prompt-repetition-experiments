@@ -1,0 +1,184 @@
+{
+  "run_id": "scout-run-03",
+  "group": "control",
+  "started_at": "2026-02-20T22:16:14Z",
+  "finished_at": "2026-02-20T22:22:35Z",
+  "session_id": "exp229",
+  "lens": "scout",
+  "relevant_files": [
+    {
+      "path": "crates/aptu-core/src/security/scanner.rs",
+      "line_range": "1-406",
+      "role": "Core regex-based vulnerability scanner; scan_diff() method processes diffs line-by-line"
+    },
+    {
+      "path": "crates/aptu-core/src/security/patterns.rs",
+      "line_range": "1-150",
+      "role": "PatternEngine struct; loads and applies regex patterns from JSON; scan() method matches patterns"
+    },
+    {
+      "path": "crates/aptu-core/src/security/detection.rs",
+      "line_range": "1-120",
+      "role": "needs_security_scan() function; identifies security-relevant code changes via keywords and file paths"
+    },
+    {
+      "path": "crates/aptu-core/src/security/validator.rs",
+      "line_range": "1-382",
+      "role": "SecurityValidator; LLM-based validation to reduce false positives; fallback to pattern confidence"
+    },
+    {
+      "path": "crates/aptu-core/patterns.json",
+      "line_range": "1-128",
+      "role": "Security pattern definitions; 14 regex patterns for SQL injection, XSS, crypto, hardcoded secrets, etc."
+    },
+    {
+      "path": "crates/aptu-core/tests/security_integration.rs",
+      "line_range": "1-300",
+      "role": "Integration tests; documents multi-line detection limitation in test_multi_line_vulnerability_not_detected()"
+    },
+    {
+      "path": "tests/security_fixtures/vulnerable/sql_injection.rs",
+      "line_range": "1-50",
+      "role": "Test fixture with intentional vulnerabilities; examples of multi-line SQL injection patterns"
+    },
+    {
+      "path": "crates/aptu-core/Cargo.toml",
+      "line_range": "1-50",
+      "role": "Workspace dependencies; includes tokio, serde, regex, anyhow, thiserror"
+    },
+    {
+      "path": "Cargo.toml",
+      "line_range": "1-30",
+      "role": "Root workspace config; version 0.2.15; edition 2024; strict linting"
+    }
+  ],
+  "conventions": {
+    "commits": "Conventional commits with GPG signing and DCO sign-off required (per CONTRIBUTING.md)",
+    "testing": "AAA pattern (Arrange, Act, Assert); integration tests in crates/*/tests/; unit tests co-located with modules; test fixtures in tests/security_fixtures/",
+    "linting": "cargo clippy with --deny warnings; cargo fmt for formatting; strict linting enforced via Cargo.toml profile settings",
+    "error_handling": "thiserror for libraries; anyhow for applications; context() for error chains; Results propagated via ? operator"
+  },
+  "patterns": [
+    "Regex-based pattern matching with file extension filtering",
+    "Line-by-line scanning via diff processing",
+    "LLM-based validation for false positive reduction",
+    "SARIF report generation for CI/CD integration",
+    "Finding cache with composite keys",
+    "Module-level tests with fixtures",
+    "Strict error propagation with context"
+  ],
+  "related_issues": [
+    {
+      "number": 737,
+      "title": "Evaluate tree-sitter for AST-based vulnerability detection",
+      "relevance": "Primary issue; proposes hybrid spike starting with tree-sitter-rust for multi-line SQL injection detection; scope ~500-800 LOC"
+    },
+    {
+      "number": 735,
+      "title": "Multi-line vulnerability detection limitation",
+      "relevance": "Documents known limitation: regex patterns cannot match vulnerabilities across multiple lines; tree-sitter could resolve this"
+    },
+    {
+      "number": 699,
+      "title": "SAST tool specification and success criteria",
+      "relevance": "Establishes requirements for pattern-based vulnerability detection, SARIF compliance, caching, CI/CD integration"
+    }
+  ],
+  "constraints": [
+    "Regex-based scanner operates on line-by-line basis; cannot detect data flow across multiple lines",
+    "No existing AST infrastructure in codebase; tree-sitter would be new dependency",
+    "Pattern definitions are JSON-based; migration requires dual support or conversion strategy",
+    "LLM-based validation exists; any new detection method must integrate with validator pipeline",
+    "SARIF output format requirements must be maintained",
+    "Workspace uses Rust edition 2024 with rustc 1.92.0; ensure tree-sitter compatibility"
+  ],
+  "test_coverage": "Security module has comprehensive integration tests covering hardcoded secrets, SQL injection (single-line concat and format), command injection, weak cryptography (MD5, SHA1), XSS, and path traversal. Test fixtures in tests/security_fixtures/vulnerable/ and tests/security_fixtures/safe/. Known limitation explicitly documented: test_multi_line_vulnerability_not_detected() in security_integration.rs shows that multi-line SQL injection patterns are not detected by current regex scanner.",
+  "library_findings": [
+    {
+      "library": "tree-sitter",
+      "version": "0.26.5",
+      "relevant_api": "Parser::new() for language parsing, Tree struct for AST navigation, Query API for pattern matching via tree-sitter query language",
+      "notes": "Stable Rust bindings; supports incremental parsing; features: std, bindgen, wasm; MSRV 1.77 (compatible with project's 1.92)"
+    },
+    {
+      "library": "tree-sitter-rust",
+      "version": "0.24.0",
+      "relevant_api": "Language grammar for Rust code; enables tree-sitter queries on Rust AST including function calls, variable assignments, and data flow",
+      "notes": "Official tree-sitter grammar; maintained by tree-sitter org; no MSRV specified but widely used in Rust tooling"
+    },
+    {
+      "library": "regex",
+      "version": "current dependency",
+      "relevant_api": "Regex::new() for pattern compilation; is_match() and captures() for matching",
+      "notes": "Already in use for current pattern engine; tree-sitter would supplement, not replace, for more complex patterns"
+    }
+  ],
+  "approaches": [
+    {
+      "name": "Approach 1: Hybrid Tree-Sitter Layer (Recommended Spike)",
+      "description": "Add a new TSQueryEngine module alongside existing PatternEngine. Start by migrating 2-3 high-value patterns (SQL injection concat/format, hardcoded secrets) to tree-sitter queries. Patterns queried via tree-sitter queries; results merged with regex findings. Pattern JSON extended with optional ts_query field. SecurityScanner.scan_diff() branches on pattern type (regex vs tree-sitter). Multi-line detection becomes possible via query traversal. Validation pipeline unchanged; both engines feed Finding objects to SecurityValidator.",
+      "pros": [
+        "Minimal disruption to existing code; regex patterns remain untouched",
+        "Can evaluate effectiveness of tree-sitter on subset of patterns before full commitment",
+        "Tree-sitter queries are declarative and maintainable; easier to express data flow logic than regex",
+        "Multi-line vulnerability detection immediately solves #735 limitation",
+        "Incremental rollout allows testing and tuning; fallback to regex if issues arise",
+        "Aligns with maintainer's suggested 'hybrid spike' approach from issue #737"
+      ],
+      "cons": [
+        "Dual-engine maintenance burden; two pattern definition systems to keep in sync",
+        "Tree-sitter dependency adds ~50KB to binary and compilation time",
+        "Query language learning curve; team must understand tree-sitter query syntax",
+        "Potential for inconsistent findings if regex and tree-sitter detect same issue differently",
+        "Integration test suite must cover both engines; increased test complexity",
+        "Performance characteristics differ (tree-sitter parses entire file vs regex scans line-by-line)"
+      ],
+      "complexity": "medium",
+      "files_touched": 6
+    },
+    {
+      "name": "Approach 2: Full Migration to Tree-Sitter Queries",
+      "description": "Replace PatternEngine entirely with TSQueryEngine. Convert all 14 regex patterns to tree-sitter queries (or identify patterns unsuitable for tree-sitter and keep regex fallback). Store queries in JSON with ts_query field; deprecate regex_pattern field. Scanner always parses AST once per file, executes all queries against it. Removes line-by-line processing; enables sophisticated data-flow and control-flow analysis. SecurityValidator integration unchanged. Requires comprehensive rewrite of patterns.rs and scanner.rs.",
+      "pros": [
+        "Cleaner architecture; single detection engine instead of dual systems",
+        "Significant accuracy improvements for complex vulnerabilities; captures intent via AST rather than text patterns",
+        "Better multi-line and cross-function data-flow detection capabilities",
+        "Tree-sitter queries are composable and reusable; patterns become modular",
+        "No conditional branching in scanner; simpler code path",
+        "Potential to leverage existing tree-sitter query libraries from security community"
+      ],
+      "cons": [
+        "High risk; breaking change to proven regex system that currently works in production",
+        "All 14 patterns must be ported or pattern coverage decreases; some patterns (e.g., weak-crypto-md5) may not map cleanly to AST queries",
+        "Significant development and testing effort; estimated 1000+ LOC change",
+        "Performance impact unknown; AST parsing may be slower than line-by-line regex for small diffs",
+        "Requires extensive regression testing and maintainer sign-off before deployment",
+        "Tree-sitter query language less familiar to most developers than regex"
+      ],
+      "complexity": "complex",
+      "files_touched": 8
+    },
+    {
+      "name": "Approach 3: Targeted Multi-Line Extension (Minimal Scope)",
+      "description": "Extend existing PatternEngine to support a limited form of multi-line matching without tree-sitter. Define 2-3 'multi-line pattern groups' in JSON that specify: line patterns (regex), context (e.g., 'within function scope'), and assembly logic. Scanner collects matching lines within a diff chunk and attempts to assemble them into multi-line vulnerabilities. Purely regex-based; no AST parsing. Solves #735 for SQL injection but does not handle arbitrary data-flow scenarios.",
+      "pros": [
+        "Minimal new dependencies; no tree-sitter required",
+        "Quick to implement; ~200-300 LOC in scanner.rs and patterns.json extensions",
+        "Preserves all existing regex patterns and logic; pure additive change",
+        "Lower risk than full tree-sitter migration; can be reverted easily",
+        "No new language/query syntax to learn; stays in JSON and regex domain",
+        "Good fit for 'known limitation' documented in #735"
+      ],
+      "cons": [
+        "Still fundamentally limited by regex; does not solve harder problems (e.g., data-flow across function boundaries)",
+        "Context detection (e.g., 'within function scope') requires heuristic parsing, likely fragile",
+        "Does not scale to complex vulnerabilities; tree-sitter approach is more elegant",
+        "Defers proper solution; maintainers may view as technical debt",
+        "Only addresses specific multi-line cases; arbitrary data-flow scenarios still unsupported"
+      ],
+      "complexity": "simple",
+      "files_touched": 3
+    }
+  ],
+  "recommendation": "Approach 1 (Hybrid Tree-Sitter Layer) is the optimal path. It directly aligns with the maintainer's suggested 'hybrid spike' from issue #737, mitigates risk via incremental rollout, and provides immediate proof of concept. Start with tree-sitter-rust grammar and 2-3 high-value patterns (SQL injection concat/format via data-flow queries, hardcoded secrets via constant assignment patterns). Implement TSQueryEngine alongside PatternEngine; extend patterns.json with optional ts_query field; modify scanner.rs to detect and route patterns. Add integration tests for tree-sitter findings; verify multi-line SQL injection from test fixtures is detected. Estimated scope: 500-700 LOC (within issue estimate). Decision on full migration vs. continued hybrid use can be made after spike completion with real data on accuracy/performance tradeoffs."
+}

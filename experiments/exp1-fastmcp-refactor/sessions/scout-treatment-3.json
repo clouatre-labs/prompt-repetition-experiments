@@ -1,0 +1,183 @@
+{
+  "session_id": "treatment-3",
+  "lens": "scout",
+  "relevant_files": [
+    {
+      "path": "src/math_mcp/tools/persistence.py",
+      "line_range": "63",
+      "role": "Anti-pattern usage: session_id generation via id(ctx.lifespan_context)"
+    },
+    {
+      "path": "src/math_mcp/tools/persistence.py",
+      "line_range": "54-94",
+      "role": "save_calculation tool - uses session_id in metadata and appends to calculation_history"
+    },
+    {
+      "path": "src/math_mcp/tools/persistence.py",
+      "line_range": "77-78, 141-142",
+      "role": "Appends history entries to ctx.lifespan_context.calculation_history"
+    },
+    {
+      "path": "src/math_mcp/tools/calculate.py",
+      "line_range": "61-62",
+      "role": "Appends history entries to ctx.lifespan_context.calculation_history"
+    },
+    {
+      "path": "src/math_mcp/server.py",
+      "line_range": "33-49",
+      "role": "AppContext dataclass and app_lifespan context manager - defines calculation_history"
+    },
+    {
+      "path": "tests/test_persistence.py",
+      "line_range": "49-62",
+      "role": "Mock context fixture - simulates lifespan_context with calculation_history"
+    },
+    {
+      "path": "tests/test_persistence.py",
+      "line_range": "340-375",
+      "role": "Tests that verify calculation_history is appended to"
+    },
+    {
+      "path": "pyproject.toml",
+      "line_range": "1-50",
+      "role": "Project manifest - FastMCP 3.0+ dependency"
+    }
+  ],
+  "conventions": {
+    "commits": "Conventional commits with GPG sign-off required; format: type(scope): description",
+    "testing": "pytest with AAA pattern; mock_context fixture for testing tools with Context parameter; tests verify behavior without checking session_id values",
+    "linting": "ruff for linting/formatting; pyright for type checking; strict mode enabled",
+    "error_handling": "Pydantic validation with Field constraints; optional Context parameter with SkipValidation; graceful fallback when ctx is None"
+  },
+  "patterns": [
+    "FastMCP 3.0 composition: sub-servers (calculate_mcp, persistence_mcp) mounted on main mcp instance",
+    "Context as optional parameter: ctx: SkipValidation[Context | None] = None with fallback logic",
+    "Lifespan context for process-wide state: AppContext with calculation_history list",
+    "History tracking: tools append entries to ctx.lifespan_context.calculation_history when ctx available",
+    "Metadata enrichment: tools add difficulty, topic, timestamp to history and response annotations",
+    "Mock context in tests: simple object with lifespan_context.calculation_history for tool testing"
+  ],
+  "related_issues": [
+    {
+      "number": 222,
+      "title": "refactor: replace lifespan_context session ID hack with ctx.set_state",
+      "relevance": "Direct target issue - defines the anti-pattern and required solution"
+    }
+  ],
+  "constraints": [
+    "ctx must remain optional (Context | None = None) - non-breaking change required",
+    "Fallback to None session_id when ctx unavailable",
+    "ctx.set_state() is session-scoped (per client connection), not process-scoped",
+    "Do not store non-serializable values via ctx.set_state for session IDs",
+    "Session ID data must be serializable (UUID string is appropriate)",
+    "Existing tests must pass unchanged - no test modifications allowed",
+    "Only modify persistence.py and calculate.py files"
+  ],
+  "test_coverage": "3065 total test lines across 6 test files; test_persistence.py (487 lines) covers workspace operations; test_math_operations.py (727 lines) covers calculation tools; mock_context fixture used in multiple tests to verify history appending behavior; no explicit session_id value assertions found in current tests",
+  "library_findings": [
+    {
+      "library": "fastmcp",
+      "version": "3.0+",
+      "relevant_api": "ctx.set_state(key, value) / ctx.get_state(key) for session-scoped state management; Context class with optional lifespan_context attribute",
+      "notes": "FastMCP 3.0 provides proper session state API as alternative to memory address hack; ctx.set_state persists across requests within same MCP session (per-client connection scope); must initialize session_id on first request with UUID; fallback to None when ctx unavailable"
+    },
+    {
+      "library": "uuid",
+      "version": "stdlib",
+      "relevant_api": "uuid.uuid4() for generating unique session identifiers; str(uuid.uuid4()) for serializable string representation",
+      "notes": "Standard library module; uuid4() generates random UUID suitable for session identifiers; must convert to string for serialization via ctx.set_state"
+    },
+    {
+      "library": "pydantic",
+      "version": "2.x",
+      "relevant_api": "Field constraints for validation; SkipValidation for optional Context parameter",
+      "notes": "Used for model validation and tool parameter annotations; SkipValidation pattern already established in codebase for Context parameters"
+    }
+  ],
+  "approaches": [
+    {
+      "name": "Approach 1: Minimal Session ID Replacement (Direct Refactor)",
+      "description": "Replace id(ctx.lifespan_context) with ctx.set_state/ctx.get_state pattern in both persistence.py and calculate.py. Initialize session_id on first request using UUID. Keep all other logic unchanged. Add import for uuid module.",
+      "changes": [
+        "Add 'import uuid' to both files",
+        "In persistence.py save_calculation (line 63): Replace session_id generation with ctx.set_state/get_state logic",
+        "In calculate.py calculate (line 62): No session_id in response, but ensure history entry compatibility",
+        "Create helper function or inline pattern: if await ctx.get_state('session_id') is None: await ctx.set_state('session_id', str(uuid.uuid4()))",
+        "Update metadata dict to use await ctx.get_state('session_id')",
+        "Add inline comment explaining why ctx.set_state is used (session scope vs lifespan scope)"
+      ],
+      "pros": [
+        "Minimal code changes - only affects session_id generation logic",
+        "Directly addresses the issue requirements",
+        "No test modifications needed",
+        "Maintains backward compatibility (fallback to None when ctx unavailable)",
+        "Clear, focused change that's easy to review"
+      ],
+      "cons": [
+        "Requires async/await in metadata dict comprehension (may need refactoring)",
+        "Duplicates session_id initialization logic in both files if not extracted",
+        "Doesn't address potential code duplication between persistence.py and calculate.py",
+        "Session ID only available after first await ctx.get_state call"
+      ],
+      "complexity": "medium",
+      "files_touched": 2
+    },
+    {
+      "name": "Approach 2: Extracted Session Manager Utility (DRY Pattern)",
+      "description": "Create a shared utility module (e.g., src/math_mcp/tools/session.py) with a get_or_create_session_id(ctx) async function. Use this function in both persistence.py and calculate.py. Centralizes session ID logic and eliminates duplication.",
+      "changes": [
+        "Create new file: src/math_mcp/tools/session.py with async function get_or_create_session_id(ctx: Context | None) -> str | None",
+        "Function checks ctx availability, initializes session_id via ctx.set_state if needed, returns str(uuid.uuid4()) or None",
+        "Import and use this function in both persistence.py and calculate.py",
+        "Add docstring explaining session scope vs lifespan scope",
+        "Include type hints for clarity"
+      ],
+      "pros": [
+        "Eliminates code duplication between files",
+        "Single source of truth for session ID logic",
+        "Easier to test session ID behavior in isolation",
+        "More maintainable - future changes only need one location",
+        "Follows DRY principle and improves code organization",
+        "Cleaner tool code - delegates complexity to utility"
+      ],
+      "cons": [
+        "Introduces new file (adds to module count)",
+        "Requires import in both tool files",
+        "Slightly more indirection for developers reading code",
+        "May be overkill if session ID logic is truly simple"
+      ],
+      "complexity": "medium",
+      "files_touched": 4
+    },
+    {
+      "name": "Approach 3: Context Middleware with Session Initialization (Elegant Pattern)",
+      "description": "Create a custom middleware that initializes session_id in ctx.set_state before tools execute. Tools simply call ctx.get_state('session_id') without initialization logic. Separates concerns: middleware handles session setup, tools focus on business logic.",
+      "changes": [
+        "Create new middleware class in src/math_mcp/middleware/session.py",
+        "Middleware intercepts requests, checks if session_id exists, initializes with UUID if needed",
+        "Register middleware in server.py after other middleware",
+        "Simplify persistence.py and calculate.py: just use await ctx.get_state('session_id')",
+        "Remove session_id initialization logic from tool code entirely",
+        "Add documentation comment in middleware explaining session scope"
+      ],
+      "pros": [
+        "Cleanest separation of concerns - middleware handles infrastructure, tools handle business logic",
+        "Session ID guaranteed to exist for all requests (no null checks needed in tools)",
+        "Most elegant and maintainable long-term",
+        "Follows FastMCP middleware patterns already in codebase (StructuredLoggingMiddleware, ErrorHandlingMiddleware, RateLimitingMiddleware)",
+        "Easier to add session-related features in future (logging, validation, etc.)",
+        "Tools code becomes simpler and more focused"
+      ],
+      "cons": [
+        "Requires understanding FastMCP middleware architecture",
+        "Adds new middleware to server startup (minor performance impact)",
+        "More files touched (new middleware file + server.py modification)",
+        "May be overengineering if session ID is only used in two places",
+        "Requires careful middleware ordering in server.py"
+      ],
+      "complexity": "complex",
+      "files_touched": 4
+    }
+  ],
+  "recommendation": "Approach 2 (Extracted Session Manager Utility) is recommended. It balances simplicity with maintainability: creates a single utility function that both tools import, eliminates duplication, is straightforward to test, and follows the project's existing patterns without requiring middleware knowledge. It's more practical than Approach 1 (avoids code duplication) while being simpler than Approach 3 (no middleware complexity). The utility function can be added to existing tools module or as a small new module, and both persistence.py and calculate.py can be updated in parallel with minimal risk."
+}

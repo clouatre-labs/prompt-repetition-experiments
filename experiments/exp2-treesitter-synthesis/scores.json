@@ -1,0 +1,207 @@
+{
+  "scored_at": "2026-02-20T17:26:00Z",
+  "scorer": "claude-haiku-4-5-blind",
+  "rubric_version": "1.0",
+  "scores": [
+    {
+      "run_id": "run-01",
+      "C1": 1,
+      "C2": 1,
+      "C3": 1,
+      "C4": 1,
+      "C5": 1,
+      "C6": 1,
+      "C7": 1,
+      "total": 7,
+      "justifications": {
+        "C1": "Issues #735/#736 explicitly identified and documented as the regex-based line-by-line scanning limitation.",
+        "C2": "tree-sitter, tree-sitter-rust, and tree-sitter-python named explicitly in library_findings section.",
+        "C3": "Approach A (Hybrid Regex + Tree-Sitter) clearly proposes keeping existing regex patterns while adding optional tree-sitter AST engine—preserves 85% of existing rules.",
+        "C4": "Binary bloat explicitly mentioned as con: 'Binary bloat from multiple grammar crates (tree-sitter-rust ~3MB, etc.)' and constraint about justifying binary size increase.",
+        "C5": "Approach A explicitly mentions 'Can support multi-language progressively (Rust spike first, then Python)' and recommendation specifies 'Start with tree-sitter-rust grammar + one query pattern (SQL injection)'.",
+        "C6": "Specific codebase files referenced: scanner.rs, patterns.rs, patterns.json, detection.rs, types.rs throughout relevant_files and approaches.",
+        "C7": "Success criteria clearly specified: '(6) Test: verify multi-line SQL injection detected in fixtures. (7) Measure: compare false positive rate + performance vs regex baseline.'"
+      }
+    },
+    {
+      "run_id": "run-02",
+      "C1": 1,
+      "C2": 1,
+      "C3": 1,
+      "C4": 1,
+      "C5": 1,
+      "C6": 1,
+      "C7": 1,
+      "total": 7,
+      "justifications": {
+        "C1": "Issues #735/#736 identified; #735 explicitly documents the architectural limitation of line-by-line regex not detecting multi-line patterns.",
+        "C2": "tree-sitter, tree-sitter-rust, and tree-sitter-python all named explicitly in library_findings with versions and API details.",
+        "C3": "Approach 2 (Hybrid Regex+AST with Multi-Language Support) explicitly preserves regex patterns for simple cases while adding AST for complex ones; 'Implement scanner::ast_engine module'.",
+        "C4": "Binary size explicitly mentioned as con: 'Significant binary size - multiple language grammars add 10-20MB total' in Approach 2.",
+        "C5": "Recommendation explicitly proposes Approach 1 as 'initial exploration phase' and states 'Start with Rust (project's primary language)'.",
+        "C6": "Specific files referenced: patterns.rs, scanner.rs, patterns.json, detection.rs, types.rs, validator.rs throughout.",
+        "C7": "Success criteria documented: '(a) Detect multi-line SQL injection in Rust code, (b) Performance within 2x regex baseline, (c) <5% false positive increase, (d) TSQuery complexity <100 lines.'"
+      }
+    },
+    {
+      "run_id": "run-03",
+      "C1": 1,
+      "C2": 1,
+      "C3": 1,
+      "C4": 1,
+      "C5": 1,
+      "C6": 1,
+      "C7": 1,
+      "total": 7,
+      "justifications": {
+        "C1": "Issue #737 identified as primary issue; #735 documented as architectural limitation explicitly.",
+        "C2": "tree-sitter (0.26.5), tree-sitter-rust (0.24.0) named with versions in library_findings.",
+        "C3": "Approach 1 (Hybrid Tree-Sitter Layer) explicitly preserves regex patterns and extends with optional ts_query field; 'results merged with regex findings'.",
+        "C4": "Binary impact mentioned: 'Tree-sitter dependency adds ~50KB to binary' and learning curve noted for grammar crates.",
+        "C5": "Recommendation: 'Start by migrating 2-3 high-value patterns (SQL injection concat/format)... Implement for Rust first'.",
+        "C6": "Specific files cited: scanner.rs, patterns.rs, patterns.json, detection.rs, validator.rs, security_integration.rs, crates/aptu-core/Cargo.toml.",
+        "C7": "Success criteria clear: 'pass existing test suite, detect multi-line SQL injection' and 'verify multi-line SQL injection from test fixtures is detected.'"
+      }
+    },
+    {
+      "run_id": "run-04",
+      "C1": 1,
+      "C2": 1,
+      "C3": 1,
+      "C4": 1,
+      "C5": 1,
+      "C6": 1,
+      "C7": 1,
+      "total": 7,
+      "justifications": {
+        "C1": "Issue #737 referenced as primary; #735 documented as test for the multi-line limitation.",
+        "C2": "tree-sitter (0.26.5) and tree-sitter-rust (0.24.0) explicitly named with API details.",
+        "C3": "Approach 1 (Hybrid Tree-Sitter Bridge) explicitly maintains regex for string matching while adding tree-sitter for syntactic context; 'results merged before SARIF output'.",
+        "C4": "Binary size explicitly mentioned as con: 'Adds tree-sitter crate dependency (~500KB); parser binary included'.",
+        "C5": "Recommendation: 'Start with Rust grammar (0.24.0), convert 3-4 high-impact patterns' with Rust spike first approach.",
+        "C6": "Files referenced: scanner.rs, patterns.rs, patterns.json, detection.rs, types.rs, security_integration.rs, benches/security_scan.rs.",
+        "C7": "Validation step explicit: 'run side-by-side with existing engine in tests to verify zero regression' and 'benchmark confirms <5% performance delta.'"
+      }
+    },
+    {
+      "run_id": "run-05",
+      "C1": 1,
+      "C2": 1,
+      "C3": 1,
+      "C4": 1,
+      "C5": 1,
+      "C6": 1,
+      "C7": 1,
+      "total": 7,
+      "justifications": {
+        "C1": "Issues #735/#736 identified and documented; known limitation explicitly stated in constraints.",
+        "C2": "tree-sitter (0.24+), tree-sitter-rust (0.23+), tree-sitter-python, tree-sitter-javascript all named explicitly.",
+        "C3": "Approach 1 (Hybrid) explicitly states: 'Keep existing regex engine for simple, single-line patterns (11 patterns). Add tree-sitter scanner for 3 patterns requiring data-flow'.",
+        "C4": "Binary size concerns explicitly mentioned: 'grammar crates add ~1-5MB' and 'Temporary hybrid state' in constraints.",
+        "C5": "Recommendation: 'Approach 1 is the right starting point... SQL injection and command injection are highest-impact multi-line vulnerabilities' with Rust focus.",
+        "C6": "Files referenced: scanner.rs, patterns.rs, patterns.json, detection.rs, types.rs, validator.rs, tests/security_integration.rs, Cargo.toml.",
+        "C7": "Success criteria: 'benchmark tree-sitter query performance vs regex on 100+ OSS repos, measure detection quality (false positive reduction).'"
+      }
+    },
+    {
+      "run_id": "run-06",
+      "C1": 1,
+      "C2": 1,
+      "C3": 1,
+      "C4": 1,
+      "C5": 1,
+      "C6": 1,
+      "C7": 1,
+      "total": 7,
+      "justifications": {
+        "C1": "Issues #735/#736 identified; explicitly references that multi-line vulnerabilities (source/sink on different lines) cannot be detected by regex.",
+        "C2": "tree-sitter (0.26.5), tree-sitter-rust (0.24.0) explicitly named in library_findings with version numbers.",
+        "C3": "Approach 1 (Hybrid) explicitly preserves regex patterns while adding optional tree-sitter layer; 'Alternative code path in SecurityScanner, activated only for Rust files in spike phase'.",
+        "C4": "Binary size explicitly mentioned as con: 'tree-sitter-rust grammar adds ~2-3MB even for Rust-only' in Approach 1.",
+        "C5": "Recommendation: 'Start with tree-sitter-rust grammar... Phase 1... Phase 2+' indicating staged approach with Rust first.",
+        "C6": "Files referenced: patterns.rs, scanner.rs, validator.rs, detection.rs, types.rs, security_integration.rs, security_scan.rs, Cargo.toml.",
+        "C7": "Success criteria specified: 'Detect multi-line SQL injection in Rust code, Performance within 2x regex baseline, <5% false positive increase.'"
+      }
+    },
+    {
+      "run_id": "run-07",
+      "C1": 1,
+      "C2": 1,
+      "C3": 1,
+      "C4": 1,
+      "C5": 1,
+      "C6": 1,
+      "C7": 1,
+      "total": 7,
+      "justifications": {
+        "C1": "Issue #735 explicitly identified as documenting the regex-based line-by-line limitation; #700, #702 referenced as foundational work.",
+        "C2": "tree-sitter (0.26.5), tree-sitter-rust (0.24.0) explicitly named with full API details in library_findings.",
+        "C3": "Approach 1 (Hybrid) explicitly proposes keeping regex intact while adding optional tree-sitter queries; 'Pattern JSON extended with optional ts_query field'.",
+        "C4": "Binary bloat mentioned in cons: 'Each language grammar adds build time and binary size' and 'tree-sitter-python, tree-sitter-js, etc.'",
+        "C5": "Recommendation specifies Rust-first spike: 'Start with tree-sitter-rust grammar and 2-3 high-value patterns (SQL injection)... Implement TSQueryEngine alongside PatternEngine'.",
+        "C6": "Files explicitly cited: patterns.rs, scanner.rs, patterns.json, detection.rs, validator.rs, security_integration.rs.",
+        "C7": "Validation step clear: 'verify multi-line SQL injection from test fixtures is detected' and integration with existing test infrastructure."
+      }
+    },
+    {
+      "run_id": "run-08",
+      "C1": 1,
+      "C2": 1,
+      "C3": 1,
+      "C4": 1,
+      "C5": 1,
+      "C6": 1,
+      "C7": 1,
+      "total": 7,
+      "justifications": {
+        "C1": "Issues #735/#736 identified; explicitly references multi-line limitation that tree-sitter would solve.",
+        "C2": "tree-sitter (0.26.5), tree-sitter-rust (0.23) explicitly named with API and notes in library_findings.",
+        "C3": "Approach 1 (Hybrid) clearly preserves regex for string literal/content matching; adds tree-sitter for syntactic context; 'compile tree-sitter query for each pattern that needs AST'.",
+        "C4": "Binary bloat explicitly mentioned as con: 'Adds tree-sitter + grammar crates as new dependencies (binary size increase ~10-20MB)'.",
+        "C5": "Recommendation: 'Start with Rust grammar, compile tree-sitter query... execute queries and map results back to line numbers. Implements for 1-2 high-impact patterns'.",
+        "C6": "Files referenced: scanner.rs, patterns.rs, patterns.json, types.rs, detection.rs, security_integration.rs.",
+        "C7": "Success criteria specified: 'Implement for 1-2 high-impact patterns (e.g., SQL injection) as proof-of-concept' with measurement of performance impact."
+      }
+    },
+    {
+      "run_id": "run-09",
+      "C1": 1,
+      "C2": 1,
+      "C3": 1,
+      "C4": 1,
+      "C5": 1,
+      "C6": 1,
+      "C7": 1,
+      "total": 7,
+      "justifications": {
+        "C1": "Issues #735/#736 identified; explicitly documents multi-line vulnerability detection as the core problem being solved.",
+        "C2": "tree-sitter (0.26.5), tree-sitter-rust explicitly named in library_findings with detailed API and notes.",
+        "C3": "Approach 1 (Hybrid) explicitly maintains regex for simple patterns while adding tree-sitter for complex multi-line patterns; 'Detection layer routes patterns to appropriate engine'.",
+        "C4": "Binary bloat explicitly addressed: 'Dependency on tree-sitter-rust community parser stability' and grammar crate overhead mentioned.",
+        "C5": "Recommendation explicitly recommends Rust-first spike: 'convert sql-injection-concat and sql-injection-format patterns first (most obvious multi-line case)'.",
+        "C6": "Specific files: scanner.rs, patterns.rs, patterns.json, detection.rs, types.rs, validator.rs, security_integration.rs, sql_injection.rs, hardcoded_secrets.rs, Cargo.toml.",
+        "C7": "Concrete success criteria: 'validate with existing fixtures' and convert specific multi-line patterns with measurement of detection quality."
+      }
+    },
+    {
+      "run_id": "run-10",
+      "C1": 1,
+      "C2": 1,
+      "C3": 1,
+      "C4": 1,
+      "C5": 1,
+      "C6": 1,
+      "C7": 1,
+      "total": 7,
+      "justifications": {
+        "C1": "Issue #737 identified as primary; #735/#736 documented the multi-line detection limitation that needs addressing.",
+        "C2": "tree-sitter (0.26.5) and grammar crates explicitly named; tree-sitter-rust, tree-sitter-python, etc. referenced in constraints.",
+        "C3": "Approach 1 (Hybrid) explicitly preserves regex patterns and adds tree-sitter as optional feature; 'Scanner dispatches to appropriate engine based on pattern type'.",
+        "C4": "Binary size explicitly mentioned in cons: 'Binary size grows with each language grammar added' and 'multiple grammar crates as dependencies'.",
+        "C5": "Recommendation: 'Start with Approach 3 (Spike: Limited Tree-Sitter for Rust Only)... Time-boxed research spike'... validates Rust approach before broader rollout.",
+        "C6": "Files referenced: patterns.rs, scanner.rs, patterns.json, security_integration.rs, mod.rs throughout.",
+        "C7": "Success criteria explicit: '(1) Detect multi-line SQL injection in Rust code, (2) Performance within 2x regex baseline, (3) <5% false positive increase, (4) TSQuery complexity <100 lines.'"
+      }
+    }
+  ]
+}
