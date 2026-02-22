@@ -130,7 +130,7 @@ Session ID: `20260220_43`. Recorded in `analysis.json`.
 
 | Component | Version |
 |---|---|
-| Goose | v1.0.x (Feb 2026) |
+| Goose | 1.25.0 |
 | Claude Haiku 4.5 | `claude-haiku-4-5@20251001` |
 | Claude Sonnet 4.6 | `claude-sonnet-4-6@default` |
 | Provider | GCP Vertex AI |
