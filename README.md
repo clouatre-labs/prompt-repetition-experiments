@@ -155,7 +155,7 @@ All delegates run on Claude Haiku 4.5 at temperature 0.5. The orchestrator spawn
 
 ## Infrastructure Confound
 
-Goose enforces an undocumented 5-delegate concurrency cap. With 10 delegates, execution splits into two sequential batches:
+The 5-delegate concurrency cap is undocumented. It is enforced as a hard rejection in source (`GOOSE_MAX_BACKGROUND_TASKS` defaults to 5), with no queuing or retry. Excess delegates are dropped, not deferred. With 10 delegates, this silently split our groups into two sequential batches:
 
 ```text
 Experiment 2 timeline:
@@ -166,7 +166,7 @@ Experiment 2 timeline:
   22:23:00  Batch 2 completes
 ```
 
-Batch 2 delegates had stale context (4 minutes older). The raw orchestrator logs in `experiments/*/raw/orchestrator.jsonl` show this behavior.
+Batch 2 delegates had stale context (4 minutes older). The raw orchestrator logs in `experiments/*/raw/orchestrator.jsonl` show this behavior. This class of confound (runtime resource limits, queue behavior, model routing) is endemic to agent systems and invisible without structured logging.
 
 ---
 
