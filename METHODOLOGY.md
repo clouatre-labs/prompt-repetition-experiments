@@ -122,7 +122,7 @@ Session ID: `20260220_43`. Recorded in `analysis.json`.
 
 1. **Ceiling effects.** Both rubrics were too easy. 100% accuracy in both groups leaves no room for treatment effects.
 2. **Small sample size.** n=5 per group is underpowered for detecting small effects.
-3. **Infrastructure confound.** The 5-delegate concurrency cap created unbalanced batching.
+3. **Infrastructure confound.** Goose enforces an undocumented 5-delegate concurrency cap (`GOOSE_MAX_BACKGROUND_TASKS` defaults to 5) as a hard rejection with no queuing. Excess delegates are dropped, not deferred, which silently split our groups into unbalanced batches.
 4. **Single model.** All experiments used Claude Haiku 4.5. Results may not generalize to other models.
 5. **Session log loss.** Experiment 2 `.jsonl` session logs were purged from disk before archival. Per-run message and token counts were reconstructed from SQLite session metadata.
 
