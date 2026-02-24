@@ -120,6 +120,19 @@ Perfect scores across all 10 runs. Complete ceiling effect. The rubric was desig
 
 **Conclusion:** No detectable difference between x1 and x2 instruction conditions. Both experiments exhibited ceiling effects, making treatment effects unmeasurable. The null result suggests prompt repetition addresses positional attention decay -- a problem that well-scoped engineering tasks with structured outputs do not have.
 
+### Token Efficiency
+
+Treatment agents consistently used fewer tokens despite the longer prompt. The effect is confounded with the ceiling-effect task design and too small (n=5 per group per experiment) for statistical conclusions.
+
+| Slice | N (control v treatment) | Input token diff | Output token diff |
+|---|---|---|---|
+| Pooled (all runs) | 10 v 10 | -13.1% | -15.4% |
+| Pooled (excl. control-1 drift) | 9 v 10 | -17.0% | -20.9% |
+| Exp1 only | 5 v 5 | -23.1% | -17.4% |
+| Exp2 only | 5 v 5 | -0.2% | -13.5% |
+
+Exp1 control-1 was a drift failure (93 messages, no output file, scored 0). It was excluded from scoring but included in the "all runs" row. Its abnormally low token counts (482K input, 3.5K output) pull the control mean down, so excluding it widens the gap.
+
 ---
 
 ## Experiment Flow
