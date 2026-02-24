@@ -17,7 +17,7 @@ Supplementary materials for [What a Null Result Taught Us About AI Agent Evaluat
 
 ## The Question
 
-[Leviathan et al. (2025)](https://arxiv.org/abs/2502.07869) showed that repeating instructions in LLM prompts improves accuracy on positional retrieval tasks. Does this translate to structured engineering tasks executed by AI agent delegates?
+[Leviathan et al. (2025)](https://arxiv.org/abs/2512.14982) showed that repeating instructions in LLM prompts improves accuracy on positional retrieval tasks. Does this translate to structured engineering tasks executed by AI agent delegates?
 
 ```text
 Experiment setup:
