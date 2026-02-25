@@ -1,0 +1,113 @@
+{
+  "source": "extracted from analysis.json which was backfilled from sessions.db; only accumulated_input_tokens and accumulated_output_tokens available (no session-level split)",
+  "pricing_date": "2026-02-20",
+  "pricing": {
+    "haiku-4.5": {
+      "input_per_mtok": 1.00,
+      "output_per_mtok": 5.00,
+      "provider": "gcp_vertex_ai"
+    }
+  },
+  "runs": [
+    {
+      "run_id": "scout-run-01",
+      "group": "control",
+      "model": "haiku-4.5",
+      "valid": true,
+      "attempt": 1,
+      "wall_time_minutes": 19.4,
+      "accumulated_input_tokens": 852200,
+      "accumulated_output_tokens": 11568
+    },
+    {
+      "run_id": "scout-run-02",
+      "group": "treatment",
+      "model": "haiku-4.5",
+      "valid": true,
+      "attempt": 1,
+      "wall_time_minutes": 13.9,
+      "accumulated_input_tokens": 667135,
+      "accumulated_output_tokens": 8450
+    },
+    {
+      "run_id": "scout-run-03",
+      "group": "control",
+      "model": "haiku-4.5",
+      "valid": true,
+      "attempt": 1,
+      "wall_time_minutes": 6.4,
+      "accumulated_input_tokens": 646611,
+      "accumulated_output_tokens": 8593
+    },
+    {
+      "run_id": "scout-run-04",
+      "group": "treatment",
+      "model": "haiku-4.5",
+      "valid": true,
+      "attempt": 1,
+      "wall_time_minutes": 7.5,
+      "accumulated_input_tokens": 746775,
+      "accumulated_output_tokens": 8369
+    },
+    {
+      "run_id": "scout-run-05",
+      "group": "control",
+      "model": "haiku-4.5",
+      "valid": true,
+      "attempt": 1,
+      "wall_time_minutes": 9.6,
+      "accumulated_input_tokens": 695551,
+      "accumulated_output_tokens": 8442
+    },
+    {
+      "run_id": "scout-run-06",
+      "group": "treatment",
+      "model": "haiku-4.5",
+      "valid": true,
+      "attempt": 1,
+      "wall_time_minutes": 0.5,
+      "accumulated_input_tokens": 819620,
+      "accumulated_output_tokens": 8365
+    },
+    {
+      "run_id": "scout-run-07",
+      "group": "control",
+      "model": "haiku-4.5",
+      "valid": true,
+      "attempt": 1,
+      "wall_time_minutes": 1.4,
+      "accumulated_input_tokens": 817906,
+      "accumulated_output_tokens": 9018
+    },
+    {
+      "run_id": "scout-run-08",
+      "group": "treatment",
+      "model": "haiku-4.5",
+      "valid": true,
+      "attempt": 1,
+      "wall_time_minutes": 6.9,
+      "accumulated_input_tokens": 612122,
+      "accumulated_output_tokens": 7492
+    },
+    {
+      "run_id": "scout-run-09",
+      "group": "control",
+      "model": "haiku-4.5",
+      "valid": true,
+      "attempt": 1,
+      "wall_time_minutes": 5.4,
+      "accumulated_input_tokens": 642422,
+      "accumulated_output_tokens": 9500
+    },
+    {
+      "run_id": "scout-run-10",
+      "group": "treatment",
+      "model": "haiku-4.5",
+      "valid": true,
+      "attempt": 1,
+      "wall_time_minutes": 14.6,
+      "accumulated_input_tokens": 800224,
+      "accumulated_output_tokens": 8101
+    }
+  ]
+}

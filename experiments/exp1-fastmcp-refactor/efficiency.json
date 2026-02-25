@@ -1,0 +1,114 @@
+{
+  "source": "extracted from analysis.json which was backfilled from sessions.db; only accumulated_input_tokens and accumulated_output_tokens available (no session-level split)",
+  "pricing_date": "2026-02-20",
+  "pricing": {
+    "haiku-4.5": {
+      "input_per_mtok": 1.00,
+      "output_per_mtok": 5.00,
+      "provider": "gcp_vertex_ai"
+    }
+  },
+  "runs": [
+    {
+      "run_id": "scout-control-1",
+      "group": "control",
+      "model": "haiku-4.5",
+      "valid": false,
+      "attempt": 1,
+      "wall_time_minutes": 0.9,
+      "accumulated_input_tokens": 482353,
+      "accumulated_output_tokens": 3476,
+      "note": "drift failure, no output file written"
+    },
+    {
+      "run_id": "scout-control-2",
+      "group": "control",
+      "model": "haiku-4.5",
+      "valid": true,
+      "attempt": 1,
+      "wall_time_minutes": 2.1,
+      "accumulated_input_tokens": 1008475,
+      "accumulated_output_tokens": 9166
+    },
+    {
+      "run_id": "scout-control-3",
+      "group": "control",
+      "model": "haiku-4.5",
+      "valid": true,
+      "attempt": 1,
+      "wall_time_minutes": 2.3,
+      "accumulated_input_tokens": 1036688,
+      "accumulated_output_tokens": 10293
+    },
+    {
+      "run_id": "scout-control-4",
+      "group": "control",
+      "model": "haiku-4.5",
+      "valid": true,
+      "attempt": 1,
+      "wall_time_minutes": 2.4,
+      "accumulated_input_tokens": 1213952,
+      "accumulated_output_tokens": 10206
+    },
+    {
+      "run_id": "scout-control-5",
+      "group": "control",
+      "model": "haiku-4.5",
+      "valid": true,
+      "attempt": 1,
+      "wall_time_minutes": 2.5,
+      "accumulated_input_tokens": 972091,
+      "accumulated_output_tokens": 11856
+    },
+    {
+      "run_id": "scout-treatment-1",
+      "group": "treatment",
+      "model": "haiku-4.5",
+      "valid": true,
+      "attempt": 1,
+      "wall_time_minutes": 1.7,
+      "accumulated_input_tokens": 708540,
+      "accumulated_output_tokens": 7784
+    },
+    {
+      "run_id": "scout-treatment-2",
+      "group": "treatment",
+      "model": "haiku-4.5",
+      "valid": true,
+      "attempt": 1,
+      "wall_time_minutes": 1.6,
+      "accumulated_input_tokens": 873935,
+      "accumulated_output_tokens": 7333
+    },
+    {
+      "run_id": "scout-treatment-3",
+      "group": "treatment",
+      "model": "haiku-4.5",
+      "valid": true,
+      "attempt": 1,
+      "wall_time_minutes": 1.4,
+      "accumulated_input_tokens": 568629,
+      "accumulated_output_tokens": 6901
+    },
+    {
+      "run_id": "scout-treatment-4",
+      "group": "treatment",
+      "model": "haiku-4.5",
+      "valid": true,
+      "attempt": 1,
+      "wall_time_minutes": 2.1,
+      "accumulated_input_tokens": 990778,
+      "accumulated_output_tokens": 9611
+    },
+    {
+      "run_id": "scout-treatment-5",
+      "group": "treatment",
+      "model": "haiku-4.5",
+      "valid": true,
+      "attempt": 1,
+      "wall_time_minutes": 1.2,
+      "accumulated_input_tokens": 482231,
+      "accumulated_output_tokens": 5541
+    }
+  ]
+}
