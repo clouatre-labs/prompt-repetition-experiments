@@ -254,6 +254,7 @@ prompt-repetition-experiments/
 - **`analysis.json`** -- Experiment metadata: issue reference, model, dates, per-run timing/token counts, aggregate statistics, and statistical tests.
 - **`scores.json`** -- Blind scorer output: per-criterion binary scores (0/1) with natural-language justifications for each run.
 - **`label-map.json`** -- Group assignments sealed before scoring began. Maps run IDs to control/treatment groups.
+- **`efficiency.json`** -- Per-run wall time, token usage, and pricing metadata. Contains execution duration in minutes and cost analysis for each delegate run.
 - **`sessions/*.json`** -- Structured delegate outputs. Each file contains the research findings produced by one Scout delegate. These are the artifacts scored by the rubric.
 - **`raw/*.jsonl`** -- Full message-by-message conversation logs exported from Goose's session database. Includes tool calls, intermediate reasoning, and errors. Home directory paths sanitized to `$EXPERIMENTER_HOME`.
 
