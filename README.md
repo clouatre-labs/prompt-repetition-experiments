@@ -139,26 +139,10 @@ Exp1 control-1 was a drift failure (93 messages, no output file, scored 0). It w
 
 ```mermaid
 graph TD
-    O[Orchestrator<br/>Claude Sonnet 4.6] --> C1[Control 1<br/>x1 instructions]
-    O --> C2[Control 2]
-    O --> C3[Control 3]
-    O --> C4[Control 4]
-    O --> C5[Control 5]
-    O --> T1[Treatment 1<br/>x2 instructions]
-    O --> T2[Treatment 2]
-    O --> T3[Treatment 3]
-    O --> T4[Treatment 4]
-    O --> T5[Treatment 5]
-    C1 --> S[Blind Scorer<br/>Pre-registered rubric]
-    C2 --> S
-    C3 --> S
-    C4 --> S
-    C5 --> S
-    T1 --> S
-    T2 --> S
-    T3 --> S
-    T4 --> S
-    T5 --> S
+    O[Orchestrator<br/>Claude Sonnet 4.6] --> CG[Control 1..5<br/>x1 instructions]
+    O --> TG[Treatment 1..5<br/>x2 instructions]
+    CG --> S[Blind Scorer<br/>Pre-registered rubric]
+    TG --> S
     S --> R[Results<br/>scores.json]
 ```
 
