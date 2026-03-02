@@ -270,6 +270,35 @@ For questions about the methodology or data, open an issue on this repository.
 
 ---
 
+## Ethics Statement
+
+This research involves no human subjects. All experimental runs are automated
+LLM evaluations using synthetic coding tasks. No personally identifiable
+information is collected or processed. Scoring is performed by a separate LLM
+instance under blinded conditions (group labels replaced with opaque
+identifiers).
+
+---
+
+## Data Availability
+
+All experimental data, protocols, scoring rubrics, and analysis outputs are
+available in this repository under the MIT license. Raw session data was
+extracted from the local Goose sessions database (`sessions.db`) and is
+preserved in the experiment directories. No data has been excluded or
+selectively reported.
+
+---
+
+## Funding and Conflict of Interest
+
+This research received no external funding. The author has no financial or
+non-financial conflicts of interest to declare. The tools used (Goose, Claude)
+are commercially available products; the author has no affiliation with their
+developers beyond being a user.
+
+---
+
 ## Citation
 
 ```bibtex

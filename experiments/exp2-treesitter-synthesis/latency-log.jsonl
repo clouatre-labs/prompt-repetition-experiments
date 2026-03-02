@@ -1,0 +1,10 @@
+{"run_id": "scout-run-01", "goose_session_id": "20260220_46", "start_ts": "2026-02-20T22:15:45Z", "end_ts": "2026-02-20T22:18:11Z", "wall_clock_seconds": 146}
+{"run_id": "scout-run-02", "goose_session_id": "20260220_47", "start_ts": "2026-02-20T22:16:02Z", "end_ts": "2026-02-20T22:18:01Z", "wall_clock_seconds": 119}
+{"run_id": "scout-run-03", "goose_session_id": "20260220_48", "start_ts": "2026-02-20T22:16:12Z", "end_ts": "2026-02-20T22:18:18Z", "wall_clock_seconds": 126}
+{"run_id": "scout-run-04", "goose_session_id": "20260220_49", "start_ts": "2026-02-20T22:16:29Z", "end_ts": "2026-02-20T22:18:19Z", "wall_clock_seconds": 110}
+{"run_id": "scout-run-05", "goose_session_id": "20260220_50", "start_ts": "2026-02-20T22:16:39Z", "end_ts": "2026-02-20T22:18:23Z", "wall_clock_seconds": 104}
+{"run_id": "scout-run-06", "goose_session_id": "20260220_53", "start_ts": "2026-02-20T22:19:27Z", "end_ts": "2026-02-20T22:21:19Z", "wall_clock_seconds": 112}
+{"run_id": "scout-run-07", "goose_session_id": "20260220_54", "start_ts": "2026-02-20T22:19:37Z", "end_ts": "2026-02-20T22:21:34Z", "wall_clock_seconds": 117}
+{"run_id": "scout-run-09", "goose_session_id": "20260220_56", "start_ts": "2026-02-20T22:20:03Z", "end_ts": "2026-02-20T22:21:59Z", "wall_clock_seconds": 116}
+{"run_id": "scout-run-10", "goose_session_id": "20260220_57", "start_ts": "2026-02-20T22:20:20Z", "end_ts": "2026-02-20T22:22:09Z", "wall_clock_seconds": 109}
+{"run_id": "scout-run-08", "goose_session_id": "20260220_58", "start_ts": "2026-02-20T22:23:02Z", "end_ts": "2026-02-20T22:25:08Z", "wall_clock_seconds": 126}
