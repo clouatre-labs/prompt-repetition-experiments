@@ -4,7 +4,7 @@
   "rubric_version": "1.0",
   "scores": [
     {
-      "run_id": "run-01",
+      "run_id": "scout-run-01",
       "C1": 1,
       "C2": 1,
       "C3": 1,
@@ -16,7 +16,7 @@
       "justifications": {
         "C1": "Issues #735/#736 explicitly identified and documented as the regex-based line-by-line scanning limitation.",
         "C2": "tree-sitter, tree-sitter-rust, and tree-sitter-python named explicitly in library_findings section.",
-        "C3": "Approach A (Hybrid Regex + Tree-Sitter) clearly proposes keeping existing regex patterns while adding optional tree-sitter AST engine—preserves 85% of existing rules.",
+        "C3": "Approach A (Hybrid Regex + Tree-Sitter) clearly proposes keeping existing regex patterns while adding optional tree-sitter AST engine\u2014preserves 85% of existing rules.",
         "C4": "Binary bloat explicitly mentioned as con: 'Binary bloat from multiple grammar crates (tree-sitter-rust ~3MB, etc.)' and constraint about justifying binary size increase.",
         "C5": "Approach A explicitly mentions 'Can support multi-language progressively (Rust spike first, then Python)' and recommendation specifies 'Start with tree-sitter-rust grammar + one query pattern (SQL injection)'.",
         "C6": "Specific codebase files referenced: scanner.rs, patterns.rs, patterns.json, detection.rs, types.rs throughout relevant_files and approaches.",
@@ -24,7 +24,7 @@
       }
     },
     {
-      "run_id": "run-02",
+      "run_id": "scout-run-02",
       "C1": 1,
       "C2": 1,
       "C3": 1,
@@ -44,7 +44,7 @@
       }
     },
     {
-      "run_id": "run-03",
+      "run_id": "scout-run-03",
       "C1": 1,
       "C2": 1,
       "C3": 1,
@@ -64,7 +64,7 @@
       }
     },
     {
-      "run_id": "run-04",
+      "run_id": "scout-run-04",
       "C1": 1,
       "C2": 1,
       "C3": 1,
@@ -84,7 +84,7 @@
       }
     },
     {
-      "run_id": "run-05",
+      "run_id": "scout-run-05",
       "C1": 1,
       "C2": 1,
       "C3": 1,
@@ -104,7 +104,7 @@
       }
     },
     {
-      "run_id": "run-06",
+      "run_id": "scout-run-06",
       "C1": 1,
       "C2": 1,
       "C3": 1,
@@ -124,7 +124,7 @@
       }
     },
     {
-      "run_id": "run-07",
+      "run_id": "scout-run-07",
       "C1": 1,
       "C2": 1,
       "C3": 1,
@@ -144,7 +144,7 @@
       }
     },
     {
-      "run_id": "run-08",
+      "run_id": "scout-run-08",
       "C1": 1,
       "C2": 1,
       "C3": 1,
@@ -164,7 +164,7 @@
       }
     },
     {
-      "run_id": "run-09",
+      "run_id": "scout-run-09",
       "C1": 1,
       "C2": 1,
       "C3": 1,
@@ -184,7 +184,7 @@
       }
     },
     {
-      "run_id": "run-10",
+      "run_id": "scout-run-10",
       "C1": 1,
       "C2": 1,
       "C3": 1,
