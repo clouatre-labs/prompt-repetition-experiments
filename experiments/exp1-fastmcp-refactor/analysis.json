@@ -375,5 +375,12 @@
   },
   "experiment_start": null,
   "experiment_end": null,
-  "data_note": null
+  "data_note": null,
+  "goose_version": "1.25.0",
+  "effect_size": {
+    "metric": "cohens_d",
+    "value": 0.7766,
+    "interpretation": "medium",
+    "note": "Computed from mean quality scores (sum of binary criteria) between control and treatment groups"
+  }
 }

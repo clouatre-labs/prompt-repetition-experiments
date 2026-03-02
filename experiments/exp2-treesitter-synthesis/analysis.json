@@ -368,5 +368,12 @@
       "passed": 10,
       "total": 10
     }
+  },
+  "goose_version": "1.25.0",
+  "effect_size": {
+    "metric": "cohens_d",
+    "value": 0,
+    "interpretation": "negligible",
+    "note": "Computed from mean quality scores (sum of binary criteria) between control and treatment groups"
   }
 }
