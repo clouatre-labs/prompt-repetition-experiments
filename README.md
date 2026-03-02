@@ -13,7 +13,6 @@ Supplementary materials for [What a Null Result Taught Us About AI Agent Evaluat
 
 </div>
 
----
 
 ## The Question
 
@@ -29,7 +28,6 @@ Experiment setup:
   x2 experiments = 20 delegates total, 4,179 messages, 28 session logs
 ```
 
----
 
 ## Scoring Rubric
 
@@ -60,7 +58,6 @@ C7  Binary size / grammar crate count estimated       (quantitative analysis)
 
 C5-C7 in Experiment 2 require reading and synthesizing actual source code. They cannot be answered from the issue text alone.
 
----
 
 ## Results
 
@@ -133,7 +130,6 @@ Treatment agents consistently used fewer tokens despite the longer prompt. The e
 
 Exp1 control-1 was a drift failure (93 messages, no output file, scored 0). It was excluded from scoring but included in the "all runs" row. Its abnormally low token counts (482K input, 3.5K output) pull the control mean down, so excluding it widens the gap.
 
----
 
 ## Experiment Flow
 
@@ -148,7 +144,6 @@ graph TD
 
 All delegates run on Claude Haiku 4.5 at temperature 0.5. The orchestrator spawns delegates in parallel, subject to a 5-delegate concurrency cap discovered during experimentation.
 
----
 
 ## Infrastructure Confound
 
@@ -165,7 +160,6 @@ Experiment 2 timeline:
 
 Batch 2 delegates had stale context (4 minutes older). The raw orchestrator logs in `experiments/*/raw/orchestrator.jsonl` show this behavior. This class of confound (runtime resource limits, queue behavior, model routing) is endemic to agent systems and invisible without structured logging.
 
----
 
 ## Inspecting the Data
 
@@ -190,7 +184,6 @@ cat experiments/exp2-treesitter-synthesis/raw/scout-run-01.jsonl | \
   less
 ```
 
----
 
 ## Project Structure
 
@@ -244,7 +237,6 @@ prompt-repetition-experiments/
 
 Exact reproduction requires access to the target repositories at the commit SHAs recorded in each `analysis.json`.
 
----
 
 ## Reproducibility
 
@@ -268,8 +260,6 @@ To reproduce with different tasks or models, follow the protocols in `experiment
 
 For questions about the methodology or data, open an issue on this repository.
 
----
-
 ## Ethics Statement
 
 This research involves no human subjects. All experimental runs are automated
@@ -277,8 +267,6 @@ LLM evaluations using synthetic coding tasks. No personally identifiable
 information is collected or processed. Scoring is performed by a separate LLM
 instance under blinded conditions (group labels replaced with opaque
 identifiers).
-
----
 
 ## Data Availability
 
@@ -288,16 +276,12 @@ extracted from the local Goose sessions database (`sessions.db`) and is
 preserved in the experiment directories. No data has been excluded or
 selectively reported.
 
----
-
 ## Funding and Conflict of Interest
 
 This research received no external funding. The author has no financial or
 non-financial conflicts of interest to declare. The tools used (Goose, Claude)
 are commercially available products; the author has no affiliation with their
 developers beyond being a user.
-
----
 
 ## Citation
 
