@@ -1,113 +1,152 @@
 {
-  "source": "extracted from analysis.json which was backfilled from sessions.db; only accumulated_input_tokens and accumulated_output_tokens available (no session-level split)",
-  "pricing_date": "2026-02-20",
+  "source": "goose sessions.db + experiment analysis",
   "pricing": {
-    "haiku-4.5": {
-      "input_per_mtok": 1.00,
-      "output_per_mtok": 5.00,
-      "provider": "gcp_vertex_ai"
-    }
+    "model": "claude-haiku-4-5",
+    "provider": "gcp_vertex_ai",
+    "input_per_mtok_usd": 1.0,
+    "output_per_mtok_usd": 5.0
   },
+  "pricing_date": "2025-02-20",
   "runs": [
     {
       "run_id": "scout-run-01",
+      "goose_session_id": "20260220_46",
       "group": "control",
       "model": "haiku-4.5",
       "valid": true,
       "attempt": 1,
-      "wall_time_minutes": 19.4,
-      "accumulated_input_tokens": 852200,
-      "accumulated_output_tokens": 11568
+      "input_tokens": 852200,
+      "output_tokens": 11568,
+      "total_tokens": 863768,
+      "cost_usd": 0.91,
+      "wall_clock_seconds": 146,
+      "note": null
     },
     {
       "run_id": "scout-run-02",
+      "goose_session_id": "20260220_47",
       "group": "treatment",
       "model": "haiku-4.5",
       "valid": true,
       "attempt": 1,
-      "wall_time_minutes": 13.9,
-      "accumulated_input_tokens": 667135,
-      "accumulated_output_tokens": 8450
+      "input_tokens": 667135,
+      "output_tokens": 8450,
+      "total_tokens": 675585,
+      "cost_usd": 0.7094,
+      "wall_clock_seconds": 119,
+      "note": null
     },
     {
       "run_id": "scout-run-03",
+      "goose_session_id": "20260220_48",
       "group": "control",
       "model": "haiku-4.5",
       "valid": true,
       "attempt": 1,
-      "wall_time_minutes": 6.4,
-      "accumulated_input_tokens": 646611,
-      "accumulated_output_tokens": 8593
+      "input_tokens": 646611,
+      "output_tokens": 8593,
+      "total_tokens": 655204,
+      "cost_usd": 0.6896,
+      "wall_clock_seconds": 126,
+      "note": null
     },
     {
       "run_id": "scout-run-04",
+      "goose_session_id": "20260220_49",
       "group": "treatment",
       "model": "haiku-4.5",
       "valid": true,
       "attempt": 1,
-      "wall_time_minutes": 7.5,
-      "accumulated_input_tokens": 746775,
-      "accumulated_output_tokens": 8369
+      "input_tokens": 746775,
+      "output_tokens": 8369,
+      "total_tokens": 755144,
+      "cost_usd": 0.7886,
+      "wall_clock_seconds": 110,
+      "note": null
     },
     {
       "run_id": "scout-run-05",
+      "goose_session_id": "20260220_50",
       "group": "control",
       "model": "haiku-4.5",
       "valid": true,
       "attempt": 1,
-      "wall_time_minutes": 9.6,
-      "accumulated_input_tokens": 695551,
-      "accumulated_output_tokens": 8442
+      "input_tokens": 695551,
+      "output_tokens": 8442,
+      "total_tokens": 703993,
+      "cost_usd": 0.7378,
+      "wall_clock_seconds": 104,
+      "note": null
     },
     {
       "run_id": "scout-run-06",
+      "goose_session_id": "20260220_53",
       "group": "treatment",
       "model": "haiku-4.5",
       "valid": true,
       "attempt": 1,
-      "wall_time_minutes": 0.5,
-      "accumulated_input_tokens": 819620,
-      "accumulated_output_tokens": 8365
+      "input_tokens": 819620,
+      "output_tokens": 8365,
+      "total_tokens": 827985,
+      "cost_usd": 0.8614,
+      "wall_clock_seconds": 112,
+      "note": null
     },
     {
       "run_id": "scout-run-07",
+      "goose_session_id": "20260220_54",
       "group": "control",
       "model": "haiku-4.5",
       "valid": true,
       "attempt": 1,
-      "wall_time_minutes": 1.4,
-      "accumulated_input_tokens": 817906,
-      "accumulated_output_tokens": 9018
+      "input_tokens": 817906,
+      "output_tokens": 9018,
+      "total_tokens": 826924,
+      "cost_usd": 0.863,
+      "wall_clock_seconds": 117,
+      "note": null
     },
     {
       "run_id": "scout-run-08",
+      "goose_session_id": "20260220_58",
       "group": "treatment",
       "model": "haiku-4.5",
       "valid": true,
       "attempt": 1,
-      "wall_time_minutes": 6.9,
-      "accumulated_input_tokens": 612122,
-      "accumulated_output_tokens": 7492
+      "input_tokens": 612122,
+      "output_tokens": 7492,
+      "total_tokens": 619614,
+      "cost_usd": 0.6496,
+      "wall_clock_seconds": 126,
+      "note": null
     },
     {
       "run_id": "scout-run-09",
+      "goose_session_id": "20260220_56",
       "group": "control",
       "model": "haiku-4.5",
       "valid": true,
       "attempt": 1,
-      "wall_time_minutes": 5.4,
-      "accumulated_input_tokens": 642422,
-      "accumulated_output_tokens": 9500
+      "input_tokens": 642422,
+      "output_tokens": 9500,
+      "total_tokens": 651922,
+      "cost_usd": 0.6899,
+      "wall_clock_seconds": 116,
+      "note": null
     },
     {
       "run_id": "scout-run-10",
+      "goose_session_id": "20260220_57",
       "group": "treatment",
       "model": "haiku-4.5",
       "valid": true,
       "attempt": 1,
-      "wall_time_minutes": 14.6,
-      "accumulated_input_tokens": 800224,
-      "accumulated_output_tokens": 8101
+      "input_tokens": 800224,
+      "output_tokens": 8101,
+      "total_tokens": 808325,
+      "cost_usd": 0.8407,
+      "wall_clock_seconds": 109,
+      "note": null
     }
   ]
 }

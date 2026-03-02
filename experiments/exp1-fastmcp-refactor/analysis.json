@@ -13,114 +13,186 @@
   "runs": {
     "scout-control-1": {
       "group": "control",
-      "session_id": "20260220_31",
-      "start": "21:14:39Z",
-      "end": "21:15:30Z",
-      "wall_seconds": 51,
+      "goose_session_id": "20260220_31",
       "messages": 93,
       "input_tokens": 482353,
       "output_tokens": 3476,
-      "bytes": null,
-      "note": "Drift failure: 93 messages, no output file written. File-write instruction appeared only at end of delegate prompt."
+      "total_tokens": 485829,
+      "bytes": 230410,
+      "wall_clock_seconds": 49,
+      "note": "Drift failure: 93 messages, no output file written. File-write instruction appeared only at end of delegate prompt.",
+      "scores": {}
     },
     "scout-control-2": {
       "group": "control",
-      "session_id": "20260220_32",
-      "start": "21:14:54Z",
-      "end": "21:16:58Z",
-      "wall_seconds": 124,
+      "goose_session_id": "20260220_32",
       "messages": 194,
       "input_tokens": 1008475,
       "output_tokens": 9166,
-      "bytes": 9504
+      "total_tokens": 1017641,
+      "bytes": 9504,
+      "wall_clock_seconds": 119,
+      "note": null,
+      "scores": {
+        "C1": 1,
+        "C2": 1,
+        "C3": 1,
+        "C4": 1,
+        "C5": 1,
+        "C6": 1
+      }
     },
     "scout-control-3": {
       "group": "control",
-      "session_id": "20260220_33",
-      "start": "21:15:09Z",
-      "end": "21:17:26Z",
-      "wall_seconds": 137,
+      "goose_session_id": "20260220_33",
       "messages": 213,
       "input_tokens": 1036688,
       "output_tokens": 10293,
-      "bytes": 9500
+      "total_tokens": 1046981,
+      "bytes": 9500,
+      "wall_clock_seconds": 133,
+      "note": null,
+      "scores": {
+        "C1": 1,
+        "C2": 1,
+        "C3": 1,
+        "C4": 1,
+        "C5": 1,
+        "C6": 1
+      }
     },
     "scout-control-4": {
       "group": "control",
-      "session_id": "20260220_34",
-      "start": "21:15:24Z",
-      "end": "21:17:47Z",
-      "wall_seconds": 143,
+      "goose_session_id": "20260220_34",
       "messages": 234,
       "input_tokens": 1213952,
       "output_tokens": 10206,
-      "bytes": 9140
+      "total_tokens": 1224158,
+      "bytes": 9140,
+      "wall_clock_seconds": 139,
+      "note": null,
+      "scores": {
+        "C1": 1,
+        "C2": 1,
+        "C3": 1,
+        "C4": 1,
+        "C5": 0,
+        "C6": 1
+      }
     },
     "scout-control-5": {
       "group": "control",
-      "session_id": "20260220_35",
-      "start": "21:15:39Z",
-      "end": "21:18:08Z",
-      "wall_seconds": 149,
+      "goose_session_id": "20260220_35",
       "messages": 196,
       "input_tokens": 972091,
       "output_tokens": 11856,
-      "bytes": 9352
+      "total_tokens": 983947,
+      "bytes": 9352,
+      "wall_clock_seconds": 145,
+      "note": null,
+      "scores": {
+        "C1": 1,
+        "C2": 1,
+        "C3": 1,
+        "C4": 1,
+        "C5": 0,
+        "C6": 1
+      }
     },
     "scout-treatment-1": {
       "group": "treatment",
-      "session_id": "20260220_36",
-      "start": "21:16:01Z",
-      "end": "21:17:43Z",
-      "wall_seconds": 102,
+      "goose_session_id": "20260220_36",
       "messages": 138,
       "input_tokens": 708540,
       "output_tokens": 7784,
-      "bytes": 10815
+      "total_tokens": 716324,
+      "bytes": 10815,
+      "wall_clock_seconds": 97,
+      "note": null,
+      "scores": {
+        "C1": 1,
+        "C2": 1,
+        "C3": 1,
+        "C4": 1,
+        "C5": 1,
+        "C6": 1
+      }
     },
     "scout-treatment-2": {
       "group": "treatment",
-      "session_id": "20260220_38",
-      "start": "21:18:55Z",
-      "end": "21:20:31Z",
-      "wall_seconds": 96,
+      "goose_session_id": "20260220_38",
       "messages": 154,
       "input_tokens": 873935,
       "output_tokens": 7333,
-      "bytes": 8130
+      "total_tokens": 881268,
+      "bytes": 8130,
+      "wall_clock_seconds": 93,
+      "note": null,
+      "scores": {
+        "C1": 1,
+        "C2": 1,
+        "C3": 1,
+        "C4": 1,
+        "C5": 0,
+        "C6": 1
+      }
     },
     "scout-treatment-3": {
       "group": "treatment",
-      "session_id": "20260220_39",
-      "start": "21:19:15Z",
-      "end": "21:20:39Z",
-      "wall_seconds": 84,
+      "goose_session_id": "20260220_39",
       "messages": 116,
       "input_tokens": 568629,
       "output_tokens": 6901,
-      "bytes": 10770
+      "total_tokens": 575530,
+      "bytes": 10770,
+      "wall_clock_seconds": 80,
+      "note": null,
+      "scores": {
+        "C1": 1,
+        "C2": 1,
+        "C3": 1,
+        "C4": 1,
+        "C5": 1,
+        "C6": 1
+      }
     },
     "scout-treatment-4": {
       "group": "treatment",
-      "session_id": "20260220_40",
-      "start": "21:19:34Z",
-      "end": "21:21:39Z",
-      "wall_seconds": 125,
+      "goose_session_id": "20260220_40",
       "messages": 198,
       "input_tokens": 990778,
       "output_tokens": 9611,
-      "bytes": 10364
+      "total_tokens": 1000389,
+      "bytes": 10364,
+      "wall_clock_seconds": 122,
+      "note": null,
+      "scores": {
+        "C1": 1,
+        "C2": 1,
+        "C3": 1,
+        "C4": 1,
+        "C5": 1,
+        "C6": 1
+      }
     },
     "scout-treatment-5": {
       "group": "treatment",
-      "session_id": "20260220_41",
-      "start": "21:19:52Z",
-      "end": "21:21:01Z",
-      "wall_seconds": 69,
+      "goose_session_id": "20260220_41",
       "messages": 82,
       "input_tokens": 482231,
       "output_tokens": 5541,
-      "bytes": 9473
+      "total_tokens": 487772,
+      "bytes": 9473,
+      "wall_clock_seconds": 66,
+      "note": null,
+      "scores": {
+        "C1": 1,
+        "C2": 1,
+        "C3": 1,
+        "C4": 1,
+        "C5": 1,
+        "C6": 1
+      }
     }
   },
   "scores": {
@@ -262,5 +334,46 @@
         "diff_pct": -25.8
       }
     }
-  }
+  },
+  "criterion_pass_rates": {
+    "C1": {
+      "label": "Source file 1 identified",
+      "pass_rate": 1.0,
+      "passed": 9,
+      "total": 9
+    },
+    "C2": {
+      "label": "Source file 2 identified",
+      "pass_rate": 1.0,
+      "passed": 9,
+      "total": 9
+    },
+    "C3": {
+      "label": "Anti-pattern found",
+      "pass_rate": 1.0,
+      "passed": 9,
+      "total": 9
+    },
+    "C4": {
+      "label": "Replacement API correct",
+      "pass_rate": 1.0,
+      "passed": 9,
+      "total": 9
+    },
+    "C5": {
+      "label": "Must-Not constraint captured",
+      "pass_rate": 0.67,
+      "passed": 6,
+      "total": 9
+    },
+    "C6": {
+      "label": "FastMCP docs consulted",
+      "pass_rate": 1.0,
+      "passed": 9,
+      "total": 9
+    }
+  },
+  "experiment_start": null,
+  "experiment_end": null,
+  "data_note": null
 }
