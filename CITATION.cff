@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+message: "If you use this data, please cite it as below."
+type: software
+title: "What a Null Result Taught Us About AI Agent Evaluation"
+authors:
+  - family-names: Clouatre
+    given-names: Hugues
+    orcid: "https://orcid.org/0009-0002-4291-1999"
+repository-code: https://github.com/clouatre-labs/prompt-repetition-experiments
+url: https://clouatre.ca/posts/prompt-repetition-agent-evaluation/
+license: Apache-2.0
+date-released: "2026-02-23"
+version: "1.0.0"
+abstract: >
+  28 agent sessions (4,179 messages) testing whether prompt repetition improves AI coding agent accuracy. Two pre-registered experiments showing ceiling-accuracy null result on structured engineering tasks.
+keywords:
+  - ai-agents
+  - prompt-engineering
+  - llm-evaluation
+  - null-result
+  - supplementary-materials
