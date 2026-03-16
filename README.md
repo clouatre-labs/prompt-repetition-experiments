@@ -4,7 +4,6 @@
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19056878.svg)](https://doi.org/10.5281/zenodo.19056878)
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
-[![Stars](https://img.shields.io/github/stars/clouatre-labs/prompt-repetition-experiments?style=flat)](https://github.com/clouatre-labs/prompt-repetition-experiments)
 [![Sessions](https://img.shields.io/badge/sessions-28-green)](experiments/)
 [![Messages](https://img.shields.io/badge/messages-4%2C179-blue)](experiments/)
 
