@@ -2,6 +2,7 @@
 
 # Prompt Repetition Experiments
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19056878.svg)](https://doi.org/10.5281/zenodo.19056878)
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![Stars](https://img.shields.io/github/stars/clouatre-labs/prompt-repetition-experiments?style=flat)](https://github.com/clouatre-labs/prompt-repetition-experiments)
 [![Sessions](https://img.shields.io/badge/sessions-28-green)](experiments/)
@@ -298,7 +299,7 @@ developers beyond being a user.
   title   = {What a Null Result Taught Us About AI Agent Evaluation},
   author  = {Clouatre, Hugues},
   year    = {2026},
-  doi     = {10.5281/zenodo.19056879},
+  doi     = {10.5281/zenodo.19056878},
   howpublished = {\url{https://clouatre.ca/posts/prompt-repetition-agent-evaluation/}},
   urldate = {2026-02-23},
   note    = {Supplementary materials: https://github.com/clouatre-labs/prompt-repetition-experiments}
