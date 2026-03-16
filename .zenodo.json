@@ -1,10 +1,11 @@
 {
-  "title": "What a Null Result Taught Us About AI Agent Evaluation -- Supplementary Data",
-  "description": "28 agent sessions (4,179 messages) testing whether prompt repetition improves AI coding agent accuracy. Two pre-registered experiments showing ceiling-accuracy null result on structured engineering tasks.",
+  "title": "Prompt Repetition Experiments",
+  "description": "28 agent sessions (4,179 messages) testing whether prompt repetition improves AI coding agent accuracy. Two pre-registered experiments showing a ceiling-accuracy null result on structured engineering tasks.",
   "upload_type": "dataset",
   "access_right": "open",
-  "license": "apache-2.0",
+  "license": "Apache-2.0",
   "version": "1.0.0",
+  "publication_date": "2026-02-23",
   "creators": [
     {
       "name": "Clouatre, Hugues",
@@ -15,7 +16,7 @@
     {
       "identifier": "https://clouatre.ca/posts/prompt-repetition-agent-evaluation/",
       "relation": "isSupplementTo",
-      "resource_type": "other"
+      "resource_type": "publication-other"
     }
   ],
   "keywords": ["ai-agents", "prompt-engineering", "llm-evaluation", "null-result", "supplementary-materials"]

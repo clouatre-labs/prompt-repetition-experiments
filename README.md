@@ -298,7 +298,8 @@ developers beyond being a user.
   title   = {What a Null Result Taught Us About AI Agent Evaluation},
   author  = {Clouatre, Hugues},
   year    = {2026},
-  url     = {https://clouatre.ca/posts/prompt-repetition-agent-evaluation/},
+  howpublished = {\url{https://clouatre.ca/posts/prompt-repetition-agent-evaluation/}},
+  urldate = {2026-02-23},
   note    = {Supplementary materials: https://github.com/clouatre-labs/prompt-repetition-experiments}
 }
 ```
