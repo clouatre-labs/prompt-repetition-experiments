@@ -1,0 +1,23 @@
+{
+  "title": "Prompt Repetition Experiments",
+  "description": "28 agent sessions (4,179 messages) testing whether prompt repetition improves AI coding agent accuracy. Two pre-registered experiments showing a ceiling-accuracy null result on structured engineering tasks.",
+  "upload_type": "dataset",
+  "access_right": "open",
+  "license": "Apache-2.0",
+  "version": "1.0.0",
+  "publication_date": "2026-02-23",
+  "creators": [
+    {
+      "name": "Clouatre, Hugues",
+      "orcid": "0009-0002-4291-1999"
+    }
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://clouatre.ca/posts/prompt-repetition-agent-evaluation/",
+      "relation": "isSupplementTo",
+      "resource_type": "publication-other"
+    }
+  ],
+  "keywords": ["ai-agents", "prompt-engineering", "llm-evaluation", "null-result", "supplementary-materials"]
+}
