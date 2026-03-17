@@ -7,7 +7,7 @@
 [![Sessions](https://img.shields.io/badge/sessions-28-green)](experiments/)
 [![Messages](https://img.shields.io/badge/messages-4%2C179-blue)](experiments/)
 
-Does repeating instructions make AI agents more accurate? We tested it. 20 parallel delegates across 2 experiments say: **no, well-scoped engineering tasks already hit ceiling accuracy.**
+Prompt repetition (duplicating the input prompt verbatim before the task description) has been shown to improve accuracy for non-reasoning LLMs on positional retrieval and multiple-choice benchmarks (Leviathan et al., 2025). Whether this gain extends to agentic settings involving structured, verifiable software-engineering tasks remains an open question. We present two pre-registered controlled experiments in which Claude Haiku 4.5 agent instances (n=5 per condition, temperature 0.5) were assigned either a single-copy or a repeated-prompt instruction under a blinded binary rubric, totalling 28 session logs and 4,179 messages. In Experiment 1 (session-ID refactoring, 6 binary criteria), the repeated-prompt condition showed a non-significant score delta of +0.30 (Mann-Whitney U, n=9 valid runs); in Experiment 2 (AST-scanner implementation, 7 binary criteria), both conditions achieved perfect scores (7/7), producing a complete performance-saturation effect (U p=1.0) that precluded any treatment comparison. Repeated-prompt agents consumed 17-21% fewer tokens, but this observation is confounded by the saturation effect and cannot be causally attributed to prompt repetition. These results suggest that well-specified software-engineering tasks may saturate agent capability regardless of prompt redundancy, and that future studies must use harder task variants or larger samples to avoid floor-level statistical power.
 
 Supplementary materials for [What a Null Result Taught Us About AI Agent Evaluation](https://clouatre.ca/posts/prompt-repetition-agent-evaluation/).
 
@@ -17,7 +17,7 @@ Supplementary materials for [What a Null Result Taught Us About AI Agent Evaluat
 
 ## The Question
 
-[Leviathan et al. (2025)](https://arxiv.org/abs/2512.14982) showed that repeating instructions in LLM prompts improves accuracy on positional retrieval tasks. Does this translate to structured engineering tasks executed by AI agent delegates?
+Does repeating the instruction prompt verbatim improve task-success rates for LLM agents executing structured, criterion-graded software-engineering tasks, relative to a single-copy instruction baseline? More broadly, do prompt-level redundancy interventions that benefit non-reasoning models on retrieval benchmarks generalise to agentic settings with verifiable, multi-criterion success conditions?
 
 ```text
 Experiment setup:
@@ -118,7 +118,7 @@ Perfect scores across all 10 runs. Complete ceiling effect. The rubric was desig
 | **Result** | 5/6 criteria at 100% both groups | 7/7 criteria at 100% both groups |
 | **Valid runs** | 9 of 10 (1 drift failure) | 10 of 10 |
 
-**Conclusion:** No detectable difference between x1 and x2 instruction conditions. Both experiments exhibited ceiling effects, making treatment effects unmeasurable. The null result suggests prompt repetition addresses positional attention decay -- a problem that well-scoped engineering tasks with structured outputs do not have.
+**Conclusion:** No detectable difference between x1 and x2 instruction conditions. Both experiments exhibited ceiling effects, making treatment effects unmeasurable. The null result suggests prompt repetition addresses positional attention decay, a problem that well-scoped engineering tasks with structured outputs do not have.
 
 ### Token Efficiency
 
@@ -233,14 +233,14 @@ prompt-repetition-experiments/
 
 ### Data Files
 
-- **`protocol.md`** -- Pre-registered experimental protocol. Locked before any delegates were spawned. Contains the research question, method, rubric, gate criteria, and pre-acknowledged limitations.
-- **`recipe/goose-coder-v4.1.0.yaml`** -- The Goose recipe defining the Scout/Guard subagent architecture. Scouts run on `claude-haiku-4-5` at temperature 0.5.
-- **`analysis.json`** -- Experiment metadata: issue reference, model, dates, per-run timing/token counts, aggregate statistics, and statistical tests.
-- **`scores.json`** -- Blind scorer output: per-criterion binary scores (0/1) with natural-language justifications for each run.
-- **`label-map.json`** -- Group assignments sealed before scoring began. Maps run IDs to control/treatment groups.
-- **`efficiency.json`** -- Per-run wall time, token usage, and pricing metadata. Contains execution duration in minutes and cost analysis for each delegate run.
-- **`sessions/*.json`** -- Structured delegate outputs. Each file contains the research findings produced by one Scout delegate. These are the artifacts scored by the rubric.
-- **`raw/*.jsonl`** -- Full message-by-message conversation logs exported from Goose's session database. Includes tool calls, intermediate reasoning, and errors. Home directory paths sanitized to `$EXPERIMENTER_HOME`.
+- **`protocol.md`** Pre-registered experimental protocol. Locked before any delegates were spawned. Contains the research question, method, rubric, gate criteria, and pre-acknowledged limitations.
+- **`recipe/goose-coder-v4.1.0.yaml`** The Goose recipe defining the Scout/Guard subagent architecture. Scouts run on `claude-haiku-4-5` at temperature 0.5.
+- **`analysis.json`** Experiment metadata: issue reference, model, dates, per-run timing/token counts, aggregate statistics, and statistical tests.
+- **`scores.json`** Blind scorer output: per-criterion binary scores (0/1) with natural-language justifications for each run.
+- **`label-map.json`** Group assignments sealed before scoring began. Maps run IDs to control/treatment groups.
+- **`efficiency.json`** Per-run wall time, token usage, and pricing metadata. Contains execution duration in minutes and cost analysis for each delegate run.
+- **`sessions/*.json`** Structured delegate outputs. Each file contains the research findings produced by one Scout delegate. These are the artifacts scored by the rubric.
+- **`raw/*.jsonl`** Full message-by-message conversation logs exported from Goose's session database. Includes tool calls, intermediate reasoning, and errors. Home directory paths sanitized to `$EXPERIMENTER_HOME`.
 
 Exact reproduction requires access to the target repositories at the commit SHAs recorded in each `analysis.json`.
 
