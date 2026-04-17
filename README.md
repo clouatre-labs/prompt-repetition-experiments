@@ -2,7 +2,7 @@
 
 # Prompt Repetition Experiments
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19056878.svg)](https://doi.org/10.5281/zenodo.19056878)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19057574.svg)](https://doi.org/10.5281/zenodo.19057574)
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![Sessions](https://img.shields.io/badge/sessions-28-green)](experiments/)
 [![Messages](https://img.shields.io/badge/messages-4%2C179-blue)](experiments/)
