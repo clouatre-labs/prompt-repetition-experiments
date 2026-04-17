@@ -6,7 +6,7 @@
     "input_per_mtok_usd": 1.0,
     "output_per_mtok_usd": 5.0
   },
-  "pricing_date": "2025-02-20",
+  "pricing_date": "2026-02-20",
   "runs": [
     {
       "run_id": "scout-control-1",
