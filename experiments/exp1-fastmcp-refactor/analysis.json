@@ -385,8 +385,8 @@
       "wilson_high": 1.0
     }
   },
-  "experiment_start": null,
-  "experiment_end": null,
+  "experiment_start": "2026-02-20T21:14:39Z",
+  "experiment_end": "2026-02-20T21:21:36Z",
   "data_note": null,
   "goose_version": "1.25.0",
   "effect_size": {
