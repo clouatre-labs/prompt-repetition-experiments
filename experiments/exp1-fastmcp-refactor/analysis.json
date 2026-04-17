@@ -340,37 +340,49 @@
       "label": "Source file 1 identified",
       "pass_rate": 1.0,
       "passed": 9,
-      "total": 9
+      "total": 9,
+      "wilson_low": 0.7008,
+      "wilson_high": 1.0
     },
     "C2": {
       "label": "Source file 2 identified",
       "pass_rate": 1.0,
       "passed": 9,
-      "total": 9
+      "total": 9,
+      "wilson_low": 0.7008,
+      "wilson_high": 1.0
     },
     "C3": {
       "label": "Anti-pattern found",
       "pass_rate": 1.0,
       "passed": 9,
-      "total": 9
+      "total": 9,
+      "wilson_low": 0.7008,
+      "wilson_high": 1.0
     },
     "C4": {
       "label": "Replacement API correct",
       "pass_rate": 1.0,
       "passed": 9,
-      "total": 9
+      "total": 9,
+      "wilson_low": 0.7008,
+      "wilson_high": 1.0
     },
     "C5": {
       "label": "Must-Not constraint captured",
       "pass_rate": 0.67,
       "passed": 6,
-      "total": 9
+      "total": 9,
+      "wilson_low": 0.3542,
+      "wilson_high": 0.8794
     },
     "C6": {
       "label": "FastMCP docs consulted",
       "pass_rate": 1.0,
       "passed": 9,
-      "total": 9
+      "total": 9,
+      "wilson_low": 0.7008,
+      "wilson_high": 1.0
     }
   },
   "experiment_start": null,
