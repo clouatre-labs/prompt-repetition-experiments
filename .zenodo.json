@@ -19,5 +19,8 @@
       "resource_type": "publication-other"
     }
   ],
-  "keywords": ["ai-agents", "prompt-engineering", "llm-evaluation", "null-result", "supplementary-materials"]
+  "keywords": ["ai-agents", "prompt-engineering", "llm-evaluation", "null-result", "supplementary-materials"],
+  "custom": {
+    "code:codeRepository": "https://github.com/clouatre-labs/prompt-repetition-experiments"
+  }
 }
