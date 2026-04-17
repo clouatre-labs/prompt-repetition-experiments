@@ -20,7 +20,8 @@
       "total_tokens": 863768,
       "cost_usd": 0.91,
       "wall_clock_seconds": 146,
-      "note": null
+      "note": null,
+      "messages": 170
     },
     {
       "run_id": "scout-run-02",
@@ -34,7 +35,8 @@
       "total_tokens": 675585,
       "cost_usd": 0.7094,
       "wall_clock_seconds": 119,
-      "note": null
+      "note": null,
+      "messages": 142
     },
     {
       "run_id": "scout-run-03",
@@ -48,7 +50,8 @@
       "total_tokens": 655204,
       "cost_usd": 0.6896,
       "wall_clock_seconds": 126,
-      "note": null
+      "note": null,
+      "messages": 142
     },
     {
       "run_id": "scout-run-04",
@@ -62,7 +65,8 @@
       "total_tokens": 755144,
       "cost_usd": 0.7886,
       "wall_clock_seconds": 110,
-      "note": null
+      "note": null,
+      "messages": 138
     },
     {
       "run_id": "scout-run-05",
@@ -76,7 +80,8 @@
       "total_tokens": 703993,
       "cost_usd": 0.7378,
       "wall_clock_seconds": 104,
-      "note": null
+      "note": null,
+      "messages": 139
     },
     {
       "run_id": "scout-run-06",
@@ -90,7 +95,8 @@
       "total_tokens": 827985,
       "cost_usd": 0.8614,
       "wall_clock_seconds": 112,
-      "note": null
+      "note": null,
+      "messages": 149
     },
     {
       "run_id": "scout-run-07",
@@ -104,7 +110,8 @@
       "total_tokens": 826924,
       "cost_usd": 0.863,
       "wall_clock_seconds": 117,
-      "note": null
+      "note": null,
+      "messages": 170
     },
     {
       "run_id": "scout-run-08",
@@ -118,7 +125,8 @@
       "total_tokens": 619614,
       "cost_usd": 0.6496,
       "wall_clock_seconds": 126,
-      "note": null
+      "note": null,
+      "messages": 106
     },
     {
       "run_id": "scout-run-09",
@@ -132,7 +140,8 @@
       "total_tokens": 651922,
       "cost_usd": 0.6899,
       "wall_clock_seconds": 116,
-      "note": null
+      "note": null,
+      "messages": 137
     },
     {
       "run_id": "scout-run-10",
@@ -146,7 +155,8 @@
       "total_tokens": 808325,
       "cost_usd": 0.8407,
       "wall_clock_seconds": 109,
-      "note": null
+      "note": null,
+      "messages": 158
     }
   ]
 }
