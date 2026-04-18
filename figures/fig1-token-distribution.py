@@ -10,7 +10,7 @@ colors = ["#1f77b4", "#ff7f0e", "#1f77b4", "#ff7f0e"]
 
 fig, ax = plt.subplots(figsize=(9, 5))
 
-bars = ax.bar(range(4), values, color=colors, width=0.6, zorder=2)
+bars = ax.bar(range(4), values, color=colors, width=0.6, zorder=3)
 
 # Y-axis label and title
 ax.set_ylabel("Mean total tokens (valid runs)", fontsize=11)
@@ -29,6 +29,10 @@ for i, bar in enumerate(bars):
     v = values[i]
     ax.text(bar.get_x() + bar.get_width() / 2, bar.get_height() + 20000,
             f"{v/1e6:.2f}M", ha="center", va="bottom", fontsize=10, fontweight="bold")
+
+# Reference lines
+ax.axhline(1068182, color="#1f77b4", linestyle="--", linewidth=1, alpha=0.5)
+ax.axhline(740362, color="#1f77b4", linestyle=":", linewidth=1, alpha=0.5)
 
 # Legend using Line2D squares
 legend_elements = [
