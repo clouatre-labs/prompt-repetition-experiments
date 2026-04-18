@@ -1,0 +1,165 @@
+{
+  "run_id": "scout-pilot-01",
+  "group": "control",
+  "started_at": "2026-04-18T02:42:05Z",
+  "finished_at": "2026-04-18T02:43:25Z",
+  "session_id": "pilot-01",
+  "lens": "scout",
+  "relevant_files": [
+    {
+      "path": "Cargo.toml",
+      "line_range": "1-61",
+      "role": "Workspace manifest; defines [workspace.dependencies] where tree-sitter-kotlin must be added"
+    },
+    {
+      "path": "crates/code-analyze-core/Cargo.toml",
+      "line_range": "1-71",
+      "role": "Crate manifest; defines [features] and optional deps; lang-kotlin feature and dep go here"
+    },
+    {
+      "path": "crates/code-analyze-core/src/lang.rs",
+      "line_range": "1-130",
+      "role": "EXTENSION_MAP (.kt/.kts -> kotlin) and supported_languages() list; both need kotlin entries"
+    },
+    {
+      "path": "crates/code-analyze-core/src/languages/mod.rs",
+      "line_range": "1-302",
+      "role": "get_language_info() and get_ts_language() match arms; mod kotlin; declaration all needed"
+    },
+    {
+      "path": "crates/code-analyze-core/src/languages/kotlin.rs",
+      "line_range": "N/A (new file)",
+      "role": "New language module: ELEMENT_QUERY, CALL_QUERY, REFERENCE_QUERY, IMPORT_QUERY, optional DEFUSE_QUERY, extract_inheritance, unit tests"
+    },
+    {
+      "path": "crates/code-analyze-core/src/languages/java.rs",
+      "line_range": "1-193",
+      "role": "Closest template for Kotlin (JVM-style AST, inheritance, DEFUSE_QUERY pattern)"
+    },
+    {
+      "path": "crates/code-analyze-core/src/languages/fortran.rs",
+      "line_range": "1-74",
+      "role": "Example of defuse_query: None (Fortran omits it); illustrates omission precedent"
+    },
+    {
+      "path": "crates/code-analyze-core/tests/semantic_correctness.rs",
+      "line_range": "1-284",
+      "role": "Integration-level semantic correctness tests per language; kotlin test would follow java pattern here"
+    }
+  ],
+  "conventions": {
+    "commits": "Conventional Commits (feat/fix/chore/docs/refactor/test) with scope; GPG-signed (-S) and DCO signed-off (--signoff); example: 'feat(lang): add Kotlin grammar support'",
+    "testing": "Unit tests co-located in language module under #[cfg(all(test, feature = \"lang-kotlin\"))]; AAA pattern; parse_kotlin() helper; one happy path + one edge case per behavior; integration semantic-correctness test in crates/code-analyze-core/tests/semantic_correctness.rs",
+    "linting": "cargo fmt --check, cargo clippy --profile ci -- -D warnings -W clippy::cognitive_complexity, cargo deny check advisories licenses; SPDX header required on all .rs files",
+    "error_handling": "thiserror for library errors; no .unwrap() in production paths; Option returns via None for unsupported/unknown"
+  },
+  "patterns": [
+    "Feature-gated language support via #[cfg(feature = \"lang-X\")] on every touch point: EXTENSION_MAP entries, supported_languages() slice, mod declaration, get_language_info() arm, get_ts_language() arm",
+    "LanguageInfo struct with fixed field set: name, language, element_query, call_query, reference_query, import_query, impl_query, impl_trait_query, defuse_query, extract_function_name, find_method_for_receiver, find_receiver_type, extract_inheritance -- all optional fields set to None when not applicable",
+    "Language crate entry point is LANGUAGE const (e.g. tree_sitter_kotlin::LANGUAGE.into())",
+    "Query constants as pub const &str in the language module; named: ELEMENT_QUERY, CALL_QUERY, REFERENCE_QUERY, IMPORT_QUERY, DEFUSE_QUERY",
+    "extract_inheritance as pub fn(node: &Node, source: &str) -> Vec<String> with #[must_use]",
+    "Two-line SPDX header at top of every new .rs file",
+    "Optional features declared as dep:tree-sitter-X in workspace Cargo.toml; optional = true in crate Cargo.toml",
+    "defuse_query set to None for Fortran (precedent); all other languages include DEFUSE_QUERY"
+  ],
+  "related_issues": [
+    {
+      "number": 649,
+      "title": "feat(lang): add Kotlin grammar support",
+      "relevance": "The target issue; fully specifies acceptance criteria, node kinds, query patterns, inheritance walk, and what is out of scope"
+    },
+    {
+      "number": 659,
+      "title": "feat(core): def-use query infrastructure and write/read site extraction (PR)",
+      "relevance": "Introduced defuse_query field on LanguageInfo and DEFUSE_QUERY pattern for 8 languages; kotlin.rs must include or explicitly omit this field"
+    },
+    {
+      "number": 37,
+      "title": "feat(languages): add Python, JavaScript, TypeScript, Go, Java, Kotlin, Swift, Ruby modules (MERGED)",
+      "relevance": "Kotlin was previously added then removed (PR #63); suggests the grammar was once integrated and later dropped as unused"
+    },
+    {
+      "number": 63,
+      "title": "chore(languages): drop unused grammars (kotlin, swift, ruby, javascript) (MERGED)",
+      "relevance": "Kotlin grammar was removed in this cleanup; any surviving patterns from that era may differ from current conventions"
+    }
+  ],
+  "constraints": [
+    "tree-sitter-kotlin version must be exactly 0.3.8 per issue acceptance criteria",
+    "tree-sitter-kotlin 0.3.8 license is MIT; allowed by deny.toml",
+    "No unsafe code",
+    "No .unwrap() in production code paths",
+    "CI coverage thresholds: 90% lines / 80% regions for code-analyze-core; new tests must not drop below these",
+    "SPDX-FileCopyrightText and SPDX-License-Identifier headers required on all new .rs files",
+    "cargo deny check advisories licenses must pass (MIT is in the allow list)",
+    "Kotlin 0.3.8 crate entry point must be verified; training-data assumption that LANGUAGE const exists needs smoke-test before commit"
+  ],
+  "test_coverage": "Each language module carries its own unit tests under #[cfg(all(test, feature = \"lang-X\"))]. Java (the closest analog) has 3 focused unit tests: ELEMENT_QUERY happy path, extract_inheritance, and defuse write-site. CI gates on 90% line coverage via cargo-llvm-cov with cargo-nextest. The issue specifies 11 unit tests for kotlin.rs covering: free function, method-in-class, call, class, data class, interface, enum class, import, single inheritance (superclass with parens), multiple interface conformance (no parens), and mixed delegation specifiers.",
+  "library_findings": [
+    {
+      "library": "tree-sitter-kotlin",
+      "version": "0.3.8",
+      "relevant_api": "tree_sitter_kotlin::LANGUAGE (LanguageFn const, .into() yields tree_sitter::Language); consistent with all other language crates in the workspace",
+      "notes": "Published on crates.io by fwcd; MIT license; confirmed present on crates.io via cargo search and cargo info; not yet in Cargo.lock (not a current dep). Key node kinds per issue: function_declaration, class_declaration, interface_declaration, enum_class_declaration, object_declaration for elements; call_expression for calls; import_header for imports; delegation_specifiers for inheritance walk. Companion objects use object_declaration with companion keyword modifier."
+    },
+    {
+      "library": "tree-sitter",
+      "version": "0.26.6",
+      "relevant_api": "tree_sitter::Language (via .into() from LanguageFn), Query::new(), QueryCursor, Node, StreamingIterator pattern for cursor.matches()",
+      "notes": "Workspace pins tree-sitter = 0.26.6. ABI version must match between tree-sitter and tree-sitter-kotlin; 0.3.8 of tree-sitter-kotlin targets tree-sitter 0.22-0.24 ABI historically -- this must be verified with cargo check before PR."
+    }
+  ],
+  "approaches": [
+    {
+      "name": "Minimal -- no DEFUSE_QUERY (parity with Fortran)",
+      "description": "Add tree-sitter-kotlin 0.3.8 to workspace deps and crate features. Create kotlin.rs with ELEMENT_QUERY, CALL_QUERY, REFERENCE_QUERY, IMPORT_QUERY, and extract_inheritance. Set defuse_query: None in the LanguageInfo arm (matching Fortran). Wire up lang.rs (.kt, .kts), languages/mod.rs (mod, get_language_info, get_ts_language). Unit tests cover the 11 behaviors from the issue. README table updated.",
+      "pros": [
+        "Simpler -- no need to research Kotlin-specific write/read AST node kinds",
+        "Consistent with Fortran precedent for languages where def-use semantics are complex",
+        "Avoids a query that could produce false positives before node kinds are verified"
+      ],
+      "cons": [
+        "Does not provide def-use site extraction for Kotlin; analyze_symbol with def_use=true returns no sites",
+        "Issue acceptance criteria does not explicitly require DEFUSE_QUERY; but every other JVM language (Java) has one",
+        "Slightly weaker feature parity with Java, the closest analog"
+      ],
+      "complexity": "simple",
+      "files_touched": 5
+    },
+    {
+      "name": "Full -- with DEFUSE_QUERY modeled after Java",
+      "description": "Same as the minimal approach, plus a DEFUSE_QUERY constant in kotlin.rs that mirrors Java's pattern: property_declaration for write sites (Kotlin uses val/var), assignment_expression for LHS writes, augmented_assignment_expression for write-read, and identifier for reads. Requires verifying actual node kinds emitted by tree-sitter-kotlin 0.3.8 for val/var declarations. Set defuse_query: Some(kotlin::DEFUSE_QUERY) in get_language_info(). Add a defuse write-site unit test.",
+      "pros": [
+        "Full feature parity with Java and all other current JVM/OO languages",
+        "analyze_symbol def_use=true works for Kotlin files immediately",
+        "Matches the pattern established by PR #659 for completeness"
+      ],
+      "cons": [
+        "Requires verifying Kotlin-specific node kind names for val/var declarations against 0.3.8 grammar (risk of wrong node kind names causing a panicking query compile error)",
+        "One additional test case and one more query constant; modest but real extra complexity",
+        "If node kinds differ from assumptions, runtime Query::new() will return an error that surfaces as a panic in the query cache; must smoke-test"
+      ],
+      "complexity": "medium",
+      "files_touched": 5
+    },
+    {
+      "name": "Full with semantic-correctness integration test",
+      "description": "Same as the full approach, plus a test in crates/code-analyze-core/tests/semantic_correctness.rs following the Java pattern: write a .kt temp file with a class, method, and import, run analyze_file(), assert on semantic.functions, semantic.classes, and semantic.imports counts. This mirrors how every other language is exercised at the integration layer.",
+      "pros": [
+        "Closes the integration coverage gap; the issue does not forbid adding to semantic_correctness.rs but Java sets the pattern",
+        "Guards against regression if the grammar ABI shifts in a future upgrade",
+        "Keeps coverage above CI thresholds more comfortably"
+      ],
+      "cons": [
+        "One more file touched (semantic_correctness.rs) beyond the 5 core files",
+        "If tree-sitter-kotlin 0.3.8 has a runtime ABI mismatch with tree-sitter 0.26.6, this test will fail at runtime not compile time -- surfacing the issue early is actually a pro"
+      ],
+      "complexity": "medium",
+      "files_touched": 6
+    }
+  ],
+  "recommendation": "Approach 3 (full with semantic-correctness integration test). The issue specifies 11 unit tests and Java as the reference template; Java includes DEFUSE_QUERY and a semantic_correctness integration test. Kotlin is a JVM language with nearly identical AST structure (val/var declarations map to local_variable_declaration-equivalent nodes). DEFUSE_QUERY for Kotlin is low-risk to add with node kind verification via cargo check. The integration test adds a meaningful regression guard and mirrors the existing pattern for every other supported language. The only prerequisite is confirming tree-sitter-kotlin 0.3.8 ABI compatibility with tree-sitter 0.26.6 via cargo check before finalizing.",
+  "latency_seconds": 80,
+  "message_count": 12
+}
