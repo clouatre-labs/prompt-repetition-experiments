@@ -6,7 +6,7 @@ Experimental design and scoring protocol for the prompt repetition agent evaluat
 
 Does repeating delegate instructions verbatim (prompt repetition) improve accuracy on structured engineering tasks executed by parallel AI agents?
 
-Based on [Leviathan et al. (2025)](https://arxiv.org/abs/2502.07869), which found that repeating queries in LLM prompts improves accuracy on positional retrieval tasks.
+Based on [Leviathan et al. (2025)](https://arxiv.org/abs/2512.14982), which found that repeating queries in LLM prompts improves accuracy on positional retrieval tasks.
 
 ## Agent Architecture
 
