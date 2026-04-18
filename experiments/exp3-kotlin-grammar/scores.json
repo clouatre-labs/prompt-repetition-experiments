@@ -1,0 +1,352 @@
+[
+  {
+    "run_id": "scout-run-01",
+    "scores": {
+      "C1": {
+        "score": 0,
+        "justification": "LANGUAGE export is cited but ABI compatibility with tree-sitter 0.26.6 is not characterized with evidence; no semver range from tree-sitter-kotlin's Cargo.toml or source inspection is provided."
+      },
+      "C2": {
+        "score": 0,
+        "justification": "Companion objects are described as 'no special extraction needed' without identifying the node kind as object_declaration with companion modifier; delegation_specifiers children are described by behavior (has parens / no parens) but node kind names superclass_type_with_constructor and user_type are never stated."
+      },
+      "C3": {
+        "score": 0,
+        "justification": "The approach description for ELEMENT_QUERY uses Java node kind names (method_declaration, enum_declaration) instead of Kotlin's function_declaration and enum_class_declaration, so at least 3 patterns are not correctly captured."
+      },
+      "C4": {
+        "score": 0,
+        "justification": "extract_inheritance walking logic is described conceptually (has parens vs no parens) but neither superclass_type_with_constructor nor user_type are named as the child node kinds."
+      },
+      "C5": {
+        "score": 0,
+        "justification": "Test coverage lists tests for .kt-style constructs only; no .kts-specific syntax (top-level function, extension function) is mentioned."
+      },
+      "C6": {
+        "score": 0,
+        "justification": "DEFUSE_QUERY is declared required but this is justified by 'Kotlin supports def-use analysis via identifier nodes', not by citing inspection of the LanguageInfo struct fields or PR #659."
+      },
+      "C7": {
+        "score": 1,
+        "justification": "All structural wiring is described: lang-kotlin in default features, all five query constant names listed, .kt/.kts EXTENSION_MAP entries, get_language_info()/get_ts_language() arms, and module declaration in mod.rs."
+      }
+    },
+    "total": 1,
+    "run_group": "control"
+  },
+  {
+    "run_id": "scout-run-02",
+    "scores": {
+      "C1": {
+        "score": 0,
+        "justification": "tree_sitter_kotlin::LANGUAGE is cited, but the ABI relationship with tree-sitter 0.26.6 is not characterized with evidence; no semver range or crate source inspection is provided."
+      },
+      "C2": {
+        "score": 0,
+        "justification": "Delegation_specifiers correctly names superclass_type_with_constructor and user_type, but companion objects are described only as 'detected via modifiers child' without identifying their node kind as object_declaration with companion modifier."
+      },
+      "C3": {
+        "score": 0,
+        "justification": "The patterns section describes ELEMENT_QUERY as matching function_declaration, class_declaration, interface_declaration, enum_class_declaration but omits object_declaration entirely."
+      },
+      "C4": {
+        "score": 1,
+        "justification": "patterns section explicitly states: 'extract_inheritance handler walks delegation_specifiers children; distinguishes superclass_type_with_constructor (parens) from user_type (interfaces)'."
+      },
+      "C5": {
+        "score": 0,
+        "justification": "Test coverage describes only .kt-style constructs; no .kts-specific syntax or file parsing test is mentioned."
+      },
+      "C6": {
+        "score": 0,
+        "justification": "DEFUSE_QUERY is described as optional and the recommendation chooses to include it, but the justification does not cite inspection of the LanguageInfo struct fields or PR #659."
+      },
+      "C7": {
+        "score": 1,
+        "justification": "All structural wiring described: feature flag in default set, ELEMENT_QUERY through DEFUSE_QUERY constants named, .kt/.kts EXTENSION_MAP entries, get_language_info()/get_ts_language() arms with feature gates, module declaration."
+      }
+    },
+    "total": 2,
+    "run_group": "treatment"
+  },
+  {
+    "run_id": "scout-run-03",
+    "scores": {
+      "C1": {
+        "score": 0,
+        "justification": "tree_sitter_kotlin::LANGUAGE is cited with a benchmark score, but no ABI compatibility characterization with tree-sitter 0.26.6 is provided via semver ranges or crate source inspection."
+      },
+      "C2": {
+        "score": 0,
+        "justification": "delegation_specifiers correctly names superclass_type_with_constructor and user_type in library_findings and patterns, but companion objects are never identified as object_declaration with companion modifier; they are absent from the companion object analysis."
+      },
+      "C3": {
+        "score": 1,
+        "justification": "Approach 1 description enumerates ELEMENT_QUERY as (function_declaration, class_declaration, interface_declaration, enum_class_declaration, object_declaration), covering all three required pattern types with correct Kotlin node kind names."
+      },
+      "C4": {
+        "score": 1,
+        "justification": "Patterns section states: 'walk delegation_specifiers children, distinguish superclass_type_with_constructor (has parens) from user_type (interfaces, no parens)' with correct node kind names."
+      },
+      "C5": {
+        "score": 0,
+        "justification": "Test coverage describes 9 test cases all using .kt-style constructs; no .kts-specific syntax or file extension test is mentioned."
+      },
+      "C6": {
+        "score": 0,
+        "justification": "DEFUSE_QUERY is declared out of scope (citing issue #649 and Fortran precedent) but does not cite inspection of the LanguageInfo struct fields or PR #659 to justify the None decision."
+      },
+      "C7": {
+        "score": 1,
+        "justification": "All structural wiring is described: lang-kotlin in default features, query constant names listed, .kt/.kts EXTENSION_MAP entries, get_language_info()/get_ts_language() arms, and module declaration in mod.rs."
+      }
+    },
+    "total": 3,
+    "run_group": "control"
+  },
+  {
+    "run_id": "scout-run-04",
+    "scores": {
+      "C1": {
+        "score": 0,
+        "justification": "tree_sitter_kotlin::LANGUAGE is cited but no ABI relationship with tree-sitter 0.26.6 is characterized with evidence; no semver range or crate source is examined."
+      },
+      "C2": {
+        "score": 0,
+        "justification": "Companion objects are correctly identified as 'object_declaration with modifiers containing companion', but delegation_specifiers children are described only by behavior (constructor call with parens vs without) without naming the node kinds superclass_type_with_constructor and user_type."
+      },
+      "C3": {
+        "score": 1,
+        "justification": "Approach A ELEMENT_QUERY lists function_declaration, class_declaration, interface_declaration, object_declaration, enum_class_declaration with correct Kotlin node kind names, satisfying at least 3 required pattern types."
+      },
+      "C4": {
+        "score": 0,
+        "justification": "extract_inheritance is described as checking for 'constructor call syntax' but neither superclass_type_with_constructor nor user_type are named as the node kinds to distinguish."
+      },
+      "C5": {
+        "score": 0,
+        "justification": "Test coverage describes function/method/class/inheritance tests only in .kt style; no .kts-specific test is mentioned."
+      },
+      "C6": {
+        "score": 0,
+        "justification": "DEFUSE_QUERY is presented as an implementation choice (included in Approach B recommendation) without citing inspection of the LanguageInfo struct fields or PR #659."
+      },
+      "C7": {
+        "score": 1,
+        "justification": "All structural wiring described: feature flag in default features, query constants named (ELEMENT_QUERY through IMPORT_QUERY), .kt/.kts EXTENSION_MAP entries, get_language_info()/get_ts_language() arms, module declared in mod.rs."
+      }
+    },
+    "total": 2,
+    "run_group": "treatment"
+  },
+  {
+    "run_id": "scout-run-05",
+    "scores": {
+      "C1": {
+        "score": 0,
+        "justification": "tree_sitter_kotlin::LANGUAGE is cited, but no ABI compatibility analysis with tree-sitter 0.26.6 is provided via semver ranges or crate source inspection."
+      },
+      "C2": {
+        "score": 0,
+        "justification": "Delegation_specifiers uses 'constructor_invocation' instead of 'superclass_type_with_constructor' for the superclass node kind, and companion objects are identified only through 'modifiers for data/companion keywords' without naming object_declaration as the node kind."
+      },
+      "C3": {
+        "score": 1,
+        "justification": "Recommendation and Approach 1 both enumerate ELEMENT_QUERY as (function_declaration, class_declaration, interface_declaration, enum_class_declaration, object_declaration) with correct Kotlin node kinds, covering all three required pattern types."
+      },
+      "C4": {
+        "score": 0,
+        "justification": "Inheritance extraction is described as distinguishing 'constructor_invocation (superclass with parens) from user_type' \u2014 using the wrong node kind name constructor_invocation instead of superclass_type_with_constructor."
+      },
+      "C5": {
+        "score": 0,
+        "justification": "Test coverage describes only .kt-style test cases (functions, classes, inheritance); no .kts-specific syntax or extension test is mentioned."
+      },
+      "C6": {
+        "score": 0,
+        "justification": "DEFUSE_QUERY is excluded with the rationale that it is not in the issue acceptance criteria, but no citation of LanguageInfo struct inspection or PR #659 is provided."
+      },
+      "C7": {
+        "score": 1,
+        "justification": "All structural wiring described: lang-kotlin in default feature set, all query constant names listed (ELEMENT_QUERY, CALL_QUERY, REFERENCE_QUERY, IMPORT_QUERY), .kt/.kts EXTENSION_MAP entries, get_language_info()/get_ts_language() arms, module declaration."
+      }
+    },
+    "total": 2,
+    "run_group": "control"
+  },
+  {
+    "run_id": "scout-run-06",
+    "scores": {
+      "C1": {
+        "score": 0,
+        "justification": "tree_sitter_kotlin::LANGUAGE is cited, but no ABI characterization of the dependency relationship between tree-sitter-kotlin 0.3.8 and tree-sitter 0.26.6 is provided with evidence such as semver ranges or crate source."
+      },
+      "C2": {
+        "score": 1,
+        "justification": "Library findings identify companion objects as 'object_declaration (objects, companion objects via modifiers)' distinguishing them from standalone objects, and explicitly name superclass_type_with_constructor and user_type as delegation_specifiers children."
+      },
+      "C3": {
+        "score": 1,
+        "justification": "Patterns section explicitly lists ELEMENT_QUERY as capturing function_declaration, class_declaration, interface_declaration, enum_class_declaration, object_declaration with correct Kotlin node kind names."
+      },
+      "C4": {
+        "score": 1,
+        "justification": "Library findings state 'delegation_specifiers (inheritance with superclass_type_with_constructor for superclass with parens, user_type for interfaces without parens)', correctly naming both child node kinds."
+      },
+      "C5": {
+        "score": 0,
+        "justification": "Test coverage specifies tests for element query, inheritance extraction, and def-use sites but mentions no .kts-specific syntax or file extension test."
+      },
+      "C6": {
+        "score": 0,
+        "justification": "DEFUSE_QUERY inclusion is recommended for consistency with other languages, but no citation of LanguageInfo struct field inspection or PR #659 is provided to justify the decision."
+      },
+      "C7": {
+        "score": 1,
+        "justification": "All structural wiring described explicitly: lang-kotlin in default features, all query constant names listed, .kt/.kts EXTENSION_MAP entries with feature gates, get_language_info()/get_ts_language() arms, module declaration."
+      }
+    },
+    "total": 4,
+    "run_group": "treatment"
+  },
+  {
+    "run_id": "scout-run-07",
+    "scores": {
+      "C1": {
+        "score": 0,
+        "justification": "tree_sitter_kotlin::LANGUAGE is cited, but no ABI relationship with tree-sitter 0.26.6 is characterized with evidence; no semver range or crate source inspection is presented."
+      },
+      "C2": {
+        "score": 0,
+        "justification": "delegation_specifiers is listed as a node kind but its children (superclass_type_with_constructor, user_type) are never named; companion objects are mentioned only through 'data/companion/object modifiers as part of declaration node' without identifying object_declaration as the node kind."
+      },
+      "C3": {
+        "score": 1,
+        "justification": "Approach A describes ELEMENT_QUERY as capturing function_declaration, class_declaration, interface_declaration, enum_class_declaration, object_declaration with data/companion modifiers \u2014 correct Kotlin node kinds covering all three required pattern types."
+      },
+      "C4": {
+        "score": 0,
+        "justification": "extract_inheritance is described as walking delegation_specifiers to collect names, but superclass_type_with_constructor and user_type are never named as the child node kinds to distinguish."
+      },
+      "C5": {
+        "score": 0,
+        "justification": "Test coverage mentions parsing classes, functions, inheritance, imports, and calls but contains no .kts-specific syntax test or file extension test."
+      },
+      "C6": {
+        "score": 0,
+        "justification": "DEFUSE_QUERY is recommended for inclusion (Approach A) citing consistency with other languages, but no inspection of LanguageInfo struct fields or PR #659 is cited."
+      },
+      "C7": {
+        "score": 1,
+        "justification": "All structural wiring described: feature flag in default set, all query constant names listed (ELEMENT_QUERY through DEFUSE_QUERY), .kt/.kts EXTENSION_MAP entries with feature gates, get_language_info()/get_ts_language() arms, module declaration."
+      }
+    },
+    "total": 2,
+    "run_group": "control"
+  },
+  {
+    "run_id": "scout-run-08",
+    "scores": {
+      "C1": {
+        "score": 0,
+        "justification": "tree_sitter_kotlin::LANGUAGE is cited with reputation score, but no ABI characterization of the tree-sitter-kotlin 0.3.8 to tree-sitter 0.26.6 dependency is provided via semver ranges or crate source."
+      },
+      "C2": {
+        "score": 0,
+        "justification": "delegation_specifiers children are named as 'constructor_invocation' (wrong name) instead of superclass_type_with_constructor; companion objects are described as 'companion object { ... } inside class' without identifying object_declaration as the node kind."
+      },
+      "C3": {
+        "score": 1,
+        "justification": "Approach 1 describes ELEMENT_QUERY as capturing function_declaration, class_declaration, interface_declaration, enum_class_declaration, object_declaration \u2014 correct Kotlin node kinds covering all three required pattern types."
+      },
+      "C4": {
+        "score": 0,
+        "justification": "Library findings state 'each delegation_specifier is either constructor_invocation (superclass with parens) or user_type' \u2014 uses the wrong node kind name constructor_invocation instead of superclass_type_with_constructor."
+      },
+      "C5": {
+        "score": 0,
+        "justification": "Test coverage describes element, call, reference, import, and inheritance tests but contains no .kts-specific syntax or file extension test."
+      },
+      "C6": {
+        "score": 0,
+        "justification": "DEFUSE_QUERY inclusion is recommended (Approach 1) but justified only by analogy to Java patterns, not by citing inspection of the LanguageInfo struct fields or PR #659."
+      },
+      "C7": {
+        "score": 1,
+        "justification": "All structural wiring described: lang-kotlin in default feature set, query constant names stated, .kt/.kts EXTENSION_MAP entries with feature gates, get_language_info()/get_ts_language() arms, module declaration in mod.rs."
+      }
+    },
+    "total": 2,
+    "run_group": "treatment"
+  },
+  {
+    "run_id": "scout-run-09",
+    "scores": {
+      "C1": {
+        "score": 0,
+        "justification": "tree_sitter_kotlin::LANGUAGE is cited, but the ABI relationship with tree-sitter 0.26.6 is not characterized with evidence; no semver range or crate source inspection is presented."
+      },
+      "C2": {
+        "score": 0,
+        "justification": "Library findings state 'companion object inside class marked with modifiers containing companion keyword; object_declaration for standalone objects' \u2014 ambiguously implies companion objects are NOT object_declaration; delegation_specifiers uses 'constructor_invocation' instead of superclass_type_with_constructor."
+      },
+      "C3": {
+        "score": 1,
+        "justification": "Recommendation and Approach 1 both list ELEMENT_QUERY as (function_declaration, class_declaration, interface_declaration, enum_class_declaration, object_declaration) with correct Kotlin node kinds, covering all three required pattern types."
+      },
+      "C4": {
+        "score": 0,
+        "justification": "delegation_specifiers children are described as 'constructor_invocation (superclass with parens) or user_type' \u2014 uses the incorrect node kind name constructor_invocation instead of superclass_type_with_constructor."
+      },
+      "C5": {
+        "score": 0,
+        "justification": "Test coverage references the Java test template and describes .kt-style constructs only; no .kts-specific syntax or file extension test is mentioned."
+      },
+      "C6": {
+        "score": 0,
+        "justification": "DEFUSE_QUERY inclusion is justified by the issue's acceptance criteria, but no citation of LanguageInfo struct field inspection or PR #659 is provided."
+      },
+      "C7": {
+        "score": 1,
+        "justification": "All structural wiring described: feature flag in default set, all five query constant names listed, .kt/.kts EXTENSION_MAP entries with feature gates, get_language_info()/get_ts_language() arms with symmetric registration, module declaration."
+      }
+    },
+    "total": 2,
+    "run_group": "control"
+  },
+  {
+    "run_id": "scout-run-10",
+    "scores": {
+      "C1": {
+        "score": 0,
+        "justification": "Library findings claim 'ABI stable across 0.3.x patch versions' without citing the tree-sitter-kotlin 0.3.8 Cargo.toml or any semver range showing compatibility with tree-sitter 0.26.6."
+      },
+      "C2": {
+        "score": 0,
+        "justification": "Companion objects are described as 'companion object { ... } inside class' without identifying object_declaration as the node kind; delegation_specifiers uses 'constructor_invocation' instead of superclass_type_with_constructor."
+      },
+      "C3": {
+        "score": 1,
+        "justification": "Approach A describes ELEMENT_QUERY as capturing function_declaration, class_declaration, interface_declaration, enum_class_declaration, object_declaration \u2014 correct Kotlin node kinds satisfying all three required pattern types."
+      },
+      "C4": {
+        "score": 0,
+        "justification": "Approach A describes extract_inheritance as distinguishing 'constructor_invocation with parens from interfaces (user_type)' \u2014 uses the wrong node kind name constructor_invocation instead of superclass_type_with_constructor."
+      },
+      "C5": {
+        "score": 0,
+        "justification": "Test coverage lists 10-12 test cases covering .kt-style constructs only; no .kts-specific syntax or file extension test is mentioned."
+      },
+      "C6": {
+        "score": 0,
+        "justification": "DEFUSE_QUERY is recommended for inclusion (Approach A) based on alignment with Java, but no citation of LanguageInfo struct field inspection or PR #659 is provided."
+      },
+      "C7": {
+        "score": 1,
+        "justification": "All structural wiring described: lang-kotlin in default feature set, query constant names stated, .kt/.kts EXTENSION_MAP entries with feature gates, get_language_info()/get_ts_language() arms, module declaration in mod.rs."
+      }
+    },
+    "total": 2,
+    "run_group": "treatment"
+  }
+]

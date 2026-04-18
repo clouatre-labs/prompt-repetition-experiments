@@ -1,0 +1,81 @@
+{
+  "experiment": "exp3-kotlin-grammar",
+  "repo_head": "0a103676277af76b23d9a673dea8d8370e5531da",
+  "sealed_at": "2026-04-18T02:41:27Z",
+  "scored_at": "2026-04-18T03:30:18Z",
+  "n_control": 5,
+  "n_treatment": 5,
+  "control_totals": [
+    1,
+    3,
+    2,
+    2,
+    2
+  ],
+  "treatment_totals": [
+    2,
+    2,
+    4,
+    2,
+    2
+  ],
+  "control_median": 2.0,
+  "treatment_median": 2.0,
+  "control_mean": 2.0,
+  "treatment_mean": 2.4,
+  "mann_whitney_U": 15.0,
+  "p_value": 0.6072,
+  "alpha": 0.05,
+  "significant": 0,
+  "verdict": "no significant difference (p=0.6072)",
+  "per_criterion_control": {
+    "C1": 0.0,
+    "C2": 0.0,
+    "C3": 0.8,
+    "C4": 0.2,
+    "C5": 0.0,
+    "C6": 0.0,
+    "C7": 1.0
+  },
+  "per_criterion_treatment": {
+    "C1": 0.0,
+    "C2": 0.2,
+    "C3": 0.8,
+    "C4": 0.4,
+    "C5": 0.0,
+    "C6": 0.0,
+    "C7": 1.0
+  },
+  "latency": {
+    "control_latencies_s": [
+      54,
+      480,
+      62,
+      45,
+      68
+    ],
+    "treatment_latencies_s": [
+      72,
+      556,
+      62,
+      68,
+      780
+    ],
+    "control_median_s": 62.0,
+    "treatment_median_s": 72.0
+  },
+  "ceiling_criteria": [
+    "C7"
+  ],
+  "floor_criteria": [
+    "C1",
+    "C5",
+    "C6"
+  ],
+  "notes": [
+    "C7 ceiling effect in both groups (10/10)",
+    "C1/C5/C6 floor in both groups (0/10): task harder than expected on ABI evidence, .kts tests, DEFUSE_QUERY struct inspection",
+    "n=5 per group is under-powered; non-significant result does not rule out a small true effect",
+    "Run 04 and runs 09/10 hit provider stream-decode errors; retried per invalid-run policy (Bedrock fallback)"
+  ]
+}

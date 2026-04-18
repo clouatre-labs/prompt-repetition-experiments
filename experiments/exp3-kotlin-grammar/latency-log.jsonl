@@ -1,0 +1,10 @@
+{"run_id": "scout-run-01", "run_group": "control", "started_at": "2026-04-18T03:07:39Z", "finished_at": "2026-04-18T03:08:33Z", "latency_seconds": 54, "message_count": 0, "total_score": 1}
+{"run_id": "scout-run-02", "run_group": "treatment", "started_at": "2026-04-18T03:07:41Z", "finished_at": "2026-04-18T03:08:53Z", "latency_seconds": 72, "message_count": 12, "total_score": 2}
+{"run_id": "scout-run-03", "run_group": "control", "started_at": "2026-04-18T03:07:42Z", "finished_at": "2026-04-18T03:15:30Z", "latency_seconds": 480, "message_count": 12, "total_score": 3}
+{"run_id": "scout-run-04", "run_group": "treatment", "started_at": "2026-04-18T03:16:34Z", "finished_at": "2026-04-18T03:26:10Z", "latency_seconds": 556, "message_count": 18, "total_score": 2}
+{"run_id": "scout-run-05", "run_group": "control", "started_at": "2026-04-18T03:07:47Z", "finished_at": "2026-04-18T03:08:49Z", "latency_seconds": 62, "message_count": 18, "total_score": 2}
+{"run_id": "scout-run-06", "run_group": "treatment", "started_at": "2026-04-18T03:15:17Z", "finished_at": "2026-04-18T03:16:19Z", "latency_seconds": 62, "message_count": 8, "total_score": 4}
+{"run_id": "scout-run-07", "run_group": "control", "started_at": "2026-04-18T03:15:21Z", "finished_at": "2026-04-18T03:16:06Z", "latency_seconds": 45, "message_count": 12, "total_score": 2}
+{"run_id": "scout-run-08", "run_group": "treatment", "started_at": "2026-04-18T03:17:26Z", "finished_at": "2026-04-18T03:18:34Z", "latency_seconds": 68, "message_count": 15, "total_score": 2}
+{"run_id": "scout-run-09", "run_group": "control", "started_at": "2026-04-18T03:20:09Z", "finished_at": "2026-04-18T03:21:17Z", "latency_seconds": 68, "message_count": 20, "total_score": 2}
+{"run_id": "scout-run-10", "run_group": "treatment", "started_at": "2026-04-18T03:20:14Z", "finished_at": "2026-04-18T03:33:00Z", "latency_seconds": 780, "message_count": 12, "total_score": 2}
