@@ -1,10 +1,10 @@
-{"run_id": "scout-run-01", "run_group": "control", "started_at": "2026-04-18T03:07:39Z", "finished_at": "2026-04-18T03:08:33Z", "latency_seconds": 54, "message_count": 0, "total_score": 1}
-{"run_id": "scout-run-02", "run_group": "treatment", "started_at": "2026-04-18T03:07:41Z", "finished_at": "2026-04-18T03:08:53Z", "latency_seconds": 72, "message_count": 12, "total_score": 2}
-{"run_id": "scout-run-03", "run_group": "control", "started_at": "2026-04-18T03:07:42Z", "finished_at": "2026-04-18T03:15:30Z", "latency_seconds": 480, "message_count": 12, "total_score": 3}
-{"run_id": "scout-run-04", "run_group": "treatment", "started_at": "2026-04-18T03:16:34Z", "finished_at": "2026-04-18T03:26:10Z", "latency_seconds": 556, "message_count": 18, "total_score": 2}
-{"run_id": "scout-run-05", "run_group": "control", "started_at": "2026-04-18T03:07:47Z", "finished_at": "2026-04-18T03:08:49Z", "latency_seconds": 62, "message_count": 18, "total_score": 2}
-{"run_id": "scout-run-06", "run_group": "treatment", "started_at": "2026-04-18T03:15:17Z", "finished_at": "2026-04-18T03:16:19Z", "latency_seconds": 62, "message_count": 8, "total_score": 4}
-{"run_id": "scout-run-07", "run_group": "control", "started_at": "2026-04-18T03:15:21Z", "finished_at": "2026-04-18T03:16:06Z", "latency_seconds": 45, "message_count": 12, "total_score": 2}
-{"run_id": "scout-run-08", "run_group": "treatment", "started_at": "2026-04-18T03:17:26Z", "finished_at": "2026-04-18T03:18:34Z", "latency_seconds": 68, "message_count": 15, "total_score": 2}
-{"run_id": "scout-run-09", "run_group": "control", "started_at": "2026-04-18T03:20:09Z", "finished_at": "2026-04-18T03:21:17Z", "latency_seconds": 68, "message_count": 20, "total_score": 2}
-{"run_id": "scout-run-10", "run_group": "treatment", "started_at": "2026-04-18T03:20:14Z", "finished_at": "2026-04-18T03:33:00Z", "latency_seconds": 780, "message_count": 12, "total_score": 2}
+{"run_id": "scout-run-01", "goose_session_id": "20260418_80", "start_ts": "2026-04-18T03:07:34Z", "end_ts": "2026-04-18T03:09:38Z", "wall_clock_seconds": 124}
+{"run_id": "scout-run-02", "goose_session_id": "20260418_81", "start_ts": "2026-04-18T03:07:35Z", "end_ts": "2026-04-18T03:09:48Z", "wall_clock_seconds": 133}
+{"run_id": "scout-run-03", "goose_session_id": "20260418_82", "start_ts": "2026-04-18T03:07:37Z", "end_ts": "2026-04-18T03:09:34Z", "wall_clock_seconds": 117}
+{"run_id": "scout-run-04", "goose_session_id": "20260418_90", "start_ts": "2026-04-18T03:16:27Z", "end_ts": "2026-04-18T03:18:22Z", "wall_clock_seconds": 115}
+{"run_id": "scout-run-05", "goose_session_id": "20260418_84", "start_ts": "2026-04-18T03:07:43Z", "end_ts": "2026-04-18T03:09:34Z", "wall_clock_seconds": 111}
+{"run_id": "scout-run-06", "goose_session_id": "20260418_87", "start_ts": "2026-04-18T03:15:13Z", "end_ts": "2026-04-18T03:17:49Z", "wall_clock_seconds": 156}
+{"run_id": "scout-run-07", "goose_session_id": "20260418_89", "start_ts": "2026-04-18T03:15:17Z", "end_ts": "2026-04-18T03:17:15Z", "wall_clock_seconds": 118}
+{"run_id": "scout-run-08", "goose_session_id": "20260418_93", "start_ts": "2026-04-18T03:17:20Z", "end_ts": "2026-04-18T03:19:45Z", "wall_clock_seconds": 145}
+{"run_id": "scout-run-09", "goose_session_id": "20260418_99", "start_ts": "2026-04-18T03:20:02Z", "end_ts": "2026-04-18T03:21:59Z", "wall_clock_seconds": 117}
+{"run_id": "scout-run-10", "goose_session_id": "20260418_100", "start_ts": "2026-04-18T03:20:07Z", "end_ts": "2026-04-18T03:22:11Z", "wall_clock_seconds": 124}

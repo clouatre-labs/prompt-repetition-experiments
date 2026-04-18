@@ -118,6 +118,82 @@ The 18% latency increase is consistent with the paper's Anthropic-specific laten
 
 Session ID: `20260220_43`. Recorded in `analysis.json`.
 
+## Experiment 3: Kotlin Grammar Synthesis
+
+### Target
+
+[clouatre-labs/aptu#775](https://github.com/clouatre-labs/aptu/issues/775): add Kotlin language support to the tree-sitter AST scanner. Code synthesis task (write). Open and unimplemented at experiment time. Harder than Experiment 2: required deep source inspection of ABI compatibility, node kind taxonomy, and struct fields unavailable from the issue text alone.
+
+### Methodology Improvements Over Experiment 2
+
+- Hardened rubric after pilot audit: C1, C2, C6, and C7 rewritten to require evidence-backed synthesis, not description
+- Invalid-run retry policy added: provider stream-decode errors trigger one retry on Bedrock fallback
+- Latency and message counts recorded per run in latency-log.jsonl
+- Post-experiment: identified rubric-runner co-design failure; C1, C5, C6 excluded from primary treatment comparison with disclosed structural rationale (see Post-hoc Criterion Exclusion below).
+
+### Rubric (7 Binary Criteria)
+
+| Criterion | Description | Synthesis Required |
+|---|---|---|
+| C1 | tree-sitter-kotlin 0.3.8 LANGUAGE export verified and ABI relationship with tree-sitter 0.26.6 fully characterized with evidence (semver ranges or crate source); incompatibility is a valid finding if documented | yes |
+| C2 | Kotlin companion object node kind identified as object_declaration with companion modifier; delegation_specifiers children enumerated distinguishing superclass_type_with_constructor from user_type | yes |
+| C3 | At least 3 query patterns from tree-sitter-kotlin corpus (function_declaration, class_declaration, object_declaration variants) correctly captured in ELEMENT_QUERY | yes |
+| C4 | extract_inheritance handler correctly walks delegation_specifiers and separates superclass_type_with_constructor (has parens) from user_type (no parens) | yes |
+| C5 | Unit tests confirm .kt AND .kts file parsing both work; at least 1 test with .kts syntax (e.g. top-level function, extension function) | yes |
+| C6 | DEFUSE_QUERY constant created for Kotlin if required by current LanguageInfo struct, or justified as None if not applicable; must cite inspection of LanguageInfo struct fields or PR #659 | yes |
+| C7 | All structural wiring described: feature flag included in default feature set, all required query constant names stated, EXTENSION_MAP entries present, mod.rs arms present, module registered | no |
+
+### Valid Runs
+
+10 of 10. Runs 04, 09, and 10 hit provider stream-decode errors and were retried once on Bedrock fallback per the invalid-run policy. All retried runs produced output and were included.
+
+### Results
+
+Neither group exceeded 34% mean pass rate. Mann-Whitney U = 15, p = 0.6072 (not significant).
+
+| Group | Mean score | Median score | Wall-clock Median |
+|---|---|---|---|
+| Control (x1) | 2.0/7 (29%) | 2.0/7 | 1m 02s |
+| Treatment (x2) | 2.4/7 (34%) | 2.0/7 | 1m 12s |
+| Delta | +0.4 | 0 | +16% |
+
+C7 was the only ceiling criterion (100% both groups). C1, C5, and C6 scored 0/10 across both groups. Post-experiment investigation revealed that the runner prompt contained no instruction to investigate ABI compatibility (C1), write .kts-specific test cases (C5), or inspect LanguageInfo struct fields or PR #659 (C6). These criteria scored zero because agents were never directed to perform those investigations, not because agents attempted them and failed. See Post-hoc Criterion Exclusion below.
+
+### Post-hoc Criterion Exclusion
+
+**Discovery.** C1, C5, and C6 each scored 0/10 across all runs in both groups.
+
+**Investigation.** The runner prompt (`runner-prompt.md`) was examined after scoring was complete. It contained no instruction to investigate ABI compatibility between tree-sitter-kotlin 0.3.8 and tree-sitter 0.26.6 (C1), to write test cases exercising `.kts` file parsing specifically (C5), or to inspect the `LanguageInfo` struct fields or PR #659 to determine whether a `DEFUSE_QUERY` constant was required (C6). Agents were not directed to perform those investigations.
+
+**Structural rationale.** The exclusion reason is independent of which group scored higher: both groups scored identically (0/10) on C1, C5, and C6. Excluding these criteria therefore cannot directionally inflate the observed treatment effect in either direction. This is a rubric-runner co-design failure, not an agent capability signal. Post-hoc exclusion with disclosed structural rationale is methodologically distinct from HARKing and aligns with pre-registration amendment practice in empirical software engineering (Wohlin, C., Runeson, P., Host, M., Ohlsson, M.C., Regnell, B., Wesslen, A. (2012). *Experimentation in Software Engineering*. Springer).
+
+**Decision.** C1, C5, and C6 are retained in the full rubric table above for reproducibility. They are excluded from the primary treatment comparison. The treatment comparison is restricted to C2, C3, C4, and C7.
+
+**Restricted analysis (4-criterion subset).** Per-run scores on C2, C3, C4, C7:
+
+| Run | C2 | C3 | C4 | C7 | Total (of 4) |
+|---|---|---|---|---|---|
+| control-1 | 0 | 0 | 0 | 1 | 1 |
+| control-2 | 0 | 1 | 1 | 1 | 3 |
+| control-3 | 0 | 1 | 0 | 1 | 2 |
+| control-4 | 0 | 1 | 0 | 1 | 2 |
+| control-5 | 0 | 1 | 0 | 1 | 2 |
+| treatment-1 | 1 | 0 | 1 | 1 | 3 |
+| treatment-2 | 0 | 1 | 0 | 1 | 2 |
+| treatment-3 | 1 | 1 | 1 | 1 | 4 |
+| treatment-4 | 0 | 1 | 0 | 1 | 2 |
+| treatment-5 | 0 | 1 | 0 | 1 | 2 |
+
+*Table 1: Per-run scores on the 4 reachable criteria (C2, C3, C4, C7).*
+
+Control mean: 2.0/4. Treatment mean: 2.4/4. Mann-Whitney U = 15, p = 0.6072 (not significant). The rank order is identical to the 7-criterion analysis; restricting to reachable criteria does not alter the statistical conclusion.
+
+**Protocol fix.** For future experiments, rubric criteria must be cross-checked against runner-prompt coverage before sealing the pre-registration. Each criterion must trace to at least one explicit instruction in the runner prompt.
+
+### Orchestrator Session
+
+Session ID: `20260418_59`. Recorded in `analysis.json`.
+
 ## Known Limitations
 
 1. **Ceiling effects.** Both rubrics were too easy. 100% accuracy in both groups leaves no room for treatment effects.
@@ -125,6 +201,7 @@ Session ID: `20260220_43`. Recorded in `analysis.json`.
 3. **Infrastructure confound.** Goose enforces an undocumented 5-delegate concurrency cap (`GOOSE_MAX_BACKGROUND_TASKS` defaults to 5) as a hard rejection with no queuing. Excess delegates are dropped, not deferred, which silently split our groups into unbalanced batches.
 4. **Single model.** All experiments used Claude Haiku 4.5. Results may not generalize to other models.
 5. **Session log loss.** Experiment 2 `.jsonl` session logs were purged from disk before archival. Per-run message and token counts were reconstructed from SQLite session metadata.
+6. **Experiment 3 rubric-runner misalignment.** Three criteria (C1, C5, C6) required investigations not tasked in the runner prompt. Post-hoc exclusion with structural rationale was applied; see Experiment 3 Post-hoc Criterion Exclusion section.
 
 ## Software Versions
 
