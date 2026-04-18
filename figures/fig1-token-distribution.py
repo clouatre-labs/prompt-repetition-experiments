@@ -30,10 +30,6 @@ for i, bar in enumerate(bars):
     ax.text(bar.get_x() + bar.get_width() / 2, bar.get_height() + 20000,
             f"{v/1e6:.2f}M", ha="center", va="bottom", fontsize=10, fontweight="bold")
 
-# Reference lines
-ax.axhline(1068182, color="#1f77b4", linestyle="--", linewidth=1, alpha=0.5)
-ax.axhline(740362, color="#1f77b4", linestyle=":", linewidth=1, alpha=0.5)
-
 # Legend using Line2D squares
 legend_elements = [
     Line2D([0], [0], marker='s', color='w', markerfacecolor='#1f77b4', markersize=9, label='Control'),
