@@ -4,69 +4,67 @@
     "scores": {
       "C1": {
         "score": 0,
-        "justification": "The run identifies the LANGUAGE const exists and notes ABI concern ('0.3.8 targets tree-sitter 0.22-0.24 ABI historically') but explicitly defers verification to a smoke-test before commit, leaving ABI compatibility with 0.26.6 unresolved."
+        "justification": "The run states the LANGUAGE export exists and notes an ABI concern 'historically' targeting tree-sitter 0.22-0.24, but explicitly flags it as needing a 'cargo check smoke-test before commit' rather than presenting verified semver ranges or crate source as evidence; incompatibility is not conclusively documented."
       },
       "C2": {
         "score": 1,
-        "justification": "The run documents key node kinds and explicitly notes 'Companion objects use object_declaration with companion keyword modifier', correctly distinguishing them within the object_declaration taxonomy alongside the delegation_specifiers inheritance walk."
+        "justification": "library_findings notes 'Companion objects use object_declaration with companion keyword modifier,' and the approach description and test spec both enumerate delegation_specifiers children distinguishing superclass_type_with_constructor (has parens) from user_type (no parens)."
       },
       "C3": {
         "score": 1,
-        "justification": "The library_findings enumerate function_declaration, class_declaration, interface_declaration, enum_class_declaration, and object_declaration as element query targets, covering all three required pattern families and more."
+        "justification": "library_findings lists five node kinds for ELEMENT_QUERY (function_declaration, class_declaration, interface_declaration, enum_class_declaration, object_declaration), satisfying the requirement of at least three patterns."
       },
       "C4": {
         "score": 1,
-        "justification": "The approaches section explicitly describes extract_inheritance as 'walking delegation_specifiers, distinguishing superclass_type_with_constructor (has parens) from user_type (interfaces)', correctly capturing the required separation logic."
+        "justification": "The approach description and test coverage both explicitly describe extract_inheritance walking delegation_specifiers and separating superclass_type_with_constructor (has parens) from user_type (interfaces)."
       },
       "C5": {
         "score": 0,
-        "justification": "The test_coverage section lists 11 unit test behaviors focused on .kt scenarios (free function, class, data class, etc.) but never mentions a .kts-specific test or .kts syntax such as top-level functions or extension functions."
+        "justification": "The eleven unit tests enumerated in test_coverage cover function/class/inheritance behaviors but none is explicitly described as parsing a .kts file or using .kts-specific syntax; .kts appears only as an EXTENSION_MAP entry."
       },
       "C6": {
         "score": 1,
-        "justification": "The run references PR #659 as the source of the defuse_query field, presents both include-DEFUSE_QUERY and omit-with-None approaches, and documents the Fortran precedent for omission, satisfying the 'created or justified as None' requirement."
+        "justification": "PR #659 is cited in related_issues as the source of the defuse_query field on LanguageInfo, and the recommendation definitively chooses Approach 3 which includes DEFUSE_QUERY modeled after Java."
       },
       "C7": {
         "score": 0,
-        "justification": "The run covers query constants, extension registry, module registration, and tests, but never explicitly captures that lang-kotlin must be added to the default feature set, leaving a key acceptance criterion from issue #649 undocumented."
+        "justification": "Query constant names, EXTENSION_MAP entries, and mod.rs arms are all described, but the feature flag is only described as 'optional' (dep:tree-sitter-X, optional = true); inclusion in the default feature set is never stated."
       }
     },
-    "total": 4,
-    "run_group": null
+    "total": 4
   },
   {
     "run_id": "scout-pilot-02",
     "scores": {
       "C1": {
         "score": 1,
-        "justification": "The run verifies the LANGUAGE constant exists and performs a thorough semver analysis concluding tree-sitter-kotlin 0.3.8 declares '>=0.21, <0.23' which has no overlap with workspace 0.26.x, fully resolving the ABI compatibility question."
+        "justification": "library_findings and constraints both document the ABI incompatibility with explicit semver ranges: tree-sitter-kotlin 0.3.8 declares '>=0.21, <0.23' while the workspace uses 0.26.x, with no overlap; the run labels this a hard blocker and documents the compile-time type mismatch."
       },
       "C2": {
         "score": 0,
-        "justification": "The run documents function_declaration, class_declaration, object_declaration, and other node kinds but makes no mention of companion objects or how they are distinguished from regular object declarations within delegation_specifiers."
+        "justification": "The approach correctly distinguishes superclass_type_with_constructor from user_type in delegation_specifiers, but the companion object node kind (object_declaration with companion modifier, distinct from standalone object_declaration) is never explicitly identified anywhere in the run output."
       },
       "C3": {
         "score": 1,
-        "justification": "All three approaches consistently enumerate function_declaration, class_declaration, interface_declaration, enum_class_declaration, and object_declaration as ELEMENT_QUERY capture targets, covering the required patterns."
+        "justification": "Both approaches list at least five ELEMENT_QUERY patterns (function_declaration, class_declaration, interface_declaration, enum_class_declaration, object_declaration), meeting the requirement of at least three."
       },
       "C4": {
         "score": 1,
-        "justification": "Approaches 1 and 2 explicitly state 'extract_inheritance walking delegation_specifiers, distinguishing superclass_type_with_constructor (has parens) from user_type (interfaces)', correctly capturing the required separation logic."
+        "justification": "Approach 2 explicitly describes extract_inheritance walking delegation_specifiers and distinguishing superclass_type_with_constructor (has parens) from user_type (no parens / interfaces)."
       },
       "C5": {
         "score": 0,
-        "justification": "The test_coverage section proposes test_kotlin_element_query_happy_path and test_kotlin_extract_inheritance but specifies no .kts-specific test case covering top-level functions, extension functions, or any .kts syntax."
+        "justification": "test_coverage lists three unit tests (element_query happy path, extract_inheritance, optionally defuse write-site) with no mention of a .kts-specific test or verification that .kts file parsing works."
       },
       "C6": {
         "score": 1,
-        "justification": "The run cites PR #659 as having introduced defuse_query to LanguageInfo across all existing languages and identifies that Kotlin 'just needs to plug in', with the Fortran None precedent documented in the patterns section."
+        "justification": "PR #659 is cited in related_issues as having introduced defuse_query on LanguageInfo, and the recommendation makes a clear conclusion to include DEFUSE_QUERY in Approach 2 for consistency with Java/Go/Python."
       },
       "C7": {
         "score": 1,
-        "justification": "The constraints section explicitly states 'the lang-kotlin feature must be included in the default feature set', and the relevant files and approaches together cover all query constants, extension registry, module registration, and test requirements from issue #649."
+        "justification": "All structural wiring elements are present: constraints explicitly state lang-kotlin must be in the default feature set, patterns name all required query constants, lang.rs role lists .kt/.kts EXTENSION_MAP entries, mod.rs role lists both match-arm additions, and approach 1 registers 'mod kotlin' in languages/mod.rs."
       }
     },
-    "total": 5,
-    "run_group": null
+    "total": 5
   }
 ]
