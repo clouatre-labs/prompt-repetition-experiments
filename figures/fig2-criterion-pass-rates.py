@@ -6,7 +6,7 @@ from matplotlib.lines import Line2D
 # Data
 criteria = ["C1", "C2", "C3", "C4", "C5", "C6"]
 rates = [1.0, 1.0, 1.0, 1.0, 0.67, 1.0]
-colors = ["#2ca02c", "#2ca02c", "#2ca02c", "#2ca02c", "#ff7f0e", "#2ca02c"]
+colors = ["#2ca02c", "#2ca02c", "#2ca02c", "#2ca02c", "#d62728", "#2ca02c"]
 
 fig, ax = plt.subplots(figsize=(8, 5))
 
@@ -31,7 +31,7 @@ for i, bar in enumerate(bars):
 # Legend
 legend_elements = [
     Line2D([0], [0], marker='s', color='w', markerfacecolor='#2ca02c', markersize=9, label='Pass (100%)'),
-    Line2D([0], [0], marker='s', color='w', markerfacecolor='#ff7f0e', markersize=9, label='Partial')
+    Line2D([0], [0], marker='s', color='w', markerfacecolor='#d62728', markersize=9, label='Partial')
 ]
 ax.legend(handles=legend_elements, loc='upper right', fontsize=9)
 
