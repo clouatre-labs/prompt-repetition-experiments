@@ -23,21 +23,10 @@ ax.set_axisbelow(True)
 ax.set_yticks(range(4))
 ax.set_yticklabels(labels_sorted, fontsize=10)
 
-# Value labels and delta annotations
+# Value labels
 for i, bar in enumerate(bars):
     v = values_sorted[i]
-    label = f"{v:.1f}"
-    if i < 2:  # treatment bars
-        delta = "-34.2% vs ctrl" if i == 0 else "-8.6% vs ctrl"
-        label = f"{label}  ({delta})"
-        color = "#555555"
-    else:
-        color = "black"
-    ax.text(v + 3, bar.get_y() + bar.get_height() / 2, label, va='center', fontsize=10, color=color)
-
-# Annotation for Exp1 control note
-ax.annotate('Exp1 control: 1 drift run excluded (93 msgs)', xy=(209.25, 3), xytext=(130, 3.35),
-            fontsize=8, color='#888888', arrowprops=dict(arrowstyle='->', color='#888888', lw=0.8))
+    ax.text(v + 3, bar.get_y() + bar.get_height() / 2, f"{v:.1f}", va='center', fontsize=10)
 
 # Legend
 legend_elements = [

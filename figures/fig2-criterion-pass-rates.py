@@ -15,7 +15,7 @@ bars = ax.bar(range(6), rates, color=colors, width=0.6, zorder=3)
 # Axis labels and title
 ax.set_ylabel('Pass rate', fontsize=11)
 ax.set_title('Criterion pass rates -- Exp1: FastMCP refactor (n=9 valid runs)', fontsize=12)
-ax.set_ylim(0, 1.35)
+ax.set_ylim(0, 1.15)
 ax.yaxis.grid(True, linestyle='--', alpha=0.4, zorder=0)
 ax.set_axisbelow(True)
 # X ticks
@@ -27,10 +27,6 @@ for i, bar in enumerate(bars):
     r = rates[i]
     ax.text(bar.get_x() + bar.get_width() / 2, bar.get_height() + 0.02,
             f"{r:.0%}", ha='center', va='bottom', fontsize=10, fontweight='bold')
-
-# Footnote text
-ax.text(2.5, 1.25, 'Exp2 (tree-sitter synthesis, n=10): all 7 criteria at 100% -- ceiling effect',
-        ha='center', fontsize=9, color='#555555', style='italic')
 
 # Legend
 legend_elements = [
