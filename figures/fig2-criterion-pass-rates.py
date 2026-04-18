@@ -7,15 +7,10 @@ from matplotlib.lines import Line2D
 criteria = ["C1", "C2", "C3", "C4", "C5", "C6"]
 rates = [1.0, 1.0, 1.0, 1.0, 0.67, 1.0]
 colors = ["#2ca02c", "#2ca02c", "#2ca02c", "#2ca02c", "#ff7f0e", "#2ca02c"]
-# Wilson CI error bars
-err_low = [0.0, 0.0, 0.0, 0.0, 0.67 - 0.3542, 0.0]
-err_high = [0.0, 0.0, 0.0, 0.0, 0.8794 - 0.67, 0.0]
 
 fig, ax = plt.subplots(figsize=(8, 5))
 
 bars = ax.bar(range(6), rates, color=colors, width=0.6, zorder=3)
-# Error bars
-ax.errorbar(range(6), rates, yerr=[err_low, err_high], fmt='none', ecolor='black', capsize=5, zorder=4)
 
 # Axis labels and title
 ax.set_ylabel('Pass rate', fontsize=11)

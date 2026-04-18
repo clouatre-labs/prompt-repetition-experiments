@@ -29,12 +29,6 @@ for i, bar in enumerate(bars):
     ax.text(bar.get_x() + bar.get_width() / 2, bar.get_height() + 20000,
             f"{v/1e6:.2f}M", ha="center", va="bottom", fontsize=10, fontweight="bold")
 
-# Delta annotations (treatment bars)
-# Exp1 Treatment (index 1)
-ax.text(1, values[1] + 50000, "-31.4% vs control", ha="center", va="bottom", fontsize=9, color="#555555")
-# Exp2 Treatment (index 3)
-ax.text(3, values[3] + 50000, "-0.4% vs control", ha="center", va="bottom", fontsize=9, color="#555555")
-
 # Reference lines
 ax.axhline(1068182, color="#1f77b4", linestyle="--", linewidth=1, alpha=0.5)
 ax.axhline(740362, color="#1f77b4", linestyle=":", linewidth=1, alpha=0.5)
