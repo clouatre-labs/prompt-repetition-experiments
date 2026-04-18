@@ -17,7 +17,6 @@ ax.set_ylabel("Mean total tokens (valid runs)", fontsize=11)
 ax.set_title("Token usage by group -- Exp1 (FastMCP refactor) and Exp2 (tree-sitter synthesis)", fontsize=12)
 # Y limits and grid
 ax.set_ylim(0, 1.3e6)
-ax.yaxis.grid(True, linestyle="--", alpha=0.4, zorder=0)
 ax.set_axisbelow(True)
 # X ticks
 ax.set_xticks(range(4))

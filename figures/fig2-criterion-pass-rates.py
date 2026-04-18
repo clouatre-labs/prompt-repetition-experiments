@@ -14,7 +14,7 @@ bars = ax.bar(range(6), rates, color=colors, width=0.6, zorder=3)
 
 # Axis labels and title
 ax.set_ylabel('Pass rate', fontsize=11)
-ax.set_title('Criterion pass rates -- Exp1: FastMCP refactor (n=9 valid runs)', fontsize=12)
+ax.set_title('Criterion pass rates -- FastMCP refactor (n=9 valid runs)', fontsize=12)
 ax.set_ylim(0, 1.15)
 ax.yaxis.grid(True, linestyle='--', alpha=0.4, zorder=0)
 ax.set_axisbelow(True)
