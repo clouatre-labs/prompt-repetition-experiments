@@ -1,0 +1,83 @@
+{
+  "target_issue": "clouatre-labs/code-analyze-mcp#649",
+  "baseline_difficulty": {
+    "answerable_from_issue_text": true,
+    "evidence": "Issue #649 provides complete acceptance criteria with specific node kinds (function_declaration, class_declaration, object_declaration, companion object, delegation_specifiers) and exact tree-sitter grammar version (0.3.8). Issues #607-609 (C#, C++, JS) show no additional codebase research questions arose beyond the issue text."
+  },
+  "prior_art": {
+    "has_add_language_pattern": true,
+    "recent_language_prs": [
+      "#609: feat(lang): add C# grammar support (595 additions)",
+      "#608: feat(lang): add C and C++ grammar support (373 additions)",
+      "#607: feat(lang): add JavaScript grammar support (242 additions)"
+    ],
+    "ceiling_risk_from_pattern": "HIGH",
+    "reasoning": "All three recent add-language PRs follow an identical repeatable pattern: (1) add tree-sitter crate to root Cargo.toml workspace.dependencies; (2) add lang-LANG feature flag in code-analyze-core/Cargo.toml and to default feature set; (3) create languages/LANG.rs with 4-5 query constants and 1-2 handler functions; (4) register in mod.rs get_language_info() and get_ts_language() match arms; (5) register extension in lang.rs EXTENSION_MAP and supported_languages(); (6) write 8-12 unit tests using parse_LANG() helper. PR #609 shows 595 additions but only 392 lines are in new kotlin.rs file; 203 lines are test file additions. Each prior PR required ~250-400 lines of unique synthesis but the structure is identical. A lazy SCOUT following this pattern yields high scores; differentiation is limited."
+  },
+  "synthesis_requirements": [
+    {
+      "question": "Does tree-sitter-kotlin 0.3.8 export a public LANGUAGE constant and is it compatible with the current tree-sitter 0.26.6 crate ABI? (Prior test: verify export path and version string.)",
+      "why_not_retrievable": "Issue text states version 0.3.8 but does not confirm the actual public API or ABI compatibility. crates.io metadata shows 0.3.8 was released Aug 2024; tree-sitter 0.26.6 may have introduced breaking changes. Only the crate source or cargo build confirms this.",
+      "answer_source": "crates.io API + Cargo.lock + attempted cargo test --features lang-kotlin"
+    },
+    {
+      "question": "What are the exact node kinds for Kotlin companion objects and object declarations in tree-sitter-kotlin 0.3.8? The issue says extract object_declaration but does not specify whether a companion object inside a class is a separate node or part of class_declaration's children.",
+      "why_not_retrievable": "Issue text omits the actual tree-sitter node structure. tree-sitter-kotlin grammar must be consulted. A naive SCOUT guesses companion object is a separate declaration; this could be wrong, requiring a grammar spec or test-driven discovery.",
+      "answer_source": "/fwcd/tree-sitter-kotlin grammar corpus or crate source code"
+    },
+    {
+      "question": "Does the Kotlin DEFUSE_QUERY requirement exist? Issue #649 mentions 7 acceptance criteria but does not mention defuse_query. However, recent C# PR #609 includes DEFUSE_QUERY as a feature. Is lang-kotlin expected to support def-use or not?",
+      "why_not_retrievable": "Issue #649 does not mention defuse_query. However, examining crates/code-analyze-core/src/languages/mod.rs and recent PR #659 (def-use infrastructure) shows DEFUSE_QUERY is now a required field for new languages. The issue predates this requirement or was not updated. Only reading codebase and PR history clarifies whether DEFUSE_QUERY is now mandatory.",
+      "answer_source": "crates/code-analyze-core/src/languages/mod.rs LanguageInfo struct + PR #659 context"
+    }
+  ],
+  "kotlin_gotchas": {
+    "crate_status": "tree-sitter-kotlin 0.3.8 from crates.io, published 2024-08-03, maintained by fwcd (High reputation, Benchmark 79.1). Crate exists and is stable.",
+    "abi_compat": "tree-sitter 0.26.6 is current in code-analyze-mcp. No breaking ABI changes documented between tree-sitter-kotlin 0.3.8 release (Aug 2024) and now. However, unverified without cargo build attempt. Prior removal in commit bc3c399 used tree-sitter-kotlin-ng 1.1.0 (different crate name); issue proposes fwcd/tree-sitter-kotlin (different source). ABI risk is LOW but must be verified.",
+    "alternatives": [
+      "tree-sitter-kotlin-ng (1.1.0) from crates.io: older, now unused in code-analyze-mcp after commit bc3c399; fwcd/tree-sitter-kotlin (0.3.8) is the recommended replacement per issue text",
+      "No official Kotlin grammar from tree-sitter org; fwcd/tree-sitter-kotlin is community standard"
+    ],
+    "kts_support": "Issue text mentions .kts (script files) in acceptance criteria but does not specify tree-sitter-kotlin grammar support. Context7 docs show Kotlin class/function declarations but do not explicitly confirm .kts parsing. Only grammar inspection or test confirms whether .kts is a separate file_type node or same as .kt parsing."
+  },
+  "verdict": "SUITABLE_WITH_RUBRIC_DESIGN",
+  "recommended_rubric_criteria": [
+    {
+      "id": "C1",
+      "criterion": "tree-sitter-kotlin 0.3.8 public LANGUAGE export verified and ABI-compatible with tree-sitter 0.26.6",
+      "synthesis_required": true
+    },
+    {
+      "id": "C2",
+      "criterion": "Kotlin node kinds documented and distinguish companion objects from object declarations in delegation_specifiers correctly",
+      "synthesis_required": true
+    },
+    {
+      "id": "C3",
+      "criterion": "At least 3 query patterns from tree-sitter-kotlin corpus (function_declaration, class_declaration, object_declaration variants) correctly captured in ELEMENT_QUERY",
+      "synthesis_required": true
+    },
+    {
+      "id": "C4",
+      "criterion": "extract_inheritance handler correctly walks delegation_specifiers and separates superclass_type_with_constructor (has parens) from user_type (no parens)",
+      "synthesis_required": true
+    },
+    {
+      "id": "C5",
+      "criterion": "Unit tests confirm .kt AND .kts file parsing both work; at least 1 test with .kts syntax (e.g. top-level function, extension function)",
+      "synthesis_required": true
+    },
+    {
+      "id": "C6",
+      "criterion": "DEFUSE_QUERY constant created for Kotlin if required by current LanguageInfo struct, or justified as None if not applicable (e.g. read issue context or PR #659)",
+      "synthesis_required": true
+    },
+    {
+      "id": "C7",
+      "criterion": "All acceptance criteria from issue #649 met: feature flag added to default, all query constants present, extension registry updated, module registered, all tests pass",
+      "synthesis_required": false
+    }
+  ],
+  "alternatives_if_unsuitable": [],
+  "final_recommendation": "SUITABLE_WITH_RUBRIC_DESIGN: Issue #649 provides clear acceptance criteria but exhibits high ceiling risk due to repeatable prior-art pattern (C#, C++, JS PRs). Rubric must include 6 synthesis criteria (C1-C6) requiring code-driven discovery and tree-sitter grammar verification, not just issue text retrieval. C1-C5 force real synthesis; C7 is trivial verification. This raises difficulty above Exp 2 baseline and prevents 100% saturation if any synthesis criterion is non-obvious."
+}
