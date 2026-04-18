@@ -164,9 +164,14 @@ Exp1 control-1 was a drift failure (93 messages, no output file, scored 0). It w
 
 ## Experiment Flow
 
-![Experiment flow diagram](figures/fig0-experiment-flow.png)
-
-*Figure 0: Experiment flow. The orchestrator spawns 10 delegates in parallel (subject to a 5-delegate concurrency cap), then passes all outputs to the blind scorer.*
+```mermaid
+graph TD
+    O[Orchestrator<br/>Claude Sonnet 4.6] --> CG[Control 1..5<br/>x1 instructions]
+    O --> TG[Treatment 1..5<br/>x2 instructions]
+    CG --> S[Blind Scorer<br/>Pre-registered rubric]
+    TG --> S
+    S --> R[Results<br/>scores.json]
+```
 
 All delegates run on Claude Haiku 4.5 at temperature 0.5. The orchestrator spawns delegates in parallel, subject to a 5-delegate concurrency cap discovered during experimentation.
 
