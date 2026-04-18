@@ -1,65 +1,48 @@
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-import matplotlib.patches as mpatches
-import numpy as np
+from matplotlib.lines import Line2D
 
-# Criterion pass rates read from analysis.json for both experiments.
-# Exp1: C1-C6 (9 valid runs, control-1 drift excluded).
-# Exp2: C1-C7 (10 runs, all valid -- ceiling effect).
-# Exp1 has no C7; represented as NaN and rendered as a hatched N/A cell.
+# Data
+criteria = ["C1", "C2", "C3", "C4", "C5", "C6"]
+rates = [1.0, 1.0, 1.0, 1.0, 0.67, 1.0]
+colors = ["#2ca02c", "#2ca02c", "#2ca02c", "#2ca02c", "#ff7f0e", "#2ca02c"]
+# Wilson CI error bars
+err_low = [0.0, 0.0, 0.0, 0.0, 0.67 - 0.3542, 0.0]
+err_high = [0.0, 0.0, 0.0, 0.0, 0.8794 - 0.67, 0.0]
 
-criteria = ['C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7']
+fig, ax = plt.subplots(figsize=(8, 5))
 
-rows = [
-    'Exp1: FastMCP refactor\n(n=9 valid)',
-    'Exp2: Tree-sitter synthesis\n(n=10)',
-]
+bars = ax.bar(range(6), rates, color=colors, width=0.6, zorder=3)
+# Error bars
+ax.errorbar(range(6), rates, yerr=[err_low, err_high], fmt='none', ecolor='black', capsize=5, zorder=4)
 
-data = np.array([
-    [1.0,  1.0,  1.0,  1.0,  0.67, 1.0,  np.nan],  # Exp1 C1-C6; C7 N/A
-    [1.0,  1.0,  1.0,  1.0,  1.0,  1.0,  1.0   ],  # Exp2 C1-C7
-])
-
-fig, ax = plt.subplots(figsize=(9, 3))
-
-# Mask NaN for imshow
-masked = np.ma.masked_invalid(data)
-cmap = plt.get_cmap('RdYlGn')
-cmap.set_bad('#cccccc')
-im = ax.imshow(masked, cmap=cmap, vmin=0, vmax=1, aspect='auto')
-
-ax.set_xticks(range(len(criteria)))
+# Axis labels and title
+ax.set_ylabel('Pass rate', fontsize=11)
+ax.set_title('Criterion pass rates -- Exp1: FastMCP refactor (n=9 valid runs)', fontsize=12)
+ax.set_ylim(0, 1.35)
+ax.yaxis.grid(True, linestyle='--', alpha=0.4, zorder=0)
+ax.set_axisbelow(True)
+# X ticks
+ax.set_xticks(range(6))
 ax.set_xticklabels(criteria, fontsize=11)
-ax.set_yticks(range(len(rows)))
-ax.set_yticklabels(rows, fontsize=10)
-ax.set_xlabel('Criterion', fontsize=11)
 
-# Cell annotations
-for i in range(len(rows)):
-    for j in range(len(criteria)):
-        val = data[i, j]
-        if np.isnan(val):
-            # Hatch over the grey bad-color cell
-            ax.add_patch(mpatches.Rectangle(
-                (j - 0.5, i - 0.5), 1, 1,
-                fill=True, facecolor='#cccccc', edgecolor='black', hatch='//', linewidth=0
-            ))
-            ax.text(j, i, 'N/A', ha='center', va='center', fontsize=10, color='black')
-        else:
-            text_color = 'white' if val < 0.4 else 'black'
-            ax.text(j, i, f'{val:.0%}', ha='center', va='center',
-                    fontsize=11, color=text_color, fontweight='bold')
+# Value labels on bars
+for i, bar in enumerate(bars):
+    r = rates[i]
+    ax.text(bar.get_x() + bar.get_width() / 2, bar.get_height() + 0.02,
+            f"{r:.0%}", ha='center', va='bottom', fontsize=10, fontweight='bold')
 
-plt.colorbar(im, ax=ax, label='Pass rate (0.0 = never, 1.0 = always)', shrink=0.8)
+# Footnote text
+ax.text(2.5, 1.25, 'Exp2 (tree-sitter synthesis, n=10): all 7 criteria at 100% -- ceiling effect',
+        ha='center', fontsize=9, color='#555555', style='italic')
 
-ax.set_title('Criterion pass rates by experiment', fontsize=12, pad=10)
-
-fig.text(
-    0.5, -0.06,
-    'Exp1 C5: 67% [35\u201388% Wilson CI]. All other non-N/A cells: 100% [\u226570% Wilson lower bound].',
-    ha='center', fontsize=9, style='italic'
-)
+# Legend
+legend_elements = [
+    Line2D([0], [0], marker='s', color='w', markerfacecolor='#2ca02c', markersize=9, label='Pass (100%)'),
+    Line2D([0], [0], marker='s', color='w', markerfacecolor='#ff7f0e', markersize=9, label='Partial')
+]
+ax.legend(handles=legend_elements, loc='upper right', fontsize=9)
 
 plt.tight_layout()
 plt.savefig('figures/fig2-criterion-pass-rates.png', dpi=150, bbox_inches='tight')

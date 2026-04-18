@@ -1,65 +1,51 @@
-import json
-import os
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-import numpy as np
+from matplotlib.lines import Line2D
 
-# Paths relative to repo root (worktree root)
-exp1_path = os.path.join('experiments', 'exp1-fastmcp-refactor', 'efficiency.json')
-exp2_path = os.path.join('experiments', 'exp2-treesitter-synthesis', 'efficiency.json')
+# Data
+labels = ["Exp1\nControl", "Exp1\nTreatment", "Exp2\nControl", "Exp2\nTreatment"]
+values = [1068182, 732257, 740362, 737331]
+colors = ["#1f77b4", "#ff7f0e", "#1f77b4", "#ff7f0e"]
 
+fig, ax = plt.subplots(figsize=(9, 5))
 
-def load_tokens(path):
-    with open(path, 'r') as f:
-        data = json.load(f)
-    # data['runs'] is a list of run dicts
-    control = []
-    treatment = []
-    for run in data['runs']:
-        # treat missing valid as True
-        if run.get('valid', True) is False:
-            continue
-        if run['group'] == 'control':
-            control.append(run['total_tokens'])
-        elif run['group'] == 'treatment':
-            treatment.append(run['total_tokens'])
-    return control, treatment
+bars = ax.bar(range(4), values, color=colors, width=0.6, zorder=3)
 
-ctrl1, treat1 = load_tokens(exp1_path)
-ctrl2, treat2 = load_tokens(exp2_path)
+# Y-axis label and title
+ax.set_ylabel("Mean total tokens (valid runs)", fontsize=11)
+ax.set_title("Token usage by group -- Exp1 (FastMCP refactor) and Exp2 (tree-sitter synthesis)", fontsize=12)
+# Y limits and grid
+ax.set_ylim(0, 1.3e6)
+ax.yaxis.grid(True, linestyle="--", alpha=0.4, zorder=0)
+ax.set_axisbelow(True)
+# X ticks
+ax.set_xticks(range(4))
+ax.set_xticklabels(labels, fontsize=10)
 
-# Prepare plot
-fig, axs = plt.subplots(1, 2, figsize=(10, 5), sharey=True)
+# Value labels on bars
+for i, bar in enumerate(bars):
+    v = values[i]
+    ax.text(bar.get_x() + bar.get_width() / 2, bar.get_height() + 20000,
+            f"{v/1e6:.2f}M", ha="center", va="bottom", fontsize=10, fontweight="bold")
 
-# Settings
-colors = {'control': '#1f77b4', 'treatment': '#ff7f0e'}
+# Delta annotations (treatment bars)
+# Exp1 Treatment (index 1)
+ax.text(1, values[1] + 50000, "-31.4% vs control", ha="center", va="bottom", fontsize=9, color="#555555")
+# Exp2 Treatment (index 3)
+ax.text(3, values[3] + 50000, "-0.4% vs control", ha="center", va="bottom", fontsize=9, color="#555555")
 
-# Helper to plot strip
+# Reference lines
+ax.axhline(1068182, color="#1f77b4", linestyle="--", linewidth=1, alpha=0.5)
+ax.axhline(740362, color="#1f77b4", linestyle=":", linewidth=1, alpha=0.5)
 
-def plot_strip(ax, ctrl, treat, title):
-    # jitter
-    jitter = 0.05
-    # positions
-    x_ctrl = np.random.normal(0, jitter, size=len(ctrl))
-    x_treat = np.random.normal(1, jitter, size=len(treat))
-    ax.scatter(x_ctrl, ctrl, color=colors['control'], label='Control', alpha=0.7)
-    ax.scatter(x_treat, treat, color=colors['treatment'], label='Treatment', alpha=0.7)
-    # mean lines
-    ax.axhline(np.mean(ctrl), color=colors['control'], linestyle='--')
-    ax.axhline(np.mean(treat), color=colors['treatment'], linestyle='--')
-    ax.set_xticks([0, 1])
-    ax.set_xticklabels(['Control', 'Treatment'])
-    ax.set_ylabel('Total tokens')
-    ax.set_title(title)
-    # legend only once
+# Legend using Line2D squares
+legend_elements = [
+    Line2D([0], [0], marker='s', color='w', markerfacecolor='#1f77b4', markersize=9, label='Control'),
+    Line2D([0], [0], marker='s', color='w', markerfacecolor='#ff7f0e', markersize=9, label='Treatment')
+]
+ax.legend(handles=legend_elements, loc='upper right', fontsize=9)
 
-plot_strip(axs[0], ctrl1, treat1, 'Exp1: FastMCP refactor')
-plot_strip(axs[1], ctrl2, treat2, 'Exp2: Tree-sitter synthesis')
-
-# Adjust layout
 plt.tight_layout()
-
-# Save figure
-out_path = os.path.join('figures', 'fig1-token-distribution.png')
-plt.savefig(out_path, dpi=150, bbox_inches='tight')
+plt.savefig('figures/fig1-token-distribution.png', dpi=150, bbox_inches='tight')
+print('Saved figures/fig1-token-distribution.png')

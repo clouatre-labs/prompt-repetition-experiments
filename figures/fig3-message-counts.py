@@ -1,80 +1,51 @@
-import json
-import os
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-import numpy as np
+from matplotlib.lines import Line2D
 
-exp1_path = os.path.join('experiments', 'exp1-fastmcp-refactor', 'efficiency.json')
-exp2_path = os.path.join('experiments', 'exp2-treesitter-synthesis', 'efficiency.json')
+# Sorted data
+labels_sorted = ["Exp1\nTreatment", "Exp2\nTreatment", "Exp2\nControl", "Exp1\nControl"]
+values_sorted = [137.6, 138.6, 151.6, 209.25]
+colors_sorted = ["#ff7f0e", "#ff7f0e", "#1f77b4", "#1f77b4"]
 
+fig, ax = plt.subplots(figsize=(8, 5))
 
-def load_messages(path):
-    """Load messages from the given efficiency.json file.
-    Returns three lists:
-        ctrl_valid: messages from valid control runs
-        ctrl_invalid: messages from invalid control runs (e.g., drift failures)
-        treat_valid: messages from valid treatment runs
-    """
-    with open(path, 'r') as f:
-        data = json.load(f)
-    ctrl_valid = []
-    ctrl_invalid = []
-    treat_valid = []
-    for run in data['runs']:
-        group = run.get('group')
-        valid = run.get('valid', True)
-        msgs = run.get('messages')
-        if group == 'control':
-            if valid:
-                ctrl_valid.append(msgs)
-            else:
-                ctrl_invalid.append(msgs)
-        elif group == 'treatment':
-            if valid:
-                treat_valid.append(msgs)
-            # Invalid treatment runs are ignored
-    return ctrl_valid, ctrl_invalid, treat_valid
+bars = ax.barh(range(4), values_sorted, color=colors_sorted, height=0.6)
 
-ctrl1_valid, ctrl1_invalid, treat1 = load_messages(exp1_path)
-ctrl2_valid, ctrl2_invalid, treat2 = load_messages(exp2_path)
+# Axis labels and title
+ax.set_xlabel('Mean messages per run (valid runs)', fontsize=11)
+ax.set_title('Message count by group -- Exp1 (FastMCP refactor) and Exp2 (tree-sitter synthesis)', fontsize=12)
+ax.set_xlim(0, 260)
+ax.xaxis.grid(True, linestyle='--', alpha=0.4, zorder=0)
+ax.set_axisbelow(True)
 
-fig, axs = plt.subplots(1, 2, figsize=(10,5), sharey=True)
-colors = {'control': '#1f77b4', 'treatment': '#ff7f0e'}
+# Y ticks
+ax.set_yticks(range(4))
+ax.set_yticklabels(labels_sorted, fontsize=10)
 
+# Value labels and delta annotations
+for i, bar in enumerate(bars):
+    v = values_sorted[i]
+    label = f"{v:.1f}"
+    if i < 2:  # treatment bars
+        delta = "-34.2% vs ctrl" if i == 0 else "-8.6% vs ctrl"
+        label = f"{label}  ({delta})"
+        color = "#555555"
+    else:
+        color = "black"
+    ax.text(v + 3, bar.get_y() + bar.get_height() / 2, label, va='center', fontsize=10, color=color)
 
-def plot(ax, ctrl_valid, ctrl_invalid, treat, title):
-    jitter = 0.05
-    # Jitter for valid control points
-    x_ctrl = np.random.normal(0, jitter, size=len(ctrl_valid))
-    # Jitter for treatment points
-    x_treat = np.random.normal(1, jitter, size=len(treat))
-    # Plot valid control runs
-    ax.scatter(x_ctrl, ctrl_valid, color=colors['control'], label='Control', alpha=0.7)
-    # Plot treatment runs
-    ax.scatter(x_treat, treat, color=colors['treatment'], label='Treatment', alpha=0.7)
-    # Plot invalid control runs (outliers) as red X
-    if ctrl_invalid:
-        # Position them at x=0 with a small jitter
-        x_invalid = np.random.normal(0, jitter, size=len(ctrl_invalid))
-        ax.scatter(x_invalid, ctrl_invalid, color='red', marker='x', s=80, zorder=5, label='Invalid')
-        for xv, yv in zip(x_invalid, ctrl_invalid):
-            ax.text(xv, yv, 'drift failure', color='red', fontsize=8, ha='center', va='bottom')
-    # Mean lines for valid runs only
-    if ctrl_valid:
-        ax.axhline(np.mean(ctrl_valid), color=colors['control'], linestyle='--')
-    if treat:
-        ax.axhline(np.mean(treat), color=colors['treatment'], linestyle='--')
-    ax.set_xticks([0,1])
-    ax.set_xticklabels(['Control','Treatment'])
-    ax.set_ylabel('Messages per run')
-    ax.set_title(title)
+# Annotation for Exp1 control note
+ax.annotate('Exp1 control: 1 drift run excluded (93 msgs)', xy=(209.25, 3), xytext=(130, 3.35),
+            fontsize=8, color='#888888', arrowprops=dict(arrowstyle='->', color='#888888', lw=0.8))
 
-# Plot experiments1 with both valid and invalid control runs
-plot(axs[0], ctrl1_valid, ctrl1_invalid, treat1, 'Exp1: FastMCP refactor')
-# Plot experiment2 (no invalid control runs)
-plot(axs[1], ctrl2_valid, ctrl2_invalid, treat2, 'Exp2: Tree-sitter synthesis')
+# Legend
+legend_elements = [
+    Line2D([0], [0], marker='s', color='w', markerfacecolor='#1f77b4', markersize=9, label='Control'),
+    Line2D([0], [0], marker='s', color='w', markerfacecolor='#ff7f0e', markersize=9, label='Treatment')
+]
+ax.legend(handles=legend_elements, loc='lower right', fontsize=9)
 
 plt.tight_layout()
-out_path = os.path.join('figures', 'fig3-message-counts.png')
-plt.savefig(out_path, dpi=150, bbox_inches='tight')
+plt.savefig('figures/fig3-message-counts.png', dpi=150, bbox_inches='tight')
+print('Saved figures/fig3-message-counts.png')
