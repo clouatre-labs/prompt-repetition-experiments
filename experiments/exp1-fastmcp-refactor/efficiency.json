@@ -6,7 +6,7 @@
     "input_per_mtok_usd": 1.0,
     "output_per_mtok_usd": 5.0
   },
-  "pricing_date": "2025-02-20",
+  "pricing_date": "2026-02-20",
   "runs": [
     {
       "run_id": "scout-control-1",
@@ -20,7 +20,8 @@
       "total_tokens": 485829,
       "cost_usd": 0.4997,
       "wall_clock_seconds": 49,
-      "note": "drift failure, no output file written"
+      "note": "drift failure, no output file written",
+      "messages": 93
     },
     {
       "run_id": "scout-control-2",
@@ -34,7 +35,8 @@
       "total_tokens": 1017641,
       "cost_usd": 1.0543,
       "wall_clock_seconds": 119,
-      "note": null
+      "note": null,
+      "messages": 194
     },
     {
       "run_id": "scout-control-3",
@@ -48,7 +50,8 @@
       "total_tokens": 1046981,
       "cost_usd": 1.0882,
       "wall_clock_seconds": 133,
-      "note": null
+      "note": null,
+      "messages": 213
     },
     {
       "run_id": "scout-control-4",
@@ -62,7 +65,8 @@
       "total_tokens": 1224158,
       "cost_usd": 1.265,
       "wall_clock_seconds": 139,
-      "note": null
+      "note": null,
+      "messages": 234
     },
     {
       "run_id": "scout-control-5",
@@ -76,7 +80,8 @@
       "total_tokens": 983947,
       "cost_usd": 1.0314,
       "wall_clock_seconds": 145,
-      "note": null
+      "note": null,
+      "messages": 196
     },
     {
       "run_id": "scout-treatment-1",
@@ -90,7 +95,8 @@
       "total_tokens": 716324,
       "cost_usd": 0.7475,
       "wall_clock_seconds": 97,
-      "note": null
+      "note": null,
+      "messages": 138
     },
     {
       "run_id": "scout-treatment-2",
@@ -104,7 +110,8 @@
       "total_tokens": 881268,
       "cost_usd": 0.9106,
       "wall_clock_seconds": 93,
-      "note": null
+      "note": null,
+      "messages": 154
     },
     {
       "run_id": "scout-treatment-3",
@@ -118,7 +125,8 @@
       "total_tokens": 575530,
       "cost_usd": 0.6031,
       "wall_clock_seconds": 80,
-      "note": null
+      "note": null,
+      "messages": 116
     },
     {
       "run_id": "scout-treatment-4",
@@ -132,7 +140,8 @@
       "total_tokens": 1000389,
       "cost_usd": 1.0388,
       "wall_clock_seconds": 122,
-      "note": null
+      "note": null,
+      "messages": 198
     },
     {
       "run_id": "scout-treatment-5",
@@ -146,7 +155,8 @@
       "total_tokens": 487772,
       "cost_usd": 0.5099,
       "wall_clock_seconds": 66,
-      "note": null
+      "note": null,
+      "messages": 82
     }
   ]
 }

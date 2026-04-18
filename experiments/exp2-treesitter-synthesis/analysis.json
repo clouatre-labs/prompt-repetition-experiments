@@ -330,43 +330,57 @@
       "label": "SecurityScanner implementation file identified",
       "pass_rate": 1.0,
       "passed": 10,
-      "total": 10
+      "total": 10,
+      "wilson_low": 0.7225,
+      "wilson_high": 1.0
     },
     "C2": {
       "label": "Line-by-line regex limitation understood",
       "pass_rate": 1.0,
       "passed": 10,
-      "total": 10
+      "total": 10,
+      "wilson_low": 0.7225,
+      "wilson_high": 1.0
     },
     "C3": {
       "label": "tree-sitter-rust version verified",
       "pass_rate": 1.0,
       "passed": 10,
-      "total": 10
+      "total": 10,
+      "wilson_low": 0.7225,
+      "wilson_high": 1.0
     },
     "C4": {
       "label": "Hybrid vs. full-migration tradeoff articulated",
       "pass_rate": 1.0,
       "passed": 10,
-      "total": 10
+      "total": 10,
+      "wilson_low": 0.7225,
+      "wilson_high": 1.0
     },
     "C5": {
       "label": "At least 2 specific patterns identified",
       "pass_rate": 1.0,
       "passed": 10,
-      "total": 10
+      "total": 10,
+      "wilson_low": 0.7225,
+      "wilson_high": 1.0
     },
     "C6": {
       "label": "Data-flow/taint tracking gap noted",
       "pass_rate": 1.0,
       "passed": 10,
-      "total": 10
+      "total": 10,
+      "wilson_low": 0.7225,
+      "wilson_high": 1.0
     },
     "C7": {
       "label": "Binary size / grammar crate count estimated",
       "pass_rate": 1.0,
       "passed": 10,
-      "total": 10
+      "total": 10,
+      "wilson_low": 0.7225,
+      "wilson_high": 1.0
     }
   },
   "goose_version": "1.25.0",
