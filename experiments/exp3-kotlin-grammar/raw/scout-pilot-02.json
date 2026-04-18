@@ -1,0 +1,126 @@
+{
+  "run_id": "scout-pilot-02",
+  "group": "treatment",
+  "started_at": "2026-04-18T02:42:26Z",
+  "finished_at": "2026-04-18T02:45:10Z",
+  "session_id": "pilot-02",
+  "lens": "scout",
+  "relevant_files": [
+    {"path": "Cargo.toml", "line_range": "1-50", "role": "workspace manifest; all language crates declared in [workspace.dependencies]; add tree-sitter-kotlin here"},
+    {"path": "crates/code-analyze-core/Cargo.toml", "line_range": "1-80", "role": "crate manifest; features section; add lang-kotlin feature and optional dep"},
+    {"path": "crates/code-analyze-core/src/lang.rs", "line_range": "1-130", "role": "EXTENSION_MAP and supported_languages(); add .kt/.kts entries behind cfg(feature=lang-kotlin)"},
+    {"path": "crates/code-analyze-core/src/languages/mod.rs", "line_range": "1-280", "role": "LanguageInfo struct, get_language_info(), get_ts_language(); add kotlin arm in both match blocks"},
+    {"path": "crates/code-analyze-core/src/languages/kotlin.rs", "line_range": "new file", "role": "ELEMENT_QUERY, CALL_QUERY, REFERENCE_QUERY, IMPORT_QUERY, optional DEFUSE_QUERY, extract_inheritance, unit tests"},
+    {"path": "crates/code-analyze-core/src/languages/java.rs", "line_range": "1-90", "role": "template: similar JVM-style AST; DEFUSE_QUERY, extract_inheritance, test structure"},
+    {"path": "crates/code-analyze-core/src/languages/fortran.rs", "line_range": "1-60", "role": "template for defuse_query: None pattern (language lacking natural defuse)"}
+  ],
+  "conventions": {
+    "commits": "conventional commits (feat/chore/docs/refactor + scope in parens); GPG signed; DCO sign-off (--signoff); PR squash merge",
+    "testing": "unit tests in language module files under #[cfg(all(test, feature = lang-X))]; parse_X(src) helper per module; AAA pattern; integration tests in crates/code-analyze-core/tests/; one happy path + one edge case per behavior",
+    "linting": "cargo clippy -- -D warnings; cargo fmt --check; clippy.toml sets cognitive-complexity-threshold=30",
+    "error_handling": "thiserror for library; Option returns for missing languages; no unwrap in production paths; safe u32::try_from with unwrap_or(u32::MAX) for index casts"
+  },
+  "patterns": [
+    "Each language is a Cargo feature (lang-X); all feature-gated with #[cfg(feature = lang-X)] throughout lang.rs, languages/mod.rs, and the module itself",
+    "All language modules follow identical structure: pub const ELEMENT_QUERY, CALL_QUERY, REFERENCE_QUERY, IMPORT_QUERY, optionally DEFUSE_QUERY, plus handler fns",
+    "SPDX header on every source file: // SPDX-FileCopyrightText: 2026 code-analyze-mcp contributors and // SPDX-License-Identifier: Apache-2.0",
+    "LanguageInfo fields impl_query, impl_trait_query, find_method_for_receiver, find_receiver_type set to None for JVM-style languages (Java model); extract_inheritance always provided",
+    "workspace.dependencies centralises all dep versions; individual crates use { workspace = true, optional = true } pattern",
+    "defuse_query is Option<&'static str>; set to None for Fortran (insufficient node kinds); all other implemented languages provide it",
+    "Tests in language files use a parse_X() helper that sets the language on a tree-sitter Parser and parses; test ELEMENT_QUERY, extract_inheritance, and defuse via SemanticExtractor"
+  ],
+  "related_issues": [
+    {"number": 649, "title": "feat(lang): add Kotlin grammar support", "relevance": "target issue; full acceptance criteria specify exact file changes, node kinds, test coverage requirements"},
+    {"number": 659, "title": "feat(core): def-use query infrastructure and write/read site extraction", "relevance": "merged PR that added defuse_query to LanguageInfo and all existing languages; the DEFUSE_QUERY field and SemanticExtractor::extract_def_use_for_file are already in place; Kotlin just needs to plug in"}
+  ],
+  "constraints": [
+    "ABI BLOCKER: tree-sitter-kotlin 0.3.8 (the version specified in the issue) declares tree-sitter dependency as '>=0.21, <0.23'; the workspace uses tree-sitter 0.26.6 (resolved 0.26.8); Cargo cannot satisfy both constraints with a single tree-sitter version; the Language types from different semver epochs are distinct Rust types and cannot be coerced at compile time via .into()",
+    "All other language crates in the workspace (java, go, rust, python, etc.) require tree-sitter ^0.24 or higher and use the tree-sitter-language crate API (LanguageFn); tree-sitter-kotlin 0.3.8 predates this API",
+    "Language feature flags must be additive; the lang-kotlin feature must be included in the default feature set",
+    "All source files must have the Apache-2.0 SPDX header",
+    "clippy must pass with -D warnings; cognitive-complexity-threshold=30",
+    "The LanguageInfo struct has no impl_query or impl_trait_query for Kotlin (no separate impl blocks in Kotlin)"
+  ],
+  "test_coverage": "Existing tests cover: get_language_info('rust'/'go'/'python') returns Some; get_language_info('cobol') returns None; get_ts_language happy/edge paths; language_for_extension happy/edge paths including case-insensitivity. Each language module has its own unit tests. Adding Kotlin requires: test_kotlin_element_query_happy_path (free fn + class + method), test_kotlin_extract_inheritance (superclass + interfaces via delegation_specifiers), optionally test_defuse_query_write_site. Integration tests in tests/ do not need changes.",
+  "library_findings": [
+    {
+      "library": "tree-sitter-kotlin",
+      "version": "0.3.8",
+      "relevant_api": "tree_sitter_kotlin::LANGUAGE (Language constant); published 2024-08-03 by fwcd",
+      "notes": "CRITICAL: declares tree-sitter >=0.21, <0.23 as a normal dependency. Workspace uses tree-sitter 0.26.x. These semver ranges have no overlap. Cargo will attempt to use two distinct tree-sitter versions; the Language type from 0.22-era and 0.26-era are different Rust types. The .into() conversion used in languages/mod.rs (e.g., tree_sitter_rust::LANGUAGE.into()) will fail at compile time because the impl From<OldLanguage> for NewLanguage does not exist across crate versions. The issue acceptance criteria mandates 0.3.8 but this crate is fundamentally incompatible with the workspace ABI."
+    },
+    {
+      "library": "tree-sitter-kotlin-ng",
+      "version": "1.1.0",
+      "relevant_api": "tree_sitter_kotlin_ng::LANGUAGE (LanguageFn from tree-sitter-language); requires tree-sitter ^0.24",
+      "notes": "More recent fork; requires tree-sitter ^0.24 (>=0.24, <0.25). Still incompatible with workspace 0.26.x since ^0.24 does not include 0.26. ABI improvement over 0.3.8 but still blocked."
+    },
+    {
+      "library": "tree-sitter-kotlin-codanna",
+      "version": "0.3.9",
+      "relevant_api": "tree_sitter_kotlin_codanna::LANGUAGE; requires tree-sitter >=0.21 (no upper bound)",
+      "notes": "Fork of fwcd tree-sitter-kotlin claiming unreleased fixes; declares tree-sitter >=0.21 with no upper bound. This COULD resolve against 0.26.x at the semver level, but whether it actually compiles against 0.26 API (LanguageFn vs Language) depends on the crate's implementation. Not audited for production use. Does not match the issue spec."
+    },
+    {
+      "library": "tree-sitter",
+      "version": "0.26.8 (resolved in workspace)",
+      "relevant_api": "tree_sitter::Language, tree_sitter::Query, tree_sitter::QueryCursor, tree_sitter::Parser; LanguageFn from tree-sitter-language 0.1.7",
+      "notes": "Post-0.24 API: grammar crates export LANGUAGE as LanguageFn (from tree-sitter-language); calling .into() on LanguageFn yields tree_sitter::Language (0.26). All current workspace language crates use this pattern. tree-sitter-kotlin 0.3.8 predates this."
+    }
+  ],
+  "approaches": [
+    {
+      "name": "Spec-compliant with 0.3.8 + Cargo patch workaround",
+      "description": "Add tree-sitter-kotlin 0.3.8 exactly as the issue specifies, plus a [patch.crates-io] or git dependency override to force the crate to link against tree-sitter 0.26. In practice this requires forking or patching the kotlin crate locally to declare tree-sitter without the <0.23 upper bound, or using a workspace patch to substitute a compatible version. Implement all structural changes: kotlin.rs with ELEMENT_QUERY (function_declaration, class_declaration, interface_declaration, enum_class_declaration, object_declaration), CALL_QUERY (call_expression), REFERENCE_QUERY (identifier), IMPORT_QUERY (import_header), DEFUSE_QUERY (local_variable_declaration, assignment, identifier), extract_inheritance walking delegation_specifiers. Register .kt and .kts in EXTENSION_MAP, add kotlin arm in get_language_info and get_ts_language, add mod kotlin to languages/mod.rs, add lang-kotlin feature to Cargo.toml files.",
+      "pros": [
+        "Satisfies the letter of the issue spec (0.3.8)",
+        "Full feature parity with other languages including DEFUSE_QUERY",
+        "No deviation from stated acceptance criteria"
+      ],
+      "cons": [
+        "Cannot compile without additional intervention: tree-sitter-kotlin 0.3.8 requires <0.23, workspace uses 0.26.x; patch approach adds complexity and maintenance burden",
+        "A Cargo [patch] to rewrite the upper bound is non-trivial and may not be acceptable in a published crate",
+        "Risk of runtime ABI mismatch even if compile workaround succeeds"
+      ],
+      "complexity": "complex",
+      "files_touched": 6
+    },
+    {
+      "name": "Full implementation with compatible crate (defer 0.3.8 spec)",
+      "description": "Deviate from the strict 0.3.8 requirement and use tree-sitter-kotlin-codanna 0.3.9 (tree-sitter >=0.21, no upper bound) or a git dependency pointing to fwcd/tree-sitter-kotlin at a commit that supports 0.26. Implement the full kotlin.rs with all required queries including DEFUSE_QUERY, all structural changes (lang.rs, mod.rs, Cargo files). ELEMENT_QUERY captures function_declaration, class_declaration, interface_declaration, enum_class_declaration, object_declaration. extract_inheritance walks delegation_specifiers, distinguishing superclass_type_with_constructor (has parens) from user_type (interfaces). DEFUSE_QUERY mirrors Java's pattern: local_variable_declaration @write, assignment_expression @write.assign, identifier @read.usage.",
+      "pros": [
+        "Actually compiles and links correctly",
+        "Full feature parity with all other languages",
+        "DEFUSE_QUERY consistent with Java/Go/Python pattern",
+        "Clean implementation with no Cargo hacks"
+      ],
+      "cons": [
+        "Does not exactly follow the issue acceptance criteria (crate name/version differs)",
+        "tree-sitter-kotlin-codanna is a less prominent fork; unknown production quality",
+        "Needs maintainer sign-off to deviate from spec"
+      ],
+      "complexity": "medium",
+      "files_touched": 6
+    },
+    {
+      "name": "Minimal implementation without DEFUSE_QUERY (like Fortran)",
+      "description": "Same structural changes as approach 2 (compatible crate, full kotlin.rs, all query constants), but set defuse_query: None in the LanguageInfo arm (matching Fortran's pattern). Justify omission: Kotlin DEFUSE_QUERY node kinds (local_variable_declaration, val/var patterns) require node-kind verification against the grammar; setting None is safe, matches an existing precedent in the codebase, and can be added in a follow-up issue once node kinds are confirmed against a live parse. All other acceptance criteria (ELEMENT_QUERY, CALL_QUERY, REFERENCE_QUERY, IMPORT_QUERY, extract_inheritance, tests) still satisfied.",
+      "pros": [
+        "Simpler initial implementation with lower risk of incorrect query syntax",
+        "Fortran precedent makes this defensible at review",
+        "Unblocks Kotlin parsing, symbol extraction, and traversal without defuse dependency",
+        "Easier to get CI green on first attempt"
+      ],
+      "cons": [
+        "def_use=true on analyze_symbol will return no sites for Kotlin files until a follow-up",
+        "Inconsistent with most other languages (10 out of 11 have defuse_query)",
+        "Still requires compatible crate (ABI blocker applies to all three approaches)"
+      ],
+      "complexity": "simple",
+      "files_touched": 6
+    }
+  ],
+  "recommendation": "Approach 2 (full implementation with compatible crate) is best. The ABI incompatibility of tree-sitter-kotlin 0.3.8 with the workspace's tree-sitter 0.26.x is a hard blocker that makes approach 1 non-viable without a Cargo patch hack. Approach 2 delivers the complete feature set (including DEFUSE_QUERY for consistency with Java/Python/Go) using a crate that can actually link. Prefer tree-sitter-kotlin-codanna 0.3.9 as a first attempt since its >=0.21 constraint has no upper bound; if that fails to compile against 0.26 API, fall back to a git dependency on fwcd/tree-sitter-kotlin at a post-0.3.8 unreleased commit that adopted the tree-sitter-language API. Approach 3 is a reasonable fallback if DEFUSE_QUERY node kinds cannot be verified before the PR deadline.",
+  "latency_seconds": 164,
+  "message_count": 8
+}
