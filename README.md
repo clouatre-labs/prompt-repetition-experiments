@@ -4,12 +4,12 @@
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19057574.svg)](https://doi.org/10.5281/zenodo.19057574)
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
-[![Sessions](https://img.shields.io/badge/sessions-28-green)](experiments/)
-[![Messages](https://img.shields.io/badge/messages-4%2C179-blue)](experiments/)
+[![Sessions](https://img.shields.io/badge/sessions-30-green)](experiments/)
+[![Messages](https://img.shields.io/badge/messages-4%2C306-blue)](experiments/)
 
 ## Abstract
 
-Prompt repetition (duplicating the input prompt verbatim before the task description) has been shown to improve accuracy for non-reasoning LLMs on positional retrieval and multiple-choice benchmarks (Leviathan et al., 2025). Whether this gain extends to agentic settings involving structured, verifiable software-engineering tasks remains an open question. We present two pre-registered controlled experiments in which Claude Haiku 4.5 agent instances (n=5 per condition, temperature 0.5) were assigned either a single-copy or a repeated-prompt instruction under a blinded binary rubric, totalling 28 session logs and 4,179 messages. In Experiment 1 (session-ID refactoring, 6 binary criteria), the repeated-prompt condition showed a non-significant score delta of +0.30 (Mann-Whitney U, n=9 valid runs); in Experiment 2 (AST-scanner implementation, 7 binary criteria), both conditions achieved perfect scores (7/7), producing a complete performance-saturation effect (U p=1.0) that precluded any treatment comparison. Repeated-prompt agents consumed 17-21% fewer tokens, but this observation is confounded by the saturation effect and cannot be causally attributed to prompt repetition. These results suggest that well-specified software-engineering tasks may saturate agent capability regardless of prompt redundancy, and that future studies must use harder task variants or larger samples to avoid floor-level statistical power.
+Prompt repetition (duplicating the input prompt verbatim before the task description) has been shown to improve accuracy for non-reasoning LLMs on positional retrieval and multiple-choice benchmarks (Leviathan et al., 2025). Whether this gain extends to agentic settings involving structured, verifiable software-engineering tasks remains an open question. We present three pre-registered controlled experiments in which Claude Haiku 4.5 agent instances (n=5 per condition, temperature 0.5) were assigned either a single-copy or a repeated-prompt instruction under a blinded binary rubric, totalling 30 session logs and 4,306 messages. In Experiment 1 (session-ID refactoring, 6 binary criteria), the repeated-prompt condition showed a non-significant score delta of +0.30 (Mann-Whitney U, n=9 valid runs); in Experiment 2 (AST-scanner implementation, 7 binary criteria), both conditions achieved perfect scores (7/7), producing a complete performance-saturation effect (U p=1.0) that precluded any treatment comparison; in Experiment 3 (Kotlin grammar synthesis, 7 binary criteria), neither condition exceeded 34% mean pass rate (U=15, p=0.61), demonstrating a floor effect on a harder synthesis task. Repeated-prompt agents consumed 17-21% fewer tokens in Experiments 1 and 2, but this observation is confounded by the saturation effect and cannot be causally attributed to prompt repetition. These results suggest that prompt repetition does not reliably affect agent performance, and that task difficulty strongly moderates outcome: easy tasks produce ceiling effects, hard tasks produce floor effects, both of which mask any treatment signal.
 
 Supplementary materials for [What a Null Result Taught Us About AI Agent Evaluation](https://clouatre.ca/posts/prompt-repetition-agent-evaluation/).
 
@@ -34,7 +34,7 @@ Experiment setup:
   +-- Treatment group:  5 delegates with repeated instructions (x2)
   +-- Blind scorer:     Rubric-based evaluation (sealed before scoring)
 
-  x2 experiments = 20 delegates total, 4,179 messages, 28 session logs
+  x3 experiments = 30 delegates total, 4,306 messages, 30 session logs
 ```
 
 ---
@@ -78,7 +78,7 @@ C5-C7 in Experiment 2 require reading and synthesizing actual source code. They 
 
 ![Criterion pass rates for Exp1](figures/fig2-criterion-pass-rates.png)
 
-*Figure 2: Criterion pass rates -- Exp1: FastMCP refactor (n=9 valid runs). C5 is the only discriminating criterion. Exp2 (n=10): all 7 criteria at 100% (ceiling effect, not shown).*
+*Figure 2: Criterion pass rates -- Exp1: FastMCP refactor (n=9 valid runs). C5 is the only discriminating criterion. Exp2 (n=10): all 7 criteria at 100% (ceiling effect, not shown). Exp3 criterion pass rates appear in the text table below.*
 
 | Experiment | Group | n (valid) | Pass rate (overall) | Tokens (mean) | Messages (mean) |
 |------------|-------|-----------|---------------------|---------------|-----------------|
@@ -86,6 +86,8 @@ C5-C7 in Experiment 2 require reading and synthesizing actual source code. They 
 | Exp1: FastMCP refactor | Treatment | 5 | 93% | 732,257 | 138 |
 | Exp2: Tree-sitter synthesis | Control | 5 | 100% | 740,362 | 152 |
 | Exp2: Tree-sitter synthesis | Treatment | 5 | 100% | 737,331 | 139 |
+| Exp3: Kotlin grammar synthesis | Control | 5 | 29% | n/a | 12 |
+| Exp3: Kotlin grammar synthesis | Treatment | 5 | 34% | n/a | 13 |
 
 ### Experiment 1: FastMCP Session ID Refactor
 
@@ -129,19 +131,54 @@ Mann-Whitney U = 12.5, p = 1.0 (degenerate: all scores identical)
 
 Perfect scores across all 10 runs. Complete ceiling effect. The rubric was designed to be harder (C5-C7 require source code synthesis), but Claude Haiku 4.5 with structured Scout instructions cleared every criterion regardless of repetition.
 
+### Experiment 3: Kotlin Grammar Synthesis
+
+```text
+Run           C1  C2  C3  C4  C5  C6  C7  Total
+control-1      0   0   0   0   0   0   1   1/7
+control-2      0   0   1   1   0   0   1   3/7
+control-3      0   0   1   0   0   0   1   2/7
+control-4      0   0   1   0   0   0   1   2/7
+control-5      0   0   1   0   0   0   1   2/7
+Control avg                                 2.0/7
+
+treatment-1    0   0   0   1   0   0   1   2/7
+treatment-2    0   0   1   0   0   0   1   2/7
+treatment-3    0   1   1   1   0   0   1   4/7
+treatment-4    0   0   1   0   0   0   1   2/7
+treatment-5    0   0   1   0   0   0   1   2/7
+Treatment avg                               2.4/7
+
+Delta: +0.40 (not significant, U=15, p=0.61)
+```
+
+C7 was the only ceiling criterion (100% both groups): structural wiring is well-documented in the target issue. C1, C5, and C6 were floor criteria (0% both groups): ABI compatibility evidence, .kts-specific test coverage, and DEFUSE_QUERY struct inspection all required deep source synthesis that agents consistently failed to produce. C3 and C4 showed partial discriminability.
+
+| Criterion | Control pass rate | Treatment pass rate |
+|---|---|---|
+| C1 (ABI compatibility) | 0% | 0% |
+| C2 (companion objects / delegation_specifiers) | 0% | 20% |
+| C3 (ELEMENT_QUERY patterns) | 80% | 80% |
+| C4 (extract_inheritance handler) | 20% | 40% |
+| C5 (.kts test coverage) | 0% | 0% |
+| C6 (DEFUSE_QUERY justification) | 0% | 0% |
+| C7 (structural wiring) | 100% | 100% |
+
+Mann-Whitney U = 15, p = 0.6072 (two-tailed, not significant).
+
 ### Summary
 
-| | Experiment 1 | Experiment 2 |
-|---|---|---|
-| **Task** | FastMCP session ID refactor analysis | Tree-sitter AST scanner evaluation |
-| **Repo** | clouatre-labs/math-mcp-learning-server#222 | clouatre-labs/aptu#737 |
-| **Type** | Source analysis (read-only) | Code synthesis (write) |
-| **Groups** | 5 control, 5 treatment | 5 control, 5 treatment (blinded IDs) |
-| **Rubric** | 6 binary criteria | 7 binary criteria |
-| **Result** | 5/6 criteria at 100% both groups | 7/7 criteria at 100% both groups |
-| **Valid runs** | 9 of 10 (1 drift failure) | 10 of 10 |
+| | Experiment 1 | Experiment 2 | Experiment 3 |
+|---|---|---|---|
+| **Task** | FastMCP session ID refactor analysis | Tree-sitter AST scanner evaluation | Kotlin grammar synthesis |
+| **Repo** | clouatre-labs/math-mcp-learning-server#222 | clouatre-labs/aptu#737 | clouatre-labs/aptu#775 |
+| **Type** | Source analysis (read-only) | Code synthesis (write) | Code synthesis (write) |
+| **Groups** | 5 control, 5 treatment | 5 control, 5 treatment (blinded IDs) | 5 control, 5 treatment (blinded IDs) |
+| **Rubric** | 6 binary criteria | 7 binary criteria | 7 binary criteria |
+| **Result** | 5/6 criteria at 100% both groups | 7/7 criteria at 100% both groups | 3/7 criteria at 0% both groups (floor on C1, C5, C6); C7 at 100% both groups (ceiling) |
+| **Valid runs** | 9 of 10 (1 drift failure) | 10 of 10 | 10 of 10 |
 
-**Conclusion:** No detectable difference between x1 and x2 instruction conditions. Both experiments exhibited ceiling effects, making treatment effects unmeasurable. The null result suggests prompt repetition addresses positional attention decay, a problem that well-scoped engineering tasks with structured outputs do not have.
+**Conclusion:** No detectable difference between x1 and x2 instruction conditions across all three experiments. Experiments 1 and 2 exhibited ceiling effects; Experiment 3 exhibited a floor effect on a harder synthesis task. In all cases, task difficulty dominated outcome and masked any treatment signal. The null results suggest prompt repetition addresses positional attention decay, a problem that well-scoped engineering tasks with structured outputs do not have.
 
 ### Token Efficiency
 
@@ -149,7 +186,7 @@ Treatment agents consistently used fewer tokens despite the longer prompt. The e
 
 ![Message counts by group and experiment](figures/fig3-message-counts.png)
 
-*Figure 3: Mean messages per group. Treatment agents used fewer turns in both experiments; the effect is stronger in Exp1 (-34%) than Exp2 (-9%). Exp1 control-1 drift failure excluded from summary statistics.*
+*Figure 3: Mean messages per group. Treatment agents used fewer turns in both experiments (Exp1 and Exp2 only; Exp3 not shown); the effect is stronger in Exp1 (-34%) than Exp2 (-9%). Exp1 control-1 drift failure excluded from summary statistics.*
 
 | Slice | N (control v treatment) | Input token diff | Output token diff |
 |---|---|---|---|
@@ -289,7 +326,7 @@ This repository contains everything needed to verify our claims and reproduce th
 
 - **Pre-registered protocols** with sealed group assignments (`label-map.json` timestamps predate all scoring)
 - **Exact delegate prompts** preserved as the first message in each `raw/*.jsonl` session log
-- **Full conversation traces** (4,179 messages across 28 session logs) for auditing agent behavior
+- **Full conversation traces** (4,306 messages across 30 session logs) for auditing agent behavior
 - **Per-criterion scoring justifications** in `scores.json`, not just aggregate numbers
 
 To reproduce with different tasks or models, follow the protocols in `experiments/*/protocol.md` and substitute your target issue and model. The recipe (`recipe/goose-coder-v4.1.0.yaml`) defines the full agent architecture.

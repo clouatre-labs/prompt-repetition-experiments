@@ -118,6 +118,50 @@ The 18% latency increase is consistent with the paper's Anthropic-specific laten
 
 Session ID: `20260220_43`. Recorded in `analysis.json`.
 
+## Experiment 3: Kotlin Grammar Synthesis
+
+### Target
+
+[clouatre-labs/aptu#775](https://github.com/clouatre-labs/aptu/issues/775): add Kotlin language support to the tree-sitter AST scanner. Code synthesis task (write). Open and unimplemented at experiment time. Harder than Experiment 2: required deep source inspection of ABI compatibility, node kind taxonomy, and struct fields unavailable from the issue text alone.
+
+### Methodology Improvements Over Experiment 2
+
+- Hardened rubric after pilot audit: C1, C2, C6, and C7 rewritten to require evidence-backed synthesis, not description
+- Invalid-run retry policy added: provider stream-decode errors trigger one retry on Bedrock fallback
+- Latency and message counts recorded per run in latency-log.jsonl
+
+### Rubric (7 Binary Criteria)
+
+| Criterion | Description | Synthesis Required |
+|---|---|---|
+| C1 | tree-sitter-kotlin 0.3.8 LANGUAGE export verified and ABI relationship with tree-sitter 0.26.6 fully characterized with evidence (semver ranges or crate source); incompatibility is a valid finding if documented | yes |
+| C2 | Kotlin companion object node kind identified as object_declaration with companion modifier; delegation_specifiers children enumerated distinguishing superclass_type_with_constructor from user_type | yes |
+| C3 | At least 3 query patterns from tree-sitter-kotlin corpus (function_declaration, class_declaration, object_declaration variants) correctly captured in ELEMENT_QUERY | yes |
+| C4 | extract_inheritance handler correctly walks delegation_specifiers and separates superclass_type_with_constructor (has parens) from user_type (no parens) | yes |
+| C5 | Unit tests confirm .kt AND .kts file parsing both work; at least 1 test with .kts syntax (e.g. top-level function, extension function) | yes |
+| C6 | DEFUSE_QUERY constant created for Kotlin if required by current LanguageInfo struct, or justified as None if not applicable; must cite inspection of LanguageInfo struct fields or PR #659 | yes |
+| C7 | All structural wiring described: feature flag included in default feature set, all required query constant names stated, EXTENSION_MAP entries present, mod.rs arms present, module registered | no |
+
+### Valid Runs
+
+10 of 10. Runs 04, 09, and 10 hit provider stream-decode errors and were retried once on Bedrock fallback per the invalid-run policy. All retried runs produced output and were included.
+
+### Results
+
+Neither group exceeded 34% mean pass rate. Mann-Whitney U = 15, p = 0.6072 (not significant).
+
+| Group | Mean score | Median score | Wall-clock Median |
+|---|---|---|---|
+| Control (x1) | 2.0/7 (29%) | 2.0/7 | 1m 02s |
+| Treatment (x2) | 2.4/7 (34%) | 2.0/7 | 1m 12s |
+| Delta | +0.4 | 0 | +16% |
+
+C7 was the only ceiling criterion (100% both groups). C1, C5, and C6 were floor criteria (0% both groups): ABI evidence, .kts test coverage, and DEFUSE_QUERY struct inspection all required depth of source synthesis that agents consistently failed to reach. This is a floor effect, the inverse of Experiment 2's ceiling effect, caused by task difficulty exceeding agent capability rather than the task being too easy.
+
+### Orchestrator Session
+
+Session ID: `20260418_59`. Recorded in `analysis.json`.
+
 ## Known Limitations
 
 1. **Ceiling effects.** Both rubrics were too easy. 100% accuracy in both groups leaves no room for treatment effects.
