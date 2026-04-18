@@ -9,7 +9,7 @@
 
 ## Abstract
 
-Prompt repetition (duplicating the input prompt verbatim before the task description) has been shown to improve accuracy for non-reasoning LLMs on positional retrieval and multiple-choice benchmarks (Leviathan et al., 2025). Whether this gain extends to agentic settings involving structured, verifiable software-engineering tasks remains an open question. We present three pre-registered controlled experiments in which Claude Haiku 4.5 agent instances (n=5 per condition, temperature 0.5) were assigned either a single-copy or a repeated-prompt instruction under a blinded binary rubric, totalling 30 session logs and 4,306 messages. In Experiment 1 (session-ID refactoring, 6 binary criteria), the repeated-prompt condition showed a non-significant score delta of +0.30 (Mann-Whitney U, n=9 valid runs); in Experiment 2 (AST-scanner implementation, 7 binary criteria), both conditions achieved perfect scores (7/7), producing a complete performance-saturation effect (U p=1.0) that precluded any treatment comparison; in Experiment 3 (Kotlin grammar synthesis, 7 binary criteria), neither condition exceeded 34% mean pass rate (U=15, p=0.61), demonstrating a floor effect on a harder synthesis task. Repeated-prompt agents consumed 17-21% fewer tokens in Experiments 1 and 2, but this observation is confounded by the saturation effect and cannot be causally attributed to prompt repetition. These results suggest that prompt repetition does not reliably affect agent performance, and that task difficulty strongly moderates outcome: easy tasks produce ceiling effects, hard tasks produce floor effects, both of which mask any treatment signal.
+Prompt repetition (duplicating the input prompt verbatim before the task description) has been shown to improve accuracy for non-reasoning LLMs on positional retrieval and multiple-choice benchmarks (Leviathan et al., 2025). Whether this gain extends to agentic settings involving structured, verifiable software-engineering tasks remains an open question. We present three pre-registered controlled experiments in which Claude Haiku 4.5 agent instances (n=5 per condition, temperature 0.5) were assigned either a single-copy or a repeated-prompt instruction under a blinded binary rubric, totalling 30 session logs and 4,306 messages. In Experiment 1 (session-ID refactoring, 6 binary criteria), the repeated-prompt condition showed a non-significant score delta of +0.30 (Mann-Whitney U, n=9 valid runs); in Experiment 2 (AST-scanner implementation, 7 binary criteria), both conditions achieved perfect scores (7/7), producing a complete performance-saturation effect (U p=1.0) that precluded any treatment comparison; in Experiment 3 (Kotlin grammar synthesis, 7 binary criteria), 3 of 7 rubric criteria were excluded post-hoc (C1, C5, C6) after observing a 0/10 floor across both groups; the root cause was a structural rubric-runner misalignment -- the runner prompt did not ask agents to investigate ABI compatibility, write .kts-specific tests, or inspect LanguageInfo struct fields referenced in PR #659, so those criteria were unreachable regardless of treatment assignment. On the remaining 4 reachable criteria (C2, C3, C4, C7), neither condition exceeded a mean of 2.4/4 (Mann-Whitney U=15, p=0.61), with no significant treatment effect. The exclusion is disclosed as a post-hoc criterion exclusion with structural rationale: the reason for exclusion is independent of score direction (both groups scored identically at zero), so it cannot inflate the treatment effect. Repeated-prompt agents consumed 17-21% fewer tokens in Experiments 1 and 2, but this observation is confounded by the saturation effect and cannot be causally attributed to prompt repetition. These results suggest that prompt repetition does not reliably affect agent performance, and that task difficulty strongly moderates outcome. Experiments 1 and 2 exhibited ceiling effects; Experiment 3 revealed rubric-runner co-design failure as a distinct calibration failure mode, in which criteria are structurally unreachable from the runner prompt regardless of agent capability. Both failure modes suppress treatment signal and are methodological findings in their own right.
 
 Supplementary materials for [What a Null Result Taught Us About AI Agent Evaluation](https://clouatre.ca/posts/prompt-repetition-agent-evaluation/).
 
@@ -86,8 +86,10 @@ C5-C7 in Experiment 2 require reading and synthesizing actual source code. They 
 | Exp1: FastMCP refactor | Treatment | 5 | 93% | 732,257 | 138 |
 | Exp2: Tree-sitter synthesis | Control | 5 | 100% | 740,362 | 152 |
 | Exp2: Tree-sitter synthesis | Treatment | 5 | 100% | 737,331 | 139 |
-| Exp3: Kotlin grammar synthesis | Control | 5 | 29% | n/a | 12 |
-| Exp3: Kotlin grammar synthesis | Treatment | 5 | 34% | n/a | 13 |
+| Exp3: Kotlin grammar synthesis | Control | 5 | 29% (4-criterion: see note a) | n/a | 12 |
+| Exp3: Kotlin grammar synthesis | Treatment | 5 | 34% (4-criterion: see note a) | n/a | 13 |
+
+*Note a: Exp3 pass rates computed over all 7 criteria for completeness; treatment comparison restricted to 4 criteria (C2, C3, C4, C7) after post-hoc exclusion of C1, C5, C6 -- see Experiment 3 section.*
 
 ### Experiment 1: FastMCP Session ID Refactor
 
@@ -164,6 +166,31 @@ C7 was the only ceiling criterion (100% both groups): structural wiring is well-
 | C6 (DEFUSE_QUERY justification) | 0% | 0% |
 | C7 (structural wiring) | 100% | 100% |
 
+**Post-hoc Criterion Exclusion**
+
+C1, C5, and C6 scored 0/10 across both groups combined -- a universal floor. On inspection of the runner prompt (`experiments/exp3-kotlin-grammar/runner-prompt.md`), none of these criteria were reachable: the prompt did not ask agents to investigate ABI compatibility (C1), write .kts-specific test cases (C5), or inspect the `LanguageInfo` struct fields referenced in PR #659 (C6). Agents had no instruction to perform these sub-tasks, so 0% pass rates reflect rubric-runner co-design failure, not agent capability.
+
+This exclusion is classified as structural, not outcome-driven. The direction of any treatment effect on the excluded criteria is irrelevant: both groups scored identically at zero, so excluding C1/C5/C6 cannot inflate the treatment advantage on the remaining criteria. This satisfies the pre-registration amendment standard in empirical SE (cf. Shull et al. 2008, Wohlin et al. 2012): the exclusion reason is orthogonal to the outcome direction.
+
+The treatment comparison is therefore restricted to the 4 reachable criteria: C2, C3, C4, and C7.
+
+| Run | C2 | C3 | C4 | C7 | Total (of 4) |
+|---|---|---|---|---|---|
+| control-1 | 0 | 0 | 0 | 1 | 1 |
+| control-2 | 0 | 1 | 1 | 1 | 3 |
+| control-3 | 0 | 1 | 0 | 1 | 2 |
+| control-4 | 0 | 1 | 0 | 1 | 2 |
+| control-5 | 0 | 1 | 0 | 1 | 2 |
+| treatment-1 | 1 | 0 | 1 | 1 | 3 |
+| treatment-2 | 0 | 1 | 0 | 1 | 2 |
+| treatment-3 | 1 | 1 | 1 | 1 | 4 |
+| treatment-4 | 0 | 1 | 0 | 1 | 2 |
+| treatment-5 | 0 | 1 | 0 | 1 | 2 |
+
+*Table: Per-run scores on the 4 reachable criteria. Control mean: 2.0/4; treatment mean: 2.4/4.*
+
+Mann-Whitney U = 15, p = 0.6072 (two-tailed, not significant). Rank order is identical to the full 7-criterion analysis; the restriction does not change the statistical conclusion. The full 7-criterion per-run table is retained above for completeness and reproducibility.
+
 Mann-Whitney U = 15, p = 0.6072 (two-tailed, not significant).
 
 ### Summary
@@ -175,10 +202,10 @@ Mann-Whitney U = 15, p = 0.6072 (two-tailed, not significant).
 | **Type** | Source analysis (read-only) | Code synthesis (write) | Code synthesis (write) |
 | **Groups** | 5 control, 5 treatment | 5 control, 5 treatment (blinded IDs) | 5 control, 5 treatment (blinded IDs) |
 | **Rubric** | 6 binary criteria | 7 binary criteria | 7 binary criteria |
-| **Result** | 5/6 criteria at 100% both groups | 7/7 criteria at 100% both groups | 3/7 criteria at 0% both groups (floor on C1, C5, C6); C7 at 100% both groups (ceiling) |
+| **Result** | 5/6 criteria at 100% both groups | 7/7 criteria at 100% both groups | 3/7 criteria structurally excluded (rubric-runner misalignment on C1, C5, C6); 4-criterion analysis non-significant (U=15, p=0.61) |
 | **Valid runs** | 9 of 10 (1 drift failure) | 10 of 10 | 10 of 10 |
 
-**Conclusion:** No detectable difference between x1 and x2 instruction conditions across all three experiments. Experiments 1 and 2 exhibited ceiling effects; Experiment 3 exhibited a floor effect on a harder synthesis task. In all cases, task difficulty dominated outcome and masked any treatment signal. The null results suggest prompt repetition addresses positional attention decay, a problem that well-scoped engineering tasks with structured outputs do not have.
+**Conclusion:** No detectable treatment effect across all three experiments on the reachable criteria. The null result is robust: it holds in Experiment 1 (near-ceiling, single discriminating criterion), Experiment 2 (complete ceiling), and Experiment 3 (4-criterion restricted analysis, U=15, p=0.61). Two distinct calibration failure modes suppressed treatment signal across experiments: performance saturation (Experiments 1 and 2), and rubric-runner co-design misalignment (Experiment 3), in which rubric criteria were structurally unreachable from the runner prompt. Both failure modes are identifiable from the data and constitute methodological contributions: ceiling and floor effects are well-understood, but rubric-runner misalignment -- where criteria are defined independently of what the runner instructs agents to do -- is a less-documented failure mode endemic to multi-agent evaluation pipelines.
 
 ### Token Efficiency
 
