@@ -1,0 +1,37 @@
+{
+  "runs": [
+    {"experiment": "exp1_fastmcp_refactor", "run_id": "scout-control-1", "group": "control", "messages": 93, "valid": false},
+    {"experiment": "exp1_fastmcp_refactor", "run_id": "scout-control-2", "group": "control", "messages": 194, "valid": true},
+    {"experiment": "exp1_fastmcp_refactor", "run_id": "scout-control-3", "group": "control", "messages": 213, "valid": true},
+    {"experiment": "exp1_fastmcp_refactor", "run_id": "scout-control-4", "group": "control", "messages": 234, "valid": true},
+    {"experiment": "exp1_fastmcp_refactor", "run_id": "scout-control-5", "group": "control", "messages": 196, "valid": true},
+    {"experiment": "exp1_fastmcp_refactor", "run_id": "scout-treatment-1", "group": "treatment", "messages": 138, "valid": true},
+    {"experiment": "exp1_fastmcp_refactor", "run_id": "scout-treatment-2", "group": "treatment", "messages": 154, "valid": true},
+    {"experiment": "exp1_fastmcp_refactor", "run_id": "scout-treatment-3", "group": "treatment", "messages": 116, "valid": true},
+    {"experiment": "exp1_fastmcp_refactor", "run_id": "scout-treatment-4", "group": "treatment", "messages": 198, "valid": true},
+    {"experiment": "exp1_fastmcp_refactor", "run_id": "scout-treatment-5", "group": "treatment", "messages": 82, "valid": true},
+    {"experiment": "exp2_treesitter_synthesis", "run_id": "scout-run-01", "group": "control", "messages": 170, "valid": true},
+    {"experiment": "exp2_treesitter_synthesis", "run_id": "scout-run-02", "group": "treatment", "messages": 142, "valid": true},
+    {"experiment": "exp2_treesitter_synthesis", "run_id": "scout-run-03", "group": "control", "messages": 142, "valid": true},
+    {"experiment": "exp2_treesitter_synthesis", "run_id": "scout-run-04", "group": "treatment", "messages": 138, "valid": true},
+    {"experiment": "exp2_treesitter_synthesis", "run_id": "scout-run-05", "group": "control", "messages": 139, "valid": true},
+    {"experiment": "exp2_treesitter_synthesis", "run_id": "scout-run-06", "group": "treatment", "messages": 149, "valid": true},
+    {"experiment": "exp2_treesitter_synthesis", "run_id": "scout-run-07", "group": "control", "messages": 170, "valid": true},
+    {"experiment": "exp2_treesitter_synthesis", "run_id": "scout-run-08", "group": "treatment", "messages": 106, "valid": true},
+    {"experiment": "exp2_treesitter_synthesis", "run_id": "scout-run-09", "group": "control", "messages": 137, "valid": true},
+    {"experiment": "exp2_treesitter_synthesis", "run_id": "scout-run-10", "group": "treatment", "messages": 158, "valid": true}
+  ],
+  "group_summaries": {
+    "exp1_fastmcp_refactor": {
+      "control": {"mean": 209.25, "median": 204.5, "n": 4, "messages": [194, 213, 234, 196]},
+      "treatment": {"mean": 137.6, "median": 138.0, "n": 5, "messages": [138, 154, 116, 198, 82]},
+      "diff_pct": -34.2
+    },
+    "exp2_treesitter_synthesis": {
+      "control": {"mean": 151.6, "median": 142.0, "n": 5, "messages": [170, 142, 139, 170, 137]},
+      "treatment": {"mean": 138.6, "median": 142.0, "n": 5, "messages": [142, 138, 149, 106, 158]},
+      "diff_pct": -8.6
+    }
+  },
+  "notes": "exp1 control-1 (run_id: scout-control-1, 93 messages) is a drift failure and is excluded from the exp1 control valid-runs summary statistics."
+}

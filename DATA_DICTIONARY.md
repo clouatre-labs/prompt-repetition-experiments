@@ -277,3 +277,42 @@ Experiment data is organized into two main experiments (exp1-fastmcp-refactor, e
    - Mapping is performed during normalization.
 
 7. **Excluded Runs**: Some runs may be excluded from scoring (e.g., exp1 control-1 due to drift failure). These are noted in scores.json and analysis.json but included in token analysis.
+
+---
+
+## turn-efficiency.json (repo root)
+
+Standalone artifact surfacing per-run message counts for both experiments. Suitable for direct citation without parsing nested analysis.json.
+
+### Top-level fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `runs` | array | One entry per run across all experiments (20 total: 10 per experiment) |
+| `group_summaries` | object | Per-experiment, per-group aggregate statistics for valid runs only |
+| `notes` | string | Exclusion notes (e.g., drift failures excluded from summary statistics) |
+
+### `runs[]` fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `experiment` | string | Experiment key (`exp1_fastmcp_refactor` or `exp2_treesitter_synthesis`) |
+| `run_id` | string | Unique run identifier matching `efficiency.json` |
+| `group` | string | `"control"` or `"treatment"` |
+| `messages` | integer | Total message count for this run |
+| `valid` | boolean | `false` if this run is excluded from analysis (e.g., drift failure) |
+
+### `group_summaries.<experiment>.<group>` fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `mean` | float | Mean message count across valid runs |
+| `median` | float | Median message count across valid runs |
+| `n` | integer | Number of valid runs |
+| `messages` | array of integers | Raw message counts for valid runs |
+
+### `group_summaries.<experiment>` top-level
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `diff_pct` | float | Relative difference: `((treatment_mean - control_mean) / control_mean) * 100` |

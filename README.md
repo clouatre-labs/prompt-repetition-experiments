@@ -7,6 +7,8 @@
 [![Sessions](https://img.shields.io/badge/sessions-28-green)](experiments/)
 [![Messages](https://img.shields.io/badge/messages-4%2C179-blue)](experiments/)
 
+## Abstract
+
 Prompt repetition (duplicating the input prompt verbatim before the task description) has been shown to improve accuracy for non-reasoning LLMs on positional retrieval and multiple-choice benchmarks (Leviathan et al., 2025). Whether this gain extends to agentic settings involving structured, verifiable software-engineering tasks remains an open question. We present two pre-registered controlled experiments in which Claude Haiku 4.5 agent instances (n=5 per condition, temperature 0.5) were assigned either a single-copy or a repeated-prompt instruction under a blinded binary rubric, totalling 28 session logs and 4,179 messages. In Experiment 1 (session-ID refactoring, 6 binary criteria), the repeated-prompt condition showed a non-significant score delta of +0.30 (Mann-Whitney U, n=9 valid runs); in Experiment 2 (AST-scanner implementation, 7 binary criteria), both conditions achieved perfect scores (7/7), producing a complete performance-saturation effect (U p=1.0) that precluded any treatment comparison. Repeated-prompt agents consumed 17-21% fewer tokens, but this observation is confounded by the saturation effect and cannot be causally attributed to prompt repetition. These results suggest that well-specified software-engineering tasks may saturate agent capability regardless of prompt redundancy, and that future studies must use harder task variants or larger samples to avoid floor-level statistical power.
 
 Supplementary materials for [What a Null Result Taught Us About AI Agent Evaluation](https://clouatre.ca/posts/prompt-repetition-agent-evaluation/).
@@ -14,6 +16,12 @@ Supplementary materials for [What a Null Result Taught Us About AI Agent Evaluat
 </div>
 
 ---
+
+## Associated Publication
+
+The paper is under review. This section will be updated with a DOI and citation on publication.
+
+Current best reference: [Prompt repetition experiments - blog post](https://clouatre.ca/posts/prompt-repetition-agent-evaluation/) (includes methodology, results, and discussion).
 
 ## The Question
 
@@ -37,32 +45,47 @@ Each delegate's output was scored against a pre-registered binary rubric (0/1 pe
 
 ### Experiment 1: FastMCP Session ID Refactor (6 criteria)
 
-```text
-C1  Source file identified: persistence.py           (information retrieval)
-C2  Source file identified: calculate.py             (information retrieval)
-C3  Anti-pattern found: id(ctx.lifespan_context)     (pattern recognition)
-C4  Replacement API: ctx.set_state / ctx.get_state   (API research)
-C5  Must-Not constraint: non-serializable values     (constraint capture)
-C6  FastMCP docs consulted: gofastmcp.com            (external verification)
-```
+| Criterion | Description | Pass rate | 95% CI (Wilson) | n |
+|-----------|-------------|-----------|-----------------|---|
+| C1 | Source file 1 identified | 100% | [70.1%, 100%] | 9 |
+| C2 | Source file 2 identified | 100% | [70.1%, 100%] | 9 |
+| C3 | Anti-pattern found | 100% | [70.1%, 100%] | 9 |
+| C4 | Replacement API correct | 100% | [70.1%, 100%] | 9 |
+| C5 | Must-Not constraint captured | 67% | [35.4%, 87.9%] | 9 |
+| C6 | FastMCP docs consulted | 100% | [70.1%, 100%] | 9 |
 
 ### Experiment 2: Tree-sitter AST Scanner (7 criteria)
 
-```text
-C1  SecurityScanner implementation file identified   (codebase navigation)
-C2  Line-by-line regex limitation understood          (constraint recognition)
-C3  tree-sitter-rust version verified via Cargo.toml  (version verification)
-C4  Hybrid vs. full-migration tradeoff articulated    (synthesis + judgment)
-C5  2+ patterns requiring multi-line detection named  (source code reading)
-C6  Data-flow/taint tracking gap noted                (architectural reasoning)
-C7  Binary size / grammar crate count estimated       (quantitative analysis)
-```
+| Criterion | Description | Pass rate | 95% CI (Wilson) | n |
+|-----------|-------------|-----------|-----------------|---|
+| C1 | SecurityScanner implementation file identified | 100% | [72.3%, 100%] | 10 |
+| C2 | Line-by-line regex limitation understood | 100% | [72.3%, 100%] | 10 |
+| C3 | tree-sitter-rust version verified | 100% | [72.3%, 100%] | 10 |
+| C4 | Hybrid vs. full-migration tradeoff articulated | 100% | [72.3%, 100%] | 10 |
+| C5 | At least 2 specific patterns identified | 100% | [72.3%, 100%] | 10 |
+| C6 | Data-flow/taint tracking gap noted | 100% | [72.3%, 100%] | 10 |
+| C7 | Binary size / grammar crate count estimated | 100% | [72.3%, 100%] | 10 |
 
 C5-C7 in Experiment 2 require reading and synthesizing actual source code. They cannot be answered from the issue text alone.
 
 ---
 
 ## Results
+
+![Mean token usage by group and experiment](figures/fig1-token-distribution.png)
+
+*Figure 1: Mean total tokens per group. Valid runs only (Exp1 control-1 drift failure excluded). Dashed lines mark each experiment's control baseline.*
+
+![Criterion pass rates for Exp1](figures/fig2-criterion-pass-rates.png)
+
+*Figure 2: Criterion pass rates -- Exp1: FastMCP refactor (n=9 valid runs). C5 is the only discriminating criterion. Exp2 (n=10): all 7 criteria at 100% (ceiling effect, not shown).*
+
+| Experiment | Group | n (valid) | Pass rate (overall) | Tokens (mean) | Messages (mean) |
+|------------|-------|-----------|---------------------|---------------|-----------------|
+| Exp1: FastMCP refactor | Control | 4 | 97% | 1,068,182 | 209 |
+| Exp1: FastMCP refactor | Treatment | 5 | 93% | 732,257 | 138 |
+| Exp2: Tree-sitter synthesis | Control | 5 | 100% | 740,362 | 152 |
+| Exp2: Tree-sitter synthesis | Treatment | 5 | 100% | 737,331 | 139 |
 
 ### Experiment 1: FastMCP Session ID Refactor
 
@@ -123,6 +146,10 @@ Perfect scores across all 10 runs. Complete ceiling effect. The rubric was desig
 ### Token Efficiency
 
 Treatment agents consistently used fewer tokens despite the longer prompt. The effect is confounded with the ceiling-effect task design and too small (n=5 per group per experiment) for statistical conclusions.
+
+![Message counts by group and experiment](figures/fig3-message-counts.png)
+
+*Figure 3: Mean messages per group. Treatment agents used fewer turns in both experiments; the effect is stronger in Exp1 (-34%) than Exp2 (-9%). Exp1 control-1 drift failure excluded from summary statistics.*
 
 | Slice | N (control v treatment) | Input token diff | Output token diff |
 |---|---|---|---|
@@ -247,6 +274,16 @@ Exact reproduction requires access to the target repositories at the commit SHAs
 ---
 
 ## Reproducibility
+
+### Steps to reproduce
+
+1. Install [Goose](https://block.github.io/goose/) (version used: see software versions table below)
+2. Configure your LLM provider (Anthropic Claude Sonnet 3.5 or equivalent)
+3. Set temperature to 0.5 in your provider configuration
+4. Clone this repository and navigate to the experiment directory
+5. Run the orchestrator script to execute the agent runs
+6. Run the scorer against the agent outputs to generate pass/fail judgements
+7. Inspect `efficiency.json` and `analysis.json` for results
 
 This repository contains everything needed to verify our claims and reproduce the experimental methodology:
 
