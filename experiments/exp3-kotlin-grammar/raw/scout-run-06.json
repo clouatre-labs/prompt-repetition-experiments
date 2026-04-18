@@ -1,0 +1,184 @@
+{
+  "run_id": "scout-run-06",
+  "group": "treatment",
+  "started_at": "2026-04-18T03:15:17Z",
+  "finished_at": "2026-04-18T03:16:19Z",
+  "session_id": "scout-run-06",
+  "lens": "scout",
+  "relevant_files": [
+    {
+      "path": "crates/code-analyze-core/src/lang.rs",
+      "line_range": "7-55",
+      "role": "EXTENSION_MAP with cfg gates; language_for_extension() lookup function; supported_languages() array"
+    },
+    {
+      "path": "crates/code-analyze-core/src/languages/mod.rs",
+      "line_range": "1-250",
+      "role": "LanguageInfo struct (14 fields); get_language_info() exhaustive match; get_ts_language() getter; module declarations with cfg gates"
+    },
+    {
+      "path": "crates/code-analyze-core/src/languages/java.rs",
+      "line_range": "1-100",
+      "role": "Reference implementation: ELEMENT_QUERY, CALL_QUERY, REFERENCE_QUERY, IMPORT_QUERY, DEFUSE_QUERY constants; extract_inheritance handler"
+    },
+    {
+      "path": "crates/code-analyze-core/src/languages/go.rs",
+      "line_range": "1-80",
+      "role": "Reference implementation: find_method_for_receiver handler; extract_inheritance for embedded types"
+    },
+    {
+      "path": "crates/code-analyze-core/src/languages/python.rs",
+      "line_range": "1-60",
+      "role": "Reference implementation: DEFUSE_QUERY pattern for write/read sites; extract_inheritance for superclasses"
+    },
+    {
+      "path": "crates/code-analyze-core/Cargo.toml",
+      "line_range": "1-50",
+      "role": "Feature flags section; optional dependencies; default features array"
+    },
+    {
+      "path": "Cargo.toml",
+      "line_range": "1-40",
+      "role": "Workspace dependencies; tree-sitter version pinning"
+    },
+    {
+      "path": "crates/code-analyze-core/tests/integration_tests.rs",
+      "line_range": "1-100",
+      "role": "Integration test patterns for language support"
+    }
+  ],
+  "conventions": {
+    "commits": "Conventional commits with format 'feat(lang): add X grammar support (#NNN)'; GPG signed with DCO sign-off; all commits in feature branch via PR",
+    "testing": "Unit tests in language module under #[cfg(all(test, feature = 'lang-X'))]; parse_X() helper function to create Parser, set language, parse source; integration tests in crates/code-analyze-core/tests/; semantic correctness tests in semantic_correctness.rs; each language has 8-12 unit tests covering happy path and edge cases",
+    "linting": "cargo clippy -- -D warnings (mandatory); cargo fmt --check (mandatory); cargo deny check advisories licenses (mandatory); all must pass before merge",
+    "error_handling": "thiserror crate for error types; Result<T> return types; expect() with descriptive messages in tests; no unwrap() in production code paths",
+    "imports": "tree_sitter::* for parsing APIs; use super::* in test modules; conditional module loading via #[cfg(feature = 'lang-X')]; workspace dependencies for tree-sitter-* crates"
+  },
+  "patterns": [
+    "ELEMENT_QUERY: captures function_declaration, class_declaration, interface_declaration, enum_class_declaration, object_declaration with @function/@class labels; uses named children (name field) for symbol extraction",
+    "CALL_QUERY: captures call_expression nodes with @call label; models both direct calls and method invocations",
+    "REFERENCE_QUERY: captures type identifiers in type contexts (simple_identifier in type annotations, user_type in delegation specifiers); optional for some languages",
+    "IMPORT_QUERY: captures import_header nodes; covers all import forms (namespace, static, aliased)",
+    "DEFUSE_QUERY: captures write sites (assignment, update, declaration) and read sites (usage); uses @write.X and @read.X labels; optional but recommended",
+    "extract_inheritance: walks delegation_specifiers or equivalent to collect superclass and interface names; returns Vec<String> with formatted names (e.g., 'extends Foo', 'implements Bar')",
+    "find_method_for_receiver: optional handler; returns method name for a given receiver type; used for method dispatch analysis",
+    "extract_function_name: optional handler; extracts function name from declaration node; not all languages implement",
+    "Unit test pattern: parse_X() helper creates Parser, sets language, parses source; test_X_element_query_happy_path verifies query compilation and node matching; test_X_extract_inheritance verifies inheritance extraction; test_X_defuse_query_write_site verifies def-use sites",
+    "Feature gates: applied to module declaration (mod kotlin;), EXTENSION_MAP entries (.kt, .kts), supported_languages() array entry, get_language_info() match arm, get_ts_language() match arm, all unit tests"
+  ],
+  "related_issues": [
+    {
+      "number": 649,
+      "title": "feat(lang): add Kotlin grammar support",
+      "relevance": "Primary issue; defines acceptance criteria, implementation notes, node kinds, and delegation specifiers syntax"
+    },
+    {
+      "number": 606,
+      "title": "feat(lang): add C# grammar support",
+      "relevance": "Closed via PR #609 (merged 2026-04-02); reference implementation for JVM-style language with inheritance extraction"
+    },
+    {
+      "number": 607,
+      "title": "feat(lang): add JavaScript grammar support",
+      "relevance": "Closed via PR #607 (merged 2026-04-02); reference implementation for dynamic language with DEFUSE_QUERY"
+    },
+    {
+      "number": 608,
+      "title": "feat(lang): add C/C++ grammar support",
+      "relevance": "Closed via PR #608 (merged 2026-04-02); reference implementation with find_method_for_receiver handler"
+    },
+    {
+      "number": 62,
+      "title": "chore: drop unused language grammars (kotlin, swift, ruby, javascript)",
+      "relevance": "Closed via PR #63 (merged 2026-03-03); removed Kotlin from codebase; this issue re-adds it with proper integration"
+    }
+  ],
+  "constraints": [
+    "Kotlin delegation_specifiers syntax: class Foo : Bar(), Baz { } where Bar() is superclass (constructor call with parens), Baz is interface (no parens); extract_inheritance must distinguish these via node inspection",
+    "No separate impl blocks in Kotlin (unlike Rust); inheritance is inline in class declaration; impl_query and impl_trait_query must be None",
+    "Companion objects are nested inside class body; declared as 'companion object { ... }'; no special extraction needed for symbol analysis",
+    "tree-sitter-kotlin 0.3.8 is pinned version per issue requirement; must be added to workspace.dependencies in root Cargo.toml",
+    "All language handlers must implement LanguageInfo struct contract: 14 fields (name, language, element_query, call_query, reference_query, import_query, impl_query, impl_trait_query, defuse_query, extract_function_name, find_method_for_receiver, find_receiver_type, extract_inheritance); some optional (None allowed)",
+    "DEFUSE_QUERY is optional but recommended for semantic analysis; most languages implement it (Rust, Python, Go, Java, TypeScript, JavaScript, C/C++, C#); Fortran omits it",
+    "All feature gates must be consistent across: Cargo.toml feature definition, module declaration, EXTENSION_MAP, supported_languages(), get_language_info(), get_ts_language(), unit tests",
+    "lang-kotlin must be added to default features in crates/code-analyze-core/Cargo.toml; all languages are enabled by default"
+  ],
+  "test_coverage": "Existing test infrastructure: test_language_for_extension_happy_path and test_language_for_extension_edge_case in lang.rs verify extension registration; test_get_language_info_known/unknown and test_get_ts_language_known/unknown in languages/mod.rs verify language info retrieval. Per-language unit tests in each language module (8-12 tests per language) covering: element query compilation and node matching (happy path), edge cases (empty code, malformed syntax), inheritance extraction (single/multiple/mixed), def-use sites (write/read/update), method dispatch. Integration tests in crates/code-analyze-core/tests/integration_tests.rs and semantic_correctness.rs verify end-to-end analysis. New Kotlin tests must follow same pattern: unit tests in kotlin.rs (test_kotlin_element_query_happy_path, test_kotlin_extract_inheritance, test_kotlin_defuse_query_write_site, etc.), integration tests in integration_tests.rs, semantic correctness test in semantic_correctness.rs. Minimum 10 unit tests required; 3 integration tests recommended.",
+  "library_findings": [
+    {
+      "library": "tree-sitter",
+      "version": "0.26.6",
+      "relevant_api": "tree_sitter::Language, tree_sitter::Query, tree_sitter::Node, tree_sitter::Parser, tree_sitter::QueryCursor",
+      "notes": "Core parsing library; used by all language handlers. APIs: Parser::new(), Parser::set_language(), Parser::parse(), Query::new(), QueryCursor::matches(), Node::child_by_field_name(), Node::named_child(), Node::kind(), Node::start_byte(), Node::end_byte()"
+    },
+    {
+      "library": "tree-sitter-kotlin",
+      "version": "0.3.8",
+      "relevant_api": "tree_sitter_kotlin::LANGUAGE; node kinds: function_declaration, class_declaration, interface_declaration, enum_class_declaration, object_declaration, call_expression, simple_identifier, import_header, delegation_specifiers",
+      "notes": "Kotlin grammar for tree-sitter (fwcd/tree-sitter-kotlin). Key node kinds: function_declaration (free functions), class_declaration (classes, data classes via modifiers), interface_declaration (interfaces), enum_class_declaration (enums), object_declaration (objects, companion objects via modifiers), call_expression (calls), simple_identifier (identifiers), import_header (imports), delegation_specifiers (inheritance with superclass_type_with_constructor for superclass with parens, user_type for interfaces without parens)"
+    }
+  ],
+  "approaches": [
+    {
+      "name": "Approach 1: Minimal Implementation (No DEFUSE_QUERY)",
+      "description": "Add tree-sitter-kotlin 0.3.8 to workspace dependencies and create kotlin.rs with ELEMENT_QUERY, CALL_QUERY, REFERENCE_QUERY, IMPORT_QUERY, and extract_inheritance handler. Omit DEFUSE_QUERY to minimize scope. Register .kt and .kts extensions in lang.rs, add lang-kotlin feature flag in Cargo.toml, register kotlin in get_language_info() and get_ts_language() in languages/mod.rs. Include 8-10 unit tests (element query, call query, inheritance extraction with superclass and interfaces, edge cases). No find_method_for_receiver or extract_function_name handlers.",
+      "pros": [
+        "Smallest implementation scope; reduces risk of bugs",
+        "Faster to implement and review",
+        "Meets all 12 acceptance criteria from issue",
+        "DEFUSE_QUERY can be added in follow-up PR if needed",
+        "Aligns with Fortran approach (which also omits DEFUSE_QUERY)"
+      ],
+      "cons": [
+        "No def-use site extraction; limits semantic analysis capabilities",
+        "Inconsistent with 8 of 9 other languages (all have DEFUSE_QUERY except Fortran)",
+        "May require follow-up work to add DEFUSE_QUERY later",
+        "Reduces value for users relying on write/read site detection"
+      ],
+      "complexity": "simple",
+      "files_touched": 5
+    },
+    {
+      "name": "Approach 2: Complete Implementation (With DEFUSE_QUERY)",
+      "description": "Add tree-sitter-kotlin 0.3.8 to workspace dependencies and create kotlin.rs with ELEMENT_QUERY, CALL_QUERY, REFERENCE_QUERY, IMPORT_QUERY, DEFUSE_QUERY, and extract_inheritance handler. DEFUSE_QUERY captures local variable declarations, assignments, updates, and identifier usage (write/read sites). Register .kt and .kts extensions in lang.rs, add lang-kotlin feature flag in Cargo.toml, register kotlin in get_language_info() and get_ts_language() in languages/mod.rs. Include 12-14 unit tests covering all query types and def-use site extraction. No find_method_for_receiver or extract_function_name handlers.",
+      "pros": [
+        "Consistent with 8 of 9 other languages (all except Fortran)",
+        "Enables semantic analysis for write/read site detection",
+        "Provides comprehensive symbol analysis capabilities",
+        "No follow-up work needed; feature-complete on first PR",
+        "Better value for users relying on def-use analysis"
+      ],
+      "cons": [
+        "Larger implementation scope; more test cases to write",
+        "Requires careful tuning of DEFUSE_QUERY patterns for Kotlin syntax",
+        "Slightly longer review cycle",
+        "More potential for edge case bugs in def-use extraction"
+      ],
+      "complexity": "medium",
+      "files_touched": 5
+    },
+    {
+      "name": "Approach 3: Extended Implementation (With DEFUSE_QUERY + find_method_for_receiver)",
+      "description": "Add tree-sitter-kotlin 0.3.8 to workspace dependencies and create kotlin.rs with ELEMENT_QUERY, CALL_QUERY, REFERENCE_QUERY, IMPORT_QUERY, DEFUSE_QUERY, extract_inheritance, and find_method_for_receiver handlers. find_method_for_receiver walks parent chain from a method node to find enclosing class/interface and returns method name. Register .kt and .kts extensions in lang.rs, add lang-kotlin feature flag in Cargo.toml, register kotlin in get_language_info() and get_ts_language() in languages/mod.rs. Include 14-16 unit tests covering all query types, def-use sites, and method dispatch. Justification: Kotlin has rich method dispatch semantics (extension functions, receiver types, operator overloading); find_method_for_receiver enables precise call graph analysis.",
+      "pros": [
+        "Most comprehensive implementation; enables advanced call graph analysis",
+        "Supports Kotlin-specific features (extension functions, receiver types)",
+        "Consistent with Rust, Go, C++ approaches (which implement find_method_for_receiver)",
+        "Future-proofs against feature requests for method dispatch",
+        "Best value for users analyzing complex Kotlin codebases"
+      ],
+      "cons": [
+        "Largest implementation scope; highest complexity",
+        "Requires deep understanding of Kotlin method dispatch semantics",
+        "Most test cases to write and maintain",
+        "Longest review cycle; more potential for edge case bugs",
+        "May be over-engineered if find_method_for_receiver is not used by MCP tools"
+      ],
+      "complexity": "complex",
+      "files_touched": 5
+    }
+  ],
+  "recommendation": "Approach 2: Complete Implementation (With DEFUSE_QUERY). Rationale: Meets all 12 acceptance criteria from issue #649; consistent with 8 of 9 other languages; enables semantic analysis for write/read site detection without over-engineering. DEFUSE_QUERY is straightforward for Kotlin (similar to Java) and adds significant value for users. find_method_for_receiver (Approach 3) is optional per issue spec and can be deferred to a follow-up PR if call graph analysis becomes a priority. Approach 1 (minimal) leaves a feature gap that will likely require follow-up work. Approach 2 balances completeness, consistency, and implementation effort.",
+  "latency_seconds": 62,
+  "message_count": 8
+}

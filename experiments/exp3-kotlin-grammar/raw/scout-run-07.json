@@ -1,0 +1,167 @@
+{
+  "run_id": "scout-run-07",
+  "group": "control",
+  "started_at": "2026-04-18T03:15:21Z",
+  "finished_at": "2026-04-18T03:16:06Z",
+  "session_id": "scout-run-07",
+  "lens": "scout",
+  "relevant_files": [
+    {
+      "path": "crates/code-analyze-core/src/lang.rs",
+      "line_range": "1-160",
+      "role": "Extension registry: EXTENSION_MAP and supported_languages() function"
+    },
+    {
+      "path": "crates/code-analyze-core/src/languages/mod.rs",
+      "line_range": "1-300",
+      "role": "Language registration: get_language_info() and get_ts_language() match arms"
+    },
+    {
+      "path": "crates/code-analyze-core/src/languages/java.rs",
+      "line_range": "1-100",
+      "role": "Reference implementation: ELEMENT_QUERY, CALL_QUERY, REFERENCE_QUERY, IMPORT_QUERY, DEFUSE_QUERY patterns"
+    },
+    {
+      "path": "crates/code-analyze-core/src/languages/go.rs",
+      "line_range": "1-120",
+      "role": "Reference implementation: extract_inheritance handler and find_method_for_receiver"
+    },
+    {
+      "path": "crates/code-analyze-core/Cargo.toml",
+      "line_range": "1-80",
+      "role": "Feature flags and optional dependencies for language support"
+    },
+    {
+      "path": "Cargo.toml",
+      "line_range": "1-50",
+      "role": "Workspace dependencies: tree-sitter version and language grammar versions"
+    },
+    {
+      "path": "crates/code-analyze-core/tests/integration_tests.rs",
+      "line_range": "1-100",
+      "role": "Integration test patterns for language support"
+    }
+  ],
+  "conventions": {
+    "commits": "Conventional Commits with GPG signing and DCO sign-off (git commit -S --signoff); types: feat, fix, docs, refactor, test, chore; scope in parens; breaking changes marked with ! and BREAKING CHANGE footer",
+    "testing": "AAA pattern (Arrange, Act, Assert); one happy path and one edge case per behavior; unit tests in module under #[cfg(all(test, feature = \"lang-xyz\"))]; integration tests in crates/code-analyze-core/tests/; no redundant test variations",
+    "linting": "cargo fmt --check, cargo clippy -- -D warnings, cargo deny check advisories licenses; cognitive complexity threshold 30; no .unwrap() in production code paths",
+    "error_handling": "thiserror for libraries (ParserError enum); anyhow for applications; Result<T, E> return types; graceful degradation on unsupported languages"
+  },
+  "patterns": [
+    "Language support via Cargo feature flags (lang-xyz) controlling conditional compilation of module, queries, and language info arms",
+    "Query constants (ELEMENT_QUERY, CALL_QUERY, REFERENCE_QUERY, IMPORT_QUERY, DEFUSE_QUERY) defined as &str at module level",
+    "Optional handler functions (extract_inheritance, find_method_for_receiver, extract_function_name, find_receiver_type) returning Option<T> or Vec<T>",
+    "Language registration in get_language_info() match arm returns LanguageInfo struct with all query and handler fields",
+    "Extension mapping in EXTENSION_MAP as slice of tuples (extension, language_name) with feature gate on each entry",
+    "Tree-sitter Language object obtained via tree_sitter_xyz::LANGUAGE.into() pattern",
+    "Query compilation cached in QUERY_CACHE to avoid per-file recompilation",
+    "Integration tests verify parse+extract, inheritance extraction, and analyze_symbol callees for each language"
+  ],
+  "related_issues": [
+    {
+      "number": 606,
+      "title": "feat(lang): add C# grammar support",
+      "relevance": "Closed language addition PR; demonstrates complete pattern for optional language support with feature flags, queries, handlers, and tests"
+    },
+    {
+      "number": 648,
+      "title": "feat(lang): add Swift grammar support",
+      "relevance": "Open language addition issue; similar scope to Kotlin; may provide implementation insights or coordination opportunities"
+    },
+    {
+      "number": 513,
+      "title": "feat: feature-flag tree-sitter language grammars to reduce binary size",
+      "relevance": "Closed issue establishing feature-flag architecture for optional language support; foundational pattern for Kotlin integration"
+    },
+    {
+      "number": 384,
+      "title": "feat(languages): add Fortran language support",
+      "relevance": "Closed language addition; Fortran has no DEFUSE_QUERY (set to None), providing pattern for languages without def-use analysis"
+    }
+  ],
+  "constraints": [
+    "All languages must be feature-gated to allow compile-time reduction of binary size",
+    "Language info must be registered in both get_language_info() and get_ts_language() match arms, both feature-gated",
+    "Extension mapping must be feature-gated on each entry to prevent undefined language references",
+    "New language modules must include SPDX header (Apache-2.0) on line 1",
+    "All queries must compile and match valid tree-sitter syntax for the target grammar",
+    "Handler functions must gracefully handle edge cases (missing fields, empty nodes) without panicking",
+    "Tests must use #[cfg(all(test, feature = \"lang-xyz\"))] to avoid compilation failures when feature is disabled"
+  ],
+  "test_coverage": "Existing language tests follow AAA pattern with parse_xyz() helper function; each language has happy-path tests for ELEMENT_QUERY (class, function, method), CALL_QUERY, and extract_inheritance; integration tests in integration_tests.rs verify parse+extract and analyze_symbol callees; semantic_correctness.rs tests def-use analysis where DEFUSE_QUERY is present. Kotlin tests should follow same pattern: parse_kotlin() helper, test class/function/method/interface/enum/object extraction, test inheritance with delegation_specifiers, test imports, test calls.",
+  "library_findings": [
+    {
+      "library": "tree-sitter-kotlin",
+      "version": "0.3.8",
+      "relevant_api": "tree_sitter_kotlin::LANGUAGE constant; node kinds: class_declaration, function_declaration, interface_declaration, enum_class_declaration, object_declaration, call_expression, delegation_specifier, import_header, simple_identifier, type_identifier",
+      "notes": "fwcd/tree-sitter-kotlin is primary implementation (High reputation, 576 code snippets, 79.1 benchmark score). Kotlin AST structure mirrors Java with JVM-style class hierarchy. Key differences: delegation_specifiers for inheritance (no separate impl blocks), data/companion/object modifiers as part of declaration node, call_expression for method/function calls. No suspend modifier extraction needed for symbol analysis. Companion objects declared inline, no special extraction required."
+    },
+    {
+      "library": "tree-sitter",
+      "version": "0.26.6",
+      "relevant_api": "Parser, Language, Query, QueryCursor, Node; set_language(), parse(), matches(), captures for query execution",
+      "notes": "Core parsing library; version 0.26.6 pinned in workspace. Used by all language modules for AST traversal and query execution. Query API stable across versions."
+    }
+  ],
+  "approaches": [
+    {
+      "name": "Approach A: Full Kotlin support with DEFUSE_QUERY (recommended)",
+      "description": "Add tree-sitter-kotlin 0.3.8 to workspace dependencies. Create crates/code-analyze-core/src/languages/kotlin.rs with ELEMENT_QUERY (function_declaration, class_declaration, interface_declaration, enum_class_declaration, object_declaration with data/companion modifiers), CALL_QUERY (call_expression), REFERENCE_QUERY (type_identifier), IMPORT_QUERY (import_header), and DEFUSE_QUERY (identifier write/read sites). Implement extract_inheritance handler to walk delegation_specifiers and collect superclass (has constructor call with parens) and interface names (no parens). Add lang-kotlin feature flag to Cargo.toml, register .kt/.kts extensions in EXTENSION_MAP, add kotlin arm to get_language_info() and get_ts_language() in mod.rs. Write 8-10 unit tests covering class/function/interface/enum/object definitions, inheritance patterns, imports, and calls. Add integration tests for parse+extract and analyze_symbol. All tests pass with cargo test --features lang-kotlin.",
+      "pros": [
+        "Provides complete symbol analysis including def-use tracking for Kotlin",
+        "Consistent with Java, C#, Python, Go, Rust, TypeScript, JavaScript, C++ implementations",
+        "Enables semantic correctness testing and def-use site analysis",
+        "Aligns with issue acceptance criteria which expects DEFUSE_QUERY (though not strictly required)",
+        "Maximizes value for users analyzing Kotlin codebases"
+      ],
+      "cons": [
+        "Requires careful query design to handle Kotlin-specific syntax (delegation_specifiers, data/companion modifiers)",
+        "DEFUSE_QUERY complexity may require iteration to capture all identifier write/read patterns",
+        "Slightly larger binary footprint when feature is enabled (minimal impact)"
+      ],
+      "complexity": "medium",
+      "files_touched": 5
+    },
+    {
+      "name": "Approach B: Minimal Kotlin support without DEFUSE_QUERY",
+      "description": "Add tree-sitter-kotlin 0.3.8 to workspace dependencies. Create crates/code-analyze-core/src/languages/kotlin.rs with ELEMENT_QUERY, CALL_QUERY, REFERENCE_QUERY, IMPORT_QUERY only (DEFUSE_QUERY set to None in LanguageInfo). Implement extract_inheritance handler. Add lang-kotlin feature flag, register extensions, add kotlin arm to get_language_info() and get_ts_language(). Write 5-6 unit tests covering basic symbol extraction and inheritance. All tests pass with cargo test --features lang-kotlin.",
+      "pros": [
+        "Simpler implementation: fewer queries to design and test",
+        "Faster development and review cycle",
+        "Follows Fortran pattern (no DEFUSE_QUERY) which is proven in production",
+        "Still provides symbol extraction, call analysis, and inheritance tracking",
+        "Smaller code footprint"
+      ],
+      "cons": [
+        "No def-use site analysis for Kotlin (users cannot trace variable writes/reads)",
+        "Inconsistent with most other languages in the codebase (Java, C#, Python, Go, Rust, TypeScript, JavaScript, C++ all have DEFUSE_QUERY)",
+        "Limits semantic correctness testing",
+        "May require future enhancement if users request def-use analysis"
+      ],
+      "complexity": "simple",
+      "files_touched": 5
+    },
+    {
+      "name": "Approach C: Kotlin support with deferred DEFUSE_QUERY (phased approach)",
+      "description": "Implement Approach B (minimal support without DEFUSE_QUERY) in first PR. Add TODO comment in kotlin.rs noting DEFUSE_QUERY pattern to implement in follow-up PR. Create separate issue #650 (or similar) for DEFUSE_QUERY implementation. This allows Kotlin symbol analysis to ship immediately while deferring def-use analysis to future work.",
+      "pros": [
+        "Unblocks Kotlin symbol analysis and call tracing in near term",
+        "Reduces scope and risk of initial PR",
+        "Allows community feedback on basic Kotlin support before investing in DEFUSE_QUERY",
+        "Clear path for future enhancement with tracked issue"
+      ],
+      "cons": [
+        "Requires two PRs instead of one",
+        "Users must wait for follow-up PR to get def-use analysis",
+        "May create perception of incomplete support",
+        "Additional coordination and review overhead"
+      ],
+      "complexity": "simple",
+      "files_touched": 5
+    }
+  ],
+  "recommendation": "Approach A (Full Kotlin support with DEFUSE_QUERY). Kotlin is a JVM-first language with extensive enterprise adoption (Android, microservices, Kotlin Multiplatform). The issue explicitly requests DEFUSE_QUERY in acceptance criteria. The codebase pattern is well-established (Java, C#, Python, Go, Rust, TypeScript, JavaScript, C++ all include DEFUSE_QUERY). tree-sitter-kotlin 0.3.8 is mature (High reputation, 79.1 benchmark score) and provides clear node kinds for Kotlin syntax. The delegation_specifiers pattern for inheritance is straightforward to implement following the Java model. Medium complexity is justified by the value delivered: complete symbol analysis, def-use tracking, and consistency with the existing language portfolio. Estimated effort: 3-4 hours for implementation, testing, and review.",
+  "latency_seconds": 45,
+  "message_count": 12
+}
