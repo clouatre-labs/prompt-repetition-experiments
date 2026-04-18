@@ -10,7 +10,7 @@ colors = ["#1f77b4", "#ff7f0e", "#1f77b4", "#ff7f0e"]
 
 fig, ax = plt.subplots(figsize=(9, 5))
 
-bars = ax.bar(range(4), values, color=colors, width=0.6, zorder=3)
+bars = ax.bar(range(4), values, color=colors, width=0.6)
 
 # Y-axis label and title
 ax.set_ylabel("Mean total tokens (valid runs)", fontsize=11)
