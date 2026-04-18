@@ -13,6 +13,6 @@ Extracted from protocol.md. Binary scoring (1 = criterion met, 0 = not met).
 | C7 | All acceptance criteria from issue #649 met: feature flag added to default, all query constants present, extension registry updated, module registered, all tests pass | no |
 
 **Notes**:
-- C1‑C6 require code‑driven discovery (not just issue text). C7 is a verification step.
-- Binary scoring only; half‑credit is not permitted.
-- If only C7 reaches 100 % in both groups, that is expected; a ceiling concern applies only if C1‑C6 also hit 100 %.
+- C1-C6 require code-driven discovery (not just issue text). C7 is a verification step.
+- Binary scoring only; half-credit is not permitted.
+- If only C7 reaches 100 % in both groups, that is expected; a ceiling concern applies only if C1-C6 also hit 100 %.

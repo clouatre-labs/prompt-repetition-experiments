@@ -6,16 +6,16 @@
 
 ## Context
 
-The target issue [clouatre-labs/code-analyze-mcp#649](https://github.com/clouatre-labs/code-analyze-mcp/issues/649) asks for adding Kotlin grammar support using `tree-sitter-kotlin` version 0.3.8. This requires code synthesis beyond the issue text: confirming language registration, ABI compatibility, node‑kind handling, and test coverage for both `.kt` and `.kts` files. The prior experiment (exp2) showed ceiling effects when the rubric was too easy; here the rubric includes six synthesis criteria (C1‑C6) and one verification criterion (C7).
+The target issue [clouatre-labs/code-analyze-mcp#649](https://github.com/clouatre-labs/code-analyze-mcp/issues/649) asks for adding Kotlin grammar support using `tree-sitter-kotlin` version 0.3.8. This requires code synthesis beyond the issue text: confirming language registration, ABI compatibility, node-kind handling, and test coverage for both `.kt` and `.kts` files. The prior experiment (exp2) showed ceiling effects when the rubric was too easy; here the rubric includes six synthesis criteria (C1-C6) and one verification criterion (C7).
 
-Paper: [Leviathan et al. (2025)](https://arxiv.org/abs/2502.07869) – repeating the input prompt verbatim improves non‑reasoning LLM accuracy (47/70 wins, 0 losses across 7 models).
+Paper: [Leviathan et al. (2025)](https://arxiv.org/abs/2502.07869) - repeating the input prompt verbatim improves non-reasoning LLM accuracy (47/70 wins, 0 losses across 7 models).
 
 ---
 
 ## Why This Task is Harder
 
 - The issue does not state whether the `LANGUAGE` constant is exported or whether the crate ABI matches the current `tree-sitter` version (0.26.6). This must be verified in the crate source.
-- Kotlin node‑kind taxonomy (companion objects, object declarations, delegation specifiers) is not fully described in the issue; the scout must read the grammar source.
+- Kotlin node-kind taxonomy (companion objects, object declarations, delegation specifiers) is not fully described in the issue; the scout must read the grammar source.
 - The repository must be extended with query patterns and handlers; the scout must synthesize correct `ELEMENT_QUERY` and `extract_inheritance` logic.
 - Tests must cover both `.kt` and `.kts` files, requiring creation of a Kotlin script example.
 - The `DEFUSE_QUERY` constant may be required by the current `LanguageInfo` struct; the scout must determine if it is needed or justify omission.
@@ -25,7 +25,7 @@ Paper: [Leviathan et al. (2025)](https://arxiv.org/abs/2502.07869) – repeating
 
 ## Pre-registration (locked before any runs)
 
-All decisions below are final. No post‑hoc amendments after the first delegate is spawned.
+All decisions below are final. No post-hoc amendments after the first delegate is spawned.
 
 ### Sample size and stopping rule
 
@@ -50,17 +50,17 @@ If **both** pilot runs achieve a total score of **6/7** or higher on the draft r
 
 ### Statistical test
 
-- Mann‑Whitney U test, two‑tailed, α = 0.05 applied to total scores (0‑7) across the two groups.
-- With n = 5 per group this test is under‑powered for small effects; a non‑significant result does not rule out a small true effect.
+- Mann-Whitney U test, two-tailed, alpha = 0.05 applied to total scores (0-7) across the two groups.
+- With n = 5 per group this test is under-powered for small effects; a non-significant result does not rule out a small true effect.
 
 ### Latency
 
-- Record wall‑clock start and completion times per run (ISO 8601). The orchestrator will compute **median latency per group**.
+- Record wall-clock start and completion times per run (ISO 8601). The orchestrator will compute **median latency per group**.
 - The runner must output `latency_seconds` (integer) and `message_count` (integer) in the JSON schema.
 
 ### Raw data preservation
 
-All scout‑run JSON files, `label-map.json`, `scores.json`, and the latency log (`latency-log.jsonl`) will be published as a single GitHub gist before closing the issue. The gist URL is recorded in the final issue comment.
+All scout-run JSON files, `label-map.json`, `scores.json`, and the latency log (`latency-log.jsonl`) will be published as a single GitHub gist before closing the issue. The gist URL is recorded in the final issue comment.
 
 ---
 
@@ -69,64 +69,64 @@ All scout‑run JSON files, `label-map.json`, `scores.json`, and the latency log
 ### Target
 
 - Repository: [clouatre-labs/code-analyze-mcp](https://github.com/clouatre-labs/code-analyze-mcp)
-- Issue: #649 – add Kotlin grammar support via `tree-sitter-kotlin` 0.3.8.
-- Model: `claude‑haiku‑4.5`, temperature 0.5.
+- Issue: #649 - add Kotlin grammar support via `tree-sitter-kotlin` 0.3.8.
+- Model: `claude-haiku-4.5`, temperature 0.5.
 - Extensions: `developer`, `context7`, `brave_search`.
 
 ### Delegates
 
-- 5 control: Scout instructions using the standard prompt (≈3 800 chars).
-- 5 treatment: Scout instructions with verbatim repetition of the prompt (≈7 600 chars).
+- 5 control: Scout instructions using the standard prompt (~3 800 chars).
+- 5 treatment: Scout instructions with verbatim repetition of the prompt (~7 600 chars).
 - Each delegate runs independently, writes its JSON output to `scout-run-XX.json`.
 - All 10 runs are spawned asynchronously; after completion the scorer runs blind.
 
-### Rubric (pre‑registered, 7‑point binary)
+### Rubric (pre-registered, 7-point binary)
 
 | ID | Criterion | Synthesis Required |
 |----|-----------|--------------------|
-| C1 | tree-sitter-kotlin 0.3.8 public LANGUAGE export verified and ABI‑compatible with tree-sitter 0.26.6 | yes |
+| C1 | tree-sitter-kotlin 0.3.8 public LANGUAGE export verified and ABI-compatible with tree-sitter 0.26.6 | yes |
 | C2 | Kotlin node kinds documented and distinguish companion objects from object declarations in delegation_specifiers correctly | yes |
 | C3 | At least 3 query patterns from tree-sitter-kotlin corpus (function_declaration, class_declaration, object_declaration variants) correctly captured in ELEMENT_QUERY | yes |
 | C4 | extract_inheritance handler correctly walks delegation_specifiers and separates superclass_type_with_constructor (has parens) from user_type (no parens) | yes |
-| C5 | Unit tests confirm .kt AND .kts file parsing both work; at least 1 test with .kts syntax (e.g. top‑level function, extension function) | yes |
+| C5 | Unit tests confirm .kt AND .kts file parsing both work; at least 1 test with .kts syntax (e.g. top-level function, extension function) | yes |
 | C6 | DEFUSE_QUERY constant created for Kotlin if required by current LanguageInfo struct, or justified as None if not applicable (e.g. read issue context or PR #659) | yes |
 | C7 | All acceptance criteria from issue #649 met: feature flag added to default, all query constants present, extension registry updated, module registered, all tests pass | no |
 
-Scoring is binary per criterion (1 = met, 0 = not met). Half‑credit is not permitted.
+Scoring is binary per criterion (1 = met, 0 = not met). Half-credit is not permitted.
 
 ---
 
 ## Success / Failure Gate
 
-- **Lift detected**: treatment median ≥ control median + 1 point **and** Mann‑Whitney p < 0.05.
-- **No lift**: delta < 1 point **or** p ≥ 0.05.
-- **Ceiling‑effect clause**: if C7 (and only C7) hits 100 % in both groups, that is the trivial criterion by design; a ceiling concern applies only if C1‑C6 also hit 100 %.
+- **Lift detected**: treatment median >= control median + 1 point **and** Mann-Whitney p < 0.05.
+- **No lift**: delta < 1 point **or** p >= 0.05.
+- **Ceiling-effect clause**: if C7 (and only C7) hits 100 % in both groups, that is the trivial criterion by design; a ceiling concern applies only if C1-C6 also hit 100 %.
 
 ---
 
 ## Execution Notes
 
-- Record the repository HEAD SHA before spawning delegate 1; all delegates use the same SHA.
+- Record the repository HEAD SHA before spawning delegate 1; all delegates use the same SHA.
 - The orchestrator writes `label-map.json` before any delegate spawns and seals it.
 - The scorer receives only the 10 run files and the rubric; it does **not** see `label-map.json` until after scoring.
 - After `scores.json` is written, the orchestrator reveals `label-map.json`, computes group statistics, and publishes the gist.
 
 ---
 
-## Limitations (pre‑acknowledged)
+## Limitations (pre-acknowledged)
 
-- n = 5 per group is under‑powered; the Mann‑Whitney test may miss small effects.
-- Scoring is performed by a single LLM judge; inter‑rater reliability is not measured.
+- n = 5 per group is under-powered; the Mann-Whitney test may miss small effects.
+- Scoring is performed by a single LLM judge; inter-rater reliability is not measured.
 - Only one model, temperature, and issue are used; results may not generalize.
-- The `brave_search` extension gives scouts access to external documentation, limiting ecological validity for air‑gapped settings.
+- The `brave_search` extension gives scouts access to external documentation, limiting ecological validity for air-gapped settings.
 
 ---
 
 ## References
 
-- Leviathan, Y. et al., “Prompt Repetition Improves Non‑Reasoning LLMs” (2025) – https://arxiv.org/abs/2502.07869
-- Experiment 1: [exp1-fastmcp-refactor](../exp1-fastmcp-refactor/protocol.md)
-- Experiment 2: [exp2-treesitter-synthesis](../exp2-treesitter-synthesis/protocol.md)
+- Leviathan, Y. et al., "Prompt Repetition Improves Non-Reasoning LLMs" (2025) - https://arxiv.org/abs/2502.07869
+- Experiment 1: [exp1-fastmcp-refactor](../exp1-fastmcp-refactor/protocol.md)
+- Experiment 2: [exp2-treesitter-synthesis](../exp2-treesitter-synthesis/protocol.md)
 - Target issue: https://github.com/clouatre-labs/code-analyze-mcp/issues/649
 - Pilot gate: GitHub issue #26, #27
 - Rubric source: `experiments/exp3-kotlin-grammar/target-assessment.json`
