@@ -72,6 +72,14 @@ C5-C7 in Experiment 2 require reading and synthesizing actual source code. They 
 
 ## Results
 
+![Mean token usage by group and experiment](figures/fig1-token-distribution.png)
+
+*Figure 1: Mean total tokens per group. Valid runs only (Exp1 control-1 drift failure excluded). Dashed lines mark each experiment's control baseline.*
+
+![Criterion pass rates for Exp1](figures/fig2-criterion-pass-rates.png)
+
+*Figure 2: Criterion pass rates -- Exp1: FastMCP refactor (n=9 valid runs). C5 is the only discriminating criterion. Exp2 (n=10): all 7 criteria at 100% (ceiling effect, not shown).*
+
 | Experiment | Group | n (valid) | Pass rate (overall) | Tokens (mean) | Messages (mean) |
 |------------|-------|-----------|---------------------|---------------|-----------------|
 | Exp1: FastMCP refactor | Control | 4 | 97% | 1,068,182 | 209 |
@@ -141,7 +149,7 @@ Treatment agents consistently used fewer tokens despite the longer prompt. The e
 
 ![Message counts by group and experiment](figures/fig3-message-counts.png)
 
-*Figure 1: Message counts per run by group. Exp1 control-1 drift failure (93 messages) marked; excluded from summary statistics.*
+*Figure 3: Mean messages per group. Treatment agents used fewer turns in both experiments; the effect is stronger in Exp1 (-34%) than Exp2 (-9%). Exp1 control-1 drift failure excluded from summary statistics.*
 
 | Slice | N (control v treatment) | Input token diff | Output token diff |
 |---|---|---|---|
@@ -156,14 +164,9 @@ Exp1 control-1 was a drift failure (93 messages, no output file, scored 0). It w
 
 ## Experiment Flow
 
-```mermaid
-graph TD
-    O[Orchestrator<br/>Claude Sonnet 4.6] --> CG[Control 1..5<br/>x1 instructions]
-    O --> TG[Treatment 1..5<br/>x2 instructions]
-    CG --> S[Blind Scorer<br/>Pre-registered rubric]
-    TG --> S
-    S --> R[Results<br/>scores.json]
-```
+![Experiment flow diagram](figures/fig0-experiment-flow.png)
+
+*Figure 0: Experiment flow. The orchestrator spawns 10 delegates in parallel (subject to a 5-delegate concurrency cap), then passes all outputs to the blind scorer.*
 
 All delegates run on Claude Haiku 4.5 at temperature 0.5. The orchestrator spawns delegates in parallel, subject to a 5-delegate concurrency cap discovered during experimentation.
 
