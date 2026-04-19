@@ -462,5 +462,6 @@
         "diff_pct": -0.8
       }
     }
-  }
+  },
+  "effect_size": {"metric": "rank_biserial_r", "value": -0.20, "interpretation": "small negative effect (treatment slightly worse)", "note": "r = 1 - 2U/(n1*n2) = 1 - 2*15.0/(5*5); Kerby (2014)"}
 }

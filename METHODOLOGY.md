@@ -194,6 +194,22 @@ Control mean: 2.0/4. Treatment mean: 2.4/4. Mann-Whitney U = 15, p = 0.6072 (not
 
 Session ID: `20260418_59`. Recorded in `analysis.json`.
 
+## Statistical Analysis
+
+### Inferential Test and Effect Size
+
+All experiments employ the Mann-Whitney U test (two-tailed, alpha = 0.05) as the non-parametric test of center location. Effect sizes are reported using rank-biserial correlation (r), computed via Kerby's (2014) formula:
+
+r = 1 - 2U / (n1 * n2)
+
+where U is the Mann-Whitney U statistic, n1 is the control group size (n=5), and n2 is the treatment group size (n=5). Rank-biserial r ranges from -1 to +1: positive values indicate treatment superiority, negative values indicate control superiority, and r=0 indicates no effect. Conventional thresholds (Kerby, 2014) classify |r| < 0.3 as small effect, 0.3 ≤ |r| < 0.5 as medium, and |r| ≥ 0.5 as large.
+
+This choice reflects the ordinal nature of the score data (cumulative criterion counts per run; not interval-scaled). Rank-biserial r is preferred over Cohen's d because it does not assume normality and interprets effect magnitude relative to the ranking of observations, making it suitable for small samples with discrete outcomes.
+
+Reference: Kerby, D. S. (2014). The simple difference formula: An approach to teaching nonparametric correlation. *Comprehensive Psychology*, 3, 11.IT.3.1.
+
+Note: Existing analysis references r = 0.5 as a detection threshold for the rubric-runner cross-check (Exp3 post-hoc exclusion rationale) and for the definition of "detection" in the Known Limitations. The new section complements this reference without contradiction: rank-biserial r is now the standard effect-size metric for all comparative statements, and r = 0.5 (medium effect) remains a meaningful threshold for interpreting what size of treatment difference the rubric-runner design should be able to detect.
+
 ## Known Limitations
 
 1. **Ceiling effects.** Both rubrics were too easy. 100% accuracy in both groups leaves no room for treatment effects.

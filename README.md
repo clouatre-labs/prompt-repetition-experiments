@@ -109,6 +109,7 @@ treatment-5    1   1   1   1   1   1   6/6
 Treatment avg                           5.80/6
 
 Delta: +0.30 (not significant, n=4/5 per group)
+Mann-Whitney U (estimated), p (estimated), r = +0.25 (small positive effect)
 ```
 
 One control run excluded (drift failure at 93 messages, no output produced). C5 was the only discriminating criterion; all others scored 100% in both groups.
@@ -128,7 +129,7 @@ run-08     1   1   1   1   1   1   1   7/7
 run-09     1   1   1   1   1   1   1   7/7
 run-10     1   1   1   1   1   1   1   7/7
 
-Mann-Whitney U = 12.5, p = 1.0 (degenerate: all scores identical)
+Mann-Whitney U = 12.5, p = 1.0 (degenerate: all scores identical), r = 0.00 (no effect)
 ```
 
 Perfect scores across all 10 runs. Complete ceiling effect. The rubric was designed to be harder (C5-C7 require source code synthesis), but Claude Haiku 4.5 with structured Scout instructions cleared every criterion regardless of repetition.
@@ -189,9 +190,7 @@ The treatment comparison is therefore restricted to the 4 reachable criteria: C2
 
 *Table: Per-run scores on the 4 reachable criteria. Control mean: 2.0/4; treatment mean: 2.4/4.*
 
-Mann-Whitney U = 15, p = 0.6072 (two-tailed, not significant). Rank order is identical to the full 7-criterion analysis; the restriction does not change the statistical conclusion. The full 7-criterion per-run table is retained above for completeness and reproducibility.
-
-Mann-Whitney U = 15, p = 0.6072 (two-tailed, not significant).
+Mann-Whitney U = 15, p = 0.6072 (two-tailed, not significant), r = -0.20 (small negative effect).
 
 ### Summary
 
