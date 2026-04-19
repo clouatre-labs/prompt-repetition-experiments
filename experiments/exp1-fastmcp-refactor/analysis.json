@@ -390,9 +390,9 @@
   "data_note": null,
   "goose_version": "1.25.0",
   "effect_size": {
-    "metric": "cohens_d",
-    "value": 0.7766,
-    "interpretation": "medium",
-    "note": "Computed from mean quality scores (sum of binary criteria) between control and treatment groups"
+    "metric": "rank_biserial_r",
+    "value": 0.25,
+    "interpretation": "small positive effect",
+    "note": "Kerby (2014) formula: r = 1 - 2U/(n1*n2)"
   }
 }
