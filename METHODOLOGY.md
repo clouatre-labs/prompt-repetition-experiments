@@ -202,6 +202,8 @@ Session ID: `20260418_59`. Recorded in `analysis.json`.
 4. **Single model.** All experiments used Claude Haiku 4.5. Results may not generalize to other models.
 5. **Session log loss.** Experiment 2 `.jsonl` session logs were purged from disk before archival. Per-run message and token counts were reconstructed from SQLite session metadata.
 6. **Experiment 3 rubric-runner misalignment.** Three criteria (C1, C5, C6) required investigations not tasked in the runner prompt. Post-hoc exclusion with structural rationale was applied; see Experiment 3 Post-hoc Criterion Exclusion section.
+7. **Single-judge scoring.** Scoring was performed by a single LLM judge (Claude Sonnet 4.6) with no inter-rater reliability measure. Human cross-validation or a second independent judge would strengthen scoring validity (cf. Zheng et al., 2023, MT-Bench).
+8. **Pilot-scale sample size.** Each experiment used n=5 per group, sufficient for exploratory analysis but under-powered for confirmatory inference. A Mann-Whitney U test at this sample size can only detect near-complete separation effects (rank-biserial r >= 0.80) at 80% power. Results should be interpreted as pilot evidence, not confirmatory.
 
 ## Software Versions
 
