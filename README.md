@@ -209,7 +209,7 @@ Mann-Whitney U = 15, p = 0.6072 (two-tailed, not significant).
 
 ### Token Efficiency
 
-Treatment agents consistently used fewer tokens despite the longer prompt. The effect is confounded with the ceiling-effect task design and too small (n=5 per group per experiment) for statistical conclusions.
+Treatment agents consistently used fewer tokens despite the longer prompt. The effect is confounded with the ceiling-effect task design and too small (n=5 per group per experiment) for statistical conclusions. Single-judge scoring (one LLM judge, no inter-rater reliability check) and pilot-scale sample size (n=5 per group) limit generalizability; see METHODOLOGY.md Known Limitations for detail.
 
 ![Message counts by group and experiment](figures/fig3-message-counts.png)
 

@@ -4,14 +4,16 @@ This document defines the schema and field meanings for all experiment data file
 
 ## Overview
 
-Experiment data is organized into two main experiments (exp1-fastmcp-refactor, exp2-treesitter-synthesis), each containing:
+Experiment data is organized into three experiments (exp1-fastmcp-refactor, exp2-treesitter-synthesis, exp3-kotlin-grammar), each containing:
 - `efficiency.json`: Token counts, costs, and wall-clock timing per run
 - `analysis.json`: Comprehensive run metadata, message counts, and evaluation scores
 - `latency-log.jsonl`: Per-run timing data (start/end timestamps)
 - `scores.json`: Detailed rubric scoring with justifications
 - Supporting files: `label-map.json`, `rubric.md`, `runner-prompt.md`, `scorer-prompt.md`, `protocol.md`
 
-**Token Data Note**: The goose sessions.db database has NULL values for all token columns. Token counts are authoritative from experiment analysis (accumulated during orchestrator runs) and are backfilled into analysis.json and efficiency.json. Sessions.db provides message_count, start_ts, end_ts, and total_bytes only.
+**Token Data Note**: Token counts are recovered from `sessions.db` accumulated_input_tokens / accumulated_output_tokens / accumulated_total_tokens columns and backfilled into analysis.json and efficiency.json. These accumulated columns are authoritative; per-turn token columns in sessions.db are not used.
+
+**Exp3 exception**: `bytes` is `null` in all exp3 run records because the sessions.db schema used during that experiment lacked a `total_bytes` column. All other per-run fields are recoverable.
 
 ---
 
