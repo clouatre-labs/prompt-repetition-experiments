@@ -20,7 +20,7 @@ Record start time: run `date -u +"%Y-%m-%dT%H:%M:%SZ"` and save it.
 
 # SCOUT Research Agent (READ-ONLY)
 
-SESSION_ID={session_id}
+SESSION_ID=$(sqlite3 ~/.local/share/goose/sessions/sessions.db "SELECT id FROM sessions ORDER BY id DESC LIMIT 1;")
 WORKTREE=/Users/hugues.clouatre/git/clouatre-labs/prompt-repetition-experiments/.worktrees/exp3-1776479205
 HANDOFF=$WORKTREE/.handoff
 
@@ -80,7 +80,7 @@ Write the result as valid JSON to {output_path} with this schema:
   "group": "{group}",
   "started_at": "<ISO8601>",
   "finished_at": "<ISO8601>",
-  "session_id": "{session_id}",
+  "session_id": "<ORCHESTRATOR FILLS AFTER: sqlite3 ~/.local/share/goose/sessions/sessions.db 'SELECT id FROM sessions ORDER BY id DESC LIMIT 1;'>",  // actual Goose DB session ID (format YYYYMMDD_NN)
   "lens": "scout",
   "relevant_files": [{"path": "...", "line_range": "...", "role": "..."}],
   "conventions": {"commits": "...", "testing": "...", "linting": "...", "error_handling": "..."},

@@ -108,6 +108,7 @@ Scoring is binary per criterion (1 = met, 0 = not met). Half-credit is not permi
 
 - Record the repository HEAD SHA before spawning delegate 1; all delegates use the same SHA.
 - The orchestrator writes `label-map.json` before any delegate spawns and seals it.
+- **Post-spawn action**: Immediately after spawning each delegate, capture the Goose DB session ID by running `sqlite3 ~/.local/share/goose/sessions/sessions.db "SELECT id FROM sessions ORDER BY id DESC LIMIT 1;"` and record the result as `goose_session_id` in the run's `latency-log.jsonl` entry.
 - The scorer receives only the 10 run files and the rubric; it does **not** see `label-map.json` until after scoring.
 - After `scores.json` is written, the orchestrator reveals `label-map.json`, computes group statistics, and publishes the gist.
 

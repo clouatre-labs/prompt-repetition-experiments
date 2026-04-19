@@ -39,7 +39,7 @@ Experiment data is organized into three experiments (exp1-fastmcp-refactor, exp2
 | Field | Type | Description | Source |
 |-------|------|-------------|--------|
 | `run_id` | string | Unique run identifier (e.g., "scout-control-1") | Original |
-| `goose_session_id` | string | Goose session ID from sessions.db (e.g., "20260220_31") | Original |
+| `goose_session_id` | string | Goose session ID from sessions.db (e.g., "20260220_31") – must be non‑null in all future experiments | Original |
 | `group` | string | Experimental group: "control" or "treatment" | Original |
 | `model` | string | LLM model used (e.g., "haiku-4.5") | Original |
 | `valid` | boolean | Whether run produced valid output | Original |
