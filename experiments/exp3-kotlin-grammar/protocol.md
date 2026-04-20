@@ -58,6 +58,24 @@ If **both** pilot runs achieve a total score of **6/7** or higher on the draft r
 - Record wall-clock start and completion times per run (ISO 8601). The orchestrator will compute **median latency per group**.
 - The runner must output `latency_seconds` (integer) and `message_count` (integer) in the JSON schema.
 
+### Latency-log JSON schema (per-run record)
+
+The latency-log.jsonl file records per-run metadata with the following fields:
+
+```json
+{
+  "run_id": "scout-run-NN",
+  "goose_session_id": "<captured via: sqlite3 ~/.local/share/goose/sessions/sessions.db 'SELECT id FROM sessions ORDER BY id DESC LIMIT 1;'>",
+  "start_ts": "<ISO8601>",
+  "end_ts": "<ISO8601>",
+  "wall_clock_seconds": "<integer>",
+  "input_tokens": "<from sessions.db: SELECT accumulated_input_tokens FROM sessions WHERE id='<goose_session_id>'>",
+  "output_tokens": "<from sessions.db: SELECT accumulated_output_tokens FROM sessions WHERE id='<goose_session_id>'>",
+  "total_tokens": "<from sessions.db: SELECT accumulated_total_tokens FROM sessions WHERE id='<goose_session_id>'>",
+  "bytes": "<from sessions.db: SELECT sum(length(content_json)) FROM messages WHERE session_id='<goose_session_id>' AND role='assistant'>"
+}
+```
+
 ### Raw data preservation
 
 All scout-run JSON files, `label-map.json`, `scores.json`, and the latency log (`latency-log.jsonl`) will be published as a single GitHub gist before closing the issue. The gist URL is recorded in the final issue comment.

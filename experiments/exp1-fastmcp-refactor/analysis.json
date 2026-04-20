@@ -1,5 +1,6 @@
 {
   "experiment": "Experiment 1: FastMCP Session ID Refactor",
+  "schema_version": "full-v1",
   "title": "Scout Instruction Repetition A/B Experiment (math-mcp-learning-server#222)",
   "issue": "clouatre-labs/math-mcp-learning-server#222",
   "model": "claude-haiku-4-5",
