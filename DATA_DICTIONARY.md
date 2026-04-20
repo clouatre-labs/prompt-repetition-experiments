@@ -62,6 +62,7 @@ Experiment data is organized into three experiments (exp1-fastmcp-refactor, exp2
 | Field | Type | Description | Source |
 |-------|------|-------------|--------|
 | `experiment` | string | Experiment title | Original |
+| `schema_version` | string | Schema version identifier (e.g., "full-v1"); required non-null | Original |
 | `title` | string | Full experiment description | Original |
 | `issue` | string | GitHub issue reference | Original |
 | `model` | string | LLM model used | Original |
@@ -122,6 +123,11 @@ Experiment data is organized into three experiments (exp1-fastmcp-refactor, exp2
 | `start_ts` | string | Session start time (ISO 8601 with Z suffix) | Backfilled from sessions.db |
 | `end_ts` | string | Session end time (ISO 8601 with Z suffix) | Backfilled from sessions.db |
 | `wall_clock_seconds` | integer | Elapsed time in seconds (end_ts - start_ts) | Backfilled from sessions.db |
+| `input_tokens` | integer | Accumulated input tokens for this run's session, from sessions.db | sessions.db |
+| `output_tokens` | integer | Accumulated output tokens for this run's session, from sessions.db | sessions.db |
+| `total_tokens` | integer | Accumulated total tokens for this run's session, from sessions.db | sessions.db |
+| `bytes` | integer | Sum of assistant message content_json byte lengths for this session | sessions.db |
+| `goose_session_id` | string | Goose session ID captured post-run via sqlite3 (format YYYYMMDD_NN) | sessions.db |
 
 **Example**:
 ```json

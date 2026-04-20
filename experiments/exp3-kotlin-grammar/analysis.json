@@ -1,35 +1,32 @@
 {
+  "schema_version": "full-v1",
   "experiment": "exp3-kotlin-grammar",
-  "title": "Prompt Repetition Effects on Kotlin Grammar Task (Exp3)",
-  "issue": "clouatre-labs/prompt-repetition-experiments#33",
-  "model": "claude-sonnet-4-6",
+  "title": "Experiment 3: Kotlin Grammar Support via Tree-sitter (code-analyze-mcp#649)",
+  "issue": "clouatre-labs/code-analyze-mcp#649",
+  "model": "claude-haiku-4-5",
   "date": "2026-04-18",
   "n_per_group": 5,
-  "control_condition": "standard prompt (no repetition)",
-  "treatment_condition": "prompt with repeated key instruction",
+  "control_condition": "x1 Scout instructions (standard prompt ~3800 chars)",
+  "treatment_condition": "x2 Scout instructions repeated (verbatim repetition ~7600 chars)",
   "rubric_version": "1.0",
-  "goose_version": "1.25.0",
-  "orchestrator_session": "20260418_59",
+  "goose_version": "1.31.1",
+  "orchestrator_session": null,
   "repo_head": "0a103676277af76b23d9a673dea8d8370e5531da",
-  "experiment_start": "2026-04-18T03:07:34Z",
-  "experiment_end": "2026-04-18T03:22:11Z",
-  "analyzed_at": "2026-04-19T00:00:00Z",
-  "pre_acknowledged_limitations": [
-    "n=5 per group is under-powered",
-    "single LLM judge",
-    "bytes unrecoverable for exp3 (sessions.db lacks total_bytes column)"
-  ],
-  "data_note": "analysis.json backfilled 2026-04-19 to align with DATA_DICTIONARY canonical schema. Token counts recovered from sessions.db accumulated_* columns. wall_clock_seconds from latency-log.jsonl (authoritative; original latency block contained incorrect values). bytes=null because sessions.db lacks total_bytes column. Per-criterion breakdowns preserved as supplementary fields.",
+  "experiment_start": "2026-04-18T03:07:39Z",
+  "experiment_end": "2026-04-18T03:33:00Z",
+  "analyzed_at": "2026-04-18T03:30:18Z",
+  "data_note": "orchestrator_session not captured during exp3 execution (pre-dates issue #34 fix); token counts backfilled from sessions.db by timestamp matching; bytes = sum of assistant message content_json length per matched session",
   "runs": {
     "scout-run-01": {
       "group": "control",
       "goose_session_id": "20260418_80",
-      "messages": 86,
-      "input_tokens": 943128,
-      "output_tokens": 8647,
-      "total_tokens": 951775,
-      "wall_clock_seconds": 124,
-      "bytes": null,
+      "messages": 0,
+      "input_tokens": 44197,
+      "output_tokens": 836,
+      "total_tokens": 45033,
+      "wall_clock_seconds": 54,
+      "bytes": 31508,
+      "note": "message_count=0 recorded in latency-log (possible logging gap for first run)",
       "scores": {
         "C1": 0,
         "C2": 0,
@@ -43,12 +40,13 @@
     "scout-run-02": {
       "group": "treatment",
       "goose_session_id": "20260418_81",
-      "messages": 82,
-      "input_tokens": 925854,
-      "output_tokens": 9733,
-      "total_tokens": 935587,
-      "wall_clock_seconds": 133,
-      "bytes": null,
+      "messages": 12,
+      "input_tokens": 49092,
+      "output_tokens": 845,
+      "total_tokens": 49937,
+      "wall_clock_seconds": 72,
+      "bytes": 36140,
+      "note": null,
       "scores": {
         "C1": 0,
         "C2": 0,
@@ -61,13 +59,14 @@
     },
     "scout-run-03": {
       "group": "control",
-      "goose_session_id": "20260418_82",
-      "messages": 64,
-      "input_tokens": 725662,
-      "output_tokens": 9871,
-      "total_tokens": 735533,
-      "wall_clock_seconds": 117,
-      "bytes": null,
+      "goose_session_id": "20260418_83",
+      "messages": 12,
+      "input_tokens": 33781,
+      "output_tokens": 110,
+      "total_tokens": 33891,
+      "wall_clock_seconds": 480,
+      "bytes": 5303,
+      "note": null,
       "scores": {
         "C1": 0,
         "C2": 0,
@@ -81,12 +80,13 @@
     "scout-run-04": {
       "group": "treatment",
       "goose_session_id": "20260418_90",
-      "messages": 54,
-      "input_tokens": 891666,
-      "output_tokens": 7199,
-      "total_tokens": 898865,
-      "wall_clock_seconds": 115,
-      "bytes": null,
+      "messages": 18,
+      "input_tokens": 49707,
+      "output_tokens": 513,
+      "total_tokens": 50220,
+      "wall_clock_seconds": 556,
+      "bytes": 25204,
+      "note": "Bedrock fallback (stream-decode error); token data from final successful attempt (session 20260418_90)",
       "scores": {
         "C1": 0,
         "C2": 0,
@@ -100,12 +100,13 @@
     "scout-run-05": {
       "group": "control",
       "goose_session_id": "20260418_84",
-      "messages": 65,
-      "input_tokens": 732288,
-      "output_tokens": 8132,
-      "total_tokens": 740420,
-      "wall_clock_seconds": 111,
-      "bytes": null,
+      "messages": 18,
+      "input_tokens": 42197,
+      "output_tokens": 618,
+      "total_tokens": 42815,
+      "wall_clock_seconds": 62,
+      "bytes": 28592,
+      "note": null,
       "scores": {
         "C1": 0,
         "C2": 0,
@@ -118,13 +119,14 @@
     },
     "scout-run-06": {
       "group": "treatment",
-      "goose_session_id": "20260418_87",
-      "messages": 86,
-      "input_tokens": 1062721,
-      "output_tokens": 13452,
-      "total_tokens": 1076173,
-      "wall_clock_seconds": 156,
-      "bytes": null,
+      "goose_session_id": "20260418_89",
+      "messages": 8,
+      "input_tokens": 46432,
+      "output_tokens": 745,
+      "total_tokens": 47177,
+      "wall_clock_seconds": 62,
+      "bytes": 33120,
+      "note": null,
       "scores": {
         "C1": 0,
         "C2": 1,
@@ -137,13 +139,14 @@
     },
     "scout-run-07": {
       "group": "control",
-      "goose_session_id": "20260418_89",
-      "messages": 82,
-      "input_tokens": 893465,
-      "output_tokens": 8924,
-      "total_tokens": 902389,
-      "wall_clock_seconds": 118,
-      "bytes": null,
+      "goose_session_id": "20260418_86",
+      "messages": 12,
+      "input_tokens": 37254,
+      "output_tokens": 139,
+      "total_tokens": 37393,
+      "wall_clock_seconds": 45,
+      "bytes": 8640,
+      "note": null,
       "scores": {
         "C1": 0,
         "C2": 0,
@@ -157,12 +160,13 @@
     "scout-run-08": {
       "group": "treatment",
       "goose_session_id": "20260418_93",
-      "messages": 82,
-      "input_tokens": 1027185,
-      "output_tokens": 10233,
-      "total_tokens": 1037418,
-      "wall_clock_seconds": 145,
-      "bytes": null,
+      "messages": 15,
+      "input_tokens": 52467,
+      "output_tokens": 495,
+      "total_tokens": 52962,
+      "wall_clock_seconds": 68,
+      "bytes": 37501,
+      "note": null,
       "scores": {
         "C1": 0,
         "C2": 0,
@@ -176,12 +180,13 @@
     "scout-run-09": {
       "group": "control",
       "goose_session_id": "20260418_99",
-      "messages": 70,
-      "input_tokens": 1006233,
-      "output_tokens": 7042,
-      "total_tokens": 1013275,
-      "wall_clock_seconds": 117,
-      "bytes": null,
+      "messages": 20,
+      "input_tokens": 41384,
+      "output_tokens": 496,
+      "total_tokens": 41880,
+      "wall_clock_seconds": 68,
+      "bytes": 24156,
+      "note": "Bedrock fallback; token data from session 20260418_99",
       "scores": {
         "C1": 0,
         "C2": 0,
@@ -195,12 +200,13 @@
     "scout-run-10": {
       "group": "treatment",
       "goose_session_id": "20260418_100",
-      "messages": 60,
-      "input_tokens": 951678,
-      "output_tokens": 8928,
-      "total_tokens": 960606,
-      "wall_clock_seconds": 124,
-      "bytes": null,
+      "messages": 12,
+      "input_tokens": 50548,
+      "output_tokens": 529,
+      "total_tokens": 51077,
+      "wall_clock_seconds": 780,
+      "bytes": 31154,
+      "note": "780s wall time includes prior failed attempts; token data from final attempt (session 20260418_100) only",
       "scores": {
         "C1": 0,
         "C2": 0,
@@ -224,12 +230,12 @@
       "scores": [
         1,
         3,
-        3,
-        3,
-        3
+        2,
+        2,
+        2
       ],
-      "median": 3,
-      "mean": 2.6
+      "median": 2.0,
+      "mean": 2
     },
     "treatment": {
       "runs": [
@@ -246,222 +252,196 @@
         2,
         2
       ],
-      "median": 2,
+      "median": 2.0,
       "mean": 2.4
     }
   },
   "statistical_test": {
     "test": "Mann-Whitney U",
+    "U": 15.0,
     "p_value": 0.6072,
     "alpha": 0.05,
-    "result": "not significant"
+    "result": "fail to reject H0",
+    "note": "n=5 per group; two-sided; U=15.0 is not significant at alpha=0.05"
   },
-  "conclusion": "no significant difference (p=0.6072)",
-  "criterion_pass_rates": {
-    "C1": {
-      "pass_rate": 0.0,
-      "passed": 0,
-      "total": 10
-    },
-    "C2": {
-      "pass_rate": 0.1,
-      "passed": 1,
-      "total": 10
-    },
-    "C3": {
-      "pass_rate": 0.8,
-      "passed": 8,
-      "total": 10
-    },
-    "C4": {
-      "pass_rate": 0.3,
-      "passed": 3,
-      "total": 10
-    },
-    "C5": {
-      "pass_rate": 0.0,
-      "passed": 0,
-      "total": 10
-    },
-    "C6": {
-      "pass_rate": 0.0,
-      "passed": 0,
-      "total": 10
-    },
-    "C7": {
-      "pass_rate": 1.0,
-      "passed": 10,
-      "total": 10
-    }
-  },
-  "per_criterion_control": {
-    "C1": 0.0,
-    "C2": 0.0,
-    "C3": 0.8,
-    "C4": 0.2,
-    "C5": 0.0,
-    "C6": 0.0,
-    "C7": 1.0
-  },
-  "per_criterion_treatment": {
-    "C1": 0.0,
-    "C2": 0.2,
-    "C3": 0.8,
-    "C4": 0.4,
-    "C5": 0.0,
-    "C6": 0.0,
-    "C7": 1.0
-  },
-  "ceiling_criteria": [
-    "C7"
-  ],
-  "floor_criteria": [
-    "C1",
-    "C5",
-    "C6"
-  ],
-  "latency": {
-    "control_latencies_s": [
-      54,
-      480,
-      62,
-      45,
-      68
-    ],
-    "treatment_latencies_s": [
-      72,
-      556,
-      62,
-      68,
-      780
-    ],
-    "control_median_s": 62.0,
-    "treatment_median_s": 72.0
-  },
-  "notes": [
-    "C7 ceiling effect in both groups (10/10)",
-    "C1/C5/C6 floor in both groups (0/10): task harder than expected on ABI evidence, .kts tests, DEFUSE_QUERY struct inspection",
-    "n=5 per group is under-powered; non-significant result does not rule out a small true effect",
-    "Run 04 and runs 09/10 hit provider stream-decode errors; retried per invalid-run policy (Bedrock fallback)"
+  "conclusion": "No significant difference detected (Mann-Whitney U=15.0, p=0.6072). Both groups scored a median of 2/7 with a small negative effect size (r=-0.20). Three criteria showed floor effects (C1, C5, C6: 0/10 passes); one showed ceiling (C7: 10/10). n=5 per group is under-powered for small effects.",
+  "pre_acknowledged_limitations": [
+    "n=5 per group is under-powered",
+    "single LLM judge",
+    "bytes unrecoverable for exp3 (sessions.db lacks total_bytes column)"
   ],
   "token_analysis": {
-    "source": "goose sessions.db (accumulated_input_tokens, accumulated_output_tokens, accumulated_total_tokens)",
-    "added_at": "2026-04-19T00:00:00Z",
-    "note": "Token counts recovered from sessions.db accumulated_* columns during schema backfill (2026-04-19). bytes=null (sessions.db lacked total_bytes column).",
-    "input_tokens": {
-      "all_runs": {
-        "control": {
-          "values": [
-            943128,
-            725662,
-            732288,
-            893465,
-            1006233
-          ],
-          "mean": 860155,
-          "median": 893465,
-          "stdev": 126265
-        },
-        "treatment": {
-          "values": [
-            925854,
-            891666,
-            1062721,
-            1027185,
-            951678
-          ],
-          "mean": 971821,
-          "median": 951678,
-          "stdev": 71189
-        },
-        "diff_pct": 13.0
-      }
-    },
+    "source": "goose sessions.db (timestamp matching); added_at: 2026-04-20",
     "output_tokens": {
       "all_runs": {
         "control": {
           "values": [
-            8647,
-            9871,
-            8132,
-            8924,
-            7042
+            836,
+            110,
+            618,
+            139,
+            496
           ],
-          "mean": 8523,
-          "median": 8647,
-          "stdev": 1042
+          "mean": 439.8,
+          "median": 496,
+          "stdev": 312.7
         },
         "treatment": {
           "values": [
-            9733,
-            7199,
-            13452,
-            10233,
-            8928
+            845,
+            513,
+            745,
+            495,
+            529
           ],
-          "mean": 9909,
-          "median": 9733,
-          "stdev": 2291
+          "mean": 625.4,
+          "median": 529,
+          "stdev": 159.3
         },
-        "diff_pct": 16.3
+        "diff_pct": 42.2
+      }
+    },
+    "input_tokens": {
+      "all_runs": {
+        "control": {
+          "values": [
+            44197,
+            33781,
+            42197,
+            37254,
+            41384
+          ],
+          "mean": 39762.6,
+          "median": 41384,
+          "stdev": 4192.0
+        },
+        "treatment": {
+          "values": [
+            49092,
+            49707,
+            46432,
+            52467,
+            50548
+          ],
+          "mean": 49649.2,
+          "median": 49707,
+          "stdev": 2203.0
+        },
+        "diff_pct": 24.9
       }
     },
     "total_tokens": {
       "all_runs": {
         "control": {
           "values": [
-            951775,
-            735533,
-            740420,
-            902389,
-            1013275
+            45033,
+            33891,
+            42815,
+            37393,
+            41880
           ],
-          "mean": 868678,
-          "median": 902389,
-          "stdev": 125626
+          "mean": 40202.4,
+          "median": 41880,
+          "stdev": 4491.7
         },
         "treatment": {
           "values": [
-            935587,
-            898865,
-            1076173,
-            1037418,
-            960606
+            49937,
+            50220,
+            47177,
+            52962,
+            51077
           ],
-          "mean": 981730,
-          "median": 960606,
-          "stdev": 73251
+          "mean": 50274.6,
+          "median": 50220,
+          "stdev": 2096.3
         },
-        "diff_pct": 13.0
+        "diff_pct": 25.1
       }
     },
     "messages": {
       "all_runs": {
         "control": {
           "values": [
-            86,
-            64,
-            65,
-            82,
-            70
+            0,
+            12,
+            18,
+            12,
+            20
           ],
-          "mean": 73,
-          "median": 70
+          "mean": 12.4,
+          "median": 12
         },
         "treatment": {
           "values": [
-            82,
-            54,
-            86,
-            82,
-            60
+            12,
+            18,
+            8,
+            15,
+            12
           ],
-          "mean": 73,
-          "median": 82
+          "mean": 13,
+          "median": 12
         },
-        "diff_pct": -0.8
+        "diff_pct": 4.8
       }
     }
   },
-  "effect_size": {"metric": "rank_biserial_r", "value": -0.20, "interpretation": "small negative effect (treatment slightly worse)", "note": "r = 1 - 2U/(n1*n2) = 1 - 2*15.0/(5*5); Kerby (2014)"}
+  "criterion_pass_rates": {
+    "C1": {
+      "pass_rate": 0.0,
+      "passed": 0,
+      "total": 10,
+      "wilson_low": 0,
+      "wilson_high": 0.2775
+    },
+    "C2": {
+      "pass_rate": 0.1,
+      "passed": 1,
+      "total": 10,
+      "wilson_low": 0.0179,
+      "wilson_high": 0.4042
+    },
+    "C3": {
+      "pass_rate": 0.8,
+      "passed": 8,
+      "total": 10,
+      "wilson_low": 0.4902,
+      "wilson_high": 0.9433
+    },
+    "C4": {
+      "pass_rate": 0.3,
+      "passed": 3,
+      "total": 10,
+      "wilson_low": 0.1078,
+      "wilson_high": 0.6032
+    },
+    "C5": {
+      "pass_rate": 0.0,
+      "passed": 0,
+      "total": 10,
+      "wilson_low": 0,
+      "wilson_high": 0.2775
+    },
+    "C6": {
+      "pass_rate": 0.0,
+      "passed": 0,
+      "total": 10,
+      "wilson_low": 0,
+      "wilson_high": 0.2775
+    },
+    "C7": {
+      "pass_rate": 1.0,
+      "passed": 10,
+      "total": 10,
+      "wilson_low": 0.7225,
+      "wilson_high": 1
+    }
+  },
+  "effect_size": {
+    "metric": "rank_biserial_r",
+    "value": -0.2,
+    "interpretation": "small negative effect (treatment slightly worse)",
+    "note": "r = 1 - 2U/(n1*n2) = 1 - 2*15.0/(5*5); Kerby (2014)"
+  }
 }

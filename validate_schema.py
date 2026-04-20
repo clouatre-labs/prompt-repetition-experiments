@@ -17,7 +17,7 @@ import pathlib
 
 # Top-level fields that are allowed to be null/None.
 # Note: `bytes` is a run-level field only; it is not listed here.
-NULLABLE_FIELDS = {"data_note", "effect_size", "token_analysis"}
+NULLABLE_FIELDS = {"data_note", "effect_size", "token_analysis", "orchestrator_session"}
 
 def load_analysis(exp_path):
     with open(exp_path) as f:
@@ -46,7 +46,7 @@ def main():
     base = pathlib.Path('.').resolve()
     exp_paths = sorted((base / 'experiments').glob('*/analysis.json'))
     required_top = [
-        'experiment','title','issue','date','model','n_per_group','control_condition','treatment_condition',
+        'experiment','schema_version','title','issue','date','model','n_per_group','control_condition','treatment_condition',
         'rubric_version','goose_version','orchestrator_session','repo_head','experiment_start','experiment_end',
         'analyzed_at','runs','scores','statistical_test','conclusion','pre_acknowledged_limitations'
     ]

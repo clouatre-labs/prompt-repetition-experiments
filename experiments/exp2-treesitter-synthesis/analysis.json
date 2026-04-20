@@ -1,5 +1,6 @@
 {
   "experiment": "Experiment 2: Tree-sitter Evaluation",
+  "schema_version": "full-v1",
   "title": "Scout Instruction Repetition A/B Experiment (aptu#737)",
   "issue": "clouatre-labs/aptu#737",
   "model": "claude-haiku-4-5",
