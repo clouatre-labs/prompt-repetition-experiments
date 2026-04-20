@@ -300,6 +300,60 @@
       },
       "diff_pct": -13.5
     },
+    "input_tokens": {
+      "control": {
+        "values": [
+          852200,
+          646611,
+          695551,
+          817906,
+          642422
+        ],
+        "mean": 730938,
+        "median": 695551,
+        "stdev": 98064
+      },
+      "treatment": {
+        "values": [
+          667135,
+          746775,
+          819620,
+          612122,
+          800224
+        ],
+        "mean": 729175,
+        "median": 746775,
+        "stdev": 88159
+      },
+      "diff_pct": -0.2
+    },
+    "total_tokens": {
+      "control": {
+        "values": [
+          863768,
+          655204,
+          703993,
+          826924,
+          651922
+        ],
+        "mean": 740362,
+        "median": 703993,
+        "stdev": 98892
+      },
+      "treatment": {
+        "values": [
+          675585,
+          755144,
+          827985,
+          619614,
+          808325
+        ],
+        "mean": 737331,
+        "median": 755144,
+        "stdev": 88382
+      },
+      "diff_pct": -0.4
+    },
     "messages": {
       "control": {
         "values": [
@@ -386,9 +440,9 @@
   },
   "goose_version": "1.25.0",
   "effect_size": {
-    "metric": "rank_biserial_r",
-    "value": 0.00,
-    "interpretation": "no effect",
-    "note": "Kerby (2014) formula: r = 1 - 2U/(n1*n2)"
+    "metric": "cohens_d",
+    "value": 0,
+    "interpretation": "negligible",
+    "note": "Computed from mean quality scores (sum of binary criteria) between control and treatment groups"
   }
 }
