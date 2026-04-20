@@ -272,6 +272,8 @@
   ],
   "token_analysis": {
     "source": "goose sessions.db (timestamp matching); added_at: 2026-04-20",
+    "added_at": "2026-04-20T19:47:00Z",
+    "note": "token_analysis normalised 2026-04-20 to align key set with exp1/exp2; input_tokens and total_tokens sourced from sessions.db timestamp-matched at experiment time",
     "output_tokens": {
       "all_runs": {
         "control": {
