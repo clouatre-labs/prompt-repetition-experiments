@@ -308,6 +308,118 @@
         "diff_pct": -28.4
       }
     },
+    "input_tokens": {
+      "all_runs": {
+        "control": {
+          "values": [
+            482353,
+            1008475,
+            1036688,
+            1213952,
+            972091
+          ],
+          "mean": 942712,
+          "median": 1008475,
+          "stdev": 273643
+        },
+        "treatment": {
+          "values": [
+            708540,
+            873935,
+            568629,
+            990778,
+            482231
+          ],
+          "mean": 724823,
+          "median": 708540,
+          "stdev": 210047
+        },
+        "diff_pct": -23.1
+      },
+      "excluding_control_1": {
+        "note": "control-1 had 482353 input tokens (lowest, failed run), skewing control mean down",
+        "control": {
+          "values": [
+            1008475,
+            1036688,
+            1213952,
+            972091
+          ],
+          "mean": 1057802,
+          "median": 1022581.5,
+          "stdev": 107406
+        },
+        "treatment": {
+          "values": [
+            708540,
+            873935,
+            568629,
+            990778,
+            482231
+          ],
+          "mean": 724823,
+          "median": 708540,
+          "stdev": 210047
+        },
+        "diff_pct": -31.5
+      }
+    },
+    "total_tokens": {
+      "all_runs": {
+        "control": {
+          "values": [
+            485829,
+            1017641,
+            1046981,
+            1224158,
+            983947
+          ],
+          "mean": 951711,
+          "median": 1017641,
+          "stdev": 276467
+        },
+        "treatment": {
+          "values": [
+            716324,
+            881268,
+            575530,
+            1000389,
+            487772
+          ],
+          "mean": 732257,
+          "median": 716324,
+          "stdev": 211358
+        },
+        "diff_pct": -23.1
+      },
+      "excluding_control_1": {
+        "note": "control-1 had 485829 total tokens (lowest, failed run), skewing control mean down",
+        "control": {
+          "values": [
+            1017641,
+            1046981,
+            1224158,
+            983947
+          ],
+          "mean": 1068182,
+          "median": 1032311.0,
+          "stdev": 107126
+        },
+        "treatment": {
+          "values": [
+            716324,
+            881268,
+            575530,
+            1000389,
+            487772
+          ],
+          "mean": 732257,
+          "median": 716324,
+          "stdev": 211358
+        },
+        "diff_pct": -31.4
+      }
+    },
     "messages": {
       "all_runs": {
         "control": {
@@ -391,9 +503,9 @@
   "data_note": null,
   "goose_version": "1.25.0",
   "effect_size": {
-    "metric": "rank_biserial_r",
-    "value": 0.25,
-    "interpretation": "small positive effect",
-    "note": "Kerby (2014) formula: r = 1 - 2U/(n1*n2)"
+    "metric": "cohens_d",
+    "value": 0.7766,
+    "interpretation": "medium",
+    "note": "Computed from mean quality scores (sum of binary criteria) between control and treatment groups"
   }
 }
