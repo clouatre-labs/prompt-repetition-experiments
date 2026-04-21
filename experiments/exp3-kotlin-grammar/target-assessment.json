@@ -1,5 +1,5 @@
 {
-  "target_issue": "clouatre-labs/code-analyze-mcp#649",
+  "target_issue": "clouatre-labs/aptu-coder#649",
   "baseline_difficulty": {
     "answerable_from_issue_text": true,
     "evidence": "Issue #649 provides complete acceptance criteria with specific node kinds (function_declaration, class_declaration, object_declaration, companion object, delegation_specifiers) and exact tree-sitter grammar version (0.3.8). Issues #607-609 (C#, C++, JS) show no additional codebase research questions arose beyond the issue text."
@@ -33,9 +33,9 @@
   ],
   "kotlin_gotchas": {
     "crate_status": "tree-sitter-kotlin 0.3.8 from crates.io, published 2024-08-03, maintained by fwcd (High reputation, Benchmark 79.1). Crate exists and is stable.",
-    "abi_compat": "tree-sitter 0.26.6 is current in code-analyze-mcp. No breaking ABI changes documented between tree-sitter-kotlin 0.3.8 release (Aug 2024) and now. However, unverified without cargo build attempt. Prior removal in commit bc3c399 used tree-sitter-kotlin-ng 1.1.0 (different crate name); issue proposes fwcd/tree-sitter-kotlin (different source). ABI risk is LOW but must be verified.",
+    "abi_compat": "tree-sitter 0.26.6 is current in aptu-coder. No breaking ABI changes documented between tree-sitter-kotlin 0.3.8 release (Aug 2024) and now. However, unverified without cargo build attempt. Prior removal in commit bc3c399 used tree-sitter-kotlin-ng 1.1.0 (different crate name); issue proposes fwcd/tree-sitter-kotlin (different source). ABI risk is LOW but must be verified.",
     "alternatives": [
-      "tree-sitter-kotlin-ng (1.1.0) from crates.io: older, now unused in code-analyze-mcp after commit bc3c399; fwcd/tree-sitter-kotlin (0.3.8) is the recommended replacement per issue text",
+      "tree-sitter-kotlin-ng (1.1.0) from crates.io: older, now unused in aptu-coder after commit bc3c399; fwcd/tree-sitter-kotlin (0.3.8) is the recommended replacement per issue text",
       "No official Kotlin grammar from tree-sitter org; fwcd/tree-sitter-kotlin is community standard"
     ],
     "kts_support": "Issue text mentions .kts (script files) in acceptance criteria but does not specify tree-sitter-kotlin grammar support. Context7 docs show Kotlin class/function declarations but do not explicitly confirm .kts parsing. Only grammar inspection or test confirms whether .kts is a separate file_type node or same as .kt parsing."

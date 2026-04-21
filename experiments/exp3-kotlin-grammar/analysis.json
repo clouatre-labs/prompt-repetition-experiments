@@ -1,8 +1,8 @@
 {
   "schema_version": "full-v1",
   "experiment": "exp3-kotlin-grammar",
-  "title": "Experiment 3: Kotlin Grammar Support via Tree-sitter (code-analyze-mcp#649)",
-  "issue": "clouatre-labs/code-analyze-mcp#649",
+  "title": "Experiment 3: Kotlin Grammar Support via Tree-sitter (aptu-coder#649)",
+  "issue": "clouatre-labs/aptu-coder#649",
   "model": "claude-haiku-4-5",
   "date": "2026-04-18",
   "n_per_group": 5,
@@ -268,7 +268,8 @@
   "pre_acknowledged_limitations": [
     "n=5 per group is under-powered",
     "single LLM judge",
-    "bytes unrecoverable for exp3 (sessions.db lacks total_bytes column)"
+    "bytes unrecoverable for exp3 (sessions.db lacks total_bytes column)",
+    "Repository clouatre-labs/code-analyze-mcp was renamed to clouatre-labs/aptu-coder after the experiment concluded (see clouatre-labs/aptu-coder#667). References in raw/ artefacts reflect the name at time of experiment and have not been altered."
   ],
   "token_analysis": {
     "source": "goose sessions.db (timestamp matching); added_at: 2026-04-20",
