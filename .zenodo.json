@@ -4,8 +4,8 @@
   "upload_type": "dataset",
   "access_right": "open",
   "license": "Apache-2.0",
-  "version": "1.0.1",
-  "publication_date": "2026-03-16",
+  "version": "1.0.3",
+  "publication_date": "2026-04-21",
   "creators": [
     {
       "name": "Clouatre, Hugues",
@@ -19,7 +19,13 @@
       "resource_type": "publication-other"
     }
   ],
-  "keywords": ["ai-agents", "prompt-engineering", "llm-evaluation", "null-result", "supplementary-materials"],
+  "keywords": [
+    "ai-agents",
+    "prompt-engineering",
+    "llm-evaluation",
+    "null-result",
+    "supplementary-materials"
+  ],
   "custom": {
     "code:codeRepository": "https://github.com/clouatre-labs/prompt-repetition-experiments"
   }
