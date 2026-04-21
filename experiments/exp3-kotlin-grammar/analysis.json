@@ -269,7 +269,9 @@
     "n=5 per group is under-powered",
     "single LLM judge",
     "bytes unrecoverable for exp3 (sessions.db lacks total_bytes column)",
-    "Repository clouatre-labs/code-analyze-mcp was renamed to clouatre-labs/aptu-coder after the experiment concluded (see clouatre-labs/aptu-coder#667). References in raw/ artefacts reflect the name at time of experiment and have not been altered."
+    "Repository clouatre-labs/code-analyze-mcp was renamed to clouatre-labs/aptu-coder after the experiment concluded (see clouatre-labs/aptu-coder#667). References in raw/ artefacts reflect the name at time of experiment and have not been altered.",
+    "goose model_config_json had reasoning:true set globally for all exp3 sessions; zero thinking or redacted_thinking blocks were observed across 403 assistant responses and input+output==total for all 10 runs, confirming effective non-reasoning mode.",
+    "3 of 10 runs used AWS Bedrock routing (model global.anthropic.claude-haiku-4-5-20251001-v1:0) vs Anthropic direct (claude-haiku-4-5); same model weights, no observable difference in outputs or scores."
   ],
   "token_analysis": {
     "source": "goose sessions.db (timestamp matching); added_at: 2026-04-20",
