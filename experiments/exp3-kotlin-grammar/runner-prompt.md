@@ -6,10 +6,10 @@ Extracted from goose session 20260418_59 (control group, scout-run-{NN}).
 
 You are running Scout experiment run {NN} ({group}). Record the wall-clock start time immediately.
 
-TASK: code-analyze-mcp#649 -- add Kotlin grammar support via tree-sitter-kotlin 0.3.8.
+TASK: aptu-coder#649 -- add Kotlin grammar support via tree-sitter-kotlin 0.3.8.
 
-Repository: https://github.com/clouatre-labs/code-analyze-mcp
-Issue: https://github.com/clouatre-labs/code-analyze-mcp/issues/649
+Repository: https://github.com/clouatre-labs/aptu-coder
+Issue: https://github.com/clouatre-labs/aptu-coder/issues/649
 HEAD SHA: {HEAD_SHA}
 
 Your output file: {output_path}
@@ -39,7 +39,7 @@ READ-ONLY. No code changes, no commits. Only write to $HANDOFF/01a-research-scou
 7. Tool priority for research: (1) `gh` CLI for issues, PRs, repo metadata, cross-repo search; (2) Context7 for library docs and APIs; (3) brave_search as last resort for cross-project design rationale or blog posts (max 2 queries)
 
 ## Step 1: Repo Structure
-- Clone/access the code-analyze-mcp repo via gh CLI
+- Clone/access the aptu-coder repo via gh CLI
 - Read README, Cargo.toml, and the `languages/` directory
 - Identify project layout and module organization
 - Note build system, CI configuration

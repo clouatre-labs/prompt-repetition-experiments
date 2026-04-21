@@ -1,10 +1,10 @@
-# Experiment 3: Kotlin Grammar Support (code-analyze-mcp#649)
+# Experiment 3: Kotlin Grammar Support (aptu-coder#649)
 
 **Status: PREP ONLY — no runs started**
 
 ## Target
 
-[clouatre-labs/code-analyze-mcp#649](https://github.com/clouatre-labs/code-analyze-mcp/issues/649):
+[clouatre-labs/aptu-coder#649](https://github.com/clouatre-labs/aptu-coder/issues/649):
 add Kotlin grammar support via tree-sitter-kotlin 0.3.8.
 
 ## Pre-protocol difficulty analysis

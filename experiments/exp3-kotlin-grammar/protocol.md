@@ -6,7 +6,7 @@
 
 ## Context
 
-The target issue [clouatre-labs/code-analyze-mcp#649](https://github.com/clouatre-labs/code-analyze-mcp/issues/649) asks for adding Kotlin grammar support using `tree-sitter-kotlin` version 0.3.8. This requires code synthesis beyond the issue text: confirming language registration, ABI compatibility, node-kind handling, and test coverage for both `.kt` and `.kts` files. The prior experiment (exp2) showed ceiling effects when the rubric was too easy; here the rubric includes six synthesis criteria (C1-C6) and one verification criterion (C7).
+The target issue [clouatre-labs/aptu-coder#649](https://github.com/clouatre-labs/aptu-coder/issues/649) asks for adding Kotlin grammar support using `tree-sitter-kotlin` version 0.3.8. This requires code synthesis beyond the issue text: confirming language registration, ABI compatibility, node-kind handling, and test coverage for both `.kt` and `.kts` files. The prior experiment (exp2) showed ceiling effects when the rubric was too easy; here the rubric includes six synthesis criteria (C1-C6) and one verification criterion (C7).
 
 Paper: [Leviathan et al. (2025)](https://arxiv.org/abs/2502.07869) - repeating the input prompt verbatim improves non-reasoning LLM accuracy (47/70 wins, 0 losses across 7 models).
 
@@ -86,7 +86,7 @@ All scout-run JSON files, `label-map.json`, `scores.json`, and the latency log (
 
 ### Target
 
-- Repository: [clouatre-labs/code-analyze-mcp](https://github.com/clouatre-labs/code-analyze-mcp)
+- Repository: [clouatre-labs/aptu-coder](https://github.com/clouatre-labs/aptu-coder)
 - Issue: #649 - add Kotlin grammar support via `tree-sitter-kotlin` 0.3.8.
 - Model: `claude-haiku-4.5`, temperature 0.5.
 - Extensions: `developer`, `context7`, `brave_search`.
@@ -146,6 +146,6 @@ Scoring is binary per criterion (1 = met, 0 = not met). Half-credit is not permi
 - Leviathan, Y. et al., "Prompt Repetition Improves Non-Reasoning LLMs" (2025) - https://arxiv.org/abs/2502.07869
 - Experiment 1: [exp1-fastmcp-refactor](../exp1-fastmcp-refactor/protocol.md)
 - Experiment 2: [exp2-treesitter-synthesis](../exp2-treesitter-synthesis/protocol.md)
-- Target issue: https://github.com/clouatre-labs/code-analyze-mcp/issues/649
+- Target issue: https://github.com/clouatre-labs/aptu-coder/issues/649
 - Pilot gate: GitHub issue #26, #27
 - Rubric source: `experiments/exp3-kotlin-grammar/target-assessment.json`

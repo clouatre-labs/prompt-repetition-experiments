@@ -61,6 +61,6 @@ Scoring is binary per criterion (1 = met, 0 = not met). Half-credit is not permi
 - Leviathan, Y. et al., "Prompt Repetition Improves Non-Reasoning LLMs" (2025) - https://arxiv.org/abs/2502.07869
 - Experiment 1: [exp1-fastmcp-refactor](../exp1-fastmcp-refactor/protocol.md)
 - Experiment 2: [exp2-treesitter-synthesis](../exp2-treesitter-synthesis/protocol.md)
-- Target issue: https://github.com/clouatre-labs/code-analyze-mcp/issues/649
+- Target issue: https://github.com/clouatre-labs/aptu-coder/issues/649
 - Pilot gate: GitHub issue #26, #27
 - Rubric source: `experiments/exp3-kotlin-grammar/target-assessment.json`
