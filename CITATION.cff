@@ -9,12 +9,12 @@ authors:
 repository-code: https://github.com/clouatre-labs/prompt-repetition-experiments
 url: https://clouatre.ca/posts/prompt-repetition-agent-evaluation/
 license: Apache-2.0
-date-released: "2026-04-21"
+date-released: "2026-04-22"
 identifiers:
   - type: doi
-    value: 10.5281/zenodo.19056879
+    value: 10.5281/zenodo.19696593
     description: Zenodo DOI
-version: "1.0.3"
+version: "1.0.4"
 abstract: >
   28 agent sessions (4,179 messages) testing whether prompt repetition improves
   AI coding agent accuracy. Two pre-registered experiments showing a ceiling-accuracy
