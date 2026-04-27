@@ -89,8 +89,13 @@ Experiment data is organized into three experiments (exp1-fastmcp-refactor, exp2
 
 | Field | Type | Description | Source |
 |-------|------|-------------|--------|
+| `run_id` | string | Unique run identifier (e.g., "scout-control-1") | Original |
 | `group` | string | "control" or "treatment" | Original |
 | `goose_session_id` | string | Goose session ID (renamed from `session_id`) | Original |
+| `started_at` | string | Session start time (ISO 8601, e.g., "2026-02-20T21:14:39Z") | latency-log.jsonl / efficiency.json |
+| `finished_at` | string | Session end time (ISO 8601, e.g., "2026-02-20T21:16:53Z") | latency-log.jsonl / efficiency.json |
+| `latency_seconds` | integer | Wall-clock duration of the scout run in seconds | latency-log.jsonl / efficiency.json |
+| `message_count` | integer | Total messages in the goose session (from sessions.db) | sessions.db / efficiency.json |
 | `messages` | integer | Total messages in session | Original or Backfilled |
 | `input_tokens` | integer | Total input tokens | Original |
 | `output_tokens` | integer | Total output tokens | Original |
@@ -99,6 +104,8 @@ Experiment data is organized into three experiments (exp1-fastmcp-refactor, exp2
 | `wall_clock_seconds` | integer | Elapsed time in seconds (renamed from `wall_seconds`) | Original or Backfilled |
 | `note` | string or null | Optional run notes | Original |
 | `scores` | object | Criterion scores (C1, C2, ..., CN) as integers | Backfilled |
+
+**Schema normalization note**: As of this PR, `latency_seconds`, `message_count`, and `goose_session_id` are present in all experiments' session files, providing consistent provenance tracking across all three experimental runs.
 
 **Scores object** (within run record):
 

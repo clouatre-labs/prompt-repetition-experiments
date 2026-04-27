@@ -1,4 +1,11 @@
 {
+  "run_id": "scout-control-5",
+  "group": "control",
+  "started_at": "2026-02-20T21:15:39Z",
+  "finished_at": "2026-02-20T21:18:04Z",
+  "latency_seconds": 145,
+  "message_count": 196,
+  "goose_session_id": "20260220_35",
   "session_id": "control-5",
   "lens": "scout",
   "relevant_files": [

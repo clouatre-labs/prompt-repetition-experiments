@@ -20,7 +20,7 @@
     "scout-run-01": {
       "group": "control",
       "goose_session_id": "20260418_80",
-      "messages": 0,
+      "messages": 86,
       "input_tokens": 44197,
       "output_tokens": 836,
       "total_tokens": 45033,
@@ -40,7 +40,7 @@
     "scout-run-02": {
       "group": "treatment",
       "goose_session_id": "20260418_81",
-      "messages": 12,
+      "messages": 82,
       "input_tokens": 49092,
       "output_tokens": 845,
       "total_tokens": 49937,
@@ -59,8 +59,8 @@
     },
     "scout-run-03": {
       "group": "control",
-      "goose_session_id": "20260418_83",
-      "messages": 12,
+      "goose_session_id": "20260418_82",
+      "messages": 64,
       "input_tokens": 33781,
       "output_tokens": 110,
       "total_tokens": 33891,
@@ -80,7 +80,7 @@
     "scout-run-04": {
       "group": "treatment",
       "goose_session_id": "20260418_90",
-      "messages": 18,
+      "messages": 54,
       "input_tokens": 49707,
       "output_tokens": 513,
       "total_tokens": 50220,
@@ -100,7 +100,7 @@
     "scout-run-05": {
       "group": "control",
       "goose_session_id": "20260418_84",
-      "messages": 18,
+      "messages": 65,
       "input_tokens": 42197,
       "output_tokens": 618,
       "total_tokens": 42815,
@@ -119,8 +119,8 @@
     },
     "scout-run-06": {
       "group": "treatment",
-      "goose_session_id": "20260418_89",
-      "messages": 8,
+      "goose_session_id": "20260418_87",
+      "messages": 86,
       "input_tokens": 46432,
       "output_tokens": 745,
       "total_tokens": 47177,
@@ -139,8 +139,8 @@
     },
     "scout-run-07": {
       "group": "control",
-      "goose_session_id": "20260418_86",
-      "messages": 12,
+      "goose_session_id": "20260418_89",
+      "messages": 82,
       "input_tokens": 37254,
       "output_tokens": 139,
       "total_tokens": 37393,
@@ -160,7 +160,7 @@
     "scout-run-08": {
       "group": "treatment",
       "goose_session_id": "20260418_93",
-      "messages": 15,
+      "messages": 82,
       "input_tokens": 52467,
       "output_tokens": 495,
       "total_tokens": 52962,
@@ -180,7 +180,7 @@
     "scout-run-09": {
       "group": "control",
       "goose_session_id": "20260418_99",
-      "messages": 20,
+      "messages": 70,
       "input_tokens": 41384,
       "output_tokens": 496,
       "total_tokens": 41880,
@@ -200,7 +200,7 @@
     "scout-run-10": {
       "group": "treatment",
       "goose_session_id": "20260418_100",
-      "messages": 12,
+      "messages": 60,
       "input_tokens": 50548,
       "output_tokens": 529,
       "total_tokens": 51077,
@@ -364,28 +364,42 @@
     "messages": {
       "all_runs": {
         "control": {
-          "values": [
-            0,
-            12,
-            18,
-            12,
-            20
+          "runs": [
+            "scout-run-01",
+            "scout-run-03",
+            "scout-run-05",
+            "scout-run-07",
+            "scout-run-09"
           ],
-          "mean": 12.4,
-          "median": 12
+          "values": [
+            86,
+            64,
+            65,
+            82,
+            70
+          ],
+          "mean": 73.4,
+          "median": 70
         },
         "treatment": {
-          "values": [
-            12,
-            18,
-            8,
-            15,
-            12
+          "runs": [
+            "scout-run-02",
+            "scout-run-04",
+            "scout-run-06",
+            "scout-run-08",
+            "scout-run-10"
           ],
-          "mean": 13,
-          "median": 12
+          "values": [
+            82,
+            54,
+            86,
+            82,
+            60
+          ],
+          "mean": 72.8,
+          "median": 82
         },
-        "diff_pct": 4.8
+        "diff_pct": -0.8
       }
     }
   },

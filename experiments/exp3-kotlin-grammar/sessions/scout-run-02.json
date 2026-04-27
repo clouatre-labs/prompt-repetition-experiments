@@ -1,0 +1,155 @@
+{
+  "run_id": "scout-run-02",
+  "group": "treatment",
+  "goose_session_id": "20260418_81",
+  "started_at": "2026-04-18T03:07:41Z",
+  "finished_at": "2026-04-18T03:08:53Z",
+  "latency_seconds": 133,
+  "message_count": 82,
+  "lens": "scout",
+  "relevant_files": [
+    {
+      "path": "crates/code-analyze-core/src/lang.rs",
+      "line_range": "1-60",
+      "role": "Extension-to-language mapping; EXTENSION_MAP const and language_for_extension() function; where .kt and .kts extensions must be registered"
+    },
+    {
+      "path": "crates/code-analyze-core/src/languages/mod.rs",
+      "line_range": "1-250",
+      "role": "Language registration hub; get_language_info() match statement and get_ts_language() function; where kotlin arm must be added with LanguageInfo struct"
+    },
+    {
+      "path": "crates/code-analyze-core/src/languages/java.rs",
+      "line_range": "1-100",
+      "role": "Reference implementation for JVM language; ELEMENT_QUERY, CALL_QUERY, REFERENCE_QUERY, IMPORT_QUERY patterns and extract_inheritance handler"
+    },
+    {
+      "path": "crates/code-analyze-core/src/languages/go.rs",
+      "line_range": "1-150",
+      "role": "Reference for extract_inheritance pattern and test structure; demonstrates node traversal and field_name lookups"
+    },
+    {
+      "path": "crates/code-analyze-core/Cargo.toml",
+      "line_range": "1-50",
+      "role": "Feature flag definitions and optional dependency declarations; where lang-kotlin feature and tree-sitter-kotlin dependency must be added"
+    },
+    {
+      "path": "Cargo.toml",
+      "line_range": "1-50",
+      "role": "Workspace dependencies; where tree-sitter-kotlin = 0.3.8 must be added to [workspace.dependencies]"
+    },
+    {
+      "path": "crates/code-analyze-core/tests/integration_tests.rs",
+      "line_range": "1-100",
+      "role": "Integration test patterns; demonstrates analyze_directory, analyze_file, and SemanticExtractor usage"
+    }
+  ],
+  "conventions": {
+    "commits": "Conventional commits (feat, fix, docs, refactor, test) with scope (lang); GPG-signed with -S flag; DCO sign-off with --signoff flag",
+    "testing": "AAA pattern (Arrange, Act, Assert); one happy path and one edge case per behavior; unit tests in module under #[cfg(all(test, feature = \"lang-kotlin\"))]; parse_X() helper function for parser setup",
+    "linting": "cargo clippy -- -D warnings; cargo fmt --check; cognitive complexity threshold 30 (clippy.toml)",
+    "error_handling": "thiserror crate for ParserError enum; Result<T, ParserError> return types; no unwrap() in production code paths",
+    "imports": "Feature-gated module declarations (#[cfg(feature = \"lang-kotlin\")] pub mod kotlin;); lazy-initialized QUERY_CACHE with LazyLock; tree-sitter imports scoped to language module"
+  },
+  "patterns": [
+    "ELEMENT_QUERY: matches function_declaration, class_declaration, interface_declaration, enum_class_declaration with @function/@class captures; data class detected via modifiers child",
+    "CALL_QUERY: matches call_expression nodes with @call capture; navigation_expression pattern for method calls",
+    "REFERENCE_QUERY: matches type_identifier nodes with @type_ref capture; used for symbol reference tracking",
+    "IMPORT_QUERY: matches import_header nodes with @import_path capture; wrapped in import_list parent",
+    "DEFUSE_QUERY: optional; matches assignment, variable declaration, and identifier usage with @write/@read captures (pattern from Python/Java)",
+    "extract_inheritance handler: walks delegation_specifiers children; distinguishes superclass_type_with_constructor (parens) from user_type (interfaces); returns Vec<String>",
+    "Feature gating: #[cfg(feature = \"lang-kotlin\")] on module declaration, match arm, and optional dependency; allows compile-time language selection",
+    "Test structure: parse_kotlin(source) helper sets language and parses; tree.root_node() traversal with node.kind() and child_by_field_name(); SemanticExtractor::extract() for integration"
+  ],
+  "related_issues": [
+    {
+      "number": 649,
+      "title": "feat(lang): add Kotlin grammar support",
+      "relevance": "Primary issue defining all acceptance criteria, node types, query structure, and test requirements; specifies tree-sitter-kotlin 0.3.8, lang-kotlin feature flag, .kt/.kts extensions"
+    }
+  ],
+  "constraints": [
+    "tree-sitter-kotlin 0.3.8 is the required version (specified in issue); must match workspace dependency version",
+    "lang-kotlin feature flag naming is non-negotiable (consistency with lang-rust, lang-python, etc.)",
+    ".kt and .kts extensions must both be registered in EXTENSION_MAP (Kotlin source and script files)",
+    "Kotlin has no impl blocks; impl_query and impl_trait_query must be set to None in LanguageInfo",
+    "No custom handlers needed; extract_function_name, find_method_for_receiver, find_receiver_type must be None",
+    "DEFUSE_QUERY is optional per issue; can be omitted or included depending on approach",
+    "All tests must pass: cargo test --features lang-kotlin; cargo clippy -- -D warnings",
+    "SPDX Apache-2.0 header required on kotlin.rs file",
+    "Conventional commit format required: feat(lang): add Kotlin grammar support via tree-sitter-kotlin 0.3.8"
+  ],
+  "test_coverage": "Existing test coverage includes unit tests per language (parse_X helper, ELEMENT_QUERY verification, CALL_QUERY verification, extract_inheritance verification) and integration tests (analyze_directory, analyze_file, symbol extraction). For Kotlin, tests must verify: free function definition, method inside class, function call extraction, class declaration, data class declaration, interface declaration, enum class declaration, import statement parsing, single inheritance (superclass with parens), multiple interface conformance (comma-separated, no parens), mixed inheritance and interface delegation. All tests run under #[cfg(all(test, feature = \"lang-kotlin\"))] and use SemanticExtractor::extract(source, \"kotlin\", None) for integration.",
+  "library_findings": [
+    {
+      "library": "tree-sitter-kotlin",
+      "version": "0.3.8",
+      "relevant_api": "tree_sitter_kotlin::LANGUAGE (Language object); node types: function_declaration, class_declaration, interface_declaration, enum_class_declaration, object_declaration, call_expression, import_header, delegation_specifiers; field names: name, modifiers, type_identifier, delegation_specifiers",
+      "notes": "fwcd/tree-sitter-kotlin has High reputation (576 code snippets, benchmark 79.1); follows standard tree-sitter conventions; Kotlin grammar structure mirrors Java (JVM language, similar AST); delegation_specifiers child nodes distinguish superclass (superclass_type_with_constructor with parens) from interfaces (user_type, no parens); data class and companion object detected via modifiers child; no separate impl blocks (inline delegation only)"
+    },
+    {
+      "library": "tree-sitter",
+      "version": "0.26.6",
+      "relevant_api": "Parser::new(), Parser::set_language(), Parser::parse(); Query::new(language, query_string); QueryCursor for query execution; Node API: kind(), child_by_field_name(), named_child(), start_byte(), end_byte()",
+      "notes": "Workspace dependency at 0.26.6; stable API; query syntax identical across all languages; LazyLock<HashMap<&str, CompiledQueries>> pattern for caching compiled queries per language; all language modules use identical parser infrastructure"
+    }
+  ],
+  "approaches": [
+    {
+      "name": "Minimal Approach: Core Queries Only (No DEFUSE_QUERY)",
+      "description": "Add Kotlin support with ELEMENT_QUERY, CALL_QUERY, REFERENCE_QUERY, IMPORT_QUERY, and extract_inheritance handler. Omit DEFUSE_QUERY entirely. This is the fastest path to compliance with issue acceptance criteria. Queries follow Java pattern closely (JVM language, similar AST structure). extract_inheritance walks delegation_specifiers to collect superclass and interface names. No custom handlers needed (set to None). Tests verify function/class/interface/enum extraction, call detection, import parsing, and inheritance parsing.",
+      "pros": [
+        "Fastest implementation; minimal code surface",
+        "Fully compliant with issue acceptance criteria (DEFUSE_QUERY is optional)",
+        "Leverages existing Java query patterns; lower risk of query syntax errors",
+        "Tests are straightforward: parse_kotlin() helper, tree traversal, SemanticExtractor integration",
+        "Matches Fortran precedent (no DEFUSE_QUERY); reduces maintenance burden"
+      ],
+      "cons": [
+        "No def-use tracking for Kotlin code; limits analysis depth for variable assignment tracking",
+        "Inconsistent with Python, Java, Go, C++, C#, JavaScript (all have DEFUSE_QUERY); may be perceived as incomplete",
+        "Future enhancement would require adding DEFUSE_QUERY in separate PR"
+      ],
+      "complexity": "simple",
+      "files_touched": 5
+    },
+    {
+      "name": "Complete Approach: All Queries Including DEFUSE_QUERY",
+      "description": "Add Kotlin support with ELEMENT_QUERY, CALL_QUERY, REFERENCE_QUERY, IMPORT_QUERY, DEFUSE_QUERY, and extract_inheritance handler. DEFUSE_QUERY matches assignment expressions, variable declarations, and identifier usage (write/read sites). Follows Python/Java pattern for def-use tracking. All handlers set to None. Tests include def-use site verification in addition to element/call/import tests.",
+      "pros": [
+        "Consistent with 9 of 12 existing languages (Python, Java, Go, C++, C#, JavaScript, TypeScript, TSX, Fortran has no DEFUSE_QUERY)",
+        "Enables variable assignment tracking and data-flow analysis for Kotlin code",
+        "Comprehensive symbol analysis; future-proofs against analysis feature requests",
+        "DEFUSE_QUERY pattern is well-established; low risk of query syntax errors",
+        "Tests are more thorough; verify write sites (assignment, variable declaration) and read sites (usage)"
+      ],
+      "cons": [
+        "Slightly more complex DEFUSE_QUERY design; must map Kotlin assignment syntax correctly",
+        "Additional test cases for def-use sites; longer test suite",
+        "Kotlin assignment syntax differs from Java (val, var, destructuring); query must account for property_declaration and variable_declaration nodes"
+      ],
+      "complexity": "medium",
+      "files_touched": 5
+    },
+    {
+      "name": "Extended Approach: Full Handlers Plus DEFUSE_QUERY",
+      "description": "Add Kotlin support with all queries (ELEMENT_QUERY, CALL_QUERY, REFERENCE_QUERY, IMPORT_QUERY, DEFUSE_QUERY) plus custom handlers for extract_function_name, find_method_for_receiver, find_receiver_type. These handlers enable advanced call-graph analysis and method resolution. Handlers extract function names from function_declaration nodes, find method names for receiver types, and resolve receiver types from extension function syntax. Tests verify handler behavior in addition to query verification.",
+      "pros": [
+        "Maximum analysis capability; enables call-graph traversal and method-receiver resolution",
+        "Supports Kotlin extension functions (receiver_type? field in function_declaration)",
+        "Future-proofs against advanced analysis features (call-graph, method resolution)",
+        "Demonstrates deep understanding of Kotlin AST structure"
+      ],
+      "cons": [
+        "Highest implementation complexity; requires custom handler logic for Kotlin-specific syntax",
+        "Kotlin extension functions have different semantics than Java/Go; handlers must account for receiver_type field",
+        "Additional test cases for handler behavior; longer test suite and more edge cases",
+        "Issue does not require handlers (sets to None); over-specification risks introducing bugs",
+        "Maintenance burden: handlers must be updated if tree-sitter-kotlin grammar changes"
+      ],
+      "complexity": "complex",
+      "files_touched": 6
+    }
+  ],
+  "recommendation": "Approach 2 (Complete Approach: All Queries Including DEFUSE_QUERY). This balances compliance, consistency, and future-proofing. DEFUSE_QUERY is optional per the issue, but adding it now ensures Kotlin analysis is consistent with 9 of 12 existing languages and enables variable assignment tracking without additional future work. The Kotlin DEFUSE_QUERY pattern is straightforward (assignment_expression, variable_declaration, property_declaration, identifier usage) and follows the Python/Java precedent closely. Approach 1 is acceptable if speed is critical, but Approach 2 adds minimal complexity (one additional query string, 2-3 test cases) and significantly improves analysis capability. Approach 3 is over-specified; the issue explicitly sets handlers to None, and custom handlers introduce maintenance risk without clear benefit for symbol extraction use cases."
+}

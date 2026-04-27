@@ -1,4 +1,11 @@
 {
+  "run_id": "scout-treatment-5",
+  "group": "treatment",
+  "started_at": "2026-02-20T21:19:52Z",
+  "finished_at": "2026-02-20T21:20:58Z",
+  "latency_seconds": 66,
+  "message_count": 82,
+  "goose_session_id": "20260220_41",
   "session_id": "treatment-5",
   "lens": "scout",
   "summary": "Issue #222 requests refactoring the anti-pattern use of id(ctx.lifespan_context) as a session identifier to the proper FastMCP 3.0 API (ctx.set_state/ctx.get_state with UUID). The anti-pattern appears only in persistence.py line 63 and affects session ID metadata tracking. The refactor is straightforward but requires careful handling of async context initialization and backward compatibility.",

@@ -1,0 +1,11 @@
+{
+  "run_id": "scout-control-1",
+  "group": "control",
+  "valid": false,
+  "started_at": "2026-02-20T21:14:39Z",
+  "finished_at": "2026-02-20T21:15:28Z",
+  "latency_seconds": 49,
+  "message_count": 93,
+  "goose_session_id": "20260220_31",
+  "note": "drift failure; no output file produced at 93 messages"
+}

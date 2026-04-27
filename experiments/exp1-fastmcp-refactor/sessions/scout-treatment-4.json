@@ -1,4 +1,11 @@
 {
+  "run_id": "scout-treatment-4",
+  "group": "treatment",
+  "started_at": "2026-02-20T21:19:34Z",
+  "finished_at": "2026-02-20T21:21:36Z",
+  "latency_seconds": 122,
+  "message_count": 198,
+  "goose_session_id": "20260220_40",
   "session_id": "treatment-4",
   "lens": "scout",
   "summary": "Issue #222 targets replacing memory address-based session IDs (id(ctx.lifespan_context)) with FastMCP 3.0's proper ctx.set_state()/ctx.get_state() API using UUIDs. Two files affected: persistence.py (1 session_id assignment + 2 history appends) and calculate.py (1 history append). The refactor maintains backward compatibility with optional ctx parameter and requires no test changes.",
