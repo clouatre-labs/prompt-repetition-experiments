@@ -1,0 +1,153 @@
+{
+  "run_id": "scout-run-04",
+  "group": "treatment",
+  "goose_session_id": "20260418_90",
+  "started_at": "2026-04-18T03:16:34Z",
+  "finished_at": "2026-04-18T03:26:10Z",
+  "latency_seconds": 115,
+  "message_count": 54,
+  "lens": "scout",
+  "relevant_files": [
+    {
+      "path": "crates/code-analyze-core/src/lang.rs",
+      "line_range": "1-70",
+      "role": "Extension map and language registration entry point; must add ('kt', 'kotlin') and ('kts', 'kotlin') entries"
+    },
+    {
+      "path": "crates/code-analyze-core/src/languages/mod.rs",
+      "line_range": "1-50",
+      "role": "Module declaration and LanguageInfo struct; must add mod kotlin; declaration and kotlin arm in get_language_info() and get_ts_language()"
+    },
+    {
+      "path": "crates/code-analyze-core/src/languages/java.rs",
+      "line_range": "1-40",
+      "role": "Reference template for query structure and DEFUSE_QUERY pattern"
+    },
+    {
+      "path": "crates/code-analyze-core/src/languages/python.rs",
+      "line_range": "40-80",
+      "role": "Reference for extract_inheritance implementation pattern"
+    },
+    {
+      "path": "crates/code-analyze-core/Cargo.toml",
+      "line_range": "1-70",
+      "role": "Feature flags and dependencies; must add lang-kotlin feature and tree-sitter-kotlin dependency"
+    },
+    {
+      "path": "Cargo.toml",
+      "line_range": "1-50",
+      "role": "Workspace dependencies; must add tree-sitter-kotlin = \"0.3.8\""
+    },
+    {
+      "path": "crates/code-analyze-core/src/languages/go.rs",
+      "line_range": "1-50",
+      "role": "Reference for find_method_for_receiver pattern (though not needed for Kotlin)"
+    }
+  ],
+  "conventions": {
+    "commits": "Conventional commits format; must be GPG signed with --signoff flag; DCO sign-off required",
+    "testing": "AAA (Arrange, Act, Assert) pattern; unit tests under #[cfg(all(test, feature = 'lang-kotlin'))]; one happy path and one edge case per behavior; tests in language module file, not separate file",
+    "linting": "cargo clippy -- -D warnings; cargo fmt --check; no unwrap() in production paths",
+    "error_handling": "Option/Result return types; thiserror for library errors; graceful None returns for missing AST fields",
+    "imports": "All language features gated behind #[cfg(feature = 'lang-kotlin')] conditional compilation"
+  },
+  "patterns": [
+    "Language module structure: pub const ELEMENT_QUERY/CALL_QUERY/REFERENCE_QUERY/IMPORT_QUERY strings; optional DEFUSE_QUERY; extract_* handler functions; unit tests under feature gate",
+    "Extension registration: EXTENSION_MAP entries with feature gate; entry in supported_languages() slice with feature gate",
+    "LanguageInfo arm: get_language_info() and get_ts_language() match arms with feature gate; LanguageInfo struct with language, element_query, call_query, reference_query, import_query, and optional fields",
+    "Inheritance extraction: walk child nodes of delegation_specifiers field; check for constructor call syntax to distinguish superclass from interfaces",
+    "Query patterns: S-expression tree-sitter queries using node kinds like (class_declaration), (function_declaration), (call_expression); capture with @name syntax",
+    "Test helper: parse_<lang>() function using Parser::new(), set_language(), parse(); query execution with QueryCursor; capture iteration pattern"
+  ],
+  "related_issues": [
+    {
+      "number": 649,
+      "title": "feat(lang): add Kotlin grammar support",
+      "relevance": "Primary issue defining acceptance criteria, required queries, node kinds, inheritance extraction logic, and test cases"
+    }
+  ],
+  "constraints": [
+    "tree-sitter-kotlin version must be 0.3.8 (specified in issue); fwcd/tree-sitter-kotlin parser source",
+    "No impl blocks in Kotlin; inheritance is inline with delegation_specifiers; impl_query and impl_trait_query must be None",
+    "Extension handling: .kt and .kts extensions both map to 'kotlin' language identifier",
+    "Feature flag consistency: lang-kotlin must be in default features in crates/code-analyze-core/Cargo.toml for parity with other languages",
+    "All tree-sitter dependencies must be in workspace [dependencies] section (not repeated per crate)",
+    "No DEFUSE_QUERY required in issue acceptance criteria (unlike Java, Python); decision to include or omit is implementation choice",
+    "No extract_function_name, find_method_for_receiver, find_receiver_type handlers required (set to None per issue)"
+  ],
+  "test_coverage": "Existing test coverage for language registration: lang.rs has test_language_for_extension_happy_path and test_language_for_extension_edge_case; languages/mod.rs has test_get_language_info_known/unknown and test_get_ts_language_known/unknown. Required new tests for kotlin.rs: function/method extraction, class declaration, data class, interface, enum, import parsing, single inheritance, multiple interfaces, mixed inheritance. Integration tests in integration_tests.rs verify analyze_directory works for supported languages.",
+  "library_findings": [
+    {
+      "library": "tree-sitter-kotlin",
+      "version": "0.3.8",
+      "relevant_api": "tree_sitter_kotlin::LANGUAGE (Language object); node kinds: function_declaration, class_declaration, interface_declaration, object_declaration, enum_class_declaration, delegation_specifiers, call_expression, import_header, import_list",
+      "notes": "Kotlin AST structure shares JVM patterns with Java. Delegation specifiers field contains inheritance info (superclass with constructor parens vs interfaces without). Data classes use modifiers field with 'data' keyword. Companion objects use object_declaration with modifiers containing 'companion'. S-expression queries work identically to Java/Python patterns."
+    },
+    {
+      "library": "tree-sitter",
+      "version": "0.26.6",
+      "relevant_api": "Language, Parser, Query, QueryCursor, StreamingIterator, Node (child_by_field_name, start_byte, end_byte, kind); query S-expression syntax with capture names",
+      "notes": "Core tree-sitter Rust API used uniformly across all language modules. Query syntax uses @capture names to mark AST nodes for extraction. Parser::parse() returns Tree; QueryCursor::matches() iterates over Match objects containing captures."
+    }
+  ],
+  "approaches": [
+    {
+      "name": "Approach A: Minimal Kotlin support without DEFUSE_QUERY",
+      "description": "Add kotlin.rs with ELEMENT_QUERY (function_declaration, class_declaration, interface_declaration, object_declaration, enum_class_declaration, data class modifiers), CALL_QUERY (call_expression), REFERENCE_QUERY (user_type, type_identifier), IMPORT_QUERY (import_header). Extract_inheritance walks delegation_specifiers to separate superclass from interfaces. No DEFUSE_QUERY. Update lang.rs with .kt/.kts entries. Update languages/mod.rs with mod kotlin, get_language_info arm, get_ts_language arm. Add feature flag lang-kotlin with tree-sitter-kotlin 0.3.8 dependency. Include unit tests for all node kinds. Rationale: Issue does not require DEFUSE_QUERY; reduces complexity and test surface area while meeting core symbol extraction requirements.",
+      "pros": [
+        "Minimal, focused scope reduces implementation risk",
+        "No DEFUSE_QUERY means no write/read site extraction tests",
+        "Matches issue acceptance criteria exactly (DEFUSE_QUERY not listed as required)",
+        "Simpler inheritance logic (only delegation_specifiers, not def-use sites)",
+        "Faster implementation"
+      ],
+      "cons": [
+        "No variable definition/use site tracking (def-use analysis not available for Kotlin)",
+        "Inconsistent with Java, Python, TypeScript (all have DEFUSE_QUERY)",
+        "May limit future use cases requiring write/read site analysis",
+        "Issue notes suggest DEFUSE_QUERY is optional for some languages (e.g., Fortran has None)"
+      ],
+      "complexity": "simple",
+      "files_touched": 5
+    },
+    {
+      "name": "Approach B: Full Kotlin support with DEFUSE_QUERY",
+      "description": "Same as Approach A, but add DEFUSE_QUERY: (local_variable_declaration declarator: (variable_declarator name: (identifier) @write.local)) (assignment_expression left: (identifier) @write.assign) (update_expression (identifier) @writeread.update) (identifier) @read.usage. Model after Java/Python def-use patterns. Requires additional unit tests for write/read sites. Rationale: Provides feature parity with other JVM-based languages (Java) and modern languages (Python, TypeScript); enables full symbol analysis including variable tracking; future-proofs for more sophisticated analysis.",
+      "pros": [
+        "Feature parity with Java, Python, TypeScript, C#",
+        "Enables variable definition and use site extraction",
+        "More comprehensive symbol analysis",
+        "Future-proof for advanced use cases (data flow analysis, variable tracking)",
+        "Consistent with ecosystem expectations"
+      ],
+      "cons": [
+        "Added complexity: must test write/read site extraction",
+        "Requires validation of Kotlin AST node kinds for def-use (local_variable_declaration, assignment_expression, update_expression)",
+        "More test cases needed",
+        "Longer implementation time"
+      ],
+      "complexity": "medium",
+      "files_touched": 5
+    },
+    {
+      "name": "Approach C: Phased implementation (minimal first, DEFUSE_QUERY in follow-up PR)",
+      "description": "Start with Approach A (minimal, no DEFUSE_QUERY); merge PR and verify integration. Follow up with separate PR adding DEFUSE_QUERY to kotlin.rs with dedicated def-use test suite. Rationale: Reduces risk of initial implementation; allows community feedback on core feature before committing to full feature parity; splits work across iterations.",
+      "pros": [
+        "Lower initial risk; easier to review minimal PR",
+        "Allows time for tree-sitter-kotlin API stability assessment",
+        "Can gather user feedback on Kotlin support before adding complexity",
+        "Easier to fix issues in two smaller PRs vs one large PR",
+        "Complies with PR atomicity principle (each PR in working state)"
+      ],
+      "cons": [
+        "Requires two PRs instead of one",
+        "Delays full feature availability to users",
+        "Second PR may need rework if AST assumptions change",
+        "Issue acceptance criteria do not list DEFUSE_QUERY as required; may not justify a follow-up"
+      ],
+      "complexity": "simple",
+      "files_touched": 5
+    }
+  ],
+  "recommendation": "Approach B (full Kotlin support with DEFUSE_QUERY). Justification: (1) Issue context shows Kotlin is JVM-first language similar to Java; Java has full DEFUSE_QUERY support. (2) Tree-sitter-kotlin 0.3.8 is stable release from fwcd (High reputation source). (3) Kotlin AST node kinds for def-use (local_variable_declaration, assignment_expression) are well-documented in tree-sitter-kotlin grammar. (4) Feature parity with peer languages (Java, Python, TypeScript, C#) justifies scope expansion over minimal Approach A. (5) Provides comprehensive symbol analysis without significant additional complexity (tests are straightforward). (6) Issue does not explicitly forbid DEFUSE_QUERY; omitting it would be inconsistent with architectural patterns in codebase. Approach A is viable fallback if Kotlin AST validation surfaces unexpected node kind differences."
+}

@@ -1,4 +1,7 @@
 {
+  "latency_seconds": 116,
+  "message_count": 137,
+  "goose_session_id": "20260220_56",
   "run_id": "scout-run-09",
   "group": "control",
   "started_at": "2026-02-20T22:20:06Z",

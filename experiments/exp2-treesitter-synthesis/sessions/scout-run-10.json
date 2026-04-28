@@ -1,4 +1,7 @@
 {
+  "latency_seconds": 109,
+  "message_count": 158,
+  "goose_session_id": "20260220_57",
   "run_id": "scout-run-10",
   "group": "treatment",
   "started_at": "2026-02-20T22:20:23Z",
@@ -65,7 +68,7 @@
     "Regex patterns operate line-by-line; cannot track data flow across lines",
     "Each language requires its own tree-sitter grammar crate (rust, python, javascript, java, etc.)",
     "Binary size increases with each language grammar included as dependency",
-    "No data-flow analysis in tree-sitter alone; custom logic needed for taint tracking (source→sink correlation)",
+    "No data-flow analysis in tree-sitter alone; custom logic needed for taint tracking (source\u2192sink correlation)",
     "14 patterns need manual conversion from regex syntax to tree-sitter query syntax (Scheme-like DSL)"
   ],
   "test_coverage": "Integration tests in security_integration.rs cover: hardcoded-api-key, hardcoded-password, sql-injection, command-injection, weak-crypto (md5, sha1), path-traversal, xss-innerhtml, insecure-random. Unit tests in patterns.rs verify pattern matching, file extension filtering, line number accuracy, no false positives on safe code. Known limitation test documents multi-line vulnerability non-detection.",

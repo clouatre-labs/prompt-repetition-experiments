@@ -1,4 +1,7 @@
 {
+  "latency_seconds": 112,
+  "message_count": 149,
+  "goose_session_id": "20260220_53",
   "run_id": "scout-run-06",
   "group": "treatment",
   "started_at": "2026-02-20T22:19:30Z",
@@ -6,14 +9,46 @@
   "session_id": "exp229",
   "lens": "scout",
   "relevant_files": [
-    {"path": "crates/aptu-core/src/security/patterns.rs", "line_range": "1-382", "role": "Pattern loading and regex-based scanning engine"},
-    {"path": "crates/aptu-core/src/security/scanner.rs", "line_range": "1-250", "role": "Main SecurityScanner orchestration and diff parsing"},
-    {"path": "crates/aptu-core/src/security/validator.rs", "line_range": "1-382", "role": "LLM-based validation to reduce false positives"},
-    {"path": "crates/aptu-core/src/security/detection.rs", "line_range": "1-150", "role": "Heuristics to determine when security scanning is needed"},
-    {"path": "crates/aptu-core/src/security/types.rs", "line_range": "1-200", "role": "Type definitions for findings, patterns, severity"},
-    {"path": "crates/aptu-core/tests/security_integration.rs", "line_range": "1-120", "role": "Integration tests with fixtures for vulnerability detection"},
-    {"path": "crates/aptu-core/benches/security_scan.rs", "line_range": "1-115", "role": "Performance benchmarks for scanner"},
-    {"path": "Cargo.toml", "line_range": "1-60", "role": "Workspace dependencies and Rust version (1.92.0)"}
+    {
+      "path": "crates/aptu-core/src/security/patterns.rs",
+      "line_range": "1-382",
+      "role": "Pattern loading and regex-based scanning engine"
+    },
+    {
+      "path": "crates/aptu-core/src/security/scanner.rs",
+      "line_range": "1-250",
+      "role": "Main SecurityScanner orchestration and diff parsing"
+    },
+    {
+      "path": "crates/aptu-core/src/security/validator.rs",
+      "line_range": "1-382",
+      "role": "LLM-based validation to reduce false positives"
+    },
+    {
+      "path": "crates/aptu-core/src/security/detection.rs",
+      "line_range": "1-150",
+      "role": "Heuristics to determine when security scanning is needed"
+    },
+    {
+      "path": "crates/aptu-core/src/security/types.rs",
+      "line_range": "1-200",
+      "role": "Type definitions for findings, patterns, severity"
+    },
+    {
+      "path": "crates/aptu-core/tests/security_integration.rs",
+      "line_range": "1-120",
+      "role": "Integration tests with fixtures for vulnerability detection"
+    },
+    {
+      "path": "crates/aptu-core/benches/security_scan.rs",
+      "line_range": "1-115",
+      "role": "Performance benchmarks for scanner"
+    },
+    {
+      "path": "Cargo.toml",
+      "line_range": "1-60",
+      "role": "Workspace dependencies and Rust version (1.92.0)"
+    }
   ],
   "conventions": {
     "commits": "Conventional commits (chore, fix, feat, test, etc.). All commits must be GPG signed with DCO sign-off. Checked HEAD=95033ea (chore: dependency update). No evidence of co-author commits.",
@@ -30,9 +65,21 @@
     "Heuristic-based skip detection (labels, description keywords, sensitive file paths)"
   ],
   "related_issues": [
-    {"number": 735, "title": "test(security): add negative test documenting multi-line detection limitation", "relevance": "Explicitly documents known regex limitation; closed by PR #736. Multi-line vulnerabilities (source/sink on different lines) cannot be detected."},
-    {"number": 736, "title": "PR: Implement multi-line vulnerability detection test", "relevance": "Adds test_multi_line_vulnerability_not_detected() to document architectural limitation and justify need for AST-based solution."},
-    {"number": 737, "title": "Evaluate tree-sitter for AST-based vulnerability detection", "relevance": "Primary issue. Proposes phased migration: spike on Rust SQL injection detection, then evaluate multi-language grammars. Scope ~500-800 LOC, 14 patterns to convert."}
+    {
+      "number": 735,
+      "title": "test(security): add negative test documenting multi-line detection limitation",
+      "relevance": "Explicitly documents known regex limitation; closed by PR #736. Multi-line vulnerabilities (source/sink on different lines) cannot be detected."
+    },
+    {
+      "number": 736,
+      "title": "PR: Implement multi-line vulnerability detection test",
+      "relevance": "Adds test_multi_line_vulnerability_not_detected() to document architectural limitation and justify need for AST-based solution."
+    },
+    {
+      "number": 737,
+      "title": "Evaluate tree-sitter for AST-based vulnerability detection",
+      "relevance": "Primary issue. Proposes phased migration: spike on Rust SQL injection detection, then evaluate multi-language grammars. Scope ~500-800 LOC, 14 patterns to convert."
+    }
   ],
   "constraints": [
     "Regex-based scanner operates strictly line-by-line; cannot detect vulnerabilities where source and sink are on different lines",

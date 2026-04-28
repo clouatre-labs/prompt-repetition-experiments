@@ -1,0 +1,165 @@
+{
+  "run_id": "scout-run-03",
+  "group": "control",
+  "goose_session_id": "20260418_82",
+  "started_at": "2026-04-18T03:07:42Z",
+  "finished_at": "2026-04-18T03:15:30Z",
+  "latency_seconds": 117,
+  "message_count": 64,
+  "lens": "scout",
+  "relevant_files": [
+    {
+      "path": "crates/code-analyze-core/src/lang.rs",
+      "line_range": "1-153",
+      "role": "Extension registry: EXTENSION_MAP constant and language_for_extension() function; supported_languages() slice"
+    },
+    {
+      "path": "crates/code-analyze-core/src/languages/mod.rs",
+      "line_range": "1-302",
+      "role": "Language registration: LanguageInfo struct, get_language_info() match arms, get_ts_language() match arms"
+    },
+    {
+      "path": "crates/code-analyze-core/src/languages/java.rs",
+      "line_range": "1-200",
+      "role": "Template for Kotlin: ELEMENT_QUERY, CALL_QUERY, REFERENCE_QUERY, IMPORT_QUERY, extract_inheritance() handler, test patterns"
+    },
+    {
+      "path": "crates/code-analyze-core/Cargo.toml",
+      "line_range": "1-60",
+      "role": "Feature flags: default feature set, lang-* feature definitions, optional dependencies"
+    },
+    {
+      "path": "Cargo.toml",
+      "line_range": "1-50",
+      "role": "Workspace dependencies: tree-sitter-kotlin to be added to [workspace.dependencies]"
+    },
+    {
+      "path": "crates/code-analyze-core/tests/integration_tests.rs",
+      "line_range": "1-100",
+      "role": "Integration test patterns: tempfile::TempDir, analyze_directory(), file I/O"
+    }
+  ],
+  "conventions": {
+    "commits": "Conventional Commits (feat, fix, docs, refactor, test, chore). Format: type(scope): subject. All commits GPG-signed with --signoff (DCO). Example: git commit -S --signoff -m 'feat(lang): add Kotlin grammar support'",
+    "testing": "AAA pattern (Arrange, Act, Assert). One happy path + one edge case per test behavior. Unit tests in language module under #[cfg(all(test, feature = 'lang-kotlin'))]. Integration tests in tests/integration_tests.rs. Helper function: parse_kotlin(src) -> tree_sitter::Tree",
+    "linting": "cargo fmt --check, cargo clippy -- -D warnings, cargo deny check advisories licenses. All required before PR submission.",
+    "error_handling": "thiserror for error types. Result<T, E> return types. No unwrap() in production code paths. Errors propagated via ? operator.",
+    "module_organization": "pub mod languages; in lib.rs. Each language in languages/<lang>.rs. Feature-gated module declarations in languages/mod.rs with #[cfg(feature = 'lang-*')]."
+  },
+  "patterns": [
+    "Feature-gated language modules: #[cfg(feature = 'lang-kotlin')] gates module declaration, dependency, and all registration arms",
+    "Dual registration: (1) Extension mapping in lang.rs EXTENSION_MAP and supported_languages(); (2) Language info in languages/mod.rs get_language_info() and get_ts_language()",
+    "Query constants as &str: ELEMENT_QUERY, CALL_QUERY, REFERENCE_QUERY, IMPORT_QUERY exported as public constants; DEFUSE_QUERY optional",
+    "Optional handler functions: extract_inheritance() always present; extract_function_name, find_method_for_receiver, find_receiver_type set to None for Kotlin (no impl blocks)",
+    "Tree-sitter query syntax: S-expression format with @capture names; navigation via field_by_field_name() and node.kind()",
+    "Test helper pattern: parse_<lang>(src) -> tree_sitter::Tree using Parser::new(), set_language(), parse()",
+    "Inheritance extraction: walk delegation_specifiers children, distinguish superclass_type_with_constructor (has parens) from user_type (interfaces, no parens)"
+  ],
+  "related_issues": [
+    {
+      "number": 649,
+      "title": "feat(lang): add Kotlin grammar support",
+      "relevance": "Primary task. Specifies acceptance criteria (Cargo dependency, feature flag, query module, extension registry, language info, module registration, unit tests, linting). Defines node kinds and inheritance model."
+    },
+    {
+      "number": 62,
+      "title": "Reduce binary size by dropping unused language grammars",
+      "relevance": "Context: Kotlin was removed due to binary size (8.9 MB reduction) and lack of semantic handlers. Issue #649 re-adds with full semantic support."
+    },
+    {
+      "number": 63,
+      "title": "chore(languages): drop unused grammars (kotlin, swift, ruby, javascript)",
+      "relevance": "Removal PR (commit bc3c399). Shows minimal old Kotlin implementation (12 lines). Justifies re-implementation with full queries and handlers."
+    },
+    {
+      "number": 37,
+      "title": "feat(languages): add Python, JavaScript, TypeScript, Go, Java, Kotlin, Swift, Ruby modules",
+      "relevance": "Original Kotlin addition (commit f734a42, 2026-03-02). Shows early design; old implementation used tree-sitter-kotlin-ng 1.1.0 (now tree-sitter-kotlin 0.3.8)."
+    }
+  ],
+  "constraints": [
+    "READ-ONLY: No code changes, no commits to target repo",
+    "Feature flag: lang-kotlin must be optional and added to default feature set in crates/code-analyze-core/Cargo.toml",
+    "Cargo dependency: tree-sitter-kotlin = '0.3.8' in root Cargo.toml [workspace.dependencies]",
+    "No impl_query, impl_trait_query, extract_function_name, find_method_for_receiver, find_receiver_type (Kotlin has no impl blocks; set to None)",
+    "No DEFUSE_QUERY (def-use analysis out of scope per issue #649; Fortran also omits)",
+    "All tests must pass: cargo test --features lang-kotlin",
+    "All clippy warnings must be resolved: cargo clippy -- -D warnings",
+    "SPDX header required: SPDX-FileCopyrightText: 2026 code-analyze-mcp contributors; SPDX-License-Identifier: Apache-2.0"
+  ],
+  "test_coverage": "Existing languages (Rust, Python, Go, Java, TypeScript, JavaScript, Fortran, C++, C#) all have: (1) test_<lang>_element_query_happy_path() testing ELEMENT_QUERY compilation and node matching (class + method/function extraction); (2) test_<lang>_extract_inheritance() testing superclass and interface extraction; (3) edge case tests for uppercase extensions, unknown languages, etc.; (4) integration tests in tests/integration_tests.rs using tempfile::TempDir. Kotlin must follow identical pattern with 9 test cases per issue #649 acceptance criteria.",
+  "library_findings": [
+    {
+      "library": "tree-sitter-kotlin",
+      "version": "0.3.8",
+      "source": "fwcd/tree-sitter-kotlin",
+      "relevant_api": "tree_sitter_kotlin::LANGUAGE constant; node kinds: function_declaration, class_declaration, interface_declaration, enum_class_declaration, object_declaration, call_expression, delegation_specifiers, superclass_type_with_constructor, user_type",
+      "notes": "High reputation (79.1 benchmark score). Supports full Kotlin syntax including modifiers (data, companion), delegation specifiers for inheritance, enum entries with nested declarations. Query syntax is S-expression format compatible with tree_sitter::Query::new()."
+    },
+    {
+      "library": "tree-sitter",
+      "version": "0.26.6",
+      "source": "workspace.dependencies",
+      "relevant_api": "Parser::new(), Parser::set_language(), Parser::parse(), Query::new(), QueryCursor::new(), Node::child_by_field_name(), Node::kind(), Node::start_byte(), Node::end_byte()",
+      "notes": "Core tree-sitter Rust bindings. Used to compile and execute queries, navigate syntax tree, extract source text by byte range."
+    }
+  ],
+  "approaches": [
+    {
+      "name": "Approach 1: Full semantic support with inheritance extraction (Recommended)",
+      "description": "Implement complete Kotlin language support following issue #649 acceptance criteria. Add tree-sitter-kotlin 0.3.8 to workspace dependencies. Create crates/code-analyze-core/src/languages/kotlin.rs with ELEMENT_QUERY (function_declaration, class_declaration, interface_declaration, enum_class_declaration, object_declaration), CALL_QUERY (call_expression), REFERENCE_QUERY (identifier references), IMPORT_QUERY (import_header), and extract_inheritance() handler that walks delegation_specifiers to distinguish superclass (superclass_type_with_constructor with parens) from interfaces (user_type without parens). Register .kt and .kts extensions in lang.rs EXTENSION_MAP. Add lang-kotlin feature flag to crates/code-analyze-core/Cargo.toml default features. Register 'kotlin' in get_language_info() and get_ts_language() in languages/mod.rs. Implement 9 unit tests (free function, method in class, function call, class declaration, data class, interface, enum class, import statement, inheritance). All tests pass with cargo test --features lang-kotlin.",
+      "pros": [
+        "Fully satisfies issue #649 acceptance criteria",
+        "Matches existing language implementation patterns (Java, Python, Go)",
+        "Enables symbol extraction, call graph analysis, and inheritance tracking for Kotlin",
+        "Supports all Kotlin declaration types (data class, companion object, enum, interface)",
+        "Comprehensive test coverage (9 test cases) ensures correctness",
+        "Minimal code duplication; follows established patterns"
+      ],
+      "cons": [
+        "Requires careful tree-sitter-kotlin node kind understanding (delegation_specifiers complexity)",
+        "Larger implementation (~200 lines for kotlin.rs + tests)",
+        "Increases binary size by ~8.9 MB (trade-off accepted per issue #649 context)"
+      ],
+      "complexity": "medium",
+      "files_touched": 5
+    },
+    {
+      "name": "Approach 2: Minimal semantic support (no inheritance extraction)",
+      "description": "Add Kotlin support with basic queries only: ELEMENT_QUERY (function_declaration, class_declaration, object_declaration), CALL_QUERY (call_expression), REFERENCE_QUERY (identifier), IMPORT_QUERY (import_header). Omit extract_inheritance() handler (set to None in LanguageInfo). Register extensions and feature flag as in Approach 1. Implement 5 unit tests (function, class, call, import, unknown language edge case). Justification: Kotlin inheritance model (delegation_specifiers) is complex; defer extraction to future PR if demand arises.",
+      "pros": [
+        "Simpler implementation (~100 lines for kotlin.rs + tests)",
+        "Faster to implement and review",
+        "Covers core use cases: symbol extraction and call analysis",
+        "Reduces risk of inheritance extraction bugs"
+      ],
+      "cons": [
+        "Does not fully satisfy issue #649 acceptance criteria (inheritance extraction required)",
+        "Reduces value for Kotlin projects with complex class hierarchies",
+        "Inconsistent with other languages (Java, Python, Go all have inheritance extraction)",
+        "May require rework if issue is not closed as-is"
+      ],
+      "complexity": "simple",
+      "files_touched": 5
+    },
+    {
+      "name": "Approach 3: Phased implementation with feature flag for inheritance",
+      "description": "Add Kotlin support in two phases: Phase 1 (this PR) adds basic queries (ELEMENT_QUERY, CALL_QUERY, REFERENCE_QUERY, IMPORT_QUERY) with extract_inheritance() returning empty Vec. Phase 2 (follow-up PR) implements delegation_specifiers walking to populate inheritance. Register extensions and feature flag as in Approach 1. Implement 5 unit tests for Phase 1 (function, class, call, import, edge case); add 4 more tests in Phase 2 (single inheritance, multiple interfaces, mixed inheritance, companion object). Justification: Reduces scope and risk; allows incremental validation.",
+      "pros": [
+        "Reduces initial implementation scope and risk",
+        "Allows incremental testing and review",
+        "Enables Kotlin support to land faster (Phase 1)",
+        "Inheritance extraction can be validated separately (Phase 2)"
+      ],
+      "cons": [
+        "Does not fully satisfy issue #649 in single PR",
+        "Requires two PRs instead of one",
+        "Inheritance extraction deferred; may not be prioritized",
+        "Inconsistent with issue acceptance criteria (inheritance required)"
+      ],
+      "complexity": "medium",
+      "files_touched": 5
+    }
+  ],
+  "recommendation": "Approach 1 (Full semantic support with inheritance extraction). Rationale: Issue #649 explicitly requires inheritance extraction via extract_inheritance() handler in acceptance criteria. Approach 1 fully satisfies the issue, matches existing language patterns (Java, Python, Go), and provides maximum value for Kotlin codebases. The inheritance extraction logic is well-scoped: walk delegation_specifiers children, check for superclass_type_with_constructor (superclass with parens) vs user_type (interfaces without parens). Tree-sitter-kotlin 0.3.8 provides robust node kinds and field names. Test coverage (9 cases) ensures correctness. Binary size trade-off (8.9 MB) is acceptable per issue context. Estimated complexity: medium (200 lines code + 300 lines tests). Risk: low (follows established patterns; tree-sitter-kotlin is mature)."
+}
