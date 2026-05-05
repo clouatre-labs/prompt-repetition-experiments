@@ -17,7 +17,7 @@ identifiers:
   - type: doi
     value: 10.5281/zenodo.20039271
     description: Zenodo preprint DOI (associated paper)
-version: "1.0.6"
+version: "1.0.7"
 abstract: >
   30 agent sessions (4,306 messages) across three pre-registered controlled experiments
   testing whether prompt repetition improves LLM-agent task completion on structured
