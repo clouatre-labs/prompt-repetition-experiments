@@ -77,11 +77,11 @@ C5-C7 in Experiment 2 require reading and synthesizing actual source code. They 
 
 ![Mean token usage by group and experiment](figures/fig1-token-distribution.png)
 
-*Figure 1: Mean total tokens per group. Valid runs only (Exp1 control-1 drift failure excluded). Dashed lines mark each experiment's control baseline.*
+*Figure 1: Mean total tokens per group. Valid runs only (Exp1 control-1 drift failure excluded). All three experiments shown; Exp3 values (~41-50K) are ~20x smaller than Exp1/2, reflecting the shorter Kotlin task.*
 
-![Criterion pass rates for Exp1](figures/fig2-criterion-pass-rates.png)
+![Criterion pass rates by experiment](figures/fig2-criterion-pass-rates.png)
 
-*Figure 2: Criterion pass rates -- Exp1: FastMCP refactor (n=9 valid runs). C5 is the only discriminating criterion. Exp2 (n=10): all 7 criteria at 100% (ceiling effect, not shown). Exp3 criterion pass rates appear in the text table below.*
+*Figure 2: Criterion pass rates across all three experiments (vertical panels). Top: Exp1 FastMCP refactor (n=9). Middle: Exp2 tree-sitter AST scanner (n=10), complete ceiling. Bottom: Exp3 Kotlin grammar synthesis (n=10); grey bars (C1, C5, C6) are structurally excluded criteria (rubric-runner misalignment).*
 
 | Experiment | Group | n (valid) | Pass rate (overall) | Tokens (mean) | Messages (mean) |
 |------------|-------|-----------|---------------------|---------------|-----------------|
@@ -215,7 +215,7 @@ Treatment agents used 30.6% fewer tokens in Experiment 1, but 7.2% more in Exper
 
 ![Message counts by group and experiment](figures/fig3-message-counts.png)
 
-*Figure 3: Mean messages per group. Treatment agents used fewer turns in both experiments (Exp1 and Exp2 only; Exp3 not shown); the effect is stronger in Exp1 (-34%) than Exp2 (-9%). Exp1 control-1 drift failure excluded from summary statistics.*
+*Figure 3: Mean messages per group. All three experiments shown. Exp3 agents used far fewer messages (~12-13) than Exp1/2 (~138-209), reflecting the shorter Kotlin task. Exp1 control-1 drift failure excluded.*
 
 | Slice | N (control v treatment) | Total token diff |
 |---|---|---|
