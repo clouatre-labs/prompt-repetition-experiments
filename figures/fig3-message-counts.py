@@ -3,24 +3,24 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 
-# Sorted data
-labels_sorted = ["Exp1\nTreatment", "Exp2\nTreatment", "Exp2\nControl", "Exp1\nControl"]
-values_sorted = [137.6, 138.6, 151.6, 209.25]
-colors_sorted = ["#ff7f0e", "#ff7f0e", "#1f77b4", "#1f77b4"]
+# Sorted data (ascending by value)
+labels_sorted = ["Exp3\nControl", "Exp3\nTreatment", "Exp1\nTreatment", "Exp2\nTreatment", "Exp2\nControl", "Exp1\nControl"]
+values_sorted = [12.4, 13.0, 137.6, 138.6, 151.6, 209.25]
+colors_sorted = ["#1f77b4", "#ff7f0e", "#ff7f0e", "#ff7f0e", "#1f77b4", "#1f77b4"]
 
-fig, ax = plt.subplots(figsize=(8, 5))
+fig, ax = plt.subplots(figsize=(9, 6))
 
-bars = ax.barh(range(4), values_sorted, color=colors_sorted, height=0.6)
+bars = ax.barh(range(6), values_sorted, color=colors_sorted, height=0.6)
 
 # Axis labels and title
 ax.set_xlabel('Mean messages per run (valid runs)', fontsize=11)
-ax.set_title('Message count by group -- Exp1 (FastMCP refactor) and Exp2 (tree-sitter synthesis)', fontsize=12)
+ax.set_title('Message count by group -- all three experiments', fontsize=12)
 ax.set_xlim(0, 260)
 ax.xaxis.grid(True, linestyle='--', alpha=0.4, zorder=0)
 ax.set_axisbelow(True)
 
 # Y ticks
-ax.set_yticks(range(4))
+ax.set_yticks(range(6))
 ax.set_yticklabels(labels_sorted, fontsize=10)
 
 # Value labels
