@@ -3,7 +3,7 @@
 # Ceiling Effects and Convergence: Null Results for Instruction Repetition in LLM-Agent Pipelines
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19696593.svg)](https://doi.org/10.5281/zenodo.19696593)
-[![Paper](https://img.shields.io/badge/paper-under%20review-blue)](https://doi.org/10.5281/zenodo.19696593)
+[![Paper](https://img.shields.io/badge/preprint-zenodo-blue)](https://doi.org/10.5281/zenodo.20039271)
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![Sessions](https://img.shields.io/badge/sessions-30-green)](experiments/)
 [![Messages](https://img.shields.io/badge/messages-4%2C306-blue)](experiments/)
@@ -20,7 +20,7 @@ Supplementary data for [Ceiling Effects and Convergence: Null Results for Instru
 
 ## Associated Publication
 
-**Clouatre, H.** (2026). *Ceiling Effects and Convergence: Null Results for Instruction Repetition in LLM-Agent Pipelines.* HEC Montréal. Manuscript under review; no preprint DOI yet.
+**Clouatre, H.** (2026). *Ceiling Effects and Convergence: Null Results for Instruction Repetition in LLM-Agent Pipelines.* HEC Montréal. Preprint: [10.5281/zenodo.20039271](https://doi.org/10.5281/zenodo.20039271). Manuscript under review.
 
 Dataset archived at Zenodo: [10.5281/zenodo.19696593](https://doi.org/10.5281/zenodo.19696593).
 
@@ -194,6 +194,22 @@ The treatment comparison is therefore restricted to the 4 reachable criteria: C2
 *Table: Per-run scores on the 4 reachable criteria. Control mean: 2.00/4; treatment mean: 2.40/4.*
 
 Mann-Whitney U = 15, p = 0.6072 (two-tailed, not significant), r = -0.20 (small negative effect).
+
+> **Note:** The associated paper's abstract cites means of 2.60/4 (control) and 2.80/4 (treatment); these differ from the values above due to a revision in the paper draft that was not propagated back to the dataset. The values above (2.00/4 and 2.40/4) are derived directly from `scores.json` and are authoritative.
+
+### Experiment 3: Criterion Pass Rates (Combined, n=10)
+
+| Criterion | Description | Pass rate | 95% CI (Wilson) | n |
+|-----------|-------------|-----------|-----------------|---|
+| C1 | ABI compatibility evidence | 0% | [0%, 27.8%] | 10 |
+| C2 | companion objects / delegation_specifiers | 10% | [1.79%, 40.42%] | 10 |
+| C3 | ELEMENT_QUERY patterns | 80% | [49.02%, 94.33%] | 10 |
+| C4 | extract_inheritance handler | 30% | [10.78%, 60.32%] | 10 |
+| C5 | .kts-specific test coverage | 0% | [0%, 27.8%] | 10 |
+| C6 | DEFUSE_QUERY justification | 0% | [0%, 27.8%] | 10 |
+| C7 | Structural wiring | 100% | [72.25%, 100%] | 10 |
+
+C1, C5, C6 structurally excluded from treatment comparison (rubric-runner misalignment); included here for completeness.
 
 ### Summary
 
@@ -402,7 +418,8 @@ developers beyond being a user.
   title   = {Ceiling Effects and Convergence: Null Results for Instruction Repetition in {LLM}-Agent Pipelines},
   author  = {Clouatre, Hugues},
   year    = {2026},
-  note    = {Manuscript under review, HEC Montr{\'e}al. Supplementary dataset: \url{https://doi.org/10.5281/zenodo.19696593}},
+  doi     = {10.5281/zenodo.20039271},
+  note    = {Preprint. HEC Montr{\'e}al. Supplementary dataset: \url{https://doi.org/10.5281/zenodo.19696593}},
 }
 ```
 

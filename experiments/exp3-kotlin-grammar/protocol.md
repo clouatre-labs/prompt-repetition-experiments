@@ -4,6 +4,17 @@
 
 ---
 
+## Amendment Log
+
+| Date | Commit | Change | Rationale |
+|------|--------|--------|-----------|
+| 2026-04-19 | 48155ff | Added post-spawn session ID capture instruction; replaced Cohen's d with rank-biserial r (Kerby 2014) | Procedural: session IDs needed for data provenance; statistical correction for ordinal data |
+| 2026-04-20 | 13f1491 | Backfilled analysis.json to full canonical schema; added schema_version | Data completeness: aligned schema with exp1/exp2 for reproducibility |
+
+These amendments are administrative and methodological. Neither changes rubric criteria, scoring rules, group assignments, nor any scored value. Both were made after scores were sealed (2026-04-17, commit 203e02d) but affect only procedural recording and statistical reporting conventions, not outcome direction.
+
+---
+
 ## Context
 
 The target issue [clouatre-labs/code-analyze-mcp#649](https://github.com/clouatre-labs/code-analyze-mcp/issues/649) asks for adding Kotlin grammar support using `tree-sitter-kotlin` version 0.3.8. This requires code synthesis beyond the issue text: confirming language registration, ABI compatibility, node-kind handling, and test coverage for both `.kt` and `.kts` files. The prior experiment (exp2) showed ceiling effects when the rubric was too easy; here the rubric includes six synthesis criteria (C1-C6) and one verification criterion (C7).
