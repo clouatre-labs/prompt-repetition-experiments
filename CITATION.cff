@@ -16,21 +16,29 @@ identifiers:
     description: Zenodo DOI
 version: "1.0.5"
 abstract: >
-  28 agent sessions (4,179 messages) testing whether prompt repetition improves
-  AI coding agent accuracy. Two pre-registered experiments showing a ceiling-accuracy
-  null result on structured engineering tasks.
+  30 agent sessions (4,306 messages) across three pre-registered controlled experiments
+  testing whether prompt repetition improves LLM-agent task completion on structured
+  software-engineering tasks. Null results across all three experiments; identifies
+  ceiling effects and rubric-runner co-design failure as distinct evaluation failure modes.
 keywords:
-  - ai-agents
-  - prompt-engineering
-  - llm-evaluation
+  - prompt-repetition
+  - llm-agents
+  - agentic-pipelines
+  - ceiling-effects
   - null-result
-  - supplementary-materials
+  - instruction-design
+  - pre-registered-experiment
+  - rubric-design
+  - token-efficiency
+  - multi-step-agents
 preferred-citation:
   authors:
-    - family-names: Clouatre
-      given-names: Hugues
+    - family-names: "Clouatre"
+      given-names: "Hugues"
       orcid: "https://orcid.org/0009-0002-4291-1999"
-  title: "What a Null Result Taught Us About AI Agent Evaluation"
-  type: blog
-  url: "https://clouatre.ca/posts/prompt-repetition-agent-evaluation/"
+  title: "Ceiling Effects and Convergence: Null Results for Instruction Repetition in LLM-Agent Pipelines"
+  type: unpublished
+  institution:
+    name: "HEC Montréal"
   year: 2026
+  notes: "Manuscript under review"

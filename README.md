@@ -1,17 +1,18 @@
 <div align="center">
 
-# Prompt Repetition Experiments
+# Ceiling Effects and Convergence: Null Results for Instruction Repetition in LLM-Agent Pipelines
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19696593.svg)](https://doi.org/10.5281/zenodo.19696593)
+[![Paper](https://img.shields.io/badge/paper-under%20review-blue)](https://doi.org/10.5281/zenodo.19696593)
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![Sessions](https://img.shields.io/badge/sessions-30-green)](experiments/)
 [![Messages](https://img.shields.io/badge/messages-4%2C306-blue)](experiments/)
 
 ## Abstract
 
-Prompt repetition (duplicating the input prompt verbatim before the task description) has been shown to improve accuracy for non-reasoning LLMs on positional retrieval and multiple-choice benchmarks (Leviathan et al., 2025). Whether this gain extends to agentic settings involving structured, verifiable software-engineering tasks remains an open question. We present three pre-registered controlled experiments in which Claude Haiku 4.5 agent instances (n=5 per condition, temperature 0.5) were assigned either a single-copy or a repeated-prompt instruction under a blinded binary rubric, totalling 30 session logs and 4,306 messages. In Experiment 1 (session-ID refactoring, 6 binary criteria), the repeated-prompt condition showed a non-significant score delta of +0.30 (Mann-Whitney U, n=9 valid runs); in Experiment 2 (AST-scanner implementation, 7 binary criteria), both conditions achieved perfect scores (7/7), producing a complete performance-saturation effect (U p=1.0) that precluded any treatment comparison; in Experiment 3 (Kotlin grammar synthesis, 7 binary criteria), 3 of 7 rubric criteria were excluded post-hoc (C1, C5, C6) after observing a 0/10 floor across both groups; the root cause was a structural rubric-runner misalignment -- the runner prompt did not ask agents to investigate ABI compatibility, write .kts-specific tests, or inspect LanguageInfo struct fields referenced in PR #659, so those criteria were unreachable regardless of treatment assignment. On the remaining 4 reachable criteria (C2, C3, C4, C7), neither condition exceeded a mean of 2.4/4 (Mann-Whitney U=15, p=0.61), with no significant treatment effect. The exclusion is disclosed as a post-hoc criterion exclusion with structural rationale: the reason for exclusion is independent of score direction (both groups scored identically at zero), so it cannot inflate the treatment effect. Repeated-prompt agents consumed 17-21% fewer tokens in Experiments 1 and 2, but this observation is confounded by the saturation effect and cannot be causally attributed to prompt repetition. These results suggest that prompt repetition does not reliably affect agent performance, and that task difficulty strongly moderates outcome. Experiments 1 and 2 exhibited ceiling effects; Experiment 3 revealed rubric-runner co-design failure as a distinct calibration failure mode, in which criteria are structurally unreachable from the runner prompt regardless of agent capability. Both failure modes suppress treatment signal and are methodological findings in their own right.
+Prompt repetition (duplicating the input prompt verbatim before the task description) has been shown to improve accuracy for non-reasoning LLMs on positional retrieval and multiple-choice benchmarks (Leviathan et al., 2025). Whether this gain extends to agentic settings involving structured, verifiable software-engineering tasks remains an open question. We present three pre-registered controlled experiments in which Claude Haiku 4.5 agent instances (n=5 per condition, temperature 0.5) were assigned either a single-copy or a repeated-prompt instruction under a blinded binary rubric, totalling 30 session logs and 4,306 messages. In Experiment 1 (session-ID refactoring, 6 binary criteria), the repeated-prompt condition showed a non-significant score delta of +0.30 (Mann-Whitney U, n=9 valid runs); in Experiment 2 (AST-scanner implementation, 7 binary criteria), both conditions achieved perfect scores (7/7), producing a complete performance-saturation effect (Mann-Whitney U=12.5, p=1.000) that precluded any treatment comparison; in Experiment 3 (Kotlin grammar synthesis, 7 binary criteria), 3 of 7 rubric criteria were excluded post-hoc (C1, C5, C6) after observing a 0/10 floor across both groups; the root cause was a structural rubric-runner misalignment -- the runner prompt did not ask agents to investigate ABI compatibility, write .kts-specific tests, or inspect LanguageInfo struct fields referenced in PR #659, so those criteria were unreachable regardless of treatment assignment. On the remaining 4 reachable criteria (C2, C3, C4, C7), control scored a mean of 2.60/4 and treatment 2.80/4 (Mann-Whitney U=15, p=0.607), with no significant treatment effect. The exclusion is disclosed as a post-hoc criterion exclusion with structural rationale: the reason for exclusion is independent of score direction (both groups scored identically at zero), so it cannot inflate the treatment effect. Treatment agents used 30.6% fewer tokens in Experiment 1, but 7.2% more in Experiment 2 and 21.3% more in Experiment 3; the direction reverses with session length and cannot be causally attributed to prompt repetition. These results suggest that prompt repetition does not reliably affect agent performance, and that task difficulty strongly moderates outcome. Experiments 1 and 2 exhibited ceiling effects; Experiment 3 revealed rubric-runner co-design failure as a distinct calibration failure mode, in which criteria are structurally unreachable from the runner prompt regardless of agent capability. Both failure modes suppress treatment signal and are methodological findings in their own right.
 
-Supplementary materials for [What a Null Result Taught Us About AI Agent Evaluation](https://clouatre.ca/posts/prompt-repetition-agent-evaluation/).
+Supplementary data for [Ceiling Effects and Convergence: Null Results for Instruction Repetition in LLM-Agent Pipelines](https://clouatre.ca/posts/prompt-repetition-agent-evaluation/) -- Clouatre, HEC Montréal, 2026.
 
 </div>
 
@@ -19,9 +20,11 @@ Supplementary materials for [What a Null Result Taught Us About AI Agent Evaluat
 
 ## Associated Publication
 
-The paper is under review. This section will be updated with a DOI and citation on publication.
+**Clouatre, H.** (2026). *Ceiling Effects and Convergence: Null Results for Instruction Repetition in LLM-Agent Pipelines.* HEC Montréal. Manuscript under review; no preprint DOI yet.
 
-Current best reference: [Prompt repetition experiments - blog post](https://clouatre.ca/posts/prompt-repetition-agent-evaluation/) (includes methodology, results, and discussion).
+Dataset archived at Zenodo: [10.5281/zenodo.19696593](https://doi.org/10.5281/zenodo.19696593).
+
+Companion blog post: [What a Null Result Taught Us About AI Agent Evaluation](https://clouatre.ca/posts/prompt-repetition-agent-evaluation/).
 
 ## The Question
 
@@ -82,10 +85,10 @@ C5-C7 in Experiment 2 require reading and synthesizing actual source code. They 
 
 | Experiment | Group | n (valid) | Pass rate (overall) | Tokens (mean) | Messages (mean) |
 |------------|-------|-----------|---------------------|---------------|-----------------|
-| Exp1: FastMCP refactor | Control | 4 | 97% | 1,068,182 | 209 |
-| Exp1: FastMCP refactor | Treatment | 5 | 93% | 732,257 | 138 |
-| Exp2: Tree-sitter synthesis | Control | 5 | 100% | 740,362 | 152 |
-| Exp2: Tree-sitter synthesis | Treatment | 5 | 100% | 737,331 | 139 |
+| Exp1: FastMCP refactor | Control | 4 | 97% | 1,032,363 | 209 |
+| Exp1: FastMCP refactor | Treatment | 5 | 93% | 716,275 | 138 |
+| Exp2: Tree-sitter synthesis | Control | 5 | 100% | 703,993 | 152 |
+| Exp2: Tree-sitter synthesis | Treatment | 5 | 100% | 755,029 | 139 |
 | Exp3: Kotlin grammar synthesis | Control | 5 | 29% (4-criterion: see note a) | n/a | 12 |
 | Exp3: Kotlin grammar synthesis | Treatment | 5 | 34% (4-criterion: see note a) | n/a | 13 |
 
@@ -109,7 +112,7 @@ treatment-5    1   1   1   1   1   1   6/6
 Treatment avg                           5.80/6
 
 Delta: +0.30 (not significant, n=4/5 per group)
-Mann-Whitney U (estimated), p (estimated), r = +0.25 (small positive effect)
+Fisher's exact p = 1.000 (n=4 control, n=5 treatment); r = +0.25 (small positive effect, Mann-Whitney)
 ```
 
 One control run excluded (drift failure at 93 messages, no output produced). C5 was the only discriminating criterion; all others scored 100% in both groups.
@@ -188,7 +191,7 @@ The treatment comparison is therefore restricted to the 4 reachable criteria: C2
 | treatment-4 | 0 | 1 | 0 | 1 | 2 |
 | treatment-5 | 0 | 1 | 0 | 1 | 2 |
 
-*Table: Per-run scores on the 4 reachable criteria. Control mean: 2.0/4; treatment mean: 2.4/4.*
+*Table: Per-run scores on the 4 reachable criteria. Control mean: 2.60/4; treatment mean: 2.80/4.*
 
 Mann-Whitney U = 15, p = 0.6072 (two-tailed, not significant), r = -0.20 (small negative effect).
 
@@ -208,20 +211,20 @@ Mann-Whitney U = 15, p = 0.6072 (two-tailed, not significant), r = -0.20 (small 
 
 ### Token Efficiency
 
-Treatment agents consistently used fewer tokens despite the longer prompt. The effect is confounded with the ceiling-effect task design and too small (n=5 per group per experiment) for statistical conclusions. Single-judge scoring (one LLM judge, no inter-rater reliability check) and pilot-scale sample size (n=5 per group) limit generalizability; see METHODOLOGY.md Known Limitations for detail.
+Treatment agents used 30.6% fewer tokens in Experiment 1, but 7.2% more in Experiment 2 and 21.3% more in Experiment 3. The direction reverses with session length: longer sessions dissipate the fixed prompt overhead while shorter or saturated sessions pay pure prompt overhead. The effect is confounded with ceiling effects and too small (n=5 per group per experiment) for statistical conclusions. Single-judge scoring and pilot-scale sample size (n=5 per group) limit generalizability; see METHODOLOGY.md Known Limitations.
 
 ![Message counts by group and experiment](figures/fig3-message-counts.png)
 
 *Figure 3: Mean messages per group. Treatment agents used fewer turns in both experiments (Exp1 and Exp2 only; Exp3 not shown); the effect is stronger in Exp1 (-34%) than Exp2 (-9%). Exp1 control-1 drift failure excluded from summary statistics.*
 
-| Slice | N (control v treatment) | Input token diff | Output token diff |
-|---|---|---|---|
-| Pooled (all runs) | 10 v 10 | -13.1% | -15.4% |
-| Pooled (excl. control-1 drift) | 9 v 10 | -17.0% | -20.9% |
-| Exp1 only | 5 v 5 | -23.1% | -17.4% |
-| Exp2 only | 5 v 5 | -0.2% | -13.5% |
+| Slice | N (control v treatment) | Total token diff |
+|---|---|---|
+| Exp1 only (excl. control-1 drift) | 4 v 5 | -30.6% (treatment fewer) |
+| Exp2 only | 5 v 5 | +7.2% (treatment more) |
+| Exp3 only | 5 v 5 | +21.3% (treatment more) |
+| Pooled (excl. control-1 drift) | 14 v 15 | direction varies by experiment |
 
-Exp1 control-1 was a drift failure (93 messages, no output file, scored 0). It was excluded from scoring but included in the "all runs" row. Its abnormally low token counts (482K input, 3.5K output) pull the control mean down, so excluding it widens the gap.
+Exp1 control-1 was a drift failure (93 messages, no output file, scored 0). It is excluded from all token efficiency rows above.
 
 ---
 
@@ -361,7 +364,8 @@ To reproduce with different tasks or models, follow the protocols in `experiment
 
 | Component | Version |
 |---|---|
-| Goose | 1.25.0 |
+| Goose (Exp1, Exp2) | 1.25.0 |
+| Goose (Exp3) | 1.31.1 |
 | Orchestrator model | Claude Sonnet 4.6 (`claude-sonnet-4-6@default`) |
 | Delegate model | Claude Haiku 4.5 (`claude-haiku-4-5@20251001`) |
 | Provider | GCP Vertex AI |
@@ -379,7 +383,7 @@ identifiers).
 ## Data Availability
 
 All experimental data, protocols, scoring rubrics, and analysis outputs are
-available in this repository under the MIT license. Raw session data was
+available in this repository under the Apache 2.0 license. Raw session data was
 extracted from the local Goose sessions database (`sessions.db`) and is
 preserved in the experiment directories. No data has been excluded or
 selectively reported.
@@ -394,14 +398,11 @@ developers beyond being a user.
 ## Citation
 
 ```bibtex
-@misc{clouatre2026promptrepetition,
-  title   = {What a Null Result Taught Us About AI Agent Evaluation},
+@unpublished{clouatre2026ceilingeffects,
+  title   = {Ceiling Effects and Convergence: Null Results for Instruction Repetition in {LLM}-Agent Pipelines},
   author  = {Clouatre, Hugues},
   year    = {2026},
-  doi     = {10.5281/zenodo.19696593},
-  howpublished = {\url{https://clouatre.ca/posts/prompt-repetition-agent-evaluation/}},
-  urldate = {2026-02-23},
-  note    = {Supplementary materials: https://github.com/clouatre-labs/prompt-repetition-experiments}
+  note    = {Manuscript under review, HEC Montr{\'e}al. Supplementary dataset: \url{https://doi.org/10.5281/zenodo.19696593}},
 }
 ```
 
