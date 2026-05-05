@@ -6,7 +6,7 @@ from matplotlib.lines import Line2D
 # Exp1 data
 criteria_exp1 = ["C1", "C2", "C3", "C4", "C5", "C6"]
 rates_exp1 = [1.0, 1.0, 1.0, 1.0, 0.67, 1.0]
-colors_exp1 = ["#2ca02c", "#2ca02c", "#2ca02c", "#2ca02c", "#d62728", "#2ca02c"]
+colors_exp1 = ["#2ca02c", "#2ca02c", "#2ca02c", "#2ca02c", "#1f77b4", "#2ca02c"]
 
 # Exp2 data -- complete ceiling, all 7 criteria at 100%
 criteria_exp2 = ["C1", "C2", "C3", "C4", "C5", "C6", "C7"]
@@ -16,7 +16,7 @@ colors_exp2 = ["#2ca02c"] * 7
 # Exp3 data
 criteria_exp3 = ["C1\u2020", "C2", "C3", "C4", "C5\u2020", "C6\u2020", "C7"]
 rates_exp3 = [0.0, 0.10, 0.80, 0.30, 0.0, 0.0, 1.0]
-colors_exp3 = ["#aaaaaa", "#ff7f0e", "#2ca02c", "#ff7f0e", "#aaaaaa", "#aaaaaa", "#2ca02c"]
+colors_exp3 = ["#aaaaaa", "#9467bd", "#2ca02c", "#9467bd", "#aaaaaa", "#aaaaaa", "#2ca02c"]
 
 fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(10, 13))
 
@@ -66,5 +66,5 @@ ax3.text(0.01, -0.12, '\u2020 Structurally excluded (rubric-runner misalignment;
 
 fig.suptitle('Criterion pass rates by experiment', fontsize=13, fontweight='bold')
 plt.tight_layout(rect=[0, 0, 1, 0.97])
-plt.savefig('figures/fig2-criterion-pass-rates.png', dpi=150, bbox_inches='tight')
+plt.savefig('figures/fig2-criterion-pass-rates.png', dpi=300, bbox_inches='tight')
 print('Saved figures/fig2-criterion-pass-rates.png')
