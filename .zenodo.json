@@ -1,30 +1,46 @@
 {
   "title": "Prompt Repetition Experiments",
-  "description": "28 agent sessions (4,179 messages) testing whether prompt repetition improves AI coding agent accuracy. Two pre-registered experiments showing a ceiling-accuracy null result on structured engineering tasks.",
+  "description": "30 agent sessions (4,306 messages) across three pre-registered controlled experiments testing whether prompt repetition improves LLM-agent task completion on structured software-engineering tasks. Null results across all three experiments; identifies ceiling effects and rubric-runner co-design failure as distinct evaluation failure modes. Supplementary dataset for: Clouatre, H. (2026). Ceiling Effects and Convergence: Null Results for Instruction Repetition in LLM-Agent Pipelines. Preprint: https://doi.org/10.5281/zenodo.20039271",
   "upload_type": "dataset",
   "access_right": "open",
   "license": "Apache-2.0",
-  "version": "1.0.5",
-  "publication_date": "2026-04-27",
+  "version": "1.0.6",
+  "publication_date": "2026-05-05",
   "creators": [
     {
       "name": "Clouatre, Hugues",
+      "affiliation": "HEC Montréal",
       "orcid": "0009-0002-4291-1999"
     }
   ],
   "related_identifiers": [
     {
+      "identifier": "https://doi.org/10.5281/zenodo.20039271",
+      "relation": "isSupplementTo",
+      "resource_type": "publication-preprint"
+    },
+    {
       "identifier": "https://clouatre.ca/posts/prompt-repetition-agent-evaluation/",
       "relation": "isSupplementTo",
       "resource_type": "publication-other"
+    },
+    {
+      "identifier": "https://github.com/clouatre-labs/prompt-repetition-experiments",
+      "relation": "isIdenticalTo",
+      "resource_type": "software"
     }
   ],
   "keywords": [
-    "ai-agents",
-    "prompt-engineering",
-    "llm-evaluation",
+    "prompt-repetition",
+    "llm-agents",
+    "agentic-pipelines",
+    "ceiling-effects",
     "null-result",
-    "supplementary-materials"
+    "instruction-design",
+    "pre-registered-experiment",
+    "rubric-design",
+    "token-efficiency",
+    "llm-evaluation"
   ],
   "custom": {
     "code:codeRepository": "https://github.com/clouatre-labs/prompt-repetition-experiments"
