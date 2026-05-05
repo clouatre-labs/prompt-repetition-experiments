@@ -37,8 +37,10 @@ preferred-citation:
       given-names: "Hugues"
       orcid: "https://orcid.org/0009-0002-4291-1999"
   title: "Ceiling Effects and Convergence: Null Results for Instruction Repetition in LLM-Agent Pipelines"
-  type: unpublished
+  type: generic
+  doi: 10.5281/zenodo.20039271
+  url: "https://doi.org/10.5281/zenodo.20039271"
   institution:
     name: "HEC Montréal"
   year: 2026
-  notes: "Manuscript under review"
+  notes: "Preprint. Manuscript under review."

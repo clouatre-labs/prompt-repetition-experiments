@@ -3,7 +3,7 @@
 # Ceiling Effects and Convergence: Null Results for Instruction Repetition in LLM-Agent Pipelines
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19696593.svg)](https://doi.org/10.5281/zenodo.19696593)
-[![Paper](https://img.shields.io/badge/paper-under%20review-blue)](https://doi.org/10.5281/zenodo.19696593)
+[![Paper](https://img.shields.io/badge/preprint-zenodo-blue)](https://doi.org/10.5281/zenodo.20039271)
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![Sessions](https://img.shields.io/badge/sessions-30-green)](experiments/)
 [![Messages](https://img.shields.io/badge/messages-4%2C306-blue)](experiments/)
@@ -20,7 +20,7 @@ Supplementary data for [Ceiling Effects and Convergence: Null Results for Instru
 
 ## Associated Publication
 
-**Clouatre, H.** (2026). *Ceiling Effects and Convergence: Null Results for Instruction Repetition in LLM-Agent Pipelines.* HEC Montréal. Manuscript under review; no preprint DOI yet.
+**Clouatre, H.** (2026). *Ceiling Effects and Convergence: Null Results for Instruction Repetition in LLM-Agent Pipelines.* HEC Montréal. Preprint: [10.5281/zenodo.20039271](https://doi.org/10.5281/zenodo.20039271). Manuscript under review.
 
 Dataset archived at Zenodo: [10.5281/zenodo.19696593](https://doi.org/10.5281/zenodo.19696593).
 
@@ -418,7 +418,8 @@ developers beyond being a user.
   title   = {Ceiling Effects and Convergence: Null Results for Instruction Repetition in {LLM}-Agent Pipelines},
   author  = {Clouatre, Hugues},
   year    = {2026},
-  note    = {Manuscript under review, HEC Montr{\'e}al. Supplementary dataset: \url{https://doi.org/10.5281/zenodo.19696593}},
+  doi     = {10.5281/zenodo.20039271},
+  note    = {Preprint. HEC Montr{\'e}al. Supplementary dataset: \url{https://doi.org/10.5281/zenodo.19696593}},
 }
 ```
 
