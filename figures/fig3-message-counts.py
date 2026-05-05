@@ -36,5 +36,5 @@ legend_elements = [
 ax.legend(handles=legend_elements, loc='lower right', fontsize=9)
 
 plt.tight_layout()
-plt.savefig('figures/fig3-message-counts.png', dpi=150, bbox_inches='tight')
+plt.savefig('figures/fig3-message-counts.png', dpi=300, bbox_inches='tight')
 print('Saved figures/fig3-message-counts.png')

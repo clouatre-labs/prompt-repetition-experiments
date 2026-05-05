@@ -52,5 +52,5 @@ legend_elements = [
 ax.legend(handles=legend_elements, loc='upper right', fontsize=9)
 
 plt.tight_layout()
-plt.savefig('figures/fig1-token-distribution.png', dpi=150, bbox_inches='tight')
+plt.savefig('figures/fig1-token-distribution.png', dpi=300, bbox_inches='tight')
 print('Saved figures/fig1-token-distribution.png')
