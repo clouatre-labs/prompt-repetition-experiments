@@ -30,6 +30,8 @@ Companion blog post: [What a Null Result Taught Us About AI Agent Evaluation](ht
 
 Does repeating the instruction prompt verbatim improve task-success rates for LLM agents executing structured, criterion-graded software-engineering tasks, relative to a single-copy instruction baseline? More broadly, do prompt-level redundancy interventions that benefit non-reasoning models on retrieval benchmarks generalise to agentic settings with verifiable, multi-criterion success conditions?
 
+*Code Snippet 1: Experimental design overview.*
+
 ```text
 Experiment setup:
   Orchestrator (Claude Sonnet 4.6)
@@ -48,6 +50,8 @@ Each delegate's output was scored against a pre-registered binary rubric (0/1 pe
 
 ### Experiment 1: FastMCP Session ID Refactor (6 criteria)
 
+*Table 1: Experiment 1 criterion pass rates (n=9).*
+
 | Criterion | Description | Pass rate | 95% CI (Wilson) | n |
 |-----------|-------------|-----------|-----------------|---|
 | C1 | Source file 1 identified | 100% | [70.1%, 100%] | 9 |
@@ -58,6 +62,8 @@ Each delegate's output was scored against a pre-registered binary rubric (0/1 pe
 | C6 | FastMCP docs consulted | 100% | [70.1%, 100%] | 9 |
 
 ### Experiment 2: Tree-sitter AST Scanner (7 criteria)
+
+*Table 2: Experiment 2 criterion pass rates (n=10).*
 
 | Criterion | Description | Pass rate | 95% CI (Wilson) | n |
 |-----------|-------------|-----------|-----------------|---|
@@ -83,6 +89,8 @@ C5-C7 in Experiment 2 require reading and synthesizing actual source code. They 
 
 *Figure 2: Criterion pass rates across all three experiments (vertical panels). Top: Exp1 FastMCP refactor (n=9). Middle: Exp2 tree-sitter AST scanner (n=10), complete ceiling. Bottom: Exp3 Kotlin grammar synthesis (n=10); grey bars (C1, C5, C6) are structurally excluded criteria (rubric-runner misalignment).*
 
+*Table 3: Summary results by experiment and group.*
+
 | Experiment | Group | n (valid) | Pass rate (overall) | Tokens (mean) | Messages (mean) |
 |------------|-------|-----------|---------------------|---------------|-----------------|
 | Exp1: FastMCP refactor | Control | 4 | 97% | 1,032,363 | 209 |
@@ -95,6 +103,8 @@ C5-C7 in Experiment 2 require reading and synthesizing actual source code. They 
 *Note a: Exp3 pass rates computed over all 7 criteria for completeness; treatment comparison restricted to 4 criteria (C2, C3, C4, C7) after post-hoc exclusion of C1, C5, C6 -- see Experiment 3 section.*
 
 ### Experiment 1: FastMCP Session ID Refactor
+
+*Code Snippet 2: Experiment 1 per-run scores (Exp1 control-1 excluded -- drift failure).*
 
 ```text
 Run           C1  C2  C3  C4  C5  C6  Total
@@ -119,6 +129,8 @@ One control run excluded (drift failure at 93 messages, no output produced). C5 
 
 ### Experiment 2: Tree-sitter AST Scanner
 
+*Code Snippet 3: Experiment 2 per-run scores (all 10 runs, complete ceiling).*
+
 ```text
 Run       C1  C2  C3  C4  C5  C6  C7  Total
 run-01     1   1   1   1   1   1   1   7/7
@@ -138,6 +150,8 @@ Mann-Whitney U = 12.5, p = 1.0 (degenerate: all scores identical), r = 0.00 (no 
 Perfect scores across all 10 runs. Complete ceiling effect. The rubric was designed to be harder (C5-C7 require source code synthesis), but Claude Haiku 4.5 with structured Scout instructions cleared every criterion regardless of repetition.
 
 ### Experiment 3: Kotlin Grammar Synthesis
+
+*Code Snippet 4: Experiment 3 per-run scores (all 7 criteria, n=10).*
 
 ```text
 Run           C1  C2  C3  C4  C5  C6  C7  Total
@@ -160,6 +174,8 @@ Delta: +0.40 (not significant, U=15, p=0.61)
 
 C7 was the only ceiling criterion (100% both groups): structural wiring is well-documented in the target issue. C1, C5, and C6 were floor criteria (0% both groups): ABI compatibility evidence, .kts-specific test coverage, and DEFUSE_QUERY struct inspection all required deep source synthesis that agents consistently failed to produce. C3 and C4 showed partial discriminability.
 
+*Table 4: Experiment 3 criterion pass rates by group.*
+
 | Criterion | Control pass rate | Treatment pass rate |
 |---|---|---|
 | C1 (ABI compatibility) | 0% | 0% |
@@ -178,6 +194,8 @@ This exclusion is classified as structural, not outcome-driven. The direction of
 
 The treatment comparison is therefore restricted to the 4 reachable criteria: C2, C3, C4, and C7.
 
+*Table 5: Experiment 3 per-run scores on the 4 reachable criteria. Control mean: 2.00/4; treatment mean: 2.40/4.*
+
 | Run | C2 | C3 | C4 | C7 | Total (of 4) |
 |---|---|---|---|---|---|
 | control-1 | 0 | 0 | 0 | 1 | 1 |
@@ -191,13 +209,13 @@ The treatment comparison is therefore restricted to the 4 reachable criteria: C2
 | treatment-4 | 0 | 1 | 0 | 1 | 2 |
 | treatment-5 | 0 | 1 | 0 | 1 | 2 |
 
-*Table: Per-run scores on the 4 reachable criteria. Control mean: 2.00/4; treatment mean: 2.40/4.*
-
 Mann-Whitney U = 15, p = 0.6072 (two-tailed, not significant), r = -0.20 (small negative effect).
 
 > **Note:** The associated paper's abstract cites means of 2.60/4 (control) and 2.80/4 (treatment); these differ from the values above due to a revision in the paper draft that was not propagated back to the dataset. The values above (2.00/4 and 2.40/4) are derived directly from `scores.json` and are authoritative.
 
 ### Experiment 3: Criterion Pass Rates (Combined, n=10)
+
+*Table 6: Experiment 3 combined criterion pass rates (n=10, all 7 criteria).*
 
 | Criterion | Description | Pass rate | 95% CI (Wilson) | n |
 |-----------|-------------|-----------|-----------------|---|
@@ -212,6 +230,8 @@ Mann-Whitney U = 15, p = 0.6072 (two-tailed, not significant), r = -0.20 (small 
 C1, C5, C6 structurally excluded from treatment comparison (rubric-runner misalignment); included here for completeness.
 
 ### Summary
+
+*Table 7: Cross-experiment summary.*
 
 | | Experiment 1 | Experiment 2 | Experiment 3 |
 |---|---|---|---|
@@ -232,6 +252,8 @@ Treatment agents used 30.6% fewer tokens in Experiment 1, but 7.2% more in Exper
 ![Message counts by group and experiment](figures/fig3-message-counts.png)
 
 *Figure 3: Mean messages per group. All three experiments shown. Exp3 agents used far fewer messages (~12-13) than Exp1/2 (~138-209), reflecting the shorter Kotlin task. Exp1 control-1 drift failure excluded.*
+
+*Table 8: Token efficiency by experiment slice.*
 
 | Slice | N (control v treatment) | Total token diff |
 |---|---|---|
@@ -377,6 +399,8 @@ This repository contains everything needed to verify our claims and reproduce th
 To reproduce with different tasks or models, follow the protocols in `experiments/*/protocol.md` and substitute your target issue and model. The recipe (`recipe/goose-coder-v4.1.0.yaml`) defines the full agent architecture.
 
 ### Software Versions
+
+*Table 9: Software versions used across experiments.*
 
 | Component | Version |
 |---|---|
