@@ -89,7 +89,7 @@ C5-C7 in Experiment 2 require reading and synthesizing actual source code. They 
 
 *Figure 2: Criterion pass rates across all three experiments (vertical panels). Top: Exp1 FastMCP refactor (n=9). Middle: Exp2 tree-sitter AST scanner (n=10), complete ceiling. Bottom: Exp3 Kotlin grammar synthesis (n=10); grey bars (C1, C5, C6) are structurally excluded criteria (rubric-runner misalignment).*
 
-*Table 3: Summary results by experiment and group.*
+*Table 3: Summary results by experiment and group. Exp3 pass rates shown over all 7 criteria; treatment comparison restricted to C2, C3, C4, C7 after post-hoc exclusion of C1, C5, C6 (rubric-runner misalignment).*
 
 | Experiment | Group | n (valid) | Pass rate (overall) | Tokens (mean) | Messages (mean) |
 |------------|-------|-----------|---------------------|---------------|-----------------|
@@ -97,14 +97,12 @@ C5-C7 in Experiment 2 require reading and synthesizing actual source code. They 
 | Exp1: FastMCP refactor | Treatment | 5 | 93% | 716,275 | 138 |
 | Exp2: Tree-sitter synthesis | Control | 5 | 100% | 703,993 | 152 |
 | Exp2: Tree-sitter synthesis | Treatment | 5 | 100% | 755,029 | 139 |
-| Exp3: Kotlin grammar synthesis | Control | 5 | 29% (4-criterion: see note a) | n/a | 12 |
-| Exp3: Kotlin grammar synthesis | Treatment | 5 | 34% (4-criterion: see note a) | n/a | 13 |
-
-*Note a: Exp3 pass rates computed over all 7 criteria for completeness; treatment comparison restricted to 4 criteria (C2, C3, C4, C7) after post-hoc exclusion of C1, C5, C6 -- see Experiment 3 section.*
+| Exp3: Kotlin grammar synthesis | Control | 5 | 29% | n/a | 12 |
+| Exp3: Kotlin grammar synthesis | Treatment | 5 | 34% | n/a | 13 |
 
 ### Experiment 1: FastMCP Session ID Refactor
 
-*Code Snippet 2: Experiment 1 per-run scores (Exp1 control-1 excluded -- drift failure).*
+*Code Snippet 2: Experiment 1 per-run scores. control-1 excluded (drift failure, 93 messages, no output). C5 was the sole discriminating criterion; all others at 100% in both groups.*
 
 ```text
 Run           C1  C2  C3  C4  C5  C6  Total
@@ -125,11 +123,9 @@ Delta: +0.30 (not significant, n=4/5 per group)
 Fisher's exact p = 1.000 (n=4 control, n=5 treatment); r = +0.25 (small positive effect, Mann-Whitney)
 ```
 
-One control run excluded (drift failure at 93 messages, no output produced). C5 was the only discriminating criterion; all others scored 100% in both groups.
-
 ### Experiment 2: Tree-sitter AST Scanner
 
-*Code Snippet 3: Experiment 2 per-run scores (all 10 runs, complete ceiling).*
+*Code Snippet 3: Experiment 2 per-run scores. Complete ceiling -- all 10 runs scored 7/7. C5-C7 required source code synthesis; Claude Haiku 4.5 cleared every criterion regardless of repetition.*
 
 ```text
 Run       C1  C2  C3  C4  C5  C6  C7  Total
@@ -147,11 +143,9 @@ run-10     1   1   1   1   1   1   1   7/7
 Mann-Whitney U = 12.5, p = 1.0 (degenerate: all scores identical), r = 0.00 (no effect)
 ```
 
-Perfect scores across all 10 runs. Complete ceiling effect. The rubric was designed to be harder (C5-C7 require source code synthesis), but Claude Haiku 4.5 with structured Scout instructions cleared every criterion regardless of repetition.
-
 ### Experiment 3: Kotlin Grammar Synthesis
 
-*Code Snippet 4: Experiment 3 per-run scores (all 7 criteria, n=10).*
+*Code Snippet 4: Experiment 3 per-run scores (all 7 criteria, n=10). C7 ceiling (100% both groups); C1, C5, C6 floor (0% both groups, structurally unreachable). C3 and C4 showed partial discriminability.*
 
 ```text
 Run           C1  C2  C3  C4  C5  C6  C7  Total
@@ -171,8 +165,6 @@ Treatment avg                               2.4/7
 
 Delta: +0.40 (not significant, U=15, p=0.61)
 ```
-
-C7 was the only ceiling criterion (100% both groups): structural wiring is well-documented in the target issue. C1, C5, and C6 were floor criteria (0% both groups): ABI compatibility evidence, .kts-specific test coverage, and DEFUSE_QUERY struct inspection all required deep source synthesis that agents consistently failed to produce. C3 and C4 showed partial discriminability.
 
 *Table 4: Experiment 3 criterion pass rates by group.*
 
@@ -194,7 +186,7 @@ This exclusion is classified as structural, not outcome-driven. The direction of
 
 The treatment comparison is therefore restricted to the 4 reachable criteria: C2, C3, C4, and C7.
 
-*Table 5: Experiment 3 per-run scores on the 4 reachable criteria. Control mean: 2.00/4; treatment mean: 2.40/4.*
+*Table 5: Experiment 3 per-run scores on the 4 reachable criteria (C2, C3, C4, C7). Control mean: 2.00/4; treatment mean: 2.40/4 (U=15, p=0.61). Values derived from `scores.json`; paper abstract cites 2.60/4 and 2.80/4 due to a draft revision not propagated back to the dataset.*
 
 | Run | C2 | C3 | C4 | C7 | Total (of 4) |
 |---|---|---|---|---|---|
@@ -211,11 +203,9 @@ The treatment comparison is therefore restricted to the 4 reachable criteria: C2
 
 Mann-Whitney U = 15, p = 0.6072 (two-tailed, not significant), r = -0.20 (small negative effect).
 
-> **Note:** The associated paper's abstract cites means of 2.60/4 (control) and 2.80/4 (treatment); these differ from the values above due to a revision in the paper draft that was not propagated back to the dataset. The values above (2.00/4 and 2.40/4) are derived directly from `scores.json` and are authoritative.
-
 ### Experiment 3: Criterion Pass Rates (Combined, n=10)
 
-*Table 6: Experiment 3 combined criterion pass rates (n=10, all 7 criteria).*
+*Table 6: Experiment 3 combined criterion pass rates (n=10, all 7 criteria). C1, C5, C6 structurally excluded from treatment comparison (rubric-runner misalignment); included here for completeness.*
 
 | Criterion | Description | Pass rate | 95% CI (Wilson) | n |
 |-----------|-------------|-----------|-----------------|---|
@@ -226,8 +216,6 @@ Mann-Whitney U = 15, p = 0.6072 (two-tailed, not significant), r = -0.20 (small 
 | C5 | .kts-specific test coverage | 0% | [0%, 27.8%] | 10 |
 | C6 | DEFUSE_QUERY justification | 0% | [0%, 27.8%] | 10 |
 | C7 | Structural wiring | 100% | [72.25%, 100%] | 10 |
-
-C1, C5, C6 structurally excluded from treatment comparison (rubric-runner misalignment); included here for completeness.
 
 ### Summary
 
