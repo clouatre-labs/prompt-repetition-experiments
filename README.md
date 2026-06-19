@@ -261,13 +261,15 @@ graph TD
     S --> R[Results<br/>scores.json]
 ```
 
-All delegates run on Claude Haiku 4.5 at temperature 0.5. The orchestrator spawns delegates in parallel, subject to a 5-delegate concurrency cap discovered during experimentation.
+*Figure 4: Experiment flow. All delegates run on Claude Haiku 4.5 at temperature 0.5. The orchestrator spawns delegates in parallel, subject to a 5-delegate concurrency cap.*
 
 ---
 
 ## Infrastructure Confound
 
 The 5-delegate concurrency cap is undocumented. It is enforced as a hard rejection in source (`GOOSE_MAX_BACKGROUND_TASKS` defaults to 5), with no queuing or retry. Excess delegates are dropped, not deferred. With 10 delegates, this silently split our groups into two sequential batches:
+
+*Code Snippet 5: Experiment 2 batch execution timeline. Batch 2 delegates had stale context (4 minutes older); confound visible in `experiments/*/raw/orchestrator.jsonl`.*
 
 ```text
 Experiment 2 timeline:
@@ -278,11 +280,11 @@ Experiment 2 timeline:
   22:23:00  Batch 2 completes
 ```
 
-Batch 2 delegates had stale context (4 minutes older). The raw orchestrator logs in `experiments/*/raw/orchestrator.jsonl` show this behavior. This class of confound (runtime resource limits, queue behavior, model routing) is endemic to agent systems and invisible without structured logging.
-
 ---
 
 ## Inspecting the Data
+
+*Code Snippet 6: Shell commands for inspecting experiment data.*
 
 ```bash
 # View per-run scores with justifications
@@ -308,6 +310,8 @@ cat experiments/exp2-treesitter-synthesis/raw/scout-run-01.jsonl | \
 ---
 
 ## Project Structure
+
+*Code Snippet 7: Repository directory structure.*
 
 ```text
 prompt-repetition-experiments/
