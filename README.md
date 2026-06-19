@@ -201,6 +201,9 @@ The treatment comparison is therefore restricted to the 4 reachable criteria: C2
 | treatment-4 | 0 | 1 | 0 | 1 | 2 |
 | treatment-5 | 0 | 1 | 0 | 1 | 2 |
 
+
+> **Note:** The authoritative Exp3 means are 2.00/4 (control) and 2.40/4 (treatment), derived directly from `scores.json`. Any discrepancy in associated paper versions reflects a draft revision not propagated to the dataset at the time. Inter-rater reliability data is in [`irr/`](irr/).
+
 ### Experiment 3: Criterion Pass Rates (Combined, n=10)
 
 *Table 6: Experiment 3 combined criterion pass rates (n=10, all 7 criteria). C1, C5, C6 structurally excluded from treatment comparison (rubric-runner misalignment); included here for completeness.*

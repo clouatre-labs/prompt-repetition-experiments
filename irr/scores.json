@@ -1,0 +1,233 @@
+{
+  "provenance": {
+    "judge1_model": "claude-haiku-4-5@20251001",
+    "judge2_model": "claude-sonnet-4-6",
+    "judge2_temperature": 0.0,
+    "judge2_api": "Anthropic Messages API (ANTHROPIC_API_KEY)",
+    "generated_by": "irr/rescore.py",
+    "generated_at": "2026-06-19T01:27:00Z",
+    "goose_session": "20260619_19"
+  },
+  "sessions": [
+    {
+      "id": "scout-control-4",
+      "experiment": 1,
+      "condition": "control",
+      "pass_fail_judge1": 1,
+      "pass_fail_judge2": 1,
+      "criteria": [
+        {
+          "name": "C1",
+          "judge1": 1,
+          "judge2": 1
+        },
+        {
+          "name": "C2",
+          "judge1": 1,
+          "judge2": 1
+        },
+        {
+          "name": "C3",
+          "judge1": 1,
+          "judge2": 1
+        },
+        {
+          "name": "C4",
+          "judge1": 1,
+          "judge2": 1
+        },
+        {
+          "name": "C5",
+          "judge1": 0,
+          "judge2": 0
+        },
+        {
+          "name": "C6",
+          "judge1": 1,
+          "judge2": 1
+        }
+      ]
+    },
+    {
+      "id": "scout-treatment-2",
+      "experiment": 1,
+      "condition": "treatment",
+      "pass_fail_judge1": 1,
+      "pass_fail_judge2": 1,
+      "criteria": [
+        {
+          "name": "C1",
+          "judge1": 1,
+          "judge2": 1
+        },
+        {
+          "name": "C2",
+          "judge1": 1,
+          "judge2": 1
+        },
+        {
+          "name": "C3",
+          "judge1": 1,
+          "judge2": 1
+        },
+        {
+          "name": "C4",
+          "judge1": 1,
+          "judge2": 1
+        },
+        {
+          "name": "C5",
+          "judge1": 0,
+          "judge2": 0
+        },
+        {
+          "name": "C6",
+          "judge1": 1,
+          "judge2": 1
+        }
+      ]
+    },
+    {
+      "id": "scout-run-01",
+      "experiment": 2,
+      "condition": "control",
+      "pass_fail_judge1": 1,
+      "pass_fail_judge2": 1,
+      "criteria": [
+        {
+          "name": "C1",
+          "judge1": 1,
+          "judge2": 1
+        },
+        {
+          "name": "C2",
+          "judge1": 1,
+          "judge2": 1
+        },
+        {
+          "name": "C3",
+          "judge1": 1,
+          "judge2": 1
+        },
+        {
+          "name": "C4",
+          "judge1": 1,
+          "judge2": 1
+        },
+        {
+          "name": "C5",
+          "judge1": 1,
+          "judge2": 1
+        },
+        {
+          "name": "C6",
+          "judge1": 1,
+          "judge2": 1
+        },
+        {
+          "name": "C7",
+          "judge1": 1,
+          "judge2": 1
+        }
+      ]
+    },
+    {
+      "id": "scout-run-02",
+      "experiment": 2,
+      "condition": "treatment",
+      "pass_fail_judge1": 1,
+      "pass_fail_judge2": 1,
+      "criteria": [
+        {
+          "name": "C1",
+          "judge1": 1,
+          "judge2": 1
+        },
+        {
+          "name": "C2",
+          "judge1": 1,
+          "judge2": 1
+        },
+        {
+          "name": "C3",
+          "judge1": 1,
+          "judge2": 1
+        },
+        {
+          "name": "C4",
+          "judge1": 1,
+          "judge2": 1
+        },
+        {
+          "name": "C5",
+          "judge1": 1,
+          "judge2": 1
+        },
+        {
+          "name": "C6",
+          "judge1": 1,
+          "judge2": 1
+        },
+        {
+          "name": "C7",
+          "judge1": 1,
+          "judge2": 1
+        }
+      ]
+    },
+    {
+      "id": "scout-run-06",
+      "experiment": 3,
+      "condition": "treatment",
+      "pass_fail_judge1": 1,
+      "pass_fail_judge2": 1,
+      "criteria": [
+        {
+          "name": "C1",
+          "judge1": 0,
+          "judge2": 0
+        },
+        {
+          "name": "C2",
+          "judge1": 1,
+          "judge2": 1
+        },
+        {
+          "name": "C3",
+          "judge1": 1,
+          "judge2": 1
+        },
+        {
+          "name": "C4",
+          "judge1": 1,
+          "judge2": 1
+        },
+        {
+          "name": "C5",
+          "judge1": 0,
+          "judge2": 0
+        },
+        {
+          "name": "C6",
+          "judge1": 0,
+          "judge2": 0
+        },
+        {
+          "name": "C7",
+          "judge1": 1,
+          "judge2": 1
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "n_sessions": 5,
+    "n_criteria_total": 33,
+    "pct_agreement_criteria": 100.0,
+    "kappa_criteria": 1.0,
+    "kappa_criteria_note": "",
+    "pct_agreement_session": 100.0,
+    "kappa_session": null,
+    "kappa_session_note": "ceiling: session-level kappa undefined (all scores identical)"
+  }
+}
