@@ -42,6 +42,8 @@ Scout instructions repeated verbatim (x2), mimicking the paper's `<QUERY><QUERY>
 
 A separate Claude Haiku 4.5 instance scored each output file against the rubric. The scorer received only the output JSON and the rubric criteria. No group labels, no run metadata, no other outputs were visible during scoring.
 
+Inter-rater reliability was validated retrospectively. A second judge (Claude Sonnet 4.6, temperature 0.0) re-scored a stratified sample of 5 sessions (33 criteria) using the identical rubric. Per-criterion agreement was 100% (Cohen's kappa = 1.00); session-level kappa is undefined due to a ceiling effect (all 5 sessions pass for both judges). Raw second-judge scores and the scoring script are in `irr/`.
+
 ## Experiment 1: FastMCP Session ID Refactor
 
 ### Target
@@ -218,7 +220,7 @@ Note: Existing analysis references r = 0.5 as a detection threshold for the rubr
 4. **Single model.** All experiments used Claude Haiku 4.5. Results may not generalize to other models.
 5. **Session log loss.** Experiment 2 `.jsonl` session logs were purged from disk before archival. Per-run message and token counts were reconstructed from SQLite session metadata.
 6. **Experiment 3 rubric-runner misalignment.** Three criteria (C1, C5, C6) required investigations not tasked in the runner prompt. Post-hoc exclusion with structural rationale was applied; see Experiment 3 Post-hoc Criterion Exclusion section.
-7. **Single-judge scoring.** Scoring was performed by a single LLM judge (Claude Haiku 4.5). An inter-rater reliability check using a second judge (Claude Sonnet 4.6) over 5 stratified sessions (33 criteria) was conducted for the ESE journal submission and found perfect per-criterion agreement (κ = 1.00); the rescore file is available in the companion paper repository under `irr/scores.json`.
+7. **Single-judge scoring.** Scoring was performed by a single LLM judge (Claude Haiku 4.5). A retrospective inter-rater reliability check using a second judge (Claude Sonnet 4.6) over 5 stratified sessions (33 criteria) found perfect per-criterion agreement (κ = 1.00); raw scores and the scoring script are in `irr/`.
 8. **Pilot-scale sample size.** Each experiment used n=5 per group, sufficient for exploratory analysis but under-powered for confirmatory inference. A Mann-Whitney U test at this sample size can only detect near-complete separation effects (rank-biserial r >= 0.80) at 80% power. Results should be interpreted as pilot evidence, not confirmatory.
 
 ## Software Versions
