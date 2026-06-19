@@ -186,7 +186,7 @@ This exclusion is classified as structural, not outcome-driven. The direction of
 
 The treatment comparison is therefore restricted to the 4 reachable criteria: C2, C3, C4, and C7.
 
-*Table 5: Experiment 3 per-run scores on the 4 reachable criteria (C2, C3, C4, C7). Control mean: 2.00/4; treatment mean: 2.40/4 (U=15, p=0.61). Values derived from `scores.json`; paper abstract cites 2.60/4 and 2.80/4 due to a draft revision not propagated back to the dataset.*
+*Table 5: Experiment 3 per-run scores on the 4 reachable criteria (C2, C3, C4, C7). Control mean: 2.00/4; treatment mean: 2.40/4; Mann-Whitney U=15, p=0.6072 (two-tailed, not significant), r=-0.20. Values from `scores.json`; paper abstract cites 2.60/4 and 2.80/4 due to a draft revision not propagated back to the dataset.*
 
 | Run | C2 | C3 | C4 | C7 | Total (of 4) |
 |---|---|---|---|---|---|
@@ -200,8 +200,6 @@ The treatment comparison is therefore restricted to the 4 reachable criteria: C2
 | treatment-3 | 1 | 1 | 1 | 1 | 4 |
 | treatment-4 | 0 | 1 | 0 | 1 | 2 |
 | treatment-5 | 0 | 1 | 0 | 1 | 2 |
-
-Mann-Whitney U = 15, p = 0.6072 (two-tailed, not significant), r = -0.20 (small negative effect).
 
 ### Experiment 3: Criterion Pass Rates (Combined, n=10)
 
@@ -241,7 +239,7 @@ Treatment agents used 30.6% fewer tokens in Experiment 1, but 7.2% more in Exper
 
 *Figure 3: Mean messages per group. All three experiments shown. Exp3 agents used far fewer messages (~12-13) than Exp1/2 (~138-209), reflecting the shorter Kotlin task. Exp1 control-1 drift failure excluded.*
 
-*Table 8: Token efficiency by experiment slice.*
+*Table 8: Token efficiency by experiment slice. Exp1 control-1 (drift failure, 93 messages, no output, scored 0) excluded from all rows.*
 
 | Slice | N (control v treatment) | Total token diff |
 |---|---|---|
@@ -249,8 +247,6 @@ Treatment agents used 30.6% fewer tokens in Experiment 1, but 7.2% more in Exper
 | Exp2 only | 5 v 5 | +7.2% (treatment more) |
 | Exp3 only | 5 v 5 | +21.3% (treatment more) |
 | Pooled (excl. control-1 drift) | 14 v 15 | direction varies by experiment |
-
-Exp1 control-1 was a drift failure (93 messages, no output file, scored 0). It is excluded from all token efficiency rows above.
 
 ---
 
