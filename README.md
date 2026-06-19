@@ -10,9 +10,9 @@
 
 ## Abstract
 
-Prompt repetition (duplicating the input prompt verbatim before the task description) has been shown to improve accuracy for non-reasoning LLMs on positional retrieval and multiple-choice benchmarks (Leviathan et al., 2025). Whether this gain extends to agentic settings involving structured, verifiable software-engineering tasks remains an open question. We present three pre-registered controlled experiments in which Claude Haiku 4.5 agent instances (n=5 per condition, temperature 0.5) were assigned either a single-copy or a repeated-prompt instruction under a blinded binary rubric, totalling 30 session logs and 4,306 messages. In Experiment 1 (session-ID refactoring, 6 binary criteria), the repeated-prompt condition showed a non-significant score delta of +0.30 (Mann-Whitney U, n=9 valid runs); in Experiment 2 (AST-scanner implementation, 7 binary criteria), both conditions achieved perfect scores (7/7), producing a complete performance-saturation effect (Mann-Whitney U=12.5, p=1.000) that precluded any treatment comparison; in Experiment 3 (Kotlin grammar synthesis, 7 binary criteria), 3 of 7 rubric criteria were excluded post-hoc (C1, C5, C6) after observing a 0/10 floor across both groups; the root cause was a structural rubric-runner misalignment -- the runner prompt did not ask agents to investigate ABI compatibility, write .kts-specific tests, or inspect LanguageInfo struct fields referenced in PR #659, so those criteria were unreachable regardless of treatment assignment. On the remaining 4 reachable criteria (C2, C3, C4, C7), neither condition exceeded a mean of 2.40/4 (Mann-Whitney U=15, p=0.607), with no significant treatment effect. The exclusion is disclosed as a post-hoc criterion exclusion with structural rationale: the reason for exclusion is independent of score direction (both groups scored identically at zero), so it cannot inflate the treatment effect. Treatment agents used 30.6% fewer tokens in Experiment 1, but 7.2% more in Experiment 2 and 21.3% more in Experiment 3; the direction reverses with session length and cannot be causally attributed to prompt repetition. These results suggest that prompt repetition does not reliably affect agent performance, and that task difficulty strongly moderates outcome. Experiments 1 and 2 exhibited ceiling effects; Experiment 3 revealed rubric-runner co-design failure as a distinct calibration failure mode, in which criteria are structurally unreachable from the runner prompt regardless of agent capability. Both failure modes suppress treatment signal and are methodological findings in their own right.
+Verbatim duplication of an input prompt (prompt repetition) has been shown to improve accuracy for non-reasoning LLMs on retrieval and multiple-choice benchmarks (Leviathan et al., 2025). We ask whether the same intervention applied to fixed delegate instructions produces similar gains in multi-step agentic pipelines. We present three pre-registered controlled experiments in which Claude Haiku 4.5 delegates (n=5 per condition, temperature 0.5) were assigned either a single-copy or a repeated-prompt instruction under blinded binary rubric scoring, totalling 30 sessions and 4,306 messages. Experiment 1 (session-ID refactoring, 6 criteria) yielded a non-significant score delta of +0.30, with five of six criteria saturated at 100% in both groups. Experiment 2 (tree-sitter scanner evaluation, 7 criteria) produced a complete ceiling effect with all 10 runs scoring 7/7 (Mann-Whitney U=12.5, p=1.000). Experiment 3 (Kotlin grammar synthesis, 7 criteria) revealed a distinct failure mode: three of seven criteria scored 0/10 across both groups due to rubric-runner co-design failure, where criteria required investigations absent from the runner prompt; on the four reachable criteria the treatment effect was non-significant (U=15, p=0.607). Across all three experiments we detect no effect of prompt repetition on task success. Two calibration failure modes suppressed treatment signal: performance saturation (Experiments 1 and 2) and rubric-runner misalignment (Experiment 3); both are identifiable from the data and constitute methodological findings in their own right.
 
-Supplementary data for [Ceiling Effects and Convergence: Null Results for Instruction Repetition in LLM-Agent Pipelines](https://clouatre.ca/posts/prompt-repetition-agent-evaluation/) -- Clouatre, HEC Montréal, 2026.
+Supplementary data for [Ceiling Effects and Convergence: Null Results for Instruction Repetition in LLM-Agent Pipelines](https://clouatre.ca/posts/prompt-repetition-agent-evaluation/). Clouatre, HEC Montréal, 2026.
 
 </div>
 
@@ -29,6 +29,8 @@ Companion blog post: [What a Null Result Taught Us About AI Agent Evaluation](ht
 ## The Question
 
 Does repeating the instruction prompt verbatim improve task-success rates for LLM agents executing structured, criterion-graded software-engineering tasks, relative to a single-copy instruction baseline? More broadly, do prompt-level redundancy interventions that benefit non-reasoning models on retrieval benchmarks generalise to agentic settings with verifiable, multi-criterion success conditions?
+
+*Code Snippet 1: Experimental design overview.*
 
 ```text
 Experiment setup:
@@ -48,6 +50,8 @@ Each delegate's output was scored against a pre-registered binary rubric (0/1 pe
 
 ### Experiment 1: FastMCP Session ID Refactor (6 criteria)
 
+*Table 1: Experiment 1 criterion pass rates (n=9).*
+
 | Criterion | Description | Pass rate | 95% CI (Wilson) | n |
 |-----------|-------------|-----------|-----------------|---|
 | C1 | Source file 1 identified | 100% | [70.1%, 100%] | 9 |
@@ -58,6 +62,8 @@ Each delegate's output was scored against a pre-registered binary rubric (0/1 pe
 | C6 | FastMCP docs consulted | 100% | [70.1%, 100%] | 9 |
 
 ### Experiment 2: Tree-sitter AST Scanner (7 criteria)
+
+*Table 2: Experiment 2 criterion pass rates (n=10).*
 
 | Criterion | Description | Pass rate | 95% CI (Wilson) | n |
 |-----------|-------------|-----------|-----------------|---|
@@ -83,18 +89,20 @@ C5-C7 in Experiment 2 require reading and synthesizing actual source code. They 
 
 *Figure 2: Criterion pass rates across all three experiments (vertical panels). Top: Exp1 FastMCP refactor (n=9). Middle: Exp2 tree-sitter AST scanner (n=10), complete ceiling. Bottom: Exp3 Kotlin grammar synthesis (n=10); grey bars (C1, C5, C6) are structurally excluded criteria (rubric-runner misalignment).*
 
+*Table 3: Summary results by experiment and group. Exp3 pass rates shown over all 7 criteria; treatment comparison restricted to C2, C3, C4, C7 after post-hoc exclusion of C1, C5, C6 (rubric-runner misalignment).*
+
 | Experiment | Group | n (valid) | Pass rate (overall) | Tokens (mean) | Messages (mean) |
 |------------|-------|-----------|---------------------|---------------|-----------------|
 | Exp1: FastMCP refactor | Control | 4 | 97% | 1,032,363 | 209 |
 | Exp1: FastMCP refactor | Treatment | 5 | 93% | 716,275 | 138 |
 | Exp2: Tree-sitter synthesis | Control | 5 | 100% | 703,993 | 152 |
 | Exp2: Tree-sitter synthesis | Treatment | 5 | 100% | 755,029 | 139 |
-| Exp3: Kotlin grammar synthesis | Control | 5 | 29% (4-criterion: see note a) | n/a | 12 |
-| Exp3: Kotlin grammar synthesis | Treatment | 5 | 34% (4-criterion: see note a) | n/a | 13 |
-
-*Note a: Exp3 pass rates computed over all 7 criteria for completeness; treatment comparison restricted to 4 criteria (C2, C3, C4, C7) after post-hoc exclusion of C1, C5, C6 -- see Experiment 3 section.*
+| Exp3: Kotlin grammar synthesis | Control | 5 | 29% | n/a | 12 |
+| Exp3: Kotlin grammar synthesis | Treatment | 5 | 34% | n/a | 13 |
 
 ### Experiment 1: FastMCP Session ID Refactor
+
+*Code Snippet 2: Experiment 1 per-run scores. control-1 excluded (drift failure, 93 messages, no output). C5 was the sole discriminating criterion; all others at 100% in both groups.*
 
 ```text
 Run           C1  C2  C3  C4  C5  C6  Total
@@ -115,9 +123,9 @@ Delta: +0.30 (not significant, n=4/5 per group)
 Fisher's exact p = 1.000 (n=4 control, n=5 treatment); r = +0.25 (small positive effect, Mann-Whitney)
 ```
 
-One control run excluded (drift failure at 93 messages, no output produced). C5 was the only discriminating criterion; all others scored 100% in both groups.
-
 ### Experiment 2: Tree-sitter AST Scanner
+
+*Code Snippet 3: Experiment 2 per-run scores. Complete ceiling: all 10 runs scored 7/7. C5-C7 required source code synthesis; Claude Haiku 4.5 cleared every criterion regardless of repetition.*
 
 ```text
 Run       C1  C2  C3  C4  C5  C6  C7  Total
@@ -135,9 +143,9 @@ run-10     1   1   1   1   1   1   1   7/7
 Mann-Whitney U = 12.5, p = 1.0 (degenerate: all scores identical), r = 0.00 (no effect)
 ```
 
-Perfect scores across all 10 runs. Complete ceiling effect. The rubric was designed to be harder (C5-C7 require source code synthesis), but Claude Haiku 4.5 with structured Scout instructions cleared every criterion regardless of repetition.
-
 ### Experiment 3: Kotlin Grammar Synthesis
+
+*Code Snippet 4: Experiment 3 per-run scores (all 7 criteria, n=10). C7 ceiling (100% both groups); C1, C5, C6 floor (0% both groups, structurally unreachable). C3 and C4 showed partial discriminability.*
 
 ```text
 Run           C1  C2  C3  C4  C5  C6  C7  Total
@@ -158,7 +166,7 @@ Treatment avg                               2.4/7
 Delta: +0.40 (not significant, U=15, p=0.61)
 ```
 
-C7 was the only ceiling criterion (100% both groups): structural wiring is well-documented in the target issue. C1, C5, and C6 were floor criteria (0% both groups): ABI compatibility evidence, .kts-specific test coverage, and DEFUSE_QUERY struct inspection all required deep source synthesis that agents consistently failed to produce. C3 and C4 showed partial discriminability.
+*Table 4: Experiment 3 criterion pass rates by group (control vs. treatment, n=5 each).*
 
 | Criterion | Control pass rate | Treatment pass rate |
 |---|---|---|
@@ -172,11 +180,13 @@ C7 was the only ceiling criterion (100% both groups): structural wiring is well-
 
 **Post-hoc Criterion Exclusion**
 
-C1, C5, and C6 scored 0/10 across both groups combined -- a universal floor. On inspection of the runner prompt (`experiments/exp3-kotlin-grammar/runner-prompt.md`), none of these criteria were reachable: the prompt did not ask agents to investigate ABI compatibility (C1), write .kts-specific test cases (C5), or inspect the `LanguageInfo` struct fields referenced in PR #659 (C6). Agents had no instruction to perform these sub-tasks, so 0% pass rates reflect rubric-runner co-design failure, not agent capability.
+C1, C5, and C6 scored 0/10 across both groups combined, a universal floor. On inspection of the runner prompt (`experiments/exp3-kotlin-grammar/runner-prompt.md`), none of these criteria were reachable: the prompt did not ask agents to investigate ABI compatibility (C1), write .kts-specific test cases (C5), or inspect the `LanguageInfo` struct fields referenced in PR #659 (C6). Agents had no instruction to perform these sub-tasks, so 0% pass rates reflect rubric-runner co-design failure, not agent capability.
 
 This exclusion is classified as structural, not outcome-driven. The direction of any treatment effect on the excluded criteria is irrelevant: both groups scored identically at zero, so excluding C1/C5/C6 cannot inflate the treatment advantage on the remaining criteria. This satisfies the pre-registration amendment standard in empirical SE (cf. Shull et al. 2008, Wohlin et al. 2012): the exclusion reason is orthogonal to the outcome direction.
 
 The treatment comparison is therefore restricted to the 4 reachable criteria: C2, C3, C4, and C7.
+
+*Table 5: Experiment 3 per-run scores on the 4 reachable criteria (C2, C3, C4, C7). Control mean: 2.00/4; treatment mean: 2.40/4; U=15, p=0.6072, r=-0.20 (not significant). Dataset-authoritative; paper abstract cites 2.60/4 and 2.80/4 due to an unsynced draft revision.*
 
 | Run | C2 | C3 | C4 | C7 | Total (of 4) |
 |---|---|---|---|---|---|
@@ -191,13 +201,9 @@ The treatment comparison is therefore restricted to the 4 reachable criteria: C2
 | treatment-4 | 0 | 1 | 0 | 1 | 2 |
 | treatment-5 | 0 | 1 | 0 | 1 | 2 |
 
-*Table: Per-run scores on the 4 reachable criteria. Control mean: 2.00/4; treatment mean: 2.40/4.*
-
-Mann-Whitney U = 15, p = 0.6072 (two-tailed, not significant), r = -0.20 (small negative effect).
-
-> **Note:** The associated paper's abstract cites means of 2.60/4 (control) and 2.80/4 (treatment); these differ from the values above due to a revision in the paper draft that was not propagated back to the dataset. The values above (2.00/4 and 2.40/4) are derived directly from `scores.json` and are authoritative.
-
 ### Experiment 3: Criterion Pass Rates (Combined, n=10)
+
+*Table 6: Experiment 3 combined criterion pass rates (n=10, all 7 criteria). C1, C5, C6 structurally excluded from treatment comparison (rubric-runner misalignment); included here for completeness.*
 
 | Criterion | Description | Pass rate | 95% CI (Wilson) | n |
 |-----------|-------------|-----------|-----------------|---|
@@ -209,9 +215,9 @@ Mann-Whitney U = 15, p = 0.6072 (two-tailed, not significant), r = -0.20 (small 
 | C6 | DEFUSE_QUERY justification | 0% | [0%, 27.8%] | 10 |
 | C7 | Structural wiring | 100% | [72.25%, 100%] | 10 |
 
-C1, C5, C6 structurally excluded from treatment comparison (rubric-runner misalignment); included here for completeness.
-
 ### Summary
+
+*Table 7: Cross-experiment summary of task, rubric, valid runs, and result.*
 
 | | Experiment 1 | Experiment 2 | Experiment 3 |
 |---|---|---|---|
@@ -223,7 +229,7 @@ C1, C5, C6 structurally excluded from treatment comparison (rubric-runner misali
 | **Result** | 5/6 criteria at 100% both groups | 7/7 criteria at 100% both groups | 3/7 criteria structurally excluded (rubric-runner misalignment on C1, C5, C6); 4-criterion analysis non-significant (U=15, p=0.61) |
 | **Valid runs** | 9 of 10 (1 drift failure) | 10 of 10 | 10 of 10 |
 
-**Conclusion:** No detectable treatment effect across all three experiments on the reachable criteria. The null result is robust: it holds in Experiment 1 (near-ceiling, single discriminating criterion), Experiment 2 (complete ceiling), and Experiment 3 (4-criterion restricted analysis, U=15, p=0.61). Two distinct calibration failure modes suppressed treatment signal across experiments: performance saturation (Experiments 1 and 2), and rubric-runner co-design misalignment (Experiment 3), in which rubric criteria were structurally unreachable from the runner prompt. Both failure modes are identifiable from the data and constitute methodological contributions: ceiling and floor effects are well-understood, but rubric-runner misalignment -- where criteria are defined independently of what the runner instructs agents to do -- is a less-documented failure mode endemic to multi-agent evaluation pipelines.
+**Conclusion:** No detectable treatment effect across all three experiments on the reachable criteria. The null result is robust: it holds in Experiment 1 (near-ceiling, single discriminating criterion), Experiment 2 (complete ceiling), and Experiment 3 (4-criterion restricted analysis, U=15, p=0.61). Two distinct calibration failure modes suppressed treatment signal across experiments: performance saturation (Experiments 1 and 2) and rubric-runner co-design misalignment (Experiment 3), in which rubric criteria were structurally unreachable from the runner prompt. Both failure modes are identifiable from the data and constitute methodological contributions: ceiling and floor effects are well-understood, but rubric-runner misalignment, where criteria are defined independently of what the runner instructs agents to do, is a less-documented failure mode endemic to multi-agent evaluation pipelines.
 
 ### Token Efficiency
 
@@ -231,7 +237,9 @@ Treatment agents used 30.6% fewer tokens in Experiment 1, but 7.2% more in Exper
 
 ![Message counts by group and experiment](figures/fig3-message-counts.png)
 
-*Figure 3: Mean messages per group. All three experiments shown. Exp3 agents used far fewer messages (~12-13) than Exp1/2 (~138-209), reflecting the shorter Kotlin task. Exp1 control-1 drift failure excluded.*
+*Figure 3: Mean messages per group. Exp3 agents used far fewer messages (~12-13) than Exp1/2 (~138-209), reflecting the shorter Kotlin task. Exp1 control-1 drift failure excluded.*
+
+*Table 8: Token efficiency by experiment slice. Exp1 control-1 (drift failure, 93 messages, no output, scored 0) excluded from all rows.*
 
 | Slice | N (control v treatment) | Total token diff |
 |---|---|---|
@@ -239,8 +247,6 @@ Treatment agents used 30.6% fewer tokens in Experiment 1, but 7.2% more in Exper
 | Exp2 only | 5 v 5 | +7.2% (treatment more) |
 | Exp3 only | 5 v 5 | +21.3% (treatment more) |
 | Pooled (excl. control-1 drift) | 14 v 15 | direction varies by experiment |
-
-Exp1 control-1 was a drift failure (93 messages, no output file, scored 0). It is excluded from all token efficiency rows above.
 
 ---
 
@@ -255,13 +261,15 @@ graph TD
     S --> R[Results<br/>scores.json]
 ```
 
-All delegates run on Claude Haiku 4.5 at temperature 0.5. The orchestrator spawns delegates in parallel, subject to a 5-delegate concurrency cap discovered during experimentation.
+*Figure 4: Experiment flow. Orchestrator spawns control and treatment delegates in parallel (5-delegate concurrency cap); outputs scored by a blind rubric.*
 
 ---
 
 ## Infrastructure Confound
 
 The 5-delegate concurrency cap is undocumented. It is enforced as a hard rejection in source (`GOOSE_MAX_BACKGROUND_TASKS` defaults to 5), with no queuing or retry. Excess delegates are dropped, not deferred. With 10 delegates, this silently split our groups into two sequential batches:
+
+*Code Snippet 5: Experiment 2 batch execution timeline. Batch 2 delegates had stale context (4 minutes older); confound visible in `experiments/*/raw/orchestrator.jsonl`.*
 
 ```text
 Experiment 2 timeline:
@@ -272,11 +280,11 @@ Experiment 2 timeline:
   22:23:00  Batch 2 completes
 ```
 
-Batch 2 delegates had stale context (4 minutes older). The raw orchestrator logs in `experiments/*/raw/orchestrator.jsonl` show this behavior. This class of confound (runtime resource limits, queue behavior, model routing) is endemic to agent systems and invisible without structured logging.
-
 ---
 
 ## Inspecting the Data
+
+*Code Snippet 6: Commands to inspect scores, group assignments, and raw session logs.*
 
 ```bash
 # View per-run scores with justifications
@@ -302,6 +310,8 @@ cat experiments/exp2-treesitter-synthesis/raw/scout-run-01.jsonl | \
 ---
 
 ## Project Structure
+
+*Code Snippet 7: Repository directory structure.*
 
 ```text
 prompt-repetition-experiments/
@@ -377,6 +387,8 @@ This repository contains everything needed to verify our claims and reproduce th
 To reproduce with different tasks or models, follow the protocols in `experiments/*/protocol.md` and substitute your target issue and model. The recipe (`recipe/goose-coder-v4.1.0.yaml`) defines the full agent architecture.
 
 ### Software Versions
+
+*Table 9: Software versions used across experiments.*
 
 | Component | Version |
 |---|---|
