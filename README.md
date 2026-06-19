@@ -166,7 +166,7 @@ Treatment avg                               2.4/7
 Delta: +0.40 (not significant, U=15, p=0.61)
 ```
 
-*Table 4: Experiment 3 criterion pass rates by group.*
+*Table 4: Experiment 3 criterion pass rates by group (control vs. treatment, n=5 each).*
 
 | Criterion | Control pass rate | Treatment pass rate |
 |---|---|---|
@@ -186,7 +186,7 @@ This exclusion is classified as structural, not outcome-driven. The direction of
 
 The treatment comparison is therefore restricted to the 4 reachable criteria: C2, C3, C4, and C7.
 
-*Table 5: Experiment 3 per-run scores on the 4 reachable criteria (C2, C3, C4, C7). Control mean: 2.00/4; treatment mean: 2.40/4; Mann-Whitney U=15, p=0.6072 (two-tailed, not significant), r=-0.20. Values from `scores.json`; paper abstract cites 2.60/4 and 2.80/4 due to a draft revision not propagated back to the dataset.*
+*Table 5: Experiment 3 per-run scores on the 4 reachable criteria (C2, C3, C4, C7). Control mean: 2.00/4; treatment mean: 2.40/4; U=15, p=0.6072, r=-0.20 (not significant). Dataset-authoritative; paper abstract cites 2.60/4 and 2.80/4 due to an unsynced draft revision.*
 
 | Run | C2 | C3 | C4 | C7 | Total (of 4) |
 |---|---|---|---|---|---|
@@ -217,7 +217,7 @@ The treatment comparison is therefore restricted to the 4 reachable criteria: C2
 
 ### Summary
 
-*Table 7: Cross-experiment summary.*
+*Table 7: Cross-experiment summary of task, rubric, valid runs, and result.*
 
 | | Experiment 1 | Experiment 2 | Experiment 3 |
 |---|---|---|---|
@@ -237,7 +237,7 @@ Treatment agents used 30.6% fewer tokens in Experiment 1, but 7.2% more in Exper
 
 ![Message counts by group and experiment](figures/fig3-message-counts.png)
 
-*Figure 3: Mean messages per group. All three experiments shown. Exp3 agents used far fewer messages (~12-13) than Exp1/2 (~138-209), reflecting the shorter Kotlin task. Exp1 control-1 drift failure excluded.*
+*Figure 3: Mean messages per group. Exp3 agents used far fewer messages (~12-13) than Exp1/2 (~138-209), reflecting the shorter Kotlin task. Exp1 control-1 drift failure excluded.*
 
 *Table 8: Token efficiency by experiment slice. Exp1 control-1 (drift failure, 93 messages, no output, scored 0) excluded from all rows.*
 
@@ -261,7 +261,7 @@ graph TD
     S --> R[Results<br/>scores.json]
 ```
 
-*Figure 4: Experiment flow. All delegates run on Claude Haiku 4.5 at temperature 0.5. The orchestrator spawns delegates in parallel, subject to a 5-delegate concurrency cap.*
+*Figure 4: Experiment flow. Orchestrator spawns control and treatment delegates in parallel (5-delegate concurrency cap); outputs scored by a blind rubric.*
 
 ---
 
@@ -284,7 +284,7 @@ Experiment 2 timeline:
 
 ## Inspecting the Data
 
-*Code Snippet 6: Shell commands for inspecting experiment data.*
+*Code Snippet 6: Commands to inspect scores, group assignments, and raw session logs.*
 
 ```bash
 # View per-run scores with justifications
