@@ -9,7 +9,7 @@ authors:
 repository-code: https://github.com/clouatre-labs/prompt-repetition-experiments
 url: https://clouatre.ca/posts/prompt-repetition-agent-evaluation/
 license: Apache-2.0
-date-released: "2026-05-05"
+date-released: "2026-06-19"
 identifiers:
   - type: doi
     value: 10.5281/zenodo.19696593
@@ -17,7 +17,7 @@ identifiers:
   - type: doi
     value: 10.5281/zenodo.20039271
     description: Zenodo preprint DOI (associated paper)
-version: "1.0.7"
+version: "1.0.9"
 abstract: >
   30 agent sessions (4,306 messages) across three pre-registered controlled experiments
   testing whether prompt repetition improves LLM-agent task completion on structured
