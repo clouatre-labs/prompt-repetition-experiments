@@ -57,7 +57,7 @@ def load_per_group_criteria(exp_dir):
                 if m:
                     grp = "control" if int(m.group(1)) % 2 == 1 else "treatment"
 
-        # Criterion scores — two layouts: flat ints (exp1/exp2) or nested dicts (exp3)
+        # Criterion scores: two layouts, flat ints (exp1/exp2) or nested dicts (exp3)
         raw_scores = item.get("scores", None)
         if raw_scores is not None:
             # exp3: {"C1": {"score": 0, ...}, ...}
