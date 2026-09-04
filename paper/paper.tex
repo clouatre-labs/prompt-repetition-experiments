@@ -50,7 +50,7 @@
 \vspace{3mm}
 \textbf{Context:} Prompt repetition, the verbatim duplication of an input transforming
 \texttt{<QUERY>} into \texttt{<QUERY><QUERY>}, has been shown to improve accuracy for
-non-reasoning large language models on retrieval and multiple-choice benchmarks \citep{leviathan2025}.
+non-reasoning large language models on retrieval and multiple-choice benchmarks.
 \textbf{Objective:} We ask whether applying this analogous pattern to fixed delegate
 instructions produces similar gains in multi-step agentic pipelines.
 \textbf{Method:} Three pre-registered controlled experiments used Claude Haiku 4.5 delegates
@@ -95,15 +95,13 @@ agent-authored pull requests from real-world GitHub repositories; our study comp
 observational corpus with a controlled laboratory design that enables causal inference over a
 single variable (instruction repetition) while holding task, model, and temperature constant.
 
-Three pre-registered controlled experiments address that gap, making the following contributions:
+Three pre-registered controlled experiments address that gap.
 
-\textbf{RQ1:} Does prompt repetition (the duplicate-query pattern applied to delegate instructions) improve task success rates in multi-step LLM-agent pipelines?
+\textbf{RQ:} Does prompt repetition (the duplicate-query pattern applied to delegate instructions) improve task success rates in multi-step LLM-agent pipelines?
 
-\textbf{RQ2:} Does prompt repetition affect token and message efficiency in LLM-agent pipelines?
+This is the paper's confirmatory, pre-registered question \citep{kitchenham2002guidelines}. Because repeating an instruction changes prompt length, we also track token and message efficiency as an exploratory secondary measure in every experiment. Experiment~3 additionally surfaced rubric-runner co-design failure, a distinct evaluation failure mode characterized in \S\ref{sec:discussion} as exploratory rather than pre-specified.
 
-\textbf{RQ3:} What failure modes emerge from rubric-runner co-design in blinded LLM evaluation?
-
-This paper contributes a null result across three pre-registered experiments, a formal characterization of \emph{rubric-runner co-design failure} as a distinct evaluation failure mode in which rubric criteria are structurally unreachable from the runner prompt, and an open dataset of session logs, scoring justifications, and label-map timestamps archived at \href{https://doi.org/10.5281/zenodo.19696593}{DOI:10.5281/zenodo.19696593} \citep{clouatre2026dataset}, enabling replication and secondary analysis.
+This paper contributes a null result across three pre-registered experiments, a formal characterization of \emph{rubric-runner co-design failure} as a distinct evaluation failure mode in which rubric criteria are structurally unreachable from the runner prompt, and an open dataset of session logs, scoring justifications, and label-map timestamps archived at \href{https://doi.org/10.5281/zenodo.19696593}{DOI:10.5281/zenodo.19696593} \citep{clouatre2026dataset}, enabling replication and secondary analysis. Negative results remain rare in software engineering research despite explicit calls to value them \citep{paige2017negative}. Without published null results, a positive finding risks being generalized to untested settings \citep{wieringa2015generalizing}; we report this result to constrain that generalization, not as a preliminary finding awaiting confirmation.
 
 This work addresses topics from the Empirical Software Engineering Special Issue on Agentic Software Engineering: failure patterns in agentic systems (rubric-runner co-design failure), and testing and evaluation of AI agents (pre-registered rubric scoring pipeline).
 
@@ -118,8 +116,8 @@ suppress treatment signals regardless of intervention strength.
 \citet{zheng2023} establish LLM-as-judge as a practical but validity-limited approach, recommending
 inter-rater reliability measures, and report over 80\% agreement between GPT-4
 judgments and human preferences on MT-Bench, but note position bias. \citet{shen2023} find single-judge agreement with human raters ranges from
-$\kappa{=}0.3$ to $\kappa{=}0.7$ depending on task type \citep{yamauchi2025,jiang2024survey,hashemi2024llmrubric}.
-The MSR~2026 Mining Challenge applied AIDev to characterise agent failure taxonomies, task-stratified acceptance, and review effort \citep{failureMSR2026,comparingMSR2026,revieweffortMSR2026,aiidesMSR2026}; none of these observational studies isolates instruction repetition as a controlled pre-registered independent variable.
+$\kappa{=}0.3$ to $\kappa{=}0.7$ depending on task type \citep{hashemi2024llmrubric}.
+The MSR~2026 Mining Challenge applied AIDev to characterise agent failure taxonomies, task-stratified acceptance, and review effort \citep{failureMSR2026,comparingMSR2026,revieweffortMSR2026}; none of these observational studies isolates instruction repetition as a controlled pre-registered independent variable.
 The present experiments use a single Haiku~4.5 judge; inter-rater reliability was validated in \S\ref{subsec:scoring-validation}.
 \citet{adaptorch2026} show that static parallel agent topologies
 achieve competitive results on SWE-bench Verified under greedy decoding, supporting the
@@ -270,7 +268,7 @@ Both groups scored identically (0/1) on C1, C5, and C6, so excluding them cannot
 
 \subsection{Task Success}
 
-To address RQ1, we compare task success rates between control and treatment groups.
+To address this question, we compare task success rates between control and treatment groups.
 
 Experiment~1 used Fisher's exact test (see \S\ref{sec:preregistration}); Mann-Whitney columns are shown for consistency. Experiment~2 produced a complete ceiling effect:
 all ten runs scored 7/7, rendering the test uninformative ($U{=}12.5$, $p{=}1.000$,
@@ -316,7 +314,7 @@ when the task is explicitly set.
 
 \subsection{Token and Message Efficiency}
 
-To address RQ2, we compare token and message counts between conditions.
+As a secondary, exploratory outcome measure, we compare token and message counts between conditions.
 
 In Experiment~1, treatment agents consumed 30.6\% fewer total tokens than control
 (median 1{,}032{,}311 vs.\ 716{,}324); treatment sessions converged in fewer turns (see Table~\ref{tab:efficiency}).
@@ -350,7 +348,7 @@ Experiment & Condition & Median Total Tokens & Median Messages & Median Latency 
 
 \subsection{Per-Criterion Pass Rates}
 
-To address RQ3, we examine per-criterion pass rates to identify rubric-runner co-design failures.
+To characterize the rubric-runner co-design failure identified during analysis (\S\ref{sec:amendments}), we examine per-criterion pass rates.
 
 Fig.~\ref{fig:passrates} displays per-criterion pass rates with Wilson 95\% confidence
 intervals. The pattern of near-uniform ceiling saturation in Experiments~1 and~2 contrasts
@@ -451,7 +449,7 @@ repetition and warrant a dedicated replication.
 \subsection{Construct Validity}
 
 Three aspects of the rubric design threaten construct validity.
-First, the rubric-runner co-design failure documented in \S\ref{sec:discussion}---where three of seven criteria in Experiment~3 scored 0/1 because the runner prompt lacked instructions for the required investigations---means those criteria measure runner-prompt completeness rather than agent capability, limiting our ability to conclude that prompt repetition affects criterion-level pass rates on structurally unreachable items.
+First, \S\ref{sec:discussion} documents a rubric-runner co-design failure: three of seven criteria in Experiment~3 scored 0/1 because the runner prompt lacked instructions for the required investigations. As a result, those criteria measure runner-prompt completeness rather than agent capability, limiting our ability to conclude that prompt repetition affects criterion-level pass rates on structurally unreachable items.
 Second, the binary pass/fail granularity of each criterion compresses within-condition variance, reducing sensitivity to partial improvements that a polytomous or continuous scoring scheme might detect.
 Third, scoring stability across alternative rubric phrasings was not tested, which limits our ability to conclude that the observed pass rates are robust to wording variation.
 
@@ -461,7 +459,7 @@ Several uncontrolled sources of variance limit internal validity.
 First, Goose version 1.25.0 was used for Experiments~1 and~2 while version 1.31.1 was used for Experiment~3; version-specific behavioral changes in agent scheduling or tool-handling logic cannot be ruled out as confounds.
 Second, two individual runs in Experiment~3 fell back to Bedrock due to Vertex AI rate limits before retrying successfully on Vertex; all token and score data derive from the successful Vertex runs, but the transient provider switch cannot be ruled out as a minor infrastructure variable.
 Third, a single LLM judge (Claude Haiku~4.5) performed all rubric scoring with no human calibration; an inter-rater reliability check using a second LLM judge (Claude Sonnet~4.6) across 5 stratified sessions found perfect agreement ($\kappa = 1.00$, see~\S\ref{subsec:scoring-validation}), though the small sample and ceiling effects limit the precision of this estimate, and our ability to conclude that scores are reproducible across non-LLM judges remains limited.
-Fourth, task ordering within each session was not randomized or counterbalanced; order effects---fatigue, learning, or context carry-over---are uncontrolled and limit our ability to attribute score differences solely to the treatment.
+Fourth, task ordering within each session was not randomized or counterbalanced. Order effects such as fatigue, learning, or context carry-over are therefore uncontrolled, limiting our ability to attribute score differences solely to the treatment.
 Fifth, as discussed in \S\ref{sec:discussion}, the \texttt{GOOSE\_MAX\_BACKGROUND\_TASKS} concurrency cap serialized Experiment~2 delegates into two batches; while this did not affect the statistical conclusion in the present ceiling-affected data, it limits our ability to conclude that latency or delegation dynamics were uniform across the experiment.
 
 \subsection{External Validity}
@@ -470,7 +468,7 @@ The experimental design constrains external validity along four dimensions.
 First, only three software-engineering tasks were sampled (session-ID refactoring, tree-sitter scanner implementation, and Kotlin grammar synthesis), which limits our ability to generalize to the broader distribution of SWE-bench-style tasks or to non-engineering domains such as data analysis or creative writing.
 Second, all experiments used a single model (Claude Haiku 4.5) at a single temperature ($0.5$); results may not generalize to reasoning models, larger tiers, or other providers.
 Third, a single agentic framework (Goose) was used; framework-specific features such as delegate spawning semantics or context-window boundaries may interact with prompt-repetition effects in ways that limit generalizability to other frameworks such as LangGraph or CrewAI.
-Fourth, the controlled lab setting---pre-defined tasks, isolated repositories, and scripted pipeline execution---limits our ability to conclude that the null results hold in production pipelines with variable task difficulty, real-time API failures, and human-in-the-loop interruptions.
+Fourth, the lab setting used pre-defined tasks, isolated repositories, and scripted pipeline execution. This limits our ability to conclude that the null results hold in production pipelines, which face variable task difficulty, real-time API failures, and human-in-the-loop interruptions.
 
 \subsection{Conclusion Validity}
 
@@ -478,7 +476,7 @@ Statistical power and design choices constrain conclusion validity.
 The sample size of $n{=}5$ per condition was underpowered for medium effect sizes (Cohen's $d \approx 0.5$); the study was powered for large effects only, which limits our ability to conclude that prompt repetition has no practically meaningful effect at smaller effect sizes.
 No multiple-comparison correction was applied across the three experiments, inflating the family-wise error rate.
 Ceiling effects in Experiments~1 and~2 compress variance and further reduce statistical power, making true effects harder to detect even if they exist.
-Finally, Experiment~1 was not fully pre-registered---the statistical test was not pre-specified---which mitigates but does not eliminate the risk of HARKing (hypothesizing after results are known); the partial pre-registration limits our ability to classify all three experiments as confirmatory.
+Finally, Experiment~1 was not fully pre-registered: the statistical test was not pre-specified. This partial pre-registration mitigates but does not eliminate the risk of HARKing (hypothesizing after results are known), and limits our ability to classify all three experiments as confirmatory.
 
 \section{Conclusion}
 \label{sec:conclusion}
