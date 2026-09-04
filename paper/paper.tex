@@ -439,9 +439,8 @@ produces any signal once ceiling and floor artifacts are removed. Second,
 multi-judge scoring with a reported intraclass correlation coefficient remains
 a key validity gap. A single LLM judge cannot detect systematic scorer bias;
 a human--model cross-validation would strengthen internal
-validity. Third, all delegates used Haiku 4.5; reasoning models and
-larger tiers may exhibit different context-weighting dynamics under prompt
-repetition and warrant a dedicated replication.
+validity. Third, all delegates used Haiku 4.5; other tiers may exhibit
+different context-weighting dynamics under prompt repetition.
 
 \section{Threats to Validity}
 \label{sec:threats}
@@ -451,7 +450,7 @@ repetition and warrant a dedicated replication.
 Three aspects of the rubric design threaten construct validity.
 First, \S\ref{sec:discussion} documents a rubric-runner co-design failure: three of seven criteria in Experiment~3 scored 0/1 because the runner prompt lacked instructions for the required investigations. As a result, those criteria measure runner-prompt completeness rather than agent capability, limiting our ability to conclude that prompt repetition affects criterion-level pass rates on structurally unreachable items.
 Second, the binary pass/fail granularity of each criterion compresses within-condition variance, reducing sensitivity to partial improvements that a polytomous or continuous scoring scheme might detect.
-Third, scoring stability across alternative rubric phrasings was not tested, which limits our ability to conclude that the observed pass rates are robust to wording variation.
+Third, scoring stability across alternative rubric phrasings was not tested; a replication with criteria rewritten for full rubric-runner alignment ($A{=}1.0$, \S\ref{sec:discussion}) would test whether the observed effects hold under corrected instructions.
 
 \subsection{Internal Validity}
 
