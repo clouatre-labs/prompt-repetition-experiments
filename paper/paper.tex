@@ -50,7 +50,7 @@
 \vspace{3mm}
 \textbf{Context:} Prompt repetition, the verbatim duplication of an input transforming
 \texttt{<QUERY>} into \texttt{<QUERY><QUERY>}, has been shown to improve accuracy for
-non-reasoning large language models on retrieval and multiple-choice benchmarks \citep{leviathan2025}.
+non-reasoning large language models on retrieval and multiple-choice benchmarks.
 \textbf{Objective:} We ask whether applying this analogous pattern to fixed delegate
 instructions produces similar gains in multi-step agentic pipelines.
 \textbf{Method:} Three pre-registered controlled experiments used Claude Haiku 4.5 delegates
@@ -95,15 +95,13 @@ agent-authored pull requests from real-world GitHub repositories; our study comp
 observational corpus with a controlled laboratory design that enables causal inference over a
 single variable (instruction repetition) while holding task, model, and temperature constant.
 
-Three pre-registered controlled experiments address that gap, making the following contributions:
+Three pre-registered controlled experiments address that gap.
 
-\textbf{RQ1:} Does prompt repetition (the duplicate-query pattern applied to delegate instructions) improve task success rates in multi-step LLM-agent pipelines?
+\textbf{RQ:} Does prompt repetition (the duplicate-query pattern applied to delegate instructions) improve task success rates in multi-step LLM-agent pipelines?
 
-\textbf{RQ2:} Does prompt repetition affect token and message efficiency in LLM-agent pipelines?
+This is the paper's confirmatory, pre-registered question \citep{kitchenham2002guidelines}. Because repeating an instruction changes prompt length, we additionally track token and message efficiency as an exploratory secondary measure in every experiment. Analysis of Experiment~3 also surfaced a distinct evaluation failure mode, rubric-runner co-design failure, characterized in \S\ref{sec:discussion} as an exploratory finding rather than a pre-specified question.
 
-\textbf{RQ3:} What failure modes emerge from rubric-runner co-design in blinded LLM evaluation?
-
-This paper contributes a null result across three pre-registered experiments, a formal characterization of \emph{rubric-runner co-design failure} as a distinct evaluation failure mode in which rubric criteria are structurally unreachable from the runner prompt, and an open dataset of session logs, scoring justifications, and label-map timestamps archived at \href{https://doi.org/10.5281/zenodo.19696593}{DOI:10.5281/zenodo.19696593} \citep{clouatre2026dataset}, enabling replication and secondary analysis.
+This paper contributes a null result across three pre-registered experiments, a formal characterization of \emph{rubric-runner co-design failure} as a distinct evaluation failure mode in which rubric criteria are structurally unreachable from the runner prompt, and an open dataset of session logs, scoring justifications, and label-map timestamps archived at \href{https://doi.org/10.5281/zenodo.19696593}{DOI:10.5281/zenodo.19696593} \citep{clouatre2026dataset}, enabling replication and secondary analysis. Negative results remain rare in software engineering research despite explicit calls to value them \citep{paige2017negative}. Absent published null results, a positive finding in one setting risks being generalized without evidence to settings where it has not been tested \citep{wieringa2015generalizing}; we report this null result to constrain that generalization rather than as a preliminary finding awaiting a positive follow-up.
 
 This work addresses topics from the Empirical Software Engineering Special Issue on Agentic Software Engineering: failure patterns in agentic systems (rubric-runner co-design failure), and testing and evaluation of AI agents (pre-registered rubric scoring pipeline).
 
@@ -118,8 +116,8 @@ suppress treatment signals regardless of intervention strength.
 \citet{zheng2023} establish LLM-as-judge as a practical but validity-limited approach, recommending
 inter-rater reliability measures, and report over 80\% agreement between GPT-4
 judgments and human preferences on MT-Bench, but note position bias. \citet{shen2023} find single-judge agreement with human raters ranges from
-$\kappa{=}0.3$ to $\kappa{=}0.7$ depending on task type \citep{yamauchi2025,jiang2024survey,hashemi2024llmrubric}.
-The MSR~2026 Mining Challenge applied AIDev to characterise agent failure taxonomies, task-stratified acceptance, and review effort \citep{failureMSR2026,comparingMSR2026,revieweffortMSR2026,aiidesMSR2026}; none of these observational studies isolates instruction repetition as a controlled pre-registered independent variable.
+$\kappa{=}0.3$ to $\kappa{=}0.7$ depending on task type \citep{hashemi2024llmrubric}.
+The MSR~2026 Mining Challenge applied AIDev to characterise agent failure taxonomies, task-stratified acceptance, and review effort \citep{failureMSR2026,comparingMSR2026,revieweffortMSR2026}; none of these observational studies isolates instruction repetition as a controlled pre-registered independent variable.
 The present experiments use a single Haiku~4.5 judge; inter-rater reliability was validated in \S\ref{subsec:scoring-validation}.
 \citet{adaptorch2026} show that static parallel agent topologies
 achieve competitive results on SWE-bench Verified under greedy decoding, supporting the
@@ -270,7 +268,7 @@ Both groups scored identically (0/1) on C1, C5, and C6, so excluding them cannot
 
 \subsection{Task Success}
 
-To address RQ1, we compare task success rates between control and treatment groups.
+To address the RQ, we compare task success rates between control and treatment groups.
 
 Experiment~1 used Fisher's exact test (see \S\ref{sec:preregistration}); Mann-Whitney columns are shown for consistency. Experiment~2 produced a complete ceiling effect:
 all ten runs scored 7/7, rendering the test uninformative ($U{=}12.5$, $p{=}1.000$,
@@ -316,7 +314,7 @@ when the task is explicitly set.
 
 \subsection{Token and Message Efficiency}
 
-To address RQ2, we compare token and message counts between conditions.
+As a secondary, exploratory outcome measure, we compare token and message counts between conditions.
 
 In Experiment~1, treatment agents consumed 30.6\% fewer total tokens than control
 (median 1{,}032{,}311 vs.\ 716{,}324); treatment sessions converged in fewer turns (see Table~\ref{tab:efficiency}).
@@ -350,7 +348,7 @@ Experiment & Condition & Median Total Tokens & Median Messages & Median Latency 
 
 \subsection{Per-Criterion Pass Rates}
 
-To address RQ3, we examine per-criterion pass rates to identify rubric-runner co-design failures.
+To characterize the rubric-runner co-design failure identified during analysis (\S\ref{sec:amendments}), we examine per-criterion pass rates.
 
 Fig.~\ref{fig:passrates} displays per-criterion pass rates with Wilson 95\% confidence
 intervals. The pattern of near-uniform ceiling saturation in Experiments~1 and~2 contrasts
