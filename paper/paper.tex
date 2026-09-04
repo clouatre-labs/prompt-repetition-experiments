@@ -109,9 +109,9 @@ This work addresses topics from the Empirical Software Engineering Special Issue
 
 
 Independently, \citet{qian2026} show that benchmark saturation varies sharply by task: MATH-500
-reaches a discriminability score of 0.16 while AIME 2024 reaches 0.74, showing ceiling effects
+reaches a discriminability score of 0.16 while AIME 2024 reaches 0.74. Ceiling effects
 suppress treatment signals regardless of intervention strength.
-\citet{chen2026causal} show, via causal prompt optimization, that near-ceiling queries produce no detectable treatment signal regardless of prompt quality; all gains concentrate on hard queries. This mirrors Experiments~1 and~2: below the discriminability threshold, outcome variance is too low for any intervention to register.
+\citet{chen2026causal} demonstrate, via causal prompt optimization, that near-ceiling queries produce no detectable treatment signal regardless of prompt quality; all gains concentrate on hard queries. This mirrors Experiments~1 and~2: below the discriminability threshold, outcome variance is too low for any intervention to register.
 
 \citet{zheng2023} establish LLM-as-judge as a practical but validity-limited approach, recommending
 inter-rater reliability measures, and report over 80\% agreement between GPT-4
@@ -119,8 +119,8 @@ judgments and human preferences on MT-Bench, but note position bias. \citet{shen
 $\kappa{=}0.3$ to $\kappa{=}0.7$ depending on task type \citep{hashemi2024llmrubric}.
 The MSR~2026 Mining Challenge applied AIDev to characterise agent failure taxonomies, task-stratified acceptance, and review effort \citep{failureMSR2026,comparingMSR2026,revieweffortMSR2026}; none of these observational studies isolates instruction repetition as a controlled pre-registered independent variable.
 The present experiments use a single Haiku~4.5 judge; inter-rater reliability was validated in \S\ref{subsec:scoring-validation}.
-\citet{adaptorch2026} show that static parallel agent topologies
-achieve competitive results on SWE-bench Verified under greedy decoding, supporting the
+\citet{adaptorch2026} report that static parallel agent topologies
+achieve competitive results on SWE-bench Verified under greedy decoding. This supports the
 delegate design used here. Substantive null results from sound designs are distinct from
 methodological failures \citep{sculley2018}: a sound design delimits
 intervention scope; a flawed design reveals evaluation infrastructure defects.
@@ -350,7 +350,7 @@ Experiment & Condition & Median Total Tokens & Median Messages & Median Latency 
 
 To characterize the rubric-runner co-design failure identified during analysis (\S\ref{sec:amendments}), we examine per-criterion pass rates.
 
-Fig.~\ref{fig:passrates} displays per-criterion pass rates with Wilson 95\% confidence
+Figure~\ref{fig:passrates} displays per-criterion pass rates with Wilson 95\% confidence
 intervals. The pattern of near-uniform ceiling saturation in Experiments~1 and~2 contrasts
 sharply with the bimodal floor-ceiling structure in Experiment~3.
 
@@ -363,7 +363,7 @@ $\dagger$. (Colors use the Okabe-Ito colorblind-safe palette.)}
 \label{fig:passrates}
 \end{figure}
 
-Fig.~\ref{fig:tokens} shows token usage by group and experiment.
+Figure~\ref{fig:tokens} shows token usage by group and experiment.
 Experiment~3's reversal, where treatment consumed more tokens despite no
 performance gain, illustrates the cost of repeated prefill in short agentic loops.
 
@@ -391,7 +391,7 @@ instruction constituted a diminishing fraction of total context.
 \end{figure}
 
 The direction of the token delta is therefore a function of session length: in long-session
-experiments, turn savings dominate; in short-session experiments, prompt overhead dominates. (Fig.~\ref{fig:crossover}).
+experiments, turn savings dominate; in short-session experiments, prompt overhead dominates. (Figure~\ref{fig:crossover}).
 
 Let $p$ be the prompt token count and $\bar{c}$ the mean tokens per message. A repeated
 prompt adds $p$ tokens to every prefill. Each avoided turn eliminates $\bar{c}$ tokens of
@@ -432,13 +432,13 @@ pre-registration. This serialization does not affect the statistical conclusion,
 
 \subsection{Future Work}
 
-Three gaps follow from the present design. First, $n{=}5$ per group is
+First, $n{=}5$ per group is
 underpowered for small effects; replication with $n{\geq}20$ and tasks whose
 baseline pass rate falls below 0.5 would determine whether prompt repetition
 produces any signal once ceiling and floor artifacts are removed. Second,
 multi-judge scoring with a reported intraclass correlation coefficient remains
-a key validity gap: a single LLM judge cannot detect systematic scorer bias,
-and a human--model cross-validation would strengthen internal
+a key validity gap. A single LLM judge cannot detect systematic scorer bias;
+a human--model cross-validation would strengthen internal
 validity. Third, all delegates used Haiku 4.5; reasoning models and
 larger tiers may exhibit different context-weighting dynamics under prompt
 repetition and warrant a dedicated replication.
@@ -481,7 +481,7 @@ Finally, Experiment~1 was not fully pre-registered: the statistical test was not
 \section{Conclusion}
 \label{sec:conclusion}
 
-Three pre-registered controlled experiments find no evidence that prompt repetition improves
+Across three pre-registered experiments, we find no evidence that prompt repetition improves
 task-success rates for LLM agents executing structured software-engineering tasks in multi-step
 pipelines. The null results hold across two distinct calibration failure modes: near-ceiling
 task difficulty (Experiments~1 and~2) and rubric-runner co-design failure (Experiment~3). The
@@ -574,7 +574,7 @@ verbatim a second time.}
 \section{Per-Run Scores}
 \label{app:per-run}
 
-Tab.~\ref{tab:per-run} lists all 30 runs across the three experiments with individual scores.
+Table~\ref{tab:per-run} lists all 30 runs across the three experiments with individual scores.
 
 \begin{table}[h]
 \centering
