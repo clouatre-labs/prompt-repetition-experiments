@@ -379,7 +379,7 @@ Exact reproduction requires access to the target repositories at the commit SHAs
 
 ### Steps to reproduce
 
-1. Install [Goose](https://block.github.io/goose/) (version used: see software versions table below)
+1. Install [Goose](https://goose-docs.ai/) (version used: see software versions table below)
 2. Configure your LLM provider (Claude Sonnet 4.6 for orchestrator, Claude Haiku 4.5 for delegates)
 3. Set temperature to 0.5 in your provider configuration
 4. Clone this repository and navigate to the experiment directory
