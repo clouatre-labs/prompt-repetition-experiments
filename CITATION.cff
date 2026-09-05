@@ -19,7 +19,7 @@ identifiers:
     description: Zenodo preprint DOI (associated paper)
 version: "1.0.9"
 abstract: >
-  30 agent sessions (4,306 messages) across three pre-registered controlled experiments
+  30 agent sessions (3,196 messages) across three pre-registered controlled experiments
   testing whether prompt repetition improves LLM-agent task completion on structured
   software-engineering tasks. Null results across all three experiments; identifies
   ceiling effects and rubric-runner co-design failure as distinct evaluation failure modes.

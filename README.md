@@ -6,11 +6,11 @@
 [![Paper](https://img.shields.io/badge/preprint-zenodo-blue)](https://doi.org/10.5281/zenodo.20039271)
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![Sessions](https://img.shields.io/badge/sessions-30-green)](experiments/)
-[![Messages](https://img.shields.io/badge/messages-4%2C306-blue)](experiments/)
+[![Messages](https://img.shields.io/badge/messages-3%2C196-blue)](experiments/)
 
 ## Abstract
 
-Verbatim duplication of an input prompt (prompt repetition) has been shown to improve accuracy for non-reasoning LLMs on retrieval and multiple-choice benchmarks (Leviathan et al., 2025). We ask whether the same intervention applied to fixed delegate instructions produces similar gains in multi-step agentic pipelines. We present three pre-registered controlled experiments in which Claude Haiku 4.5 delegates (n=5 per condition, temperature 0.5) were assigned either a single-copy or a repeated-prompt instruction under blinded binary rubric scoring, totalling 30 sessions and 4,306 messages. Experiment 1 (session-ID refactoring, 6 criteria) yielded a non-significant score delta of +0.30, with five of six criteria saturated at 100% in both groups. Experiment 2 (tree-sitter scanner evaluation, 7 criteria) produced a complete ceiling effect with all 10 runs scoring 7/7 (Mann-Whitney U=12.5, p=1.000). Experiment 3 (Kotlin grammar synthesis, 7 criteria) revealed a distinct failure mode: three of seven criteria scored 0/10 across both groups due to rubric-runner co-design failure, where criteria required investigations absent from the runner prompt; on the four reachable criteria the treatment effect was non-significant (U=15, p=0.607). Across all three experiments we detect no effect of prompt repetition on task success. Two calibration failure modes suppressed treatment signal: performance saturation (Experiments 1 and 2) and rubric-runner misalignment (Experiment 3); both are identifiable from the data and constitute methodological findings in their own right.
+Verbatim duplication of an input prompt (prompt repetition) has been shown to improve accuracy for non-reasoning LLMs on retrieval and multiple-choice benchmarks (Leviathan et al., 2025). We ask whether the same intervention applied to fixed delegate instructions produces similar gains in multi-step agentic pipelines. We present three pre-registered controlled experiments in which Claude Haiku 4.5 delegates (n=5 per condition, temperature 0.5) were assigned either a single-copy or a repeated-prompt instruction under blinded binary rubric scoring, totalling 30 sessions and 3,196 messages. Experiment 1 (session-ID refactoring, 6 criteria) yielded a non-significant score delta of +0.30, with five of six criteria saturated at 100% in both groups. Experiment 2 (tree-sitter scanner evaluation, 7 criteria) produced a complete ceiling effect with all 10 runs scoring 7/7 (Mann-Whitney U=12.5, p=1.000). Experiment 3 (Kotlin grammar synthesis, 7 criteria) revealed a distinct failure mode: three of seven criteria scored 0/10 across both groups due to rubric-runner co-design failure, where criteria required investigations absent from the runner prompt; on the four reachable criteria the treatment effect was non-significant (U=15, p=0.607). Across all three experiments we detect no effect of prompt repetition on task success. Two calibration failure modes suppressed treatment signal: performance saturation (Experiments 1 and 2) and rubric-runner misalignment (Experiment 3); both are identifiable from the data and constitute methodological findings in their own right.
 
 Supplementary data for [Ceiling Effects and Convergence: Null Results for Instruction Repetition in LLM-Agent Pipelines](https://clouatre.ca/posts/prompt-repetition-agent-evaluation/). Clouatre, HEC Montréal, 2026.
 
@@ -23,6 +23,8 @@ Supplementary data for [Ceiling Effects and Convergence: Null Results for Instru
 **Clouatre, H.** (2026). *Ceiling Effects and Convergence: Null Results for Instruction Repetition in LLM-Agent Pipelines.* HEC Montréal. Preprint: [10.5281/zenodo.20039271](https://doi.org/10.5281/zenodo.20039271). Manuscript under review.
 
 Dataset archived at Zenodo: [10.5281/zenodo.19696593](https://doi.org/10.5281/zenodo.19696593).
+
+Paper source: [`paper/paper.tex`](paper/paper.tex); compiled PDF: [`paper/paper.pdf`](paper/paper.pdf).
 
 Companion blog post: [What a Null Result Taught Us About AI Agent Evaluation](https://clouatre.ca/posts/prompt-repetition-agent-evaluation/).
 
@@ -39,7 +41,7 @@ Experiment setup:
   +-- Treatment group:  5 delegates with repeated instructions (x2)
   +-- Blind scorer:     Rubric-based evaluation (sealed before scoring)
 
-  x3 experiments = 30 delegates total, 4,306 messages, 30 session logs
+  x3 experiments = 30 delegates total, 3,196 messages, 30 session logs
 ```
 
 ---
@@ -186,7 +188,7 @@ This exclusion is classified as structural, not outcome-driven. The direction of
 
 The treatment comparison is therefore restricted to the 4 reachable criteria: C2, C3, C4, and C7.
 
-*Table 5: Experiment 3 per-run scores on the 4 reachable criteria (C2, C3, C4, C7). Control mean: 2.00/4; treatment mean: 2.40/4; U=15, p=0.6072, r=-0.20 (not significant). Dataset-authoritative; paper abstract cites 2.60/4 and 2.80/4 due to an unsynced draft revision.*
+*Table 5: Experiment 3 per-run scores on the 4 reachable criteria (C2, C3, C4, C7). Control mean: 2.00/4; treatment mean: 2.40/4; U=15, p=0.6072, r=-0.20 (not significant).*
 
 | Run | C2 | C3 | C4 | C7 | Total (of 4) |
 |---|---|---|---|---|---|
@@ -202,7 +204,7 @@ The treatment comparison is therefore restricted to the 4 reachable criteria: C2
 | treatment-5 | 0 | 1 | 0 | 1 | 2 |
 
 
-> **Note:** The authoritative Exp3 means are 2.00/4 (control) and 2.40/4 (treatment), derived directly from `scores.json`. Any discrepancy in associated paper versions reflects a draft revision not propagated to the dataset at the time. Inter-rater reliability data is in [`irr/`](irr/).
+> **Note:** The Exp3 means (2.00/4 control, 2.40/4 treatment) are derived directly from `scores.json` and match `paper/paper.tex`. Inter-rater reliability data is in [`irr/`](irr/).
 
 ### Experiment 3: Criterion Pass Rates (Combined, n=10)
 
@@ -321,6 +323,11 @@ prompt-repetition-experiments/
   README.md                          # This file
   METHODOLOGY.md                     # Experimental design, rubrics, scoring protocol
   LICENSE                            # Apache 2.0
+  paper/
+    paper.tex                          # LaTeX source (compile-checked in CI)
+    refs.bib                           # Bibliography
+    figures/                           # Generated figures (generate.py)
+    paper.pdf                          # Compiled paper
   recipe/
     goose-coder-v4.1.0.yaml               # Goose recipe (Scout/Guard architecture)
   experiments/
@@ -384,7 +391,7 @@ This repository contains everything needed to verify our claims and reproduce th
 
 - **Pre-registered protocols** with sealed group assignments (`label-map.json` timestamps predate all scoring)
 - **Exact delegate prompts** preserved as the first message in each `raw/*.jsonl` session log
-- **Full conversation traces** (4,306 messages across 30 session logs) for auditing agent behavior
+- **Full conversation traces** (3,196 messages across 30 session logs) for auditing agent behavior
 - **Per-criterion scoring justifications** in `scores.json`, not just aggregate numbers
 
 To reproduce with different tasks or models, follow the protocols in `experiments/*/protocol.md` and substitute your target issue and model. The recipe (`recipe/goose-coder-v4.1.0.yaml`) defines the full agent architecture.
