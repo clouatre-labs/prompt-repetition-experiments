@@ -10,7 +10,7 @@ Based on [Leviathan et al. (2025)](https://arxiv.org/abs/2512.14982), which foun
 
 ## Agent Architecture
 
-All experiments used the [Goose](https://github.com/block/goose) agent framework with a Scout/Guard subagent architecture defined in `recipe/goose-coder-v4.1.0.yaml`.
+All experiments used the [Goose](https://github.com/aaif-goose/goose) agent framework, maintained by the [Agentic AI Foundation](https://aaif.io/), with a Scout/Guard subagent architecture defined in `recipe/goose-coder-v4.1.0.yaml`.
 
 - **Orchestrator:** Claude Sonnet 4.6 at temperature 0.3 via GCP Vertex AI
 - **Delegates (Scouts):** Claude Haiku 4.5 at temperature 0.5 via GCP Vertex AI
