@@ -187,7 +187,7 @@ scoring is complete.}
 \end{figure}
 
 The treatment mirrors the \texttt{<QUERY><QUERY>} pattern of \citet{leviathan2025} applied to
-the delegate system prompt rather than to a single-turn query (Figure~\ref{fig:pipeline}). Goose versions 1.25.0 (Exp1,
+the delegate system prompt rather than to a single-turn query (\autoref{fig:pipeline}). Goose versions 1.25.0 (Exp1,
 Exp2) and 1.31.1 (Exp3) were used. The provider was Vertex AI for all primary runs, with
 Amazon Bedrock as a fallback for stream-decode errors in Exp3. The full control instruction template is reproduced in Appendix~\ref{app:control-prompt}.
 
@@ -222,7 +222,7 @@ medium effects.
 
 \subsection{Experiments}
 
-Each experiment targeted an open, unimplemented GitHub issue as the task source, ensuring no published solution existed (see Table~\ref{tab:experiments}).
+Each experiment targeted an open, unimplemented GitHub issue as the task source, ensuring no published solution existed (see \autoref{tab:experiments}).
 
 \begin{table}[h]
 \centering
@@ -305,7 +305,7 @@ Exp & Group & $n$ & Mean score & SD & $U$ & $p$ & $r$ \\
 \end{table}
 
 In Experiment~1, five of six criteria reached 100\% pass rate in both groups; only criterion C5
-(must-not constraint captured) discriminated between groups: 50\% control, 80\% treatment (see Table~\ref{tab:results}).
+(must-not constraint captured) discriminated between groups: 50\% control, 80\% treatment (see \autoref{tab:results}).
 In Experiment~2, every criterion reached 100\% in both groups; no discriminating criterion existed.
 In Experiment~3, criterion C7 (language identification) reached 100\% in both groups, while
 criteria C1, C5, and C6 were structurally unreachable (floor). Criterion C3 (ELEMENT\_QUERY
@@ -317,7 +317,7 @@ when the task is explicitly set.
 As a secondary, exploratory outcome measure, we compare token and message counts between conditions.
 
 In Experiment~1, treatment agents consumed 30.6\% fewer total tokens than control
-(median 1{,}032{,}311 vs.\ 716{,}324); treatment sessions converged in fewer turns (see Table~\ref{tab:efficiency}).
+(median 1{,}032{,}311 vs.\ 716{,}324); treatment sessions converged in fewer turns (see \autoref{tab:efficiency}).
 In Experiment~2, treatment agents used 7.2\% more total tokens than control
 (median 703{,}993 vs.\ 755{,}144); sessions were already saturated and no turns were eliminated,
 so the doubled prompt added net input overhead. In Experiment~3, treatment agents
@@ -350,7 +350,7 @@ Experiment & Condition & Median Total Tokens & Median Messages & Median Latency 
 
 To characterize the rubric-runner co-design failure identified during analysis (\S\ref{sec:amendments}), we examine per-criterion pass rates.
 
-Figure~\ref{fig:passrates} displays per-criterion pass rates with Wilson 95\% confidence
+\autoref{fig:passrates} displays per-criterion pass rates with Wilson 95\% confidence
 intervals. The pattern of near-uniform ceiling saturation in Experiments~1 and~2 contrasts
 sharply with the bimodal floor-ceiling structure in Experiment~3.
 
@@ -363,7 +363,7 @@ $\dagger$. (Colors use the Okabe-Ito colorblind-safe palette.)}
 \label{fig:passrates}
 \end{figure}
 
-Figure~\ref{fig:tokens} shows token usage by group and experiment.
+\autoref{fig:tokens} shows token usage by group and experiment.
 Experiment~3's reversal, where treatment consumed more tokens despite no
 performance gain, illustrates the cost of repeated prefill in short agentic loops.
 
@@ -391,7 +391,7 @@ instruction constituted a diminishing fraction of total context.
 \end{figure}
 
 The direction of the token delta is therefore a function of session length: in long-session
-experiments, turn savings dominate; in short-session experiments, prompt overhead dominates. (Figure~\ref{fig:crossover}).
+experiments, turn savings dominate; in short-session experiments, prompt overhead dominates. (\autoref{fig:crossover}).
 
 Let $p$ be the prompt token count and $\bar{c}$ the mean tokens per message. A repeated
 prompt adds $p$ tokens to every prefill. Each avoided turn eliminates $\bar{c}$ tokens of
@@ -573,7 +573,7 @@ verbatim a second time.}
 \section{Per-Run Scores}
 \label{app:per-run}
 
-Table~\ref{tab:per-run} lists all 30 runs across the three experiments with individual scores.
+\autoref{tab:per-run} lists all 30 runs across the three experiments with individual scores.
 
 \begin{table}[h]
 \centering
