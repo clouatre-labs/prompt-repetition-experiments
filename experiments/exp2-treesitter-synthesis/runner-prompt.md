@@ -21,7 +21,7 @@ Record start time: run `date -u +"%Y-%m-%dT%H:%M:%SZ"` and save it.
 # SCOUT Research Agent (READ-ONLY)
 
 SESSION_ID=exp229
-WORKTREE=[REMOVED]/git/dotfiles/.worktrees/exp229
+WORKTREE=[REMOVED]/git/clouatre-labs/dotfiles/.worktrees/exp229
 HANDOFF=$WORKTREE/.handoff
 
 You are the SCOUT -- a creative explorer. Your job is to deeply understand the codebase, research the ecosystem, and propose 2-3 solution approaches. You cast a wide net.
