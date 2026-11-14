@@ -237,13 +237,13 @@ Exp & Task & Criteria & Valid runs & Task category \\
 \end{tabular}
 \end{table}
 
-Experiment~1 targeted issue \texttt{math-mcp-learning-server\#222}, a read-only source
+Experiment~1 targeted issue \texttt{math-mcp-learning-server\#222},\footnote{\url{https://github.com/clouatre-labs/math-mcp-learning-server/issues/222}} a read-only source
 analysis task: characterise a FastMCP session ID refactor. One control run drifted at 93
 messages producing no output; excluded, yielding $n{=}4$ valid runs.Experiment~2 targeted
-\texttt{aptu\#737}, a code synthesis task evaluating a tree-sitter AST scanner. All 10 runs
+\texttt{aptu\#737},\footnote{\url{https://github.com/clouatre-labs/aptu/issues/737}} a code synthesis task evaluating a tree-sitter AST scanner. All 10 runs
 produced valid output. An undocumented concurrency cap split Exp2 into two batches (see \S\ref{subsec:infrastructure}).
 
-Experiment~3 targeted issue \texttt{aptu-coder\#649}, a code
+Experiment~3 targeted issue \texttt{aptu-coder\#649},\footnote{\url{https://github.com/clouatre-labs/aptu-coder/issues/649}; the repository was formerly named \texttt{code-analyze-mcp}.} a code
 synthesis task requiring deep inspection of Kotlin grammar application binary interface (ABI) compatibility, node kind
 taxonomy, and struct fields. Three runs fell back to Bedrock; all produced output and were included.
 
