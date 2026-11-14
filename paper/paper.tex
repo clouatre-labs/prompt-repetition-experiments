@@ -203,7 +203,7 @@ metadata, or other outputs were visible during scoring.
 \subsection{Scoring Validation}
 \label{subsec:scoring-validation}
 
-To assess the reproducibility of the rubric scores prior to journal submission, a second LLM judge (Claude Sonnet~4.6) re-scored a stratified sample of 5 sessions using the identical rubric prompts employed by the primary judge (Claude Haiku~4.5). The sample included one control and one treatment session from Experiment~1 (FastMCP refactor), one from each condition in Experiment~2 (Tree-sitter AST), and one treatment session from Experiment~3 (Kotlin grammar). Per-criterion agreement between the two judges was 100\% ($\kappa = 1.00$, 33 criteria across 5 sessions). Session-level pass/fail agreement was also 100\%, though Cohen's $\kappa$ was undefined because all sessions were rated as passing the 50\% threshold by both judges. The per-criterion $\kappa$ of 1.00 indicates almost perfect agreement by Landis--Koch standards~\cite{landis1977}. The Exp2 ceiling effect (all criteria at 100\% in every session) contributed to perfect agreement on those 14 criteria, but the two judges also agreed on all 19 non-ceiling criteria in Experiments~1 and~3, suggesting the rubric is sufficiently well-specified to produce reproducible scores.
+To assess the reproducibility of the rubric scores prior to journal submission, a second LLM judge (Claude Sonnet~4.6) re-scored a stratified sample of 5 sessions using the identical rubric prompts employed by the primary judge (Claude Haiku~4.5). The sample included one control and one treatment session from Experiment~1 (FastMCP refactor), one from each condition in Experiment~2 (Tree-sitter AST, abstract syntax tree, scanner), and one treatment session from Experiment~3 (Kotlin grammar). Per-criterion agreement between the two judges was 100\% ($\kappa = 1.00$, 33 criteria across 5 sessions). Session-level pass/fail agreement was also 100\%, though Cohen's $\kappa$ was undefined because all sessions were rated as passing the 50\% threshold by both judges. The per-criterion $\kappa$ of 1.00 indicates almost perfect agreement by Landis--Koch standards~\cite{landis1977}. The Exp2 ceiling effect (all criteria at 100\% in every session) contributed to perfect agreement on those 14 criteria, but the two judges also agreed on all 19 non-ceiling criteria in Experiments~1 and~3, suggesting the rubric is sufficiently well-specified to produce reproducible scores.
 
 The inferential test (Mann-Whitney U, two-tailed, $\alpha{=}0.05$) and effect size metric
 (rank-biserial $r$ via \citep{kerby2014}) were pre-specified from Exp2 onward. For Exp1, Fisher's exact test was used post-hoc when the valid-run count fell to $n{=}4$ control and $n{=}5$ treatment.
@@ -229,7 +229,7 @@ control run to session drift; Exp3 includes three provider-retry replacements.}
 \label{tab:experiments}
 \begin{tabular}{lllll}
 \toprule
-Exp & Task & Criteria & Valid runs & Task type \\
+Exp & Task & Criteria & Valid runs & Task category \\
 \midrule
 1 & FastMCP session ID refactor & 6 & 9 & Read-only analysis \\
 2 & Tree-sitter AST scanner & 7 & 10 & Artifact synthesis (scanner) \\
@@ -246,7 +246,7 @@ produced valid output. An undocumented concurrency cap split Exp2 into two batch
 \label{sec:infrastructure}
 
 Experiment~3 targeted issue \texttt{aptu-coder\#649}, a code
-synthesis task requiring deep inspection of Kotlin grammar ABI compatibility, node kind
+synthesis task requiring deep inspection of Kotlin grammar ABI (application binary interface) compatibility, node kind
 taxonomy, and struct fields. Three runs fell back to Bedrock; all produced output and were included.
 
 \section{Results}
