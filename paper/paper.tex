@@ -35,7 +35,7 @@
 \small
 \begin{minipage}[t]{0.44\textwidth}
 \centering
-\textbf{Hugues Clouâtre}\\[4pt]HEC Montréal\\\texttt{hugues.clouatre@hec.ca}
+\textbf{Hugues Clouâtre}\\[4pt]Université de Bordeaux\\\texttt{hclouatre@u-bordeaux.fr}
 \end{minipage}
 \hfill
 \begin{minipage}[t]{0.54\textwidth}
@@ -78,8 +78,8 @@ are unreachable by both groups and must be resolved before effect sizes are inte
 
 \citet{leviathan2025} demonstrated that verbatim repetition of the input, transforming
 \texttt{<QUERY>} into \texttt{<QUERY>\allowbreak<QUERY>}, improves accuracy for
-non-reasoning large language models across a wide range of benchmarks. The intervention wins 47 of 70
-benchmark-model combinations with zero losses, gaining up to 76 pp on positional
+non-reasoning large language models (LLMs) across a wide range of benchmarks. The intervention wins 47 of 70
+benchmark-model combinations with zero losses, gaining up to 76 percentage points (pp) on positional
 retrieval tasks such as NameIndex.
 The mechanism is efficient: repeated tokens produce no additional output and impose
 no mandatory latency penalty on most providers.
@@ -95,11 +95,9 @@ agent-authored pull requests from real-world GitHub repositories; our study comp
 observational corpus with a controlled laboratory design that enables causal inference over a
 single variable (instruction repetition) while holding task, model, and temperature constant.
 
-Three pre-registered controlled experiments address that gap.
-
 \textbf{RQ:} Does prompt repetition (the duplicate-query pattern applied to delegate instructions) improve task success rates in multi-step LLM-agent pipelines?
 
-This is the paper's confirmatory, pre-registered question \citep{kitchenham2002guidelines}.
+Three pre-registered controlled experiments address that question; it was formulated and registered before any experiment was run \citep{kitchenham2002guidelines}.
 
 This paper contributes a null result across three pre-registered experiments, a formal characterization of \emph{rubric-runner co-design failure} as a distinct evaluation failure mode in which rubric criteria are structurally unreachable from the runner prompt, and an open dataset of session logs, scoring justifications, and label-map timestamps archived at \href{https://doi.org/10.5281/zenodo.19696593}{DOI:10.5281/zenodo.19696593} \citep{clouatre2026dataset}, enabling replication and secondary analysis. Negative results remain rare in software engineering research despite explicit calls to value them \citep{paige2017negative}. Without published null results, a positive finding risks being generalized to untested settings \citep{wieringa2015generalizing}; we report this result to constrain that generalization, not as a preliminary finding awaiting confirmation.
 
@@ -118,7 +116,7 @@ inter-rater reliability measures, and report over 80\% agreement between GPT-4
 judgments and human preferences on MT-Bench, but note position bias. \citet{shen2023} find single-judge agreement with human raters ranges from
 $\kappa{=}0.3$ to $\kappa{=}0.7$ depending on task type \citep{hashemi2024llmrubric}.
 The MSR~2026 Mining Challenge applied AIDev to characterise agent failure taxonomies, task-stratified acceptance, and review effort \citep{failureMSR2026,comparingMSR2026,revieweffortMSR2026}; none of these observational studies isolates instruction repetition as a controlled pre-registered independent variable.
-The present experiments use a single Haiku~4.5 judge; inter-rater reliability was validated in \S\ref{subsec:scoring-validation}.
+The present experiments use a single Haiku~4.5 judge; inter-rater reliability was validated in Section~\ref{subsec:scoring-validation}.
 \citet{adaptorch2026} report that static parallel agent topologies
 achieve competitive results on SWE-bench Verified under greedy decoding. This supports the
 delegate design used here. Substantive null results from sound designs are distinct from
@@ -233,9 +231,9 @@ control run to session drift; Exp3 includes three provider-retry replacements.}
 \toprule
 Exp & Task & Criteria & Valid runs & Task type \\
 \midrule
-1 & FastMCP session ID refactor & 6 & 9 & Source analysis \\
-2 & Tree-sitter AST scanner & 7 & 10 & Code synthesis \\
-3 & Kotlin grammar synthesis & 7 & 10 & Code synthesis \\
+1 & FastMCP session ID refactor & 6 & 9 & Read-only analysis \\
+2 & Tree-sitter AST scanner & 7 & 10 & Artifact synthesis (scanner) \\
+3 & Kotlin grammar synthesis & 7 & 10 & Artifact synthesis (grammar) \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -264,7 +262,7 @@ contained no instruction directing agents to investigate ABI compatibility betwe
 exercising \texttt{.kts} file parsing (C5), or to inspect the \texttt{LanguageInfo} struct
 fields or \texttt{aptu-coder}\#649 to determine whether a \texttt{DEFUSE\_QUERY} constant was required (C6).
 
-Both groups scored identically (0/1) on C1, C5, and C6, so excluding them cannot bias the treatment comparison in either direction. The exclusion was determined after scoring but before any group labels were inspected, aligning with pre-registration amendment practice \citep{wohlin2012}. All three criteria are retained in the full rubric table (see Appendix~\ref{app:rubrics}); the primary comparison is restricted to C2, C3, C4, and C7.
+Both groups scored identically (0/1) on C1, C5, and C6, so excluding them cannot bias the treatment comparison in either direction. The exclusion was determined after scoring but before any group labels were inspected, aligning with registered-report amendment practice \citep{ralph2022registered}. All three criteria are retained in the full rubric table (see Appendix~\ref{app:rubrics}); the primary comparison is restricted to C2, C3, C4, and C7.
 
 \subsection{Task Success}
 
@@ -306,7 +304,7 @@ Exp & Group & $n$ & Mean score & SD & $U$ & $p$ & $r$ \\
 
 In Experiment~1, five of six criteria reached 100\% pass rate in both groups; only criterion C5
 (must-not constraint captured) discriminated between groups: 50\% control, 80\% treatment (see \autoref{tab:results}).
-In Experiment~2, every criterion reached 100\% in both groups; no discriminating criterion existed.
+In Experiment~2, every criterion reached 100\% in both groups; no discriminating criterion existed. This saturation is consistent with the task-dependent discriminability limits reported by \citet{qian2026} and the causal analysis of \citet{chen2026causal}.
 In Experiment~3, criterion C7 (language identification) reached 100\% in both groups, while
 criteria C1, C5, and C6 were structurally unreachable (floor). Criterion C3 (ELEMENT\_QUERY
 patterns) achieved 80\% across both groups, indicating agents can perform structured synthesis
@@ -379,9 +377,15 @@ performance gain, illustrates the cost of repeated prefill in short agentic loop
 
 \subsection{Mechanism Mismatch}
 
+\textbf{Design choices relative to \citet{leviathan2025}.} Their intervention duplicates the entire user query in single-turn prompts across seven non-reasoning models, selecting benchmarks with substantial headroom below ceiling (e.g., 21\% baseline on NameIndex). We deliberately test a different regime: duplication targets the delegate system prompt, tasks are multi-step tool-loop sessions, a single model tier is used for cost control, and tasks were drawn from open, unimplemented issues without baseline-difficulty prescreening. Both calibration failure modes observed here (ceiling in Exp1--2, floor in Exp3) would have been excluded by headroom-first task selection.
+
 Prompt repetition enables each token in \texttt{<QUERY>} to attend to every other token in a single causal pass, a mechanism effective only for single-turn inputs where the full context fits in one forward pass; in multi-step loops, the instruction's relative weight dissipates as context grows \citep{leviathan2025}.
 By the time agents in Experiments~1 and~2 had exchanged 140--200 messages, the duplicated
 instruction constituted a diminishing fraction of total context.
+
+\subsection{Why Do the Results Diverge from Leviathan et al.?}
+
+Three factors interact. First, mechanism: their gains arise at prefill time because causal attention leaves early query tokens blind to later ones \citep{leviathan2025}; duplicating a single-turn query grants every token a second pass over the full context. A system prompt, by contrast, remains fully attended throughout the session, and by messages 140--200 the duplicated block is a negligible fraction of accumulated context. Second, headroom: their gains concentrate where baseline accuracy is low; our baselines sat at ceiling (Exp1--2) or at a structural floor (Exp3). Third, agents already restate and re-read instructions via the tool-loop context, analogous to the reasoning-model case where repetition adds little.
 
 \begin{figure}[h]
 \centering
@@ -449,7 +453,7 @@ different context-weighting dynamics under prompt repetition.
 
 Three aspects of the rubric design threaten construct validity.
 First, \S\ref{sec:discussion} documents a rubric-runner co-design failure: three of seven criteria in Experiment~3 scored 0/1 because the runner prompt lacked instructions for the required investigations. As a result, those criteria measure runner-prompt completeness rather than agent capability, limiting our ability to conclude that prompt repetition affects criterion-level pass rates on structurally unreachable items.
-Second, the binary pass/fail granularity of each criterion compresses within-condition variance, reducing sensitivity to partial improvements that a polytomous or continuous scoring scheme might detect.
+Second, the binary pass/fail granularity of each criterion (chosen to enable blinded automated scoring across 30 sessions; polytomous scales would require judge calibration beyond the project's budget) compresses within-condition variance, reducing sensitivity to partial improvements that a polytomous or continuous scoring scheme might detect.
 Third, scoring stability across alternative rubric phrasings was not tested; a replication with criteria rewritten for full rubric-runner alignment ($A{=}1.0$, \S\ref{sec:discussion}) would test whether the observed effects hold under corrected instructions.
 
 \subsection{Internal Validity}
@@ -457,7 +461,7 @@ Third, scoring stability across alternative rubric phrasings was not tested; a r
 Several uncontrolled sources of variance limit internal validity.
 First, Goose version 1.25.0 was used for Experiments~1 and~2 while version 1.31.1 was used for Experiment~3; version-specific behavioral changes in agent scheduling or tool-handling logic cannot be ruled out as confounds.
 Second, two individual runs in Experiment~3 fell back to Bedrock due to Vertex AI rate limits before retrying successfully on Vertex; all token and score data derive from the successful Vertex runs, but the transient provider switch cannot be ruled out as a minor infrastructure variable.
-Third, a single LLM judge (Claude Haiku~4.5) performed all rubric scoring with no human calibration; an inter-rater reliability check using a second LLM judge (Claude Sonnet~4.6) across 5 stratified sessions found perfect agreement ($\kappa = 1.00$, see~\S\ref{subsec:scoring-validation}), though the small sample and ceiling effects limit the precision of this estimate, and our ability to conclude that scores are reproducible across non-LLM judges remains limited.
+Third, a single LLM judge (Claude Haiku~4.5; justified by the post hoc two-judge validation, $\kappa{=}1.00$, \S\ref{subsec:scoring-validation}; a human--model cross-validation remains future work) performed all rubric scoring with no human calibration; an inter-rater reliability check using a second LLM judge (Claude Sonnet~4.6) across 5 stratified sessions found perfect agreement ($\kappa = 1.00$, see~\S\ref{subsec:scoring-validation}), though the small sample and ceiling effects limit the precision of this estimate, and our ability to conclude that scores are reproducible across non-LLM judges remains limited.
 Fourth, task ordering within each session was not randomized or counterbalanced. Order effects such as fatigue, learning, or context carry-over are therefore uncontrolled, limiting our ability to attribute score differences solely to the treatment.
 Fifth, as discussed in \S\ref{sec:discussion}, the \texttt{GOOSE\_MAX\_BACKGROUND\_TASKS} concurrency cap serialized Experiment~2 delegates into two batches; while this did not affect the statistical conclusion in the present ceiling-affected data, it limits our ability to conclude that latency or delegation dynamics were uniform across the experiment.
 
@@ -465,7 +469,7 @@ Fifth, as discussed in \S\ref{sec:discussion}, the \texttt{GOOSE\_MAX\_BACKGROUN
 
 The experimental design constrains external validity along four dimensions.
 First, only three software-engineering tasks were sampled (session-ID refactoring, tree-sitter scanner implementation, and Kotlin grammar synthesis), which limits our ability to generalize to the broader distribution of SWE-bench-style tasks or to non-engineering domains such as data analysis or creative writing.
-Second, all experiments used a single model (Claude Haiku 4.5) at a single temperature ($0.5$); results may not generalize to reasoning models, larger tiers, or other providers.
+Second, all experiments used a single model (Claude Haiku 4.5) at a single temperature ($0.5$; chosen as a compromise between eliminating within-condition variance at temperature 0 and inflating task-failure noise at $n{=}5$); results may not generalize to reasoning models, larger tiers, or other providers.
 Third, a single agentic framework (Goose) was used; framework-specific features such as delegate spawning semantics or context-window boundaries may interact with prompt-repetition effects in ways that limit generalizability to other frameworks such as LangGraph or CrewAI.
 Fourth, the lab setting used pre-defined tasks, isolated repositories, and scripted pipeline execution. This limits our ability to conclude that the null results hold in production pipelines, which face variable task difficulty, real-time API failures, and human-in-the-loop interruptions.
 
