@@ -99,7 +99,7 @@ single variable (instruction repetition) while holding task, model, and temperat
 
 Three pre-registered controlled experiments address that question; it was formulated and registered before any experiment was run \citep{kitchenham2002guidelines}.
 
-This paper contributes a null result across three pre-registered experiments, a formal characterization of \emph{rubric-runner co-design failure} as a distinct evaluation failure mode in which rubric criteria are structurally unreachable from the runner prompt, and an open dataset of session logs, scoring justifications, and label-map timestamps archived at \href{https://doi.org/10.5281/zenodo.19696593}{DOI:10.5281/zenodo.19696593} \citep{clouatre2026dataset}, enabling replication and secondary analysis. Negative results remain rare in software engineering research despite explicit calls to value them \citep{paige2017negative}. Without published null results, a positive finding risks being generalized to untested settings \citep{wieringa2015generalizing}; we report this result to constrain that generalization, not as a preliminary finding awaiting confirmation.
+This paper contributes a null result across three pre-registered experiments, a formal characterization of \emph{rubric-runner co-design failure} as a distinct evaluation failure mode in which rubric criteria are structurally unreachable from the runner prompt, and an open dataset of session logs, scoring justifications, and label-map timestamps archived at \href{https://doi.org/10.5281/zenodo.19696593}{DOI:10.5281/zenodo.19696593} \citep{clouatre2026dataset}, enabling replication and secondary analysis. Negative results remain rare in software engineering research despite explicit calls to value them \citep{paige2017negative}. Without published null results, a positive finding risks being generalized to untested settings \citep{wieringa2015generalizing}; we report this result to constrain that generalization, while acknowledging its pilot scale.
 
 This work addresses topics from the Empirical Software Engineering Special Issue on Agentic Software Engineering: failure patterns in agentic systems (rubric-runner co-design failure), and testing and evaluation of AI agents (pre-registered rubric scoring pipeline).
 
@@ -113,8 +113,7 @@ suppress treatment signals regardless of intervention strength.
 
 \citet{zheng2023} establish LLM-as-judge as a practical but validity-limited approach, recommending
 inter-rater reliability measures, and report over 80\% agreement between GPT-4
-judgments and human preferences on MT-Bench, but note position bias. \citet{shen2023} find single-judge agreement with human raters ranges from
-$\kappa{=}0.3$ to $\kappa{=}0.7$ depending on task type \citep{hashemi2024llmrubric}.
+judgments and human preferences on MT-Bench, but note position bias. \citet{shen2023} find that single-judge alignment with human raters is candidate-, dimension-, and quality-dependent, with per-system correlation spread of up to 0.5; rubric-based scoring with judge calibration has been proposed to address this variability \citep{hashemi2024llmrubric}.
 The MSR~2026 Mining Challenge applied AIDev to characterise agent failure taxonomies, task-stratified acceptance, and review effort \citep{failureMSR2026,comparingMSR2026,revieweffortMSR2026}; none of these observational studies isolates instruction repetition as a controlled pre-registered independent variable.
 The present experiments use a single Haiku~4.5 judge; inter-rater reliability was validated in Section~\ref{subsec:scoring-validation}.
 \citet{adaptorch2026} report that static parallel agent topologies
@@ -152,7 +151,7 @@ treatment:
   method: verbatim_repetition  # instructions repeated x2
   control_lengths_chars: [3805, 3399, 3800]  # exp1, exp2, exp3
 \end{lstlisting}
-\end{figure}
+\end{figure}\addtocounter{figure}{-1}
 
 \begin{figure}[h]
 \centering
@@ -203,7 +202,7 @@ metadata, or other outputs were visible during scoring.
 \subsection{Scoring Validation}
 \label{subsec:scoring-validation}
 
-To assess the reproducibility of the rubric scores prior to journal submission, a second LLM judge (Claude Sonnet~4.6) re-scored a stratified sample of 5 sessions using the identical rubric prompts employed by the primary judge (Claude Haiku~4.5). The sample included one control and one treatment session from Experiment~1 (FastMCP refactor), one from each condition in Experiment~2 (Tree-sitter AST, abstract syntax tree, scanner), and one treatment session from Experiment~3 (Kotlin grammar). Per-criterion agreement between the two judges was 100\% ($\kappa = 1.00$, 33 criteria across 5 sessions). Session-level pass/fail agreement was also 100\%, though Cohen's $\kappa$ was undefined because all sessions were rated as passing the 50\% threshold by both judges. The per-criterion $\kappa$ of 1.00 indicates almost perfect agreement by Landis--Koch standards~\cite{landis1977}. The Exp2 ceiling effect (all criteria at 100\% in every session) contributed to perfect agreement on those 14 criteria, but the two judges also agreed on all 19 non-ceiling criteria in Experiments~1 and~3, suggesting the rubric is sufficiently well-specified to produce reproducible scores.
+To assess the reproducibility of the rubric scores prior to journal submission, a second LLM judge (Claude Sonnet~4.6) re-scored a stratified sample of 5 sessions using the identical rubric prompts employed by the primary judge (Claude Haiku~4.5). The sample included one control and one treatment session from Experiment~1 (FastMCP refactor), one from each condition in Experiment~2 (Tree-sitter abstract syntax tree (AST) scanner), and one treatment session from Experiment~3 (Kotlin grammar). Per-criterion agreement between the two judges was 100\% ($\kappa = 1.00$, 33 criteria across 5 sessions). Session-level pass/fail agreement was also 100\%, though Cohen's $\kappa$ was undefined because all sessions were rated as passing the 50\% threshold by both judges. The per-criterion $\kappa$ of 1.00 indicates almost perfect agreement by Landis--Koch standards~\cite{landis1977}. The Exp2 ceiling effect (all criteria at 100\% in every session) contributed to perfect agreement on those 14 criteria, but the two judges also agreed on all 19 non-ceiling criteria in Experiments~1 and~3, suggesting the rubric is sufficiently well-specified to produce reproducible scores.
 
 The inferential test (Mann-Whitney U, two-tailed, $\alpha{=}0.05$) and effect size metric
 (rank-biserial $r$ via \citep{kerby2014}) were pre-specified from Exp2 onward. For Exp1, Fisher's exact test was used post-hoc when the valid-run count fell to $n{=}4$ control and $n{=}5$ treatment.
@@ -240,13 +239,12 @@ Exp & Task & Criteria & Valid runs & Task category \\
 
 Experiment~1 targeted issue \texttt{math-mcp-learning-server\#222}, a read-only source
 analysis task: characterise a FastMCP session ID refactor. One control run drifted at 93
-messages producing no output; excluded, yielding $n{=}4$ valid runs. Experiment~2 targeted
+messages producing no output; excluded, yielding $n{=}4$ valid runs.Experiment~2 targeted
 \texttt{aptu\#737}, a code synthesis task evaluating a tree-sitter AST scanner. All 10 runs
-produced valid output. An undocumented concurrency cap split Exp2 into two batches (see \S\ref{sec:infrastructure}).
-\label{sec:infrastructure}
+produced valid output. An undocumented concurrency cap split Exp2 into two batches (see \S\ref{subsec:infrastructure}).
 
 Experiment~3 targeted issue \texttt{aptu-coder\#649}, a code
-synthesis task requiring deep inspection of Kotlin grammar ABI (application binary interface) compatibility, node kind
+synthesis task requiring deep inspection of Kotlin grammar application binary interface (ABI) compatibility, node kind
 taxonomy, and struct fields. Three runs fell back to Bedrock; all produced output and were included.
 
 \section{Results}
@@ -262,13 +260,13 @@ contained no instruction directing agents to investigate ABI compatibility betwe
 exercising \texttt{.kts} file parsing (C5), or to inspect the \texttt{LanguageInfo} struct
 fields or \texttt{aptu-coder}\#649 to determine whether a \texttt{DEFUSE\_QUERY} constant was required (C6).
 
-Both groups scored identically (0/1) on C1, C5, and C6, so excluding them cannot bias the treatment comparison in either direction. The exclusion was determined after scoring but before any group labels were inspected, aligning with registered-report amendment practice \citep{ralph2022registered}. All three criteria are retained in the full rubric table (see Appendix~\ref{app:rubrics}); the primary comparison is restricted to C2, C3, C4, and C7.
+Both groups scored identically (0/1) on C1, C5, and C6, so excluding them cannot bias the treatment comparison in either direction. The exclusion was determined after scoring but before any group labels were inspected, aligning with registered-report amendment practice \citep{ernst2023registered}. All three criteria are retained in the full rubric table (see Appendix~\ref{app:rubrics}); the primary comparison is restricted to C2, C3, C4, and C7.
 
 \subsection{Task Success}
 
 To address this question, we compare task success rates between control and treatment groups.
 
-Experiment~1 used Fisher's exact test (see \S\ref{sec:preregistration}); Mann-Whitney columns are shown for consistency. Experiment~2 produced a complete ceiling effect:
+Experiment~1 used Fisher's exact test on session-level pass/fail (4/4 vs.\ 5/5 sessions above the 50\% threshold; see \S\ref{subsec:scoring-validation}); Mann-Whitney columns are shown for consistency. Experiment~2 produced a complete ceiling effect:
 all ten runs scored 7/7, rendering the test uninformative ($U{=}12.5$, $p{=}1.000$,
 $r{=}\text{n/a}$).\footnote{$\dagger$ Effect size undefined; all runs scored identically.}
 Experiment~3 revealed rubric-runner co-design failure: criteria C1, C5, and C6 scored 0/1
@@ -284,19 +282,20 @@ rubric-runner co-design failure rather than a treatment or capability signal.
 \caption{\small \textbf{Task success results.} Mann-Whitney U test (two-tailed,
 $\alpha{=}0.05$). Exp1 $p$-value is from Fisher's exact test ($n_\text{ctrl}{=}4$).
 $\dagger$~Complete ceiling; test is uninformative.
-$\ddagger$~Degenerate test ($n{=}4$ vs.\ $n{=}5$, single discriminating criterion).}
+$\ddagger$~Degenerate test ($n{=}4$ vs.\ $n{=}5$, single discriminating criterion).
+$\S$~Rank-biserial $r = 1 - 2U/(n_1 n_2)$ with $U$ of the treatment group; negative $r$ indicates higher treatment ranks.}
 \label{tab:results}
 \begin{tabular}{llcccccc}
 \toprule
 Exp & Group & $n$ & Mean score & SD & $U$ & $p$ & $r$ \\
 \midrule
-1 (6 criteria) & Control   & 4 & 5.50 & 0.58 & \multirow{2}{*}{---$^\ddagger$} & \multirow{2}{*}{1.000$^\ddagger$} & \multirow{2}{*}{$+$0.30} \\
+1 (6 criteria) & Control   & 4 & 5.50 & 0.58 & \multirow{2}{*}{13$^\ddagger$} & \multirow{2}{*}{1.000$^\ddagger$} & \multirow{2}{*}{$-$0.30$^\S$} \\
                & Treatment & 5 & 5.80 & 0.45 &     &       &       \\
 \addlinespace
 2 (7 criteria) & Control   & 5 & 7.00 & 0.00 & \multirow{2}{*}{12.5$^\dagger$} & \multirow{2}{*}{1.000$^\dagger$} & \multirow{2}{*}{$r{=}\text{n/a}$} \\
                & Treatment & 5 & 7.00 & 0.00 &      &       &       \\
 \addlinespace
-3 (7 criteria) & Control   & 5 & 2.00 & 0.71 & \multirow{2}{*}{15.0} & \multirow{2}{*}{0.607} & \multirow{2}{*}{$-$0.20} \\
+3 (4/7 criteria) & Control   & 5 & 2.00 & 0.71 & \multirow{2}{*}{15.0} & \multirow{2}{*}{0.607} & \multirow{2}{*}{$-$0.20$^\S$} \\
                & Treatment & 5 & 2.40 & 0.89 &      &       &       \\
 \bottomrule
 \end{tabular}
@@ -319,7 +318,7 @@ In Experiment~1, treatment agents consumed 30.6\% fewer total tokens than contro
 In Experiment~2, treatment agents used 7.2\% more total tokens than control
 (median 703{,}993 vs.\ 755{,}144); sessions were already saturated and no turns were eliminated,
 so the doubled prompt added net input overhead. In Experiment~3, treatment agents
-consumed 19.9\% more total tokens than control (mean 41{,}880 vs.\ 50{,}220); sessions averaged
+consumed 19.9\% more total tokens than control (median 41{,}880 vs.\ 50{,}220); sessions averaged
 12 messages with no turns saved, so the doubled prompt imposed pure input overhead with no performance gain.
 
 \begin{table}[h]
@@ -409,6 +408,7 @@ instruction emphasis, so the turn-count assumption underlying $L^*$ does not hol
 rubric-runner misalignment.
 
 \subsection{Rubric-Runner Co-design Failure}
+\label{subsec:codesign}
 
 A criterion is \emph{structurally unreachable} if no instruction in the runner prompt tasks the corresponding investigation (defined in \S\ref{sec:amendments}). The resulting floor effect is not an agent signal; it is an evaluation design artifact.
 Experiment~3 exemplifies this failure mode. Criteria C1, C5, and C6 required agents to inspect
@@ -423,9 +423,10 @@ and~2, $A{=}1.0$. We recommend $A{=}1.0$ as a necessary (though not sufficient)
 pre-registration gate: any criterion with $A{<}1.0$ should be revised or removed before
 sealing the rubric. This eliminates a class of evaluation failures endemic to LLM-agent pipelines where rubric authors and prompt authors operate independently.
 
-\citet{midolo2026guidelines} derive ten prompt improvement guidelines for code generation via iterative test-driven refinement, finding that explicitly specifying output post-conditions and I/O contracts produces the largest gains in test-pass rates, while structural repetition does not appear among the improvement patterns. This corroborates the rubric-runner alignment principle advanced here: traceability, not repetition count, is the operative lever.
+\citet{midolo2026guidelines} derive ten prompt improvement guidelines for code generation via iterative test-driven refinement, finding that explicitly specifying output post-conditions and I/O contracts produces the largest gains in test-pass rates, while structural repetition does not appear among the improvement patterns. This corroborates the rubric-runner alignment principle advanced here: traceability, not repetition count, is the operative lever, as diagnosed post hoc in Experiment~3.
 
 \subsection{Infrastructure Confounds}
+\label{subsec:infrastructure}
 
 The Goose agent framework enforces a concurrency cap via
 \texttt{GOOSE\_MAX\_BACKGROUND\_TASKS} (defaults to~5; configurable since Goose
@@ -437,7 +438,7 @@ pre-registration. This serialization does not affect the statistical conclusion,
 \subsection{Future Work}
 
 First, $n{=}5$ per group is
-underpowered for small effects; replication with $n{\geq}20$ and tasks whose
+underpowered for medium effects; replication with $n{\geq}20$ and tasks whose
 baseline pass rate falls below 0.5 would determine whether prompt repetition
 produces any signal once ceiling and floor artifacts are removed. Second,
 multi-judge scoring with a reported intraclass correlation coefficient remains
@@ -452,7 +453,7 @@ different context-weighting dynamics under prompt repetition.
 \subsection{Construct Validity}
 
 Three aspects of the rubric design threaten construct validity.
-First, \S\ref{sec:discussion} documents a rubric-runner co-design failure: three of seven criteria in Experiment~3 scored 0/1 because the runner prompt lacked instructions for the required investigations. As a result, those criteria measure runner-prompt completeness rather than agent capability, limiting our ability to conclude that prompt repetition affects criterion-level pass rates on structurally unreachable items.
+First, Section~\ref{subsec:codesign} documents a rubric-runner co-design failure: three of seven criteria in Experiment~3 scored 0/1 because the runner prompt lacked instructions for the required investigations. As a result, those criteria measure runner-prompt completeness rather than agent capability, limiting our ability to conclude that prompt repetition affects criterion-level pass rates on structurally unreachable items.
 Second, the binary pass/fail granularity of each criterion (chosen to enable blinded automated scoring across 30 sessions; polytomous scales would require judge calibration beyond the project's budget) compresses within-condition variance, reducing sensitivity to partial improvements that a polytomous or continuous scoring scheme might detect.
 Third, scoring stability across alternative rubric phrasings was not tested; a replication with criteria rewritten for full rubric-runner alignment ($A{=}1.0$, \S\ref{sec:discussion}) would test whether the observed effects hold under corrected instructions.
 
@@ -460,10 +461,10 @@ Third, scoring stability across alternative rubric phrasings was not tested; a r
 
 Several uncontrolled sources of variance limit internal validity.
 First, Goose version 1.25.0 was used for Experiments~1 and~2 while version 1.31.1 was used for Experiment~3; version-specific behavioral changes in agent scheduling or tool-handling logic cannot be ruled out as confounds.
-Second, two individual runs in Experiment~3 fell back to Bedrock due to Vertex AI rate limits before retrying successfully on Vertex; all token and score data derive from the successful Vertex runs, but the transient provider switch cannot be ruled out as a minor infrastructure variable.
+Second, three individual runs in Experiment~3 fell back to Bedrock due to stream-decode errors and Vertex AI rate limits before retrying successfully on Vertex; all token and score data derive from the successful Vertex runs, but the transient provider switch cannot be ruled out as a minor infrastructure variable.
 Third, a single LLM judge (Claude Haiku~4.5; justified by the post hoc two-judge validation, $\kappa{=}1.00$, \S\ref{subsec:scoring-validation}; a human--model cross-validation remains future work) performed all rubric scoring with no human calibration; an inter-rater reliability check using a second LLM judge (Claude Sonnet~4.6) across 5 stratified sessions found perfect agreement ($\kappa = 1.00$, see~\S\ref{subsec:scoring-validation}), though the small sample and ceiling effects limit the precision of this estimate, and our ability to conclude that scores are reproducible across non-LLM judges remains limited.
 Fourth, task ordering within each session was not randomized or counterbalanced. Order effects such as fatigue, learning, or context carry-over are therefore uncontrolled, limiting our ability to attribute score differences solely to the treatment.
-Fifth, as discussed in \S\ref{sec:discussion}, the \texttt{GOOSE\_MAX\_BACKGROUND\_TASKS} concurrency cap serialized Experiment~2 delegates into two batches; while this did not affect the statistical conclusion in the present ceiling-affected data, it limits our ability to conclude that latency or delegation dynamics were uniform across the experiment.
+Fifth, as discussed in Section~\ref{subsec:infrastructure}, the \texttt{GOOSE\_MAX\_BACKGROUND\_TASKS} concurrency cap serialized Experiment~2 delegates into two batches; while this did not affect the statistical conclusion in the present ceiling-affected data, it limits our ability to conclude that latency or delegation dynamics were uniform across the experiment.
 
 \subsection{External Validity}
 
@@ -488,7 +489,7 @@ Across three pre-registered experiments, we find no evidence that prompt repetit
 task-success rates for LLM agents executing structured software-engineering tasks in multi-step
 pipelines. The null results hold across two distinct calibration failure modes: near-ceiling
 task difficulty (Experiments~1 and~2) and rubric-runner co-design failure (Experiment~3). The
-evidence points instead to rubric-runner alignment as the higher-leverage design investment.
+evidence points instead to rubric-runner alignment as the higher-leverage design investment (observed, not experimentally manipulated, in this study).
 These findings do not extend to the positional-retrieval and multiple-choice settings where
 prompt repetition's gains are established.
 
@@ -551,7 +552,7 @@ Do NOT summarize; include verbatim excerpts and file paths.
 - Do not modify any source files.
 - Do not open pull requests.
 \end{lstlisting}
-\end{figure}
+\end{figure}\addtocounter{figure}{-1}
 
 \section{Treatment Condition}
 \label{app:treatment}
@@ -568,7 +569,7 @@ verbatim a second time.}
 [INSTRUCTIONS]
 [INSTRUCTIONS]  <- verbatim repeat
 \end{lstlisting}
-\end{figure}
+\end{figure}\addtocounter{figure}{-1}
 
 \bigskip
 
