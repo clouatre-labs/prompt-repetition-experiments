@@ -9,10 +9,12 @@ Output: irr/scores.json with per-criterion and session-level scores.
 
 from __future__ import annotations
 
+import argparse
 import json
 import os
 import re
 import sys
+from datetime import UTC, datetime
 from pathlib import Path
 
 import numpy as np
@@ -194,9 +196,9 @@ def score_with_claude(prompt: str) -> dict[str, int] | None:
     try:
         client = anthropic.Anthropic(api_key=api_key)
         message = client.messages.create(
-            model="claude-sonnet-4-6",
+            model=JUDGE2_MODEL,
             max_tokens=1024,
-            temperature=0.0,
+            temperature=JUDGE2_TEMPERATURE,
             system="You are a strict rubric scorer for AI agent experiments. Score each criterion 0 or 1 based on the rubric. Respond only with a JSON object.",
             messages=[{"role": "user", "content": prompt}],
         )
@@ -209,7 +211,7 @@ def score_with_claude(prompt: str) -> dict[str, int] | None:
             )
             return None
         return score
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         print(f"  API call failed: {e}", file=sys.stderr)
         return None
 
@@ -241,7 +243,247 @@ def compute_agreement(
     return pct, kappa
 
 
-def main() -> None:
+JUDGE2_MODEL = "claude-sonnet-4-6"
+JUDGE2_TEMPERATURE = 0.0
+
+# ── Experiment 4 (exploratory): blind second-judge rescore ─────────────────────
+
+# Criteria are read from the markdown rubric tables of the experiment directory.
+# rubric-v3.md supersedes rubric.md for C3, C4, C5, C7 and keeps rubric.md's
+# wording for C1, C2, C6.
+EXP4_RUBRIC_FILES = {
+    "rubric.md": ("C1", "C2", "C6"),
+    "rubric-v3.md": ("C3", "C4", "C5", "C7"),
+}
+
+# Session-file fields withheld from Judge 2 to keep it blind to condition.
+SESSION_BLIND_FIELDS = ("run_id", "group")
+
+
+def fail(msg: str) -> None:
+    print(f"ERROR: {msg}", file=sys.stderr)
+    sys.exit(1)
+
+
+def load_rubric_criteria(experiment_dir: Path) -> dict[str, str]:
+    """Extract criterion text from the rubric tables listed in EXP4_RUBRIC_FILES."""
+    criteria: dict[str, str] = {}
+    for filename, ids in EXP4_RUBRIC_FILES.items():
+        rows: dict[str, str] = {}
+        for line in (experiment_dir / filename).read_text().splitlines():
+            cells = [c.strip() for c in line.strip().strip("|").split("|")]
+            if len(cells) >= 2 and re.fullmatch(r"C\d+", cells[0]):
+                rows[cells[0]] = cells[1]
+        for cid in ids:
+            if cid not in rows:
+                fail(f"criterion {cid} not found in {filename}")
+            criteria[cid] = rows[cid]
+    return dict(sorted(criteria.items()))
+
+
+def load_judge1_scores(scores_path: Path) -> dict[str, dict[str, int]]:
+    """Return {run_id: {criterion: score}} from an experiment scores file."""
+    try:
+        data = json.loads(scores_path.read_text())
+    except (OSError, json.JSONDecodeError) as e:
+        fail(f"cannot read scores file {scores_path}: {e}")
+    judge1: dict[str, dict[str, int]] = {}
+    for entry in data:
+        run_id = entry["run_id"]
+        judge1[run_id] = {
+            cid: int(entry["scores"][cid]["score"]) for cid in entry["scores"]
+        }
+    return judge1
+
+
+def load_session_output(session_path: Path) -> str:
+    """Return the session output as JSON text without run_id or group."""
+    try:
+        data = json.loads(session_path.read_text())
+    except (OSError, json.JSONDecodeError) as e:
+        fail(f"cannot read session output {session_path}: {e}")
+    blinded = {k: v for k, v in data.items() if k not in SESSION_BLIND_FIELDS}
+    return json.dumps(blinded, indent=2)
+
+
+def build_experiment_prompt(criteria: dict[str, str], session_output: str) -> str:
+    """Build a blind Judge 2 prompt: rubric criteria plus the session output only."""
+    criteria_str = "\n".join(f"  {cid}: {desc}" for cid, desc in criteria.items())
+    example = ", ".join(f'"{cid}": 0' for cid in criteria)
+    return f"""You are scoring an AI agent's research output against a rubric.
+
+RUBRIC CRITERIA:
+{criteria_str}
+
+SESSION OUTPUT (JSON):
+{session_output}
+
+Score each criterion 1 (pass) or 0 (fail) strictly from the rubric text and
+the session output above. Binary scoring only; half-credit is not permitted.
+
+Respond with ONLY a JSON object like: {{{example}}}
+No explanation, no markdown formatting, no code fences. Just the raw JSON object."""
+
+
+def parse_judge2_scores(
+    raw: object, criteria: dict[str, str], run_id: str
+) -> dict[str, int]:
+    """Validate a Judge 2 response; every criterion must be present and binary."""
+    if not isinstance(raw, dict):
+        fail(f"Judge 2 response for {run_id} is not a JSON object")
+    scores: dict[str, int] = {}
+    for cid in criteria:
+        if cid not in raw:
+            fail(f"Judge 2 response for {run_id} is missing {cid}")
+        value = raw[cid]
+        if value in (0, 1, "0", "1") and not isinstance(value, bool):
+            scores[cid] = int(value)
+        else:
+            fail(f"Judge 2 response for {run_id} has non-binary value for {cid}")
+    return scores
+
+
+def kappa_or_none(j1: list[int], j2: list[int]) -> float | None:
+    """Cohen's kappa, or None when either vector is constant."""
+    if len(set(j1)) == 1 or len(set(j2)) == 1:
+        return None
+    try:
+        return float(cohen_kappa_score(j1, j2))
+    except ValueError:
+        return None
+
+
+def compute_exp4_statistics(criteria: dict[str, str], sessions: list[dict]) -> dict:
+    """Per-criterion kappa across sessions, pooled kappa, session agreement."""
+    per_criterion: dict[str, dict] = {}
+    constant_pairs: dict[str, dict] = {}
+    pooled_j1: list[int] = []
+    pooled_j2: list[int] = []
+    for cid in criteria:
+        j1 = [s["judge1"][cid] for s in sessions]
+        j2 = [s["judge2"][cid] for s in sessions]
+        kappa = kappa_or_none(j1, j2)
+        if kappa is None:
+            constant_pairs[cid] = {
+                "judge1_distinct_values": sorted(set(j1)),
+                "judge2_distinct_values": sorted(set(j2)),
+                "pct_agreement": round(float(np.mean(np.array(j1) == j2)) * 100.0, 1),
+            }
+            continue
+        per_criterion[cid] = {
+            "kappa": round(kappa, 3),
+            "pct_agreement": round(float(np.mean(np.array(j1) == j2)) * 100.0, 1),
+        }
+        pooled_j1.extend(j1)
+        pooled_j2.extend(j2)
+
+    pooled_kappa = kappa_or_none(pooled_j1, pooled_j2)
+    pooled_pct = (
+        round(float(np.mean(np.array(pooled_j1) == pooled_j2)) * 100.0, 1)
+        if pooled_j1
+        else None
+    )
+
+    pf_j1 = [s["pass_fail_judge1"] for s in sessions]
+    pf_j2 = [s["pass_fail_judge2"] for s in sessions]
+    pf_pct, pf_kappa = compute_agreement(pf_j1, pf_j2)
+    pf_note = (
+        "session-level kappa undefined (all pass/fail values identical)"
+        if pf_kappa is None
+        else ""
+    )
+
+    return {
+        "per_criterion_kappa": per_criterion,
+        "constant_pair_criteria": constant_pairs,
+        "pooled": {
+            "note": "pooled over non-constant criteria only",
+            "criteria": list(per_criterion),
+            "n_items": len(pooled_j1),
+            "kappa": round(pooled_kappa, 3) if pooled_kappa is not None else None,
+            "pct_agreement": pooled_pct,
+        },
+        "session_level": {
+            "definition": "pass = total / n_criteria >= 0.5",
+            "pct_agreement": round(pf_pct, 1),
+            "kappa": round(pf_kappa, 3) if pf_kappa is not None else None,
+            "note": pf_note,
+        },
+    }
+
+
+def experiment_main(args: argparse.Namespace) -> None:
+    """Blind second-judge rescore of every run in an experiment scores file.
+
+    Any failure (missing key, API error, unparseable response) exits non-zero
+    without writing the output. There is no Judge 1 fallback.
+    """
+    experiment_dir = Path(args.experiment)
+    scores_path = experiment_dir / args.scores
+    out_path = Path(args.out)
+    if not os.environ.get("ANTHROPIC_API_KEY"):
+        fail("ANTHROPIC_API_KEY not set; cannot run Judge 2 (no fallback)")
+
+    criteria = load_rubric_criteria(experiment_dir)
+    judge1 = load_judge1_scores(scores_path)
+
+    sessions: list[dict] = []
+    for run_id, j1 in judge1.items():
+        missing = [cid for cid in criteria if cid not in j1]
+        if missing:
+            fail(f"{scores_path}: {run_id} is missing Judge 1 scores for {missing}")
+        prompt = build_experiment_prompt(
+            criteria,
+            load_session_output(experiment_dir / "sessions" / f"{run_id}.json"),
+        )
+        print(f"Processing {run_id}...", file=sys.stderr)
+        judge2 = score_with_claude(prompt)
+        if judge2 is None:
+            fail(f"no Judge 2 scores for {run_id}; aborting without output")
+        judge2 = parse_judge2_scores(judge2, criteria, run_id)
+        print(f"  Judge 2 scored {sum(judge2.values())}/{len(judge2)}", file=sys.stderr)
+        n_criteria = len(criteria)
+        sessions.append(
+            {
+                "id": run_id,
+                "judge1": {cid: j1[cid] for cid in criteria},
+                "judge2": judge2,
+                "pass_fail_judge1": int(sum(j1.values()) / n_criteria >= 0.5),
+                "pass_fail_judge2": int(sum(judge2.values()) / n_criteria >= 0.5),
+            }
+        )
+
+    stats = compute_exp4_statistics(criteria, sessions)
+    output = {
+        "metadata": {
+            "experiment": experiment_dir.name,
+            "scores_file": str(scores_path),
+            "rubric_files": list(EXP4_RUBRIC_FILES),
+            "judge1": "Claude Haiku 4.5 (blind, single pass over the scores file)",
+            "judge2_model": JUDGE2_MODEL,
+            "judge2_temperature": JUDGE2_TEMPERATURE,
+            "judge2_inputs": "rubric criteria and session output only (run_id and group removed)",
+            "n_sessions": len(sessions),
+            "generated_at": datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        },
+        "sessions": sessions,
+        **stats,
+    }
+    with open(out_path, "w") as f:
+        json.dump(output, f, indent=2)
+    print(f"\nWritten {out_path}", file=sys.stderr)
+    print(f"  Per-criterion kappa: {stats['per_criterion_kappa']}", file=sys.stderr)
+    print(
+        f"  Constant-pair criteria: {list(stats['constant_pair_criteria'])}",
+        file=sys.stderr,
+    )
+    print(
+        f"  Pooled kappa (non-constant criteria): {stats['pooled']['kappa']}",
+        file=sys.stderr,
+    )
+
+
+def legacy_main() -> None:
     api_key = os.environ.get("ANTHROPIC_API_KEY")
     results = []
 
@@ -370,6 +612,30 @@ def main() -> None:
         f"  Session-level kappa: {summary['kappa_session']} ({summary['kappa_session_note']})",
         file=sys.stderr,
     )
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__.strip().splitlines()[0])
+    parser.add_argument(
+        "--experiment",
+        help="experiment directory (enables blind second-judge mode)",
+    )
+    parser.add_argument(
+        "--scores",
+        default="scores-main-run.json",
+        help="scores file, resolved relative to the experiment directory",
+    )
+    parser.add_argument(
+        "--out",
+        default="irr/exp4-scores.json",
+        help="output file for --experiment mode",
+    )
+    args = parser.parse_args()
+
+    if args.experiment:
+        experiment_main(args)
+    else:
+        legacy_main()
 
 
 if __name__ == "__main__":

@@ -15,6 +15,8 @@ Experiment data is organized into three experiments (exp1-fastmcp-refactor, exp2
 
 **Exp3 exception**: `bytes` is `null` in all exp3 run records because the sessions.db schema used during that experiment lacked a `total_bytes` column. All other per-run fields are recoverable.
 
+**Exp4 (exploratory, non-confirmatory)**: `exp-swift-grammar-mercury` is not one of the three pre-registered experiments. Its `analysis.json` covers only the 10 main-run sessions (runs 07 to 16, n=5+5); pilot rounds 01 to 06 are tracked in the directory but excluded. Exceptions to the schema above: the delegate is `inception/mercury-2.5-preview` via OpenRouter (Goose 1.49.0), not Claude Haiku 4.5; `bytes` is present and comes from `latency-log.jsonl` rather than `sessions.db`; `messages` is copied from the session file's `message_count` field, whose values are 0 or 1 and are not turn counts; and there is no `efficiency.json`, `protocol.md` or `raw/` directory. The treatment is defined differently from Exp1 to Exp3: the user `prompt` block is duplicated verbatim and the system `instructions` are unchanged. See `SUMMARY.md` and `README.md` in the experiment directory.
+
 ---
 
 ## efficiency.json
@@ -107,7 +109,7 @@ Experiment data is organized into three experiments (exp1-fastmcp-refactor, exp2
 
 **Schema normalization note**: As of this PR, `latency_seconds`, `message_count`, and `goose_session_id` are present in all experiments' session files, providing consistent provenance tracking across all three experimental runs.
 
-**Message count definition**: All published message counts (README, paper, `.zenodo.json`, `CITATION.cff`, `turn-efficiency.json`, and Figure 3) are defined as the sum of `runs[*].messages` in each `experiments/exp*/analysis.json`. These values are sourced from `sessions.db` and total 3,800 messages across all 30 session logs, including the excluded Exp1 drift run `scout-control-1` (93 messages); the headline total of 3,707 covers the 29 valid sessions. The run-time `message_count` fields in `efficiency.json` and `latency-log.jsonl` are a different measure and are not authoritative (null or absent for Exp3), so they must not be used for published counts.
+**Message count definition**: All published message counts (README, paper, `.zenodo.json`, `CITATION.cff`, `turn-efficiency.json`, and Figure 3) are defined as the sum of `runs[*].messages` in each `experiments/exp*/analysis.json`. These values are sourced from `sessions.db` and total 3,800 messages across all 30 session logs, including the excluded Exp1 drift run `scout-control-1` (93 messages); the headline total of 3,707 covers the 29 valid sessions. This definition is scoped to Exp1 to Exp3. Exp4 (`exp-swift-grammar-mercury`) is excluded: its `runs[*].messages` values are 0/1 flags copied from the session files' `message_count`, not turn counts, and must not be added to the 3,800 or 3,707 totals. The run-time `message_count` fields in `efficiency.json` and `latency-log.jsonl` are a different measure and are not authoritative (null or absent for Exp3), so they must not be used for published counts.
 
 **Scores object** (within run record):
 

@@ -1,0 +1,330 @@
+{
+  "metadata": {
+    "experiment": "exp-swift-grammar-mercury",
+    "scores_file": "experiments/exp-swift-grammar-mercury/scores-main-run.json",
+    "rubric_files": [
+      "rubric.md",
+      "rubric-v3.md"
+    ],
+    "judge1": "Claude Haiku 4.5 (blind, single pass over the scores file)",
+    "judge2_model": "claude-sonnet-4-6",
+    "judge2_temperature": 0.0,
+    "judge2_inputs": "rubric criteria and session output only (run_id and group removed)",
+    "n_sessions": 10,
+    "generated_at": "2026-11-27T13:19:51Z"
+  },
+  "sessions": [
+    {
+      "id": "scout-run-07",
+      "judge1": {
+        "C1": 0,
+        "C2": 0,
+        "C3": 1,
+        "C4": 0,
+        "C5": 1,
+        "C6": 1,
+        "C7": 1
+      },
+      "judge2": {
+        "C1": 0,
+        "C2": 0,
+        "C3": 1,
+        "C4": 0,
+        "C5": 0,
+        "C6": 1,
+        "C7": 1
+      },
+      "pass_fail_judge1": 1,
+      "pass_fail_judge2": 0
+    },
+    {
+      "id": "scout-run-08",
+      "judge1": {
+        "C1": 0,
+        "C2": 0,
+        "C3": 1,
+        "C4": 0,
+        "C5": 1,
+        "C6": 1,
+        "C7": 1
+      },
+      "judge2": {
+        "C1": 0,
+        "C2": 0,
+        "C3": 1,
+        "C4": 0,
+        "C5": 0,
+        "C6": 1,
+        "C7": 1
+      },
+      "pass_fail_judge1": 1,
+      "pass_fail_judge2": 0
+    },
+    {
+      "id": "scout-run-09",
+      "judge1": {
+        "C1": 0,
+        "C2": 0,
+        "C3": 1,
+        "C4": 0,
+        "C5": 1,
+        "C6": 1,
+        "C7": 1
+      },
+      "judge2": {
+        "C1": 0,
+        "C2": 0,
+        "C3": 1,
+        "C4": 0,
+        "C5": 0,
+        "C6": 1,
+        "C7": 1
+      },
+      "pass_fail_judge1": 1,
+      "pass_fail_judge2": 0
+    },
+    {
+      "id": "scout-run-10",
+      "judge1": {
+        "C1": 0,
+        "C2": 0,
+        "C3": 1,
+        "C4": 0,
+        "C5": 1,
+        "C6": 1,
+        "C7": 1
+      },
+      "judge2": {
+        "C1": 0,
+        "C2": 0,
+        "C3": 0,
+        "C4": 0,
+        "C5": 0,
+        "C6": 1,
+        "C7": 1
+      },
+      "pass_fail_judge1": 1,
+      "pass_fail_judge2": 0
+    },
+    {
+      "id": "scout-run-11",
+      "judge1": {
+        "C1": 0,
+        "C2": 0,
+        "C3": 1,
+        "C4": 0,
+        "C5": 1,
+        "C6": 1,
+        "C7": 1
+      },
+      "judge2": {
+        "C1": 0,
+        "C2": 0,
+        "C3": 1,
+        "C4": 0,
+        "C5": 0,
+        "C6": 1,
+        "C7": 1
+      },
+      "pass_fail_judge1": 1,
+      "pass_fail_judge2": 0
+    },
+    {
+      "id": "scout-run-12",
+      "judge1": {
+        "C1": 0,
+        "C2": 0,
+        "C3": 1,
+        "C4": 0,
+        "C5": 1,
+        "C6": 1,
+        "C7": 1
+      },
+      "judge2": {
+        "C1": 0,
+        "C2": 0,
+        "C3": 1,
+        "C4": 0,
+        "C5": 0,
+        "C6": 1,
+        "C7": 1
+      },
+      "pass_fail_judge1": 1,
+      "pass_fail_judge2": 0
+    },
+    {
+      "id": "scout-run-13",
+      "judge1": {
+        "C1": 0,
+        "C2": 0,
+        "C3": 1,
+        "C4": 1,
+        "C5": 1,
+        "C6": 1,
+        "C7": 1
+      },
+      "judge2": {
+        "C1": 0,
+        "C2": 0,
+        "C3": 1,
+        "C4": 0,
+        "C5": 0,
+        "C6": 1,
+        "C7": 1
+      },
+      "pass_fail_judge1": 1,
+      "pass_fail_judge2": 0
+    },
+    {
+      "id": "scout-run-14",
+      "judge1": {
+        "C1": 0,
+        "C2": 0,
+        "C3": 1,
+        "C4": 0,
+        "C5": 1,
+        "C6": 1,
+        "C7": 1
+      },
+      "judge2": {
+        "C1": 0,
+        "C2": 0,
+        "C3": 1,
+        "C4": 0,
+        "C5": 1,
+        "C6": 1,
+        "C7": 1
+      },
+      "pass_fail_judge1": 1,
+      "pass_fail_judge2": 1
+    },
+    {
+      "id": "scout-run-15",
+      "judge1": {
+        "C1": 0,
+        "C2": 0,
+        "C3": 1,
+        "C4": 0,
+        "C5": 1,
+        "C6": 1,
+        "C7": 1
+      },
+      "judge2": {
+        "C1": 0,
+        "C2": 0,
+        "C3": 1,
+        "C4": 0,
+        "C5": 1,
+        "C6": 1,
+        "C7": 1
+      },
+      "pass_fail_judge1": 1,
+      "pass_fail_judge2": 1
+    },
+    {
+      "id": "scout-run-16",
+      "judge1": {
+        "C1": 0,
+        "C2": 0,
+        "C3": 1,
+        "C4": 0,
+        "C5": 1,
+        "C6": 1,
+        "C7": 1
+      },
+      "judge2": {
+        "C1": 0,
+        "C2": 0,
+        "C3": 1,
+        "C4": 0,
+        "C5": 0,
+        "C6": 1,
+        "C7": 1
+      },
+      "pass_fail_judge1": 1,
+      "pass_fail_judge2": 0
+    }
+  ],
+  "per_criterion_kappa": {},
+  "constant_pair_criteria": {
+    "C1": {
+      "judge1_distinct_values": [
+        0
+      ],
+      "judge2_distinct_values": [
+        0
+      ],
+      "pct_agreement": 100.0
+    },
+    "C2": {
+      "judge1_distinct_values": [
+        0
+      ],
+      "judge2_distinct_values": [
+        0
+      ],
+      "pct_agreement": 100.0
+    },
+    "C3": {
+      "judge1_distinct_values": [
+        1
+      ],
+      "judge2_distinct_values": [
+        0,
+        1
+      ],
+      "pct_agreement": 90.0
+    },
+    "C4": {
+      "judge1_distinct_values": [
+        0,
+        1
+      ],
+      "judge2_distinct_values": [
+        0
+      ],
+      "pct_agreement": 90.0
+    },
+    "C5": {
+      "judge1_distinct_values": [
+        1
+      ],
+      "judge2_distinct_values": [
+        0,
+        1
+      ],
+      "pct_agreement": 20.0
+    },
+    "C6": {
+      "judge1_distinct_values": [
+        1
+      ],
+      "judge2_distinct_values": [
+        1
+      ],
+      "pct_agreement": 100.0
+    },
+    "C7": {
+      "judge1_distinct_values": [
+        1
+      ],
+      "judge2_distinct_values": [
+        1
+      ],
+      "pct_agreement": 100.0
+    }
+  },
+  "pooled": {
+    "note": "pooled over non-constant criteria only",
+    "criteria": [],
+    "n_items": 0,
+    "kappa": null,
+    "pct_agreement": null
+  },
+  "session_level": {
+    "definition": "pass = total / n_criteria >= 0.5",
+    "pct_agreement": 20.0,
+    "kappa": 0.0,
+    "note": ""
+  }
+}

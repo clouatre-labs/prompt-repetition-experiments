@@ -1,0 +1,70 @@
+[
+  {
+    "run_id": "scout-run-05",
+    "scores": {
+      "C1": {
+        "score": 0,
+        "justification": "Constraints state tree-sitter-swift 0.7.3 has tree-sitter-language as only normal dependency but do not cite the actual tree-sitter-swift Cargo.toml manifest content."
+      },
+      "C2": {
+        "score": 0,
+        "justification": "Library findings mention class_declaration with declaration_kind field for five types but do not cite the actual node-types.json or grammar.js field definition."
+      },
+      "C3": {
+        "score": 1,
+        "justification": "element_query_draft provides literal tree-sitter query text with correct syntax for function_declaration, class_declaration, and protocol_declaration with proper capture labels."
+      },
+      "C4": {
+        "score": 1,
+        "justification": "inheritance_walk_citation cites tree-sitter-swift grammar source and correctly describes walking inheritance_specifier to inherits_from field to user_type to type_identifier."
+      },
+      "C5": {
+        "score": 1,
+        "justification": "language_info_struct_citation includes full LanguageInfo struct definition showing defuse_query field, and defuse_query_draft provides literal tree-sitter query text."
+      },
+      "C6": {
+        "score": 1,
+        "justification": "test_snippets array lists 8 concrete test cases covering all five declaration_kind values (class/struct/actor/enum/extension) and three inheritance shapes with specific test function names."
+      },
+      "C7": {
+        "score": 1,
+        "justification": "wiring_summary includes all five facts: workspace_dependency, unconditional_dependency, extension_map_entry, mod_registration, and both get_language_info/get_ts_language match arms."
+      }
+    },
+    "total": 5
+  },
+  {
+    "run_id": "scout-run-06",
+    "scores": {
+      "C1": {
+        "score": 0,
+        "justification": "library_findings state tree-sitter-language ^0.1.0 as only dependency without citing the actual tree-sitter-swift Cargo.toml manifest content."
+      },
+      "C2": {
+        "score": 0,
+        "justification": "element_query_draft references class_declaration but does not cite the actual class_declaration.declaration_kind field definition from grammar.js or node-types.json."
+      },
+      "C3": {
+        "score": 1,
+        "justification": "element_query_draft provides literal tree-sitter query text for function_declaration, class_declaration, and protocol_declaration with correct capture labels and node field names."
+      },
+      "C4": {
+        "score": 1,
+        "justification": "inheritance_walk_citation cites tree-sitter-swift grammar source and correctly describes walking class_declaration's _inheritance_specifiers to inherits_from to user_type to type_identifier."
+      },
+      "C5": {
+        "score": 1,
+        "justification": "language_info_struct_citation includes full struct definition confirming defuse_query field, and defuse_query_draft provides literal tree-sitter query text for local declarations and assignments."
+      },
+      "C6": {
+        "score": 1,
+        "justification": "test_snippets array lists 8 test cases covering all five declaration_kind values (class/struct/actor/enum/extension) and three inheritance shapes (single superclass/multiple protocols/mixed) with specific test names."
+      },
+      "C7": {
+        "score": 1,
+        "justification": "wiring_summary includes all five facts: workspace_dependency, unconditional_dependency, extension_map_entry, mod_registration, and both get_language_info and get_ts_language match arms."
+      }
+    },
+    "total": 5
+  }
+]

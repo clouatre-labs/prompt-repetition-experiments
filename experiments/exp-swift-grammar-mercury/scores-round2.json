@@ -1,0 +1,70 @@
+[
+  {
+    "run_id": "scout-run-03",
+    "scores": {
+      "C1": {
+        "score": 0,
+        "justification": "Notes state 'no version conflict' with tree-sitter 0.26.13 but do not cite tree-sitter-swift's actual Cargo.toml manifest; this restates the issue rather than reproducing manifest content."
+      },
+      "C2": {
+        "score": 0,
+        "justification": "Constraints list declaration kinds but provide no citation of node-types.json or grammar.js; this is issue restatement, not grammar-source citation."
+      },
+      "C3": {
+        "score": 0,
+        "justification": "Element_query_draft provides three patterns (function_declaration, class_declaration, protocol_declaration) but does not cite java.rs's actual ELEMENT_QUERY structure to show explicit modeling."
+      },
+      "C4": {
+        "score": 0,
+        "justification": "Inheritance_walk_citation describes the walk from tree-sitter-swift grammar.js but does not cite an existing repo handler (e.g. kotlin.rs) to justify the walk shape, as required."
+      },
+      "C5": {
+        "score": 0,
+        "justification": "Language_info_struct_citation shows the struct correctly, but defuse_query_draft is not explicitly tied to or modeled on java.rs's real 4-line DEFUSE_QUERY; the source pattern is not cited."
+      },
+      "C6": {
+        "score": 0,
+        "justification": "Test_snippets cover five declaration kinds with concrete code and test names, but no snippets are provided for inheritance shapes (single superclass, multiple protocols, mixed), which the rubric requires."
+      },
+      "C7": {
+        "score": 0,
+        "justification": "Relevant_files and patterns are identified, but the five required wiring elements ([workspace.dependencies], Cargo.toml dependency, EXTENSION_MAP entry, mod swift; registration, both match arms in mod.rs) are not systematically described."
+      }
+    },
+    "total": 0
+  },
+  {
+    "run_id": "scout-run-04",
+    "scores": {
+      "C1": {
+        "score": 0,
+        "justification": "Library_findings note tree-sitter-swift as 'Dependency on tree-sitter-language ^0.1.0 only' but do not cite tree-sitter-swift's actual Cargo.toml manifest content; this is library-level summary, not manifest citation."
+      },
+      "C2": {
+        "score": 0,
+        "justification": "Constraints mention 'Swift declaration kinds' but provide no citation of node-types.json or grammar.js; this is issue restatement without grammar-source evidence."
+      },
+      "C3": {
+        "score": 0,
+        "justification": "Element_query_draft contains three patterns but does not cite java.rs's actual query structure; patterns appear derived from issue prose rather than modeled on the reference implementation."
+      },
+      "C4": {
+        "score": 0,
+        "justification": "Inheritance_walk_citation cites tree-sitter-swift grammar.ts, describing the walk, but does not cite an existing repo handler like kotlin.rs to justify the walk shape as the rubric requires."
+      },
+      "C5": {
+        "score": 0,
+        "justification": "Language_info_struct_citation correctly shows the LanguageInfo struct with defuse_query field, but defuse_query_draft is not explicitly modeled on or tied to java.rs's real 4-line DEFUSE_QUERY; the source pattern is not cited."
+      },
+      "C6": {
+        "score": 0,
+        "justification": "Test_snippets cover five declaration kinds (class, struct, actor, enum, extension) with code and test names, but no snippets address inheritance shapes (single superclass, multiple protocols, mixed) as required."
+      },
+      "C7": {
+        "score": 0,
+        "justification": "Relevant_files are listed but the five required wiring elements are not systematically described; the run does not explicitly outline [workspace.dependencies], Cargo.toml dependency, EXTENSION_MAP entry, mod swift; registration, and both mod.rs match arms."
+      }
+    },
+    "total": 0
+  }
+]

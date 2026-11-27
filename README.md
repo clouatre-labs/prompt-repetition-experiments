@@ -220,6 +220,35 @@ The treatment comparison is therefore restricted to the 4 reachable criteria: C2
 | C6 | DEFUSE_QUERY justification | 0% | [0%, 27.8%] | 10 |
 | C7 | Structural wiring | 100% | [72.25%, 100%] | 10 |
 
+### Experiment 4 (exploratory, non-confirmatory)
+
+Experiment 4 (`experiments/exp-swift-grammar-mercury/`) is **exploratory and non-confirmatory**. It is not one of the three pre-registered experiments, it is not in Table 7, and it is not in the paper. Its results are reported descriptively only and do not enter any pooled count above (30 sessions, 3,707 / 3,800 messages, which cover Exp1 to Exp3 only).
+
+- **Delegate:** `inception/mercury-2.5-preview` via OpenRouter, temperature 0.5, Goose 1.49.0. This differs from Exp1 to Exp3 (Claude Haiku 4.5, Goose 1.25.0 / 1.31.1).
+- **Target:** `clouatre-labs/aptu-coder#648` (Swift grammar support via tree-sitter-swift), pinned at `c3d3669c`.
+- **Treatment definition:** the entire user `prompt` block of the recipe is duplicated verbatim and the system `instructions` are unchanged. This differs from Exp1 to Exp3, which repeat the Scout instructions. `recipes/recipe-07.yaml` (control) and `recipe-08.yaml` (treatment) differ only in that duplication and the run-specific substitutions.
+- **Rubric:** `rubric.md` for C1, C2, C6 and `rubric-v3.md` for C3, C4, C5, C7. It was authored over three pilot revision rounds and was not inter-rater checked before the main run.
+- **Pilot rounds:** runs 01 to 06 are three n=1+1 rounds (runner prompt v1, v2, v3; rubric v1, v2, v3) that scored 0/7, 3/7 and 5/7. They are tracked in the directory but excluded from `analysis.json`. Two main-run slots (13 and 15) needed retries after the delegate repeated one tool call until the attempt was interrupted or ran out of context; only the first successful attempt per slot is scored.
+- **Main run:** n=5+5 (runs 07 to 16). Judge 1 (blind Claude Haiku 4.5) gave control a mean of 4.2/7 and treatment 4.0/7 (Mann-Whitney U=15.0, exact two-sided p=1.0, rank-biserial r=-0.20). At this n the result carries no evidential weight about prompt repetition.
+
+*Table 6b: Experiment 4 criterion pass rates by group (Judge 1, n=5 each).*
+
+| Criterion | Control pass rate | Treatment pass rate | Combined (n=10) |
+|---|---|---|---|
+| C1 (tree-sitter-swift manifest cited) | 0% | 0% | 0% |
+| C2 (declaration_kind field cited from grammar source) | 0% | 0% | 0% |
+| C3 (ELEMENT_QUERY patterns) | 100% | 100% | 100% |
+| C4 (extract_inheritance walk with grammar citation) | 20% | 0% | 10% |
+| C5 (DEFUSE_QUERY literal text) | 100% | 100% | 100% |
+| C6 (concrete Swift test snippets) | 100% | 100% | 100% |
+| C7 (structural wiring) | 100% | 100% | 100% |
+
+Six of seven criteria are at floor or ceiling in both groups; C4 is the only criterion with any variance and it is a single run.
+
+**Second-judge check.** All 10 main-run sessions were rescored by Claude Sonnet 4.6 (temperature 0.0) from the rubric criteria and the session output only, with no access to Judge 1 scores, totals or group (`irr/exp4-scores.json`). The judges agreed on 60 of 70 criterion decisions (85.7%). Every disagreement is a Judge 2 fail where Judge 1 passed: C5 in 8 of 10 sessions, C3 in 1 and C4 in 1. For every criterion at least one judge's vector is constant across the 10 sessions, so no per-criterion kappa is defined and the pooled kappa is null; the criteria are listed under `constant_pair_criteria` in the output file. With a pass threshold of 50% of criteria, Judge 1 passes 10/10 sessions and Judge 2 passes 2/10 (session-level agreement 20%, kappa 0.00). This check does not support treating Judge 1's C5 scores as reliable for this rubric.
+
+`experiments/exp-swift-grammar-mercury/analysis.json` follows the shared schema with two exceptions: `messages` is copied from the session files' `message_count`, which is 0 or 1 and is not a turn count, so it is excluded from the published message totals; and the per-run tokens, wall clock and `bytes` come from `latency-log.jsonl` for the first successful attempt of each slot. See `DATA_DICTIONARY.md` and `SUMMARY.md` in the experiment directory.
+
 ### Summary
 
 *Table 7: Cross-experiment summary of task, rubric, valid runs, and result.*
@@ -358,6 +387,18 @@ prompt-repetition-experiments/
         utility-{1..2}.jsonl               # Utility sessions
         scout-run-{01..10}.jsonl           # Delegate conversations (blinded)
         scout-run-08-retry.jsonl           # Retry of run-08
+    exp-swift-grammar-mercury/                # Experiment 4: exploratory, non-confirmatory
+      analysis.json                        # Main run only (runs 07-16, n=5+5)
+      scores-main-run.json                 # Blind Judge 1 scores for the main run
+      scores*.json                         # Pilot-round score files (excluded from analysis)
+      rubric.md, rubric-v2-diagnostic.md, rubric-v3.md
+      runner-prompt.md, runner-prompt-v2.md, runner-prompt-v3.md
+      label-map.json                       # Group assignments (sealed before scoring)
+      latency-log.jsonl                    # Per-run tokens, wall clock, bytes
+      recipes/                             # 16 run recipes (run-specific absolute paths)
+      sessions/                            # Structured delegate outputs
+        scout-run-{01..16}.json
+      SUMMARY.md                           # Pilot history and main-run notes
 ```
 
 ### Data Files
