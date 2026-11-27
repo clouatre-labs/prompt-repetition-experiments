@@ -1,0 +1,128 @@
+{
+  "scored_at": "2026-11-27T10:00:00Z",
+  "scorer": "claude-haiku-4-5",
+  "rubric_version": "exp5-v1",
+  "note": "synthetic fixture",
+  "scores": [
+    {
+      "run_id": "run-c1",
+      "C1": null,
+      "C2": null,
+      "C3": 1,
+      "C4": 0,
+      "C5": 1,
+      "C6": 1,
+      "C7": 1,
+      "total": 4,
+      "justifications": {}
+    },
+    {
+      "run_id": "run-c2",
+      "C1": null,
+      "C2": null,
+      "C3": 1,
+      "C4": 0,
+      "C5": 1,
+      "C6": 0,
+      "C7": 1,
+      "total": 3,
+      "justifications": {}
+    },
+    {
+      "run_id": "run-c3",
+      "C1": null,
+      "C2": null,
+      "C3": 0,
+      "C4": 0,
+      "C5": 1,
+      "C6": 1,
+      "C7": 0,
+      "total": 2,
+      "justifications": {}
+    },
+    {
+      "run_id": "run-c4",
+      "C1": null,
+      "C2": null,
+      "C3": 1,
+      "C4": 1,
+      "C5": 1,
+      "C6": 1,
+      "C7": 1,
+      "total": 5,
+      "justifications": {}
+    },
+    {
+      "run_id": "run-c5",
+      "C1": null,
+      "C2": null,
+      "C3": 1,
+      "C4": 1,
+      "C5": 0,
+      "C6": 1,
+      "C7": 1,
+      "total": 4,
+      "justifications": {}
+    },
+    {
+      "run_id": "run-t1",
+      "C1": null,
+      "C2": null,
+      "C3": 1,
+      "C4": 1,
+      "C5": 1,
+      "C6": 1,
+      "C7": 1,
+      "total": 5,
+      "justifications": {}
+    },
+    {
+      "run_id": "run-t2",
+      "C1": null,
+      "C2": null,
+      "C3": 1,
+      "C4": 1,
+      "C5": 1,
+      "C6": 1,
+      "C7": 1,
+      "total": 5,
+      "justifications": {}
+    },
+    {
+      "run_id": "run-t3",
+      "C1": null,
+      "C2": null,
+      "C3": 1,
+      "C4": 0,
+      "C5": 1,
+      "C6": 1,
+      "C7": 1,
+      "total": 4,
+      "justifications": {}
+    },
+    {
+      "run_id": "run-t4",
+      "C1": null,
+      "C2": null,
+      "C3": 1,
+      "C4": 1,
+      "C5": 1,
+      "C6": 1,
+      "C7": 0,
+      "total": 4,
+      "justifications": {}
+    },
+    {
+      "run_id": "run-t5",
+      "C1": null,
+      "C2": null,
+      "C3": 1,
+      "C4": 1,
+      "C5": 1,
+      "C6": 1,
+      "C7": 1,
+      "total": 5,
+      "justifications": {}
+    }
+  ]
+}
