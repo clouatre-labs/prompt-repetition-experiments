@@ -112,3 +112,7 @@ e72dcea0f5baf23a7ff4ac369e1d7ffcb5d4cf1459ee9cc150f573aed9f885af  tests/test_pre
 ## DOI
 
 Zenodo DOI, recorded by the owner at deposit before the first main-run spawn:
+
+- DOI: `10.5281/zenodo.24603433`, a new record (version 1.0.0), not a version of `10.5281/zenodo.19696593` or `10.5281/zenodo.20039271`.
+- Deposit timestamp (UTC): `2026-11-27T20:08:06Z`, the record's `created` time; the publish request was sent at `2026-11-27T20:08:05Z`.
+- Record URL: https://zenodo.org/records/24603433
