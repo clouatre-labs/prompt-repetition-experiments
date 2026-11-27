@@ -55,7 +55,7 @@ non-reasoning large language models on retrieval and multiple-choice benchmarks.
 instructions produces similar gains in multi-step agentic pipelines.
 \textbf{Method:} Three pre-registered controlled experiments used Claude Haiku 4.5 delegates
 ($n{=}5$ per condition, temperature 0.5) assigned either a single-copy or a repeated-prompt
-instruction under blinded binary rubric scoring, totalling 30 sessions and 3,196 messages.
+instruction under blinded binary rubric scoring, totalling 30 sessions and 3{,}707 messages.
 \textbf{Results:} Experiment~1 (session-ID refactoring, 6 criteria) yielded a non-significant
 score delta of $+0.30$ with five of six criteria saturated at 100\% in both groups
 (Fisher's $p{=}1.000$).
@@ -318,8 +318,8 @@ In Experiment~1, treatment agents consumed 30.6\% fewer total tokens than contro
 In Experiment~2, treatment agents used 7.2\% more total tokens than control
 (median 703{,}993 vs.\ 755{,}144); sessions were already saturated and no turns were eliminated,
 so the doubled prompt added net input overhead. In Experiment~3, treatment agents
-consumed 19.9\% more total tokens than control (median 41{,}880 vs.\ 50{,}220); sessions averaged
-12 messages with no turns saved, so the doubled prompt imposed pure input overhead with no performance gain.
+consumed 19.9\% more total tokens than control (median 41{,}880 vs.\ 50{,}220); sessions ran to a median
+of 70 messages (control) and 82 messages (treatment) with no turns saved, so the doubled prompt imposed pure input overhead with no performance gain.
 
 \begin{table}[h]
 \centering
@@ -337,8 +337,8 @@ Experiment & Condition & Median Total Tokens & Median Messages & Median Latency 
 \multirow{2}{*}{Exp2} & Control   & 703{,}993  & 142   & 117 \\
                       & Treatment & 755{,}144  & 142   & 112 \\
 \addlinespace
-\multirow{2}{*}{Exp3} & Control   &  41{,}880  &  12   &  62 \\
-                      & Treatment &  50{,}220  &  12   &  72 \\
+\multirow{2}{*}{Exp3} & Control   &  41{,}880  &  70   &  62 \\
+                      & Treatment &  50{,}220  &  82   &  72 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -401,7 +401,7 @@ prompt adds $p$ tokens to every prefill. Each avoided turn eliminates $\bar{c}$ 
 accumulated context, where $\bar{c}$ grows with session length. The crossover point $L^*$
 satisfies $p = \bar{c}(L^* - 1)$, giving $L^* \approx p/\bar{c} + 1$: sessions longer than
 $L^*$ yield a net token saving; sessions shorter than $L^*$ incur overhead. For Experiment~3 ($p \approx 950$, $\bar{c} \approx
-3{,}300$ tokens/message), $L^* \approx 1.3$ messages, well below the observed 12-message median.
+600$ tokens/message, from median totals of 41{,}880 and 50{,}220 tokens over 70 and 82 messages), $L^* \approx 950/600 + 1 \approx 2.6$ messages, well below the observed 70- and 82-message medians.
 Yet treatment agents still consumed more tokens, because repeated instructions did not reduce
 turn count: agents could not complete structurally unreachable criteria regardless of
 instruction emphasis, so the turn-count assumption underlying $L^*$ does not hold under

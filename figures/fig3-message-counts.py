@@ -4,9 +4,9 @@ import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 
 # Sorted data (ascending by value)
-labels_sorted = ["Exp3\nControl", "Exp3\nTreatment", "Exp1\nTreatment", "Exp2\nTreatment", "Exp2\nControl", "Exp1\nControl"]
-values_sorted = [12.4, 13.0, 137.6, 138.6, 151.6, 209.25]
-colors_sorted = ["#1f77b4", "#ff7f0e", "#ff7f0e", "#ff7f0e", "#1f77b4", "#1f77b4"]
+labels_sorted = ["Exp3\nTreatment", "Exp3\nControl", "Exp1\nTreatment", "Exp2\nTreatment", "Exp2\nControl", "Exp1\nControl"]
+values_sorted = [72.8, 73.4, 137.6, 138.6, 151.6, 209.25]
+colors_sorted = ["#ff7f0e", "#1f77b4", "#ff7f0e", "#ff7f0e", "#1f77b4", "#1f77b4"]
 
 fig, ax = plt.subplots(figsize=(9, 6))
 
