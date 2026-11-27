@@ -65,7 +65,11 @@ uv run --no-project --with "anthropic<1" --with scikit-learn irr/rescore.py \
 
 ### Results (`exp4-scores.json`)
 
+**Second-judge agreement is poor: 20% session-level agreement, kappa 0.00.** Judge 1's Exp4 scores, C5 in particular, are not reliable measurements. The Exp4 pass rates and the 4.2 vs 4.0 means must not be interpreted as evidence in either direction.
+
 - Judges agreed on 60 of 70 criterion decisions (85.7%). Every disagreement is a Judge 2 fail where Judge 1 passed: C5 in 8 sessions, C3 in 1, C4 in 1.
 - `per_criterion_kappa` is empty and pooled kappa is `null`: for every one of the 7 criteria at least one judge's vector is constant across sessions (Judge 1: C1, C2, C3, C5, C6, C7; Judge 2: C1, C2, C4, C6, C7).
 - Session-level pass/fail: Judge 1 passes 10/10, Judge 2 passes 2/10; agreement 20%, kappa 0.00.
 - Judge 2 scored the session output file rather than a transcript, and the rubric was not inter-rater checked before the main run, so these numbers describe this rubric and this output format only.
+
+What would be needed before the Exp4 scores could be used: a rubric revision agreed by both judges, followed by a re-score of the 10 sessions under the revised rubric. No score or data file has been changed on the basis of this check.
