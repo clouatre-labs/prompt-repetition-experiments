@@ -79,7 +79,7 @@ READ-ONLY. No code changes, no commits. Only write to {output_path}.
 ## Step 7: Produce Literal Artifacts (required -- do not skip or paraphrase)
 For your recommended approach, produce these as literal, quoted text (not descriptions of what they would contain):
 - `language_info_struct_citation`: the literal field list you read from `mod.rs`'s `LanguageInfo` struct (paste the actual field names and types).
-- `element_query_draft`: the literal tree-sitter query text you propose for PHP's `ELEMENT_QUERY`, covering at least `function_definition`, `method_declaration`, `class_declaration`, `interface_declaration` and `trait_declaration`, each with the specific field (e.g. `name`) and capture label you use.
+- `element_query_draft`: the literal tree-sitter query text you propose for PHP's `ELEMENT_QUERY`, covering every declaration kind the grammar defines for functions, methods, classes, interfaces, traits and enums; name each node kind you use and the field you capture.
 - `defuse_query_draft`: the literal tree-sitter query text you propose for PHP's `DEFUSE_QUERY`, adapted from java.rs's actual pattern, covering local declarations, assignments, and identifier reads.
 - `inheritance_walk_citation`: a literal description of the exact field-by-field walk from a class declaration to its `extends` and `implements` names in the tree-sitter-php grammar, citing the grammar source you inspected in Step 4.
 - `test_snippets`: an array of at least 9 objects, tagged by a `dimension` field with value `"declaration_kind"` or `"inheritance_shape"`:
@@ -88,10 +88,10 @@ For your recommended approach, produce these as literal, quoted text (not descri
   - every entry has a literal PHP code snippet in its `code` field and a literal proposed test function name, regardless of dimension
 - `wiring_summary`: an object consolidating all 5 structural wiring facts in one place, each a literal one-line statement of that specific fact (not a paragraph):
   - `workspace_dependency`: the literal `[workspace.dependencies]` entry you propose for tree-sitter-php
-  - `unconditional_dependency`: the literal dependency line you propose for `crates/aptu-coder-core/Cargo.toml` (no feature flag)
-  - `extension_map_entry`: the literal `.php` entry you propose for `EXTENSION_MAP` in `lang.rs`
-  - `mod_registration`: the literal `mod php;` registration statement and where it goes
-  - `match_arms`: the literal match arms you propose for both `get_language_info()` and `get_ts_language()`
+  - `unconditional_dependency`: the literal dependency line you propose for `crates/aptu-coder-core/Cargo.toml`
+  - `extension_map_entry`: the literal `.php` entry you propose for `EXTENSION_MAP`
+  - `mod_registration`: the literal module registration statement you propose and the file it goes in
+  - `match_arms`: the literal match arms you propose, in each function that needs one
 
 ## Output
 Write the result as valid JSON to {output_path} with this schema:
