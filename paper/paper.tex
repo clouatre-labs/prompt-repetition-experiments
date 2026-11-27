@@ -55,7 +55,7 @@ non-reasoning large language models on retrieval and multiple-choice benchmarks.
 instructions produces similar gains in multi-step agentic pipelines.
 \textbf{Method:} Three pre-registered controlled experiments used Claude Haiku 4.5 delegates
 ($n{=}5$ per condition, temperature 0.5) assigned either a single-copy or a repeated-prompt
-instruction under blinded binary rubric scoring, totalling 30 sessions and 3{,}707 messages.
+instruction under binary rubric scoring by a single LLM judge, totalling 30 sessions and 3{,}707 messages.
 \textbf{Results:} Experiment~1 (session-ID refactoring, 6 criteria) yielded a non-significant
 score delta of $+0.30$ with five of six criteria saturated at 100\% in both groups
 (Fisher's $p{=}1.000$).
@@ -115,7 +115,7 @@ suppress treatment signals regardless of intervention strength.
 inter-rater reliability measures, and report over 80\% agreement between GPT-4
 judgments and human preferences on MT-Bench, but note position bias. \citet{shen2023} find that single-judge alignment with human raters is candidate-, dimension-, and quality-dependent, with per-system correlation spread of up to 0.5; rubric-based scoring with judge calibration has been proposed to address this variability \citep{hashemi2024llmrubric}.
 The MSR~2026 Mining Challenge applied AIDev to characterise agent failure taxonomies, task-stratified acceptance, and review effort \citep{failureMSR2026,comparingMSR2026,revieweffortMSR2026}; none of these observational studies isolates instruction repetition as a controlled pre-registered independent variable.
-The present experiments use a single Haiku~4.5 judge; inter-rater reliability was validated in Section~\ref{subsec:scoring-validation}.
+The present experiments use a single Haiku~4.5 judge; a post hoc second-judge check is reported in Section~\ref{subsec:scoring-validation}, but it was not an independent re-scoring and leaves judge reliability untested.
 \citet{adaptorch2026} report that static parallel agent topologies
 achieve competitive results on SWE-bench Verified under greedy decoding. This supports the
 delegate design used here. Substantive null results from sound designs are distinct from
@@ -179,7 +179,7 @@ treatment:
 \end{tikzpicture}
 \caption{\small \textbf{Blinded evaluation pipeline.} The orchestrator spawns 10 independent delegates per experiment.
 The blind scorer receives only output JSON and the rubric; group labels are revealed after all
-scoring is complete.}
+scoring is complete (Experiment~1 excepted, Section~\ref{sec:preregistration}).}
 \label{fig:pipeline}
 \end{figure}
 
@@ -195,14 +195,17 @@ The evaluation rubric was locked before any delegate was spawned. Group assignme
 in a \texttt{label-map.json} file before scoring began, with file creation timestamps serving
 as the pre-registration record, archived in the supplementary dataset \citep{clouatre2026dataset}.
 
-A separate Haiku~4.5 instance performed blind scoring:
-it received only the delegate output JSON and the rubric criteria. No group labels, run
-metadata, or other outputs were visible during scoring.
+A separate Haiku~4.5 instance performed the scoring.
+It received the delegate output JSON and the rubric criteria. In Experiments~2 and~3 the output
+files were named neutrally (\texttt{scout-run-NN}), so no group labels, run metadata, or other
+outputs were visible. In Experiment~1 the scoring prompt listed the files by condition
+(\texttt{scout-control-N}, \texttt{scout-treatment-N}) and noted that one control run had failed,
+so the scorer knew each run's condition.
 
 \subsection{Scoring Validation}
 \label{subsec:scoring-validation}
 
-To assess the reproducibility of the rubric scores prior to journal submission, a second LLM judge (Claude Sonnet~4.6) re-scored a stratified sample of 5 sessions using the identical rubric prompts employed by the primary judge (Claude Haiku~4.5). The sample included one control and one treatment session from Experiment~1 (FastMCP refactor), one from each condition in Experiment~2 (Tree-sitter abstract syntax tree (AST) scanner), and one treatment session from Experiment~3 (Kotlin grammar). Per-criterion agreement between the two judges was 100\% ($\kappa = 1.00$, 33 criteria across 5 sessions). Session-level pass/fail agreement was also 100\%, though Cohen's $\kappa$ was undefined because all sessions were rated as passing the 50\% threshold by both judges. The per-criterion $\kappa$ of 1.00 indicates almost perfect agreement by Landis--Koch standards~\cite{landis1977}. The Exp2 ceiling effect (all criteria at 100\% in every session) contributed to perfect agreement on those 14 criteria, but the two judges also agreed on all 19 non-ceiling criteria in Experiments~1 and~3, suggesting the rubric is sufficiently well-specified to produce reproducible scores.
+A post hoc second-judge check was run over a stratified sample of 5 sessions before journal submission. A second LLM judge (Claude Sonnet~4.6) was given the rubric criteria, the session's condition, and the primary judge's (Claude Haiku~4.5) total score, and was asked to reproduce the per-criterion scores. The sample included one control and one treatment session from Experiment~1 (FastMCP refactor), one from each condition in Experiment~2 (Tree-sitter abstract syntax tree (AST) scanner), and one treatment session from Experiment~3 (Kotlin grammar). Per-criterion agreement between the two judges was 100\% ($\kappa = 1.00$, 33 criteria across 5 sessions). Session-level pass/fail agreement was also 100\%, though Cohen's $\kappa$ was undefined because all sessions were rated as passing the 50\% threshold by both judges. The second judge did not see the delegate outputs. This check is therefore a score-reconstruction exercise, not an independent re-scoring: it shows only that the two judges' criterion-level scores were consistent given the totals, and it provides no evidence that the primary judge's scores are reproducible from the delegate outputs alone. Judge reliability is consequently untested (Section~\ref{sec:threats}).
 
 The inferential test (Mann-Whitney U, two-tailed, $\alpha{=}0.05$) and effect size metric
 (rank-biserial $r$ via \citep{kerby2014}) were pre-specified from Exp2 onward. For Exp1, Fisher's exact test was used post-hoc when the valid-run count fell to $n{=}4$ control and $n{=}5$ treatment.
@@ -462,7 +465,7 @@ Third, scoring stability across alternative rubric phrasings was not tested; a r
 Several uncontrolled sources of variance limit internal validity.
 First, Goose version 1.25.0 was used for Experiments~1 and~2 while version 1.31.1 was used for Experiment~3; version-specific behavioral changes in agent scheduling or tool-handling logic cannot be ruled out as confounds.
 Second, three individual runs in Experiment~3 fell back to Bedrock due to stream-decode errors and Vertex AI rate limits before retrying successfully on Vertex; all token and score data derive from the successful Vertex runs, but the transient provider switch cannot be ruled out as a minor infrastructure variable.
-Third, a single LLM judge (Claude Haiku~4.5; justified by the post hoc two-judge validation, $\kappa{=}1.00$, \S\ref{subsec:scoring-validation}; a human--model cross-validation remains future work) performed all rubric scoring with no human calibration; an inter-rater reliability check using a second LLM judge (Claude Sonnet~4.6) across 5 stratified sessions found perfect agreement ($\kappa = 1.00$, see~\S\ref{subsec:scoring-validation}), though the small sample and ceiling effects limit the precision of this estimate, and our ability to conclude that scores are reproducible across non-LLM judges remains limited.
+Third, a single LLM judge (Claude Haiku~4.5) performed all rubric scoring with no human calibration. The post hoc second-judge check (\S\ref{subsec:scoring-validation}) was a score-reconstruction exercise, not an independent re-scoring, so it does not establish that the scores are reproducible; whether they are reproducible across judges, LLM or human, is untested, and a human--model cross-validation remains future work. In Experiment~1 the scorer also knew each run's condition (\S\ref{sec:preregistration}), so condition-related scoring bias cannot be excluded for that experiment.
 Fourth, task ordering within each session was not randomized or counterbalanced. Order effects such as fatigue, learning, or context carry-over are therefore uncontrolled, limiting our ability to attribute score differences solely to the treatment.
 Fifth, as discussed in Section~\ref{subsec:infrastructure}, the \texttt{GOOSE\_MAX\_BACKGROUND\_TASKS} concurrency cap serialized Experiment~2 delegates into two batches; while this did not affect the statistical conclusion in the present ceiling-affected data, it limits our ability to conclude that latency or delegation dynamics were uniform across the experiment.
 
