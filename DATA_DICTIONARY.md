@@ -174,8 +174,10 @@ Experiment data is organized into three experiments (exp1-fastmcp-refactor, exp2
 | `goose_version` | string or null | Output of `goose --version` at run time | Original |
 | `env` | object | `GOOSE_MAX_TURNS`, `GOOSE_CONTEXT_LIMIT` and `GOOSE_PROVIDER` in effect for the run | Original |
 | `exit_code` | integer or null | goose process exit status; `null` on timeout or clone failure | Original |
-| `failure_mode` | string or null | `goose_exit_<code>`, `timeout`, `clone_failed`, `session_not_found`, `session_ambiguous` or `sessions_db_unavailable`; `null` on success | Original |
+| `failure_mode` | string or null | `goose_exit_<code>`, `timeout`, `clone_failed`, `session_not_found` or `session_ambiguous`; `null` on success | Original |
 | `detail` | string or null | Last 300 characters of goose stderr | Original |
+
+`sessions_db` is required; an unusable path raises at backfill and the batch is not resumed automatically.
 
 
 **Example**:
