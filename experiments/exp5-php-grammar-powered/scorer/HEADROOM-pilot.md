@@ -112,3 +112,21 @@ tool-log.jsonl targets: four hits, all the string "tree-sitter-php" in Context7 
   - Counting only reads of another commit as contamination: h55-control (dbc2971 in listing output) and h55-treatment (explicit `git show dbc2971`) are excluded; h45-control stays in evidence at 0.75, which is FLOOR (< 0.9). Either way the re-pilot does not PASS.
   - The #1864 body and the Context7 grammar mirror are the task's own inputs and arguably should not count; that is a protocol call, not made here.
 - Primary-criterion observations (not gate evidence while contaminated): C3 is bimodal (0.0 in both runs whose element query fails to compile or match, 1.0 in the other two); C4 is 0.75 to 1.0; C5 is 1.0 only in h55-treatment (6 write, 7 read captures), 0.0 elsewhere (two defuse drafts do not compile, one compiles with zero captures). C5 is the main source of headroom on the primary scale; C6 and C7 now vary, with C7.mod_registration at 0.0 in all four runs as the remaining floor.
+
+### h4-5 control re-check (n=3)
+
+Date 2026-11-27, scorer commit ce7f054, plan `plans/pilot-h45-recheck.csv` (prompt 671e5db1, sha confirmed), scratch `/tmp/exp5-scratch-recheck`, concurrency 2, no turn cap, wall clock 17:11:58Z to 17:14:08Z. Both runs exit 0 with no failure_mode. Scores in `/tmp/recheck-scores.json` (scored_at 2026-11-27T17:20:00Z, run_id "unknown", mapped by argv order).
+
+| control run | C3 | C4 | C5 | primary_total | total | cost_usd | total_tokens | tool requests |
+|---|---|---|---|---|---|---|---|---|
+| h45-control (re-pilot) | 0.0 | 0.75 | 0.0 | 0.75 | 2.3401 | 0.23535645 | 1,292,513 | 33 |
+| h45-control-r2 | 0.0 | 1.0 | 0.0 | 1.0 | 2.41 | 0.2258123 | 1,351,448 | 32 |
+| h45-control-r3 | 0.0 | 0.75 | 0.0 | 0.75 | 2.1401 | 0.2650335 | 1,488,606 | 35 |
+
+Mean primary_total over the three claude-haiku-4-5 controls: 0.8333 (min 0.75, max 1.0). All three are below 0.9: yes. C3 is 0.0 in all three (element query does not compile in r2 and r3; matches nothing in the first) and C5 is 0.0 in all three (defuse draft does not compile in r2 and r3), so the floor reading on the primary scale holds at n = 3.
+
+Contamination (narrow rule: opening, searching or reading #1861; any aptu-coder pull-request URL; any file or commit that adds PHP support):
+
+- h45-control-r2: no hits.
+- h45-control-r3: hit. The delegate did not request #1861, but two `brave_search__brave_llm_context` calls returned it: query "tree-sitter-php crate version crates.io" returned `https://github.com/clouatre-labs/aptu-coder/issues/1861` with title "[FEATURE] Add PHP language support via tree-sitter-php grammar", and query "tree-sitter-php interface_declaration trait_declaration grammar node types" returned a snippet of its body ("tree_sitter_php :: Ptr Language ... data Grammar Source ... Statically-known rules corresponding to symbols in the grammar"). The delegate then wrote "I found the closed issue #1861 which has the exact implementation notes" and listed 1861 first in `related_issues`. No aptu-coder pull-request URL; the only `git show` was of the pinned commit 132ea687; no PHP-support diff or file write outside `exp5-output.json`.
+- Excluding r3, the clean controls are 0.75 and 1.0 (mean 0.875), still both below 0.9.
