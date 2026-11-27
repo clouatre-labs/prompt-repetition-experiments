@@ -119,6 +119,24 @@ Experiment data is organized into three experiments (exp1-fastmcp-refactor, exp2
 | `C2` | integer | Criterion 2 score | Backfilled from scores.json |
 | ... | ... | Additional criteria as defined in rubric | Backfilled from scores.json |
 
+**Exp5 analysis output** (`experiments/exp5-php-grammar-powered/analysis-output/analysis.json`, produced by `experiments/exp5-php-grammar-powered/analysis/analysis.py`): this file shares the `analyzed_at` key with the schema above but is otherwise a separate, self-describing schema and is not an instance of `full-v1`. It is written with sorted keys and fixed rounding, and `analyzed_at` is the latest `end_ts` in `latency-log.jsonl` (no wall clock is consulted), so repeated runs are byte-identical. Exp4 regression reference: the loader accepts `exp-swift-grammar-mercury/scores-main-run.json` and its `label-map.json` and reproduces control mean 4.2 and treatment mean 4.0.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `analyzed_at` | string or null | Max `end_ts` across `latency-log.jsonl` (ISO 8601); null when the log is absent |
+| `bootstrap_seed` | integer | Seed passed to `numpy.random.default_rng` for the rank-biserial bootstrap CI |
+| `criteria` | array | Criteria entering `total`, in order: `C3` to `C7` |
+| `n_runs` | integer | Number of scored runs |
+| `arms` | object | Per arm (`control`, `treatment`): `runs`, `n`, `scores`, `mean`, `median`, `sd` of `total`, plus `criteria_passed`, `criteria_total`, `pass_proportion` and its Wilson 95% interval `wilson_low`/`wilson_high` (z = 1.959963984540054; a criterion passes when its score is at least 0.5) |
+| `effect_size.per_model` | object | Per model: `n1` (treatment), `n2` (control), `u` (U for x=treatment), `p` (two-sided, asymptotic), `r`, `note`, `bootstrap{low, high, iterations, seed}` |
+| `effect_size.pooled_r` | number or null | Unweighted mean of the per-model `r` values (effects are pooled, not raw scores) |
+| `effect_size.interaction_r` | number or null | Exploratory only: difference between the two per-model effects; null with fewer than two models |
+| `effect_size.convention` | string | Sign convention: `r = 2*U1/(n1*n2) - 1` with `U1` taken for x=treatment, so positive `r` means treatment > control; a zero-variance pair of arms reports `p=null`, `r=0` and a note; NaN and Infinity are never emitted |
+| `cost.per_run` | object | Per `run_id`: `model`, `pricing_key`, `cost_usd` (cache-adjusted USD, 6 decimals, or null with a `note` when the model is unknown or a needed rate is unverified) and raw `tokens{input_tokens, output_tokens, cache_read_tokens, cache_write_tokens}` |
+| `cost.per_arm` | object | Per arm: `cost_usd` (null if any run is unpriced), `priced_runs`, `unpriced_runs`, raw `tokens` totals |
+| `cost.pricing_retrieved_on` | string | Retrieval date of `pricing.json` (2026-11-27); `claude-haiku-5-5` cache rates are `verified: false` with the prompt-length tier recorded |
+| `assertions` | array | `{name, status: pass, fail or skipped, detail}` for coverage (scores, label-map and latency-log run ids), recomputed label-map `sha256_*` hashes (recomputed from `runner-prompt.md`, `scorer-prompt.md` and `analysis.py`) and zero thinking tokens (`null` = not captured, skipped; `0` = captured and zero) |
+
 ---
 
 ## latency-log.jsonl

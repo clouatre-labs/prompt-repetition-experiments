@@ -1,0 +1,27 @@
+{
+  "retrieved_on": "2026-11-27",
+  "unit": "USD per MTok",
+  "note": "Rates are per million tokens. A null rate means not verified; the analysis emits a null cost with a note rather than guessing. input_tokens are billed as uncached input; cache reads and cache writes are billed separately at their own rates.",
+  "models": {
+    "claude-haiku-4-5": {
+      "input": 1.0,
+      "output": 5.0,
+      "cache_read": 0.1,
+      "cache_write": 1.25,
+      "verified": true,
+      "source": "https://platform.claude.com/docs/en/about-claude/pricing",
+      "tier": "flat",
+      "note": "prompt caching: 5-minute cache write, base cache read rate"
+    },
+    "claude-haiku-5-5": {
+      "input": 0.1,
+      "output": 0.5,
+      "cache_read": null,
+      "cache_write": null,
+      "verified": false,
+      "source": "https://platform.claude.com/docs/en/about-claude/pricing",
+      "tier": "standard: prompt length at or below 100k tokens; a higher input/output tier applies above 100k and is not priced here",
+      "note": "input and output listed are the at-or-below-100k tier; cache read and cache write rates were not verified at retrieval time"
+    }
+  }
+}

@@ -1,0 +1,20 @@
+[project]
+name = "exp5-analysis"
+version = "0.1.0"
+description = "Exp5 (PHP grammar) analysis: per-arm means, Mann-Whitney effects per model, cache-adjusted cost"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "numpy>=1.26,<3",
+    "scipy>=1.11,<2",
+]
+
+[dependency-groups]
+dev = ["pytest>=8,<9"]
+
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

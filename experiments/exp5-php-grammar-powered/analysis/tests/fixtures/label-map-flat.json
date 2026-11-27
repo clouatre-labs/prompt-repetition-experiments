@@ -1,0 +1,12 @@
+{
+  "run-c1": "control",
+  "run-c2": "control",
+  "run-c3": "control",
+  "run-c4": "control",
+  "run-c5": "control",
+  "run-t1": "treatment",
+  "run-t2": "treatment",
+  "run-t3": "treatment",
+  "run-t4": "treatment",
+  "run-t5": "treatment"
+}

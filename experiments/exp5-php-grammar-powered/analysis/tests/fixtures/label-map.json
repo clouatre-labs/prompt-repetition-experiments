@@ -1,0 +1,76 @@
+{
+  "sealed_at": "2026-11-27T09:00:00Z",
+  "assignments": {
+    "run-c1": {
+      "group": "control",
+      "model": "claude-haiku-4-5",
+      "goose_session_id": "20261127_0",
+      "sealed_at": "2026-11-27T09:00:00Z",
+      "concurrency_limit": 1
+    },
+    "run-c2": {
+      "group": "control",
+      "model": "claude-haiku-4-5",
+      "goose_session_id": "20261127_1",
+      "sealed_at": "2026-11-27T09:00:00Z",
+      "concurrency_limit": 1
+    },
+    "run-c3": {
+      "group": "control",
+      "model": "claude-haiku-4-5",
+      "goose_session_id": "20261127_2",
+      "sealed_at": "2026-11-27T09:00:00Z",
+      "concurrency_limit": 1
+    },
+    "run-c4": {
+      "group": "control",
+      "model": "claude-haiku-5-5",
+      "goose_session_id": "20261127_3",
+      "sealed_at": "2026-11-27T09:00:00Z",
+      "concurrency_limit": 1
+    },
+    "run-c5": {
+      "group": "control",
+      "model": "claude-haiku-5-5",
+      "goose_session_id": "20261127_4",
+      "sealed_at": "2026-11-27T09:00:00Z",
+      "concurrency_limit": 1
+    },
+    "run-t1": {
+      "group": "treatment",
+      "model": "claude-haiku-4-5",
+      "goose_session_id": "20261127_5",
+      "sealed_at": "2026-11-27T09:00:00Z",
+      "concurrency_limit": 1
+    },
+    "run-t2": {
+      "group": "treatment",
+      "model": "claude-haiku-4-5",
+      "goose_session_id": "20261127_6",
+      "sealed_at": "2026-11-27T09:00:00Z",
+      "concurrency_limit": 1
+    },
+    "run-t3": {
+      "group": "treatment",
+      "model": "claude-haiku-4-5",
+      "goose_session_id": "20261127_7",
+      "sealed_at": "2026-11-27T09:00:00Z",
+      "concurrency_limit": 1
+    },
+    "run-t4": {
+      "group": "treatment",
+      "model": "claude-haiku-5-5",
+      "goose_session_id": "20261127_8",
+      "sealed_at": "2026-11-27T09:00:00Z",
+      "concurrency_limit": 1
+    },
+    "run-t5": {
+      "group": "treatment",
+      "model": "claude-haiku-5-5",
+      "goose_session_id": "20261127_9",
+      "sealed_at": "2026-11-27T09:00:00Z",
+      "concurrency_limit": 1
+    }
+  },
+  "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+}
