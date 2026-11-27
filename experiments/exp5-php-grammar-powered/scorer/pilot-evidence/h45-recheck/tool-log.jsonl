@@ -1,0 +1,67 @@
+{"run_id": "h45-control-r2", "goose_session_id": "20261127_88", "seq": 0, "tool": "shell", "target": null}
+{"run_id": "h45-control-r2", "goose_session_id": "20261127_88", "seq": 1, "tool": "shell", "target": null}
+{"run_id": "h45-control-r2", "goose_session_id": "20261127_88", "seq": 2, "tool": "shell", "target": null}
+{"run_id": "h45-control-r2", "goose_session_id": "20261127_88", "seq": 3, "tool": "shell", "target": null}
+{"run_id": "h45-control-r2", "goose_session_id": "20261127_88", "seq": 4, "tool": "shell", "target": null}
+{"run_id": "h45-control-r2", "goose_session_id": "20261127_88", "seq": 5, "tool": "shell", "target": null}
+{"run_id": "h45-control-r2", "goose_session_id": "20261127_88", "seq": 6, "tool": "shell", "target": null}
+{"run_id": "h45-control-r2", "goose_session_id": "20261127_88", "seq": 7, "tool": "shell", "target": null}
+{"run_id": "h45-control-r2", "goose_session_id": "20261127_88", "seq": 8, "tool": "shell", "target": null}
+{"run_id": "h45-control-r2", "goose_session_id": "20261127_88", "seq": 9, "tool": "shell", "target": null}
+{"run_id": "h45-control-r2", "goose_session_id": "20261127_88", "seq": 10, "tool": "shell", "target": null}
+{"run_id": "h45-control-r2", "goose_session_id": "20261127_88", "seq": 11, "tool": "shell", "target": null}
+{"run_id": "h45-control-r2", "goose_session_id": "20261127_88", "seq": 12, "tool": "shell", "target": null}
+{"run_id": "h45-control-r2", "goose_session_id": "20261127_88", "seq": 13, "tool": "context7__resolve-library-id", "target": "tree-sitter-php"}
+{"run_id": "h45-control-r2", "goose_session_id": "20261127_88", "seq": 14, "tool": "context7__query-docs", "target": "PHP grammar node types class declaration function declaration interface trait enum extends implements"}
+{"run_id": "h45-control-r2", "goose_session_id": "20261127_88", "seq": 15, "tool": "context7__query-docs", "target": "interface_declaration trait_declaration method_declaration function_definition use_statement"}
+{"run_id": "h45-control-r2", "goose_session_id": "20261127_88", "seq": 16, "tool": "shell", "target": null}
+{"run_id": "h45-control-r2", "goose_session_id": "20261127_88", "seq": 17, "tool": "shell", "target": null}
+{"run_id": "h45-control-r2", "goose_session_id": "20261127_88", "seq": 18, "tool": "shell", "target": null}
+{"run_id": "h45-control-r2", "goose_session_id": "20261127_88", "seq": 19, "tool": "shell", "target": null}
+{"run_id": "h45-control-r2", "goose_session_id": "20261127_88", "seq": 20, "tool": "shell", "target": null}
+{"run_id": "h45-control-r2", "goose_session_id": "20261127_88", "seq": 21, "tool": "shell", "target": null}
+{"run_id": "h45-control-r2", "goose_session_id": "20261127_88", "seq": 22, "tool": "shell", "target": null}
+{"run_id": "h45-control-r2", "goose_session_id": "20261127_88", "seq": 23, "tool": "shell", "target": null}
+{"run_id": "h45-control-r2", "goose_session_id": "20261127_88", "seq": 24, "tool": "shell", "target": null}
+{"run_id": "h45-control-r2", "goose_session_id": "20261127_88", "seq": 25, "tool": "shell", "target": null}
+{"run_id": "h45-control-r2", "goose_session_id": "20261127_88", "seq": 26, "tool": "shell", "target": null}
+{"run_id": "h45-control-r2", "goose_session_id": "20261127_88", "seq": 27, "tool": "shell", "target": null}
+{"run_id": "h45-control-r2", "goose_session_id": "20261127_88", "seq": 28, "tool": "shell", "target": null}
+{"run_id": "h45-control-r2", "goose_session_id": "20261127_88", "seq": 29, "tool": "write", "target": "exp5-output.json"}
+{"run_id": "h45-control-r2", "goose_session_id": "20261127_88", "seq": 30, "tool": "shell", "target": null}
+{"run_id": "h45-control-r2", "goose_session_id": "20261127_88", "seq": 31, "tool": "shell", "target": null}
+{"run_id": "h45-control-r3", "goose_session_id": "20261127_87", "seq": 0, "tool": "shell", "target": null}
+{"run_id": "h45-control-r3", "goose_session_id": "20261127_87", "seq": 1, "tool": "shell", "target": null}
+{"run_id": "h45-control-r3", "goose_session_id": "20261127_87", "seq": 2, "tool": "shell", "target": null}
+{"run_id": "h45-control-r3", "goose_session_id": "20261127_87", "seq": 3, "tool": "shell", "target": null}
+{"run_id": "h45-control-r3", "goose_session_id": "20261127_87", "seq": 4, "tool": "shell", "target": null}
+{"run_id": "h45-control-r3", "goose_session_id": "20261127_87", "seq": 5, "tool": "shell", "target": null}
+{"run_id": "h45-control-r3", "goose_session_id": "20261127_87", "seq": 6, "tool": "shell", "target": null}
+{"run_id": "h45-control-r3", "goose_session_id": "20261127_87", "seq": 7, "tool": "shell", "target": null}
+{"run_id": "h45-control-r3", "goose_session_id": "20261127_87", "seq": 8, "tool": "shell", "target": null}
+{"run_id": "h45-control-r3", "goose_session_id": "20261127_87", "seq": 9, "tool": "shell", "target": null}
+{"run_id": "h45-control-r3", "goose_session_id": "20261127_87", "seq": 10, "tool": "shell", "target": null}
+{"run_id": "h45-control-r3", "goose_session_id": "20261127_87", "seq": 11, "tool": "context7__resolve-library-id", "target": "tree-sitter-php"}
+{"run_id": "h45-control-r3", "goose_session_id": "20261127_87", "seq": 12, "tool": "context7__query-docs", "target": "PHP grammar node types for class declaration, function declaration, method declaration, interface, trait, enum, extends, implements"}
+{"run_id": "h45-control-r3", "goose_session_id": "20261127_87", "seq": 13, "tool": "shell", "target": null}
+{"run_id": "h45-control-r3", "goose_session_id": "20261127_87", "seq": 14, "tool": "brave_search__brave_llm_context", "target": "tree-sitter-php crate version crates.io"}
+{"run_id": "h45-control-r3", "goose_session_id": "20261127_87", "seq": 15, "tool": "shell", "target": null}
+{"run_id": "h45-control-r3", "goose_session_id": "20261127_87", "seq": 16, "tool": "shell", "target": null}
+{"run_id": "h45-control-r3", "goose_session_id": "20261127_87", "seq": 17, "tool": "shell", "target": null}
+{"run_id": "h45-control-r3", "goose_session_id": "20261127_87", "seq": 18, "tool": "shell", "target": null}
+{"run_id": "h45-control-r3", "goose_session_id": "20261127_87", "seq": 19, "tool": "shell", "target": null}
+{"run_id": "h45-control-r3", "goose_session_id": "20261127_87", "seq": 20, "tool": "shell", "target": null}
+{"run_id": "h45-control-r3", "goose_session_id": "20261127_87", "seq": 21, "tool": "shell", "target": null}
+{"run_id": "h45-control-r3", "goose_session_id": "20261127_87", "seq": 22, "tool": "shell", "target": null}
+{"run_id": "h45-control-r3", "goose_session_id": "20261127_87", "seq": 23, "tool": "shell", "target": null}
+{"run_id": "h45-control-r3", "goose_session_id": "20261127_87", "seq": 24, "tool": "shell", "target": null}
+{"run_id": "h45-control-r3", "goose_session_id": "20261127_87", "seq": 25, "tool": "shell", "target": null}
+{"run_id": "h45-control-r3", "goose_session_id": "20261127_87", "seq": 26, "tool": "shell", "target": null}
+{"run_id": "h45-control-r3", "goose_session_id": "20261127_87", "seq": 27, "tool": "shell", "target": null}
+{"run_id": "h45-control-r3", "goose_session_id": "20261127_87", "seq": 28, "tool": "context7__query-docs", "target": "function_declaration interface_declaration trait_declaration enum_declaration node types fields name"}
+{"run_id": "h45-control-r3", "goose_session_id": "20261127_87", "seq": 29, "tool": "shell", "target": null}
+{"run_id": "h45-control-r3", "goose_session_id": "20261127_87", "seq": 30, "tool": "brave_search__brave_llm_context", "target": "tree-sitter-php interface_declaration trait_declaration grammar node types"}
+{"run_id": "h45-control-r3", "goose_session_id": "20261127_87", "seq": 31, "tool": "shell", "target": null}
+{"run_id": "h45-control-r3", "goose_session_id": "20261127_87", "seq": 32, "tool": "write", "target": "/private/tmp/exp5-scratch-recheck/h45-control-r3/aptu-coder/exp5-output.json"}
+{"run_id": "h45-control-r3", "goose_session_id": "20261127_87", "seq": 33, "tool": "shell", "target": null}
+{"run_id": "h45-control-r3", "goose_session_id": "20261127_87", "seq": 34, "tool": "shell", "target": null}

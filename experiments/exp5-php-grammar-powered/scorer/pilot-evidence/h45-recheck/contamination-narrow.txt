@@ -1,0 +1,19 @@
+######## h45-control-r2 20261127_88
+1861 hits: 0
+aptu-coder PR URL hits: 0
+git other-commit requests / php-in-diff results: 0
+######## h45-control-r3 20261127_87
+1861 hits: 35
+    ('toolResult', 'https://crates.io/crates/brokk-tree-sitter-php/0.24.3\\"]},{\\"url\\":\\"https://github.com/clouatre-labs/aptu-coder/issues/1861\\",\\"title\\":\\"[FEATURE] Add PHP language support via tree-sitter-php grammar \\u00b7 Issue #1861 \\u00b7 clouatre-labs/ap')
+    ('toolResult', '-labs/aptu-coder/issues/1861\\",\\"title\\":\\"[FEATURE] Add PHP language support via tree-sitter-php grammar \\u00b7 Issue #1861 \\u00b7 clouatre-labs/aptu-coder \\u00b7 GitHub\\",\\"snippets\\":[\\"# \\\\\\\\[FEATURE\\\\\\\\] Add PHP language support via tree-s')
+    ('toolResult', 'tu-coder \\u00b7 GitHub\\",\\"snippets\\":[\\"# \\\\\\\\[FEATURE\\\\\\\\] Add PHP language support via tree-sitter-php grammar\\u00a0#1861\\\\n## Context\\\\n- tree-sitter-php 0.25.2 (7.4M downloads, official org) is the only top candidate that is both current a')
+    ('toolResult', ' asymmetric visibility support to the upstream 0.24.2 baseline.\\"},\\"https://github.com/clouatre-labs/aptu-coder/issues/1861\\":{\\"title\\":\\"[FEATURE] Add PHP language support via tree-sitter-php grammar \\u00b7 Issue #1861 \\u00b7 clouatre-labs/a')
+    ('toolResult', 'labs/aptu-coder/issues/1861\\":{\\"title\\":\\"[FEATURE] Add PHP language support via tree-sitter-php grammar \\u00b7 Issue #1861 \\u00b7 clouatre-labs/aptu-coder \\u00b7 GitHub\\",\\"hostname\\":\\"github.com\\",\\"age\\":[\\"Friday, November 27, 2026\\",\\"20')
+    ('toolResult', ': https://crates.io/crates/brokk-tree-sitter-php/0.24.3"]}, {"url": "https://github.com/clouatre-labs/aptu-coder/issues/1861", "title": "[FEATURE] Add PHP language support via tree-sitter-php grammar \\u00b7 Issue #1861 \\u00b7 clouatre-labs/aptu')
+    ('toolResult', 're-labs/aptu-coder/issues/1861", "title": "[FEATURE] Add PHP language support via tree-sitter-php grammar \\u00b7 Issue #1861 \\u00b7 clouatre-labs/aptu-coder \\u00b7 GitHub", "snippets": ["# \\\\[FEATURE\\\\] Add PHP language support via tree-sitter-')
+    ('toolResult', 'abs/aptu-coder \\u00b7 GitHub", "snippets": ["# \\\\[FEATURE\\\\] Add PHP language support via tree-sitter-php grammar\\u00a0#1861\\n## Context\\n- tree-sitter-php 0.25.2 (7.4M downloads, official org) is the only top candidate that is both current and')
+aptu-coder PR URL hits: 0
+git other-commit requests / php-in-diff results: 1
+    ('git-other-commit REQUEST', 'cd /private/tmp/exp5-scratch-recheck/h45-control-r3/aptu-coder && git log --format="%H %s" | head -5 && echo "---" && git show --stat 132ea687e09a916091699a562da3c96c86ec1fd8 | head -50')
+######## tool-log targets
+  (end)
