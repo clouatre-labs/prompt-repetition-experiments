@@ -15,6 +15,7 @@ import tree_sitter_php
 from tree_sitter import Language, Parser, Query, QueryCursor
 
 HERE = Path(__file__).resolve().parent
+CORPUS_DIR = HERE / "fixtures" / "php"
 NODE_TYPES = json.loads((HERE / "vendor" / "tree-sitter-php-node-types.json").read_text())
 APTU_SNAPSHOT = HERE / "vendor" / "aptu-coder"
 NODE_KINDS = {e["type"] for e in NODE_TYPES if e.get("named")}
@@ -61,7 +62,7 @@ def _corpus_trees(lang: Language) -> list:
     parser = Parser(lang)
     return [
         parser.parse(p.read_bytes())
-        for p in sorted((HERE / "fixtures" / "php").glob("*.php"))
+        for p in sorted(CORPUS_DIR.glob("*.php"))
     ]
 
 
@@ -143,17 +144,17 @@ def check_defuse_query(text: str, lang: Language) -> Result:
     query = compile_query(text, lang)
     if query is None:
         return Result(0.0, f"C5: defuse_query_draft does not compile: {text.strip()[:80]!r}")
-    tree = Parser(lang).parse((HERE / "fixtures" / "php" / "defuse.php").read_bytes())
+    tree = Parser(lang).parse((CORPUS_DIR / "defuse.php").read_bytes())
     writes = reads = 0
     for nodes in QueryCursor(query).captures(tree.root_node).values():
         for node in nodes:
             if node.type != "variable_name":
                 continue
             parent = node.parent
-        if parent is not None and parent.type.endswith("assignment_expression"):
-            writes += 1  # a variable_name directly under an assignment is its left-hand side
-        else:
-            reads += 1
+            if parent is not None and parent.type.endswith("assignment_expression"):
+                writes += 1  # a variable_name directly under an assignment is its left-hand side
+            else:
+                reads += 1
     score = (1 + (writes > 0) + (reads > 0)) / 3
     return Result(score, f"C5: defuse query compiles; write captures={writes}, read captures={reads}")
 

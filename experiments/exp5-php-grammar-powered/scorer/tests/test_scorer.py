@@ -56,6 +56,19 @@ def test_no_snippets_scores_zero(lang):
     assert checks.check_snippets([], lang).score == 0.0
 
 
+def test_defuse_query_capturing_no_variable_name_does_not_raise(lang):
+    # Regression: a capture group with no variable_name used to read an unbound `parent`.
+    result = checks.check_defuse_query("(integer) @literal\n(name) @id", lang)
+    assert result.score == pytest.approx(1 / 3)
+    assert "write captures=0, read captures=0" in result.justification
+
+
+def test_defuse_query_counts_every_captured_variable(lang):
+    result = checks.check_defuse_query("(variable_name (name)) @var", lang)
+    assert result.score == 1.0
+    assert "write captures=3, read captures=6" in result.justification
+
+
 # --- C7: wiring check (happy path) ---
 def test_wiring_each_fact_scores_against_snapshot():
     assert checks.check_wiring(GOOD["wiring_summary"]).score == 1.0
