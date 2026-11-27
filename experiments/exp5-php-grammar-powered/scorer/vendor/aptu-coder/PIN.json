@@ -1,0 +1,37 @@
+{
+  "repo": "clouatre-labs/aptu-coder",
+  "commit": "132ea687e09a916091699a562da3c96c86ec1fd8",
+  "note": "Pre-PHP snapshot used only to grade C7 offline. Downloaded once with `gh api` raw contents at scoring-setup time; the scorer never clones or reads the network. Two Cargo.toml files are stored under distinct names to avoid a basename collision.",
+  "files": [
+    {
+      "path": "crates/aptu-coder-core/src/lang.rs",
+      "local": "lang.rs",
+      "role": "EXTENSION_MAP and extension lookup",
+      "sha256": "6384835cae311518566f556d8ba2c48fa882d63a342279312e0da432838a86ee"
+    },
+    {
+      "path": "crates/aptu-coder-core/src/languages/mod.rs",
+      "local": "mod.rs",
+      "role": "LanguageInfo struct, mod registrations, get_language_info()/get_ts_language() match arms",
+      "sha256": "603002260503a3e171f51cbc0bc4a6195fa1291be8f3127f4c8727fc10df0960"
+    },
+    {
+      "path": "crates/aptu-coder-core/Cargo.toml",
+      "local": "core.Cargo.toml",
+      "role": "core crate dependencies (unconditional `{ workspace = true }` lines)",
+      "sha256": "3fdd27899a04841e745ab2a156e428831541c251baaed98a3ada5cd00e0dcd00"
+    },
+    {
+      "path": "Cargo.toml",
+      "local": "workspace.Cargo.toml",
+      "role": "workspace [workspace.dependencies] entries",
+      "sha256": "58bd0bc1805e7bd5b8677039e68d35f795ecffd52d7c8cede0662ec231f578ff"
+    },
+    {
+      "path": "crates/aptu-coder-core/src/languages/java.rs",
+      "local": "java.rs",
+      "role": "query-text shape reference only (not used by the scorer)",
+      "sha256": "2b227c206f86cf8610e426c1459769b30553d62cefeaf83dd6e0b8ebaba6998f"
+    }
+  ]
+}

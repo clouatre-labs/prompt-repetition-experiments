@@ -1,0 +1,92 @@
+[workspace]
+members = ["crates/aptu-coder-core", "crates/aptu-coder"]
+exclude = ["fuzz"]
+resolver = "2"
+
+[workspace.package]
+version = "0.47.0"
+edition = "2024"
+rust-version = "1.98.0"
+authors = ["Hugues Clouatre"]
+license = "Apache-2.0"
+repository = "https://github.com/clouatre-labs/aptu-coder"
+homepage = "https://github.com/clouatre-labs/aptu-coder"
+
+[workspace.dependencies]
+tree-sitter = "0.27.1"
+rayon = "1"
+ignore = "0.4"
+lru = "0.19"
+blake3 = "1"
+snap = "1"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+base64 = "0.23"
+thiserror = "2.0.21"
+tracing = "0.1"
+tokio-util = "0.7"
+rmcp = { version = "3", features = ["server", "macros", "transport-io", "transport-streamable-http-server"] }
+tokio = { version = "1", features = ["macros", "rt-multi-thread", "sync", "time", "fs", "process", "signal"] }
+tracing-subscriber = { version = "0.3", features = ["env-filter", "registry"] }
+schemars = { version = "1", features = ["derive"] }
+tempfile = "=3.27.0"
+filetime = "0.2"
+criterion = { version = "=0.8.2", features = ["html_reports"] }
+tree-sitter-rust = "0.24.2"
+regex = "1"
+toml = "1.1"
+tree-sitter-go = "0.25.0"
+tree-sitter-cpp = "0.23.4"
+tree-sitter-c-sharp = "0.24.0"
+tree-sitter-java = "0.23.5"
+tree-sitter-swift = "0.7.4"
+tree-sitter-kotlin-ng = "1.1.0"
+tree-sitter-python = "0.25.0"
+tree-sitter-typescript = "0.23.2"
+tree-sitter-javascript = "0.25.0"
+tree-sitter-fortran = "0.6.0"
+tree-sitter-md = "0.5.3"
+tree-sitter-css = "0.25.0"
+tree-sitter-yaml = "0.7.2"
+opentelemetry = "0.33"
+opentelemetry_sdk = { version = "0.33", features = ["rt-tokio", "metrics"] }
+opentelemetry-otlp = { version = "0.33", features = ["http-proto", "reqwest-client"] }
+opentelemetry-appender-tracing = { version = "0.33", features = ["log"] }
+tracing-opentelemetry = "0.34"
+
+rustls = "0.23"
+axum = { version = "0.8", features = ["http1", "tokio"], default-features = false }
+
+[workspace.lints.rust]
+unreachable_pub = "warn"
+
+[workspace.lints.clippy]
+undocumented_unsafe_blocks = "deny"
+unwrap_used = "deny"
+expect_used = "deny"
+# Lints below are "warn" until all violations are cleared; promote each to "deny"
+# once zero warnings are confirmed in CI (tracked in issue #1225).
+must_use_candidate = "warn"
+redundant_clone = "warn"
+needless_pass_by_value = "warn"
+large_enum_variant = "warn"
+
+[profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true
+
+[profile.ci]
+inherits = "release"
+lto = false
+codegen-units = 16
+panic = "unwind"
+strip = false
+
+[profile.fuzz]
+inherits = "dev"
+opt-level = 1
+debug-assertions = true
+incremental = false
