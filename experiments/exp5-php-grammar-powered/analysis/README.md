@@ -1,7 +1,24 @@
 # Exp5 analysis
 
 Computes the Exp5 (PHP grammar, powered) statistics from the sealed inputs in
-the experiment directory and writes deterministic outputs. The package is a
+the experiment directory and writes deterministic outputs.
+
+## Outcome variables
+
+- **Primary:** `primary_total = C3 + C4 + C5`, range [0, 3], per run, taken
+  exactly as the scorer emits the `primary_total` field. It is never recomputed
+  from the criteria and no criterion is dropped from it after the main run
+  begins.
+- **Co-reported:** `primary_total` minus C5, range [0, 2], computed for every
+  run whether or not C5 varies (C5 is 0.0 in every run of the fenced re-pilot;
+  see `../protocol.md`, Primary Outcome).
+- **Secondary:** C6 and C7, reported per arm and per model. **Record only:**
+  `total` (max 5.0).
+- Every effect (per-model Mann-Whitney r, bootstrap CI, pooled r, exploratory
+  interaction) is computed twice, once per outcome variable, in
+  `effect_size` (primary) and `effect_size_minus_c5` (co-reported). The only
+  fallback to `total` is the pre-#123 Exp4 fixture layout, which has no
+  `primary_total`; an Exp5 record without it raises. The package is a
 standalone uv project; it makes no network calls and writes only inside the
 experiment directory.
 
@@ -22,9 +39,12 @@ outputs are still written so the failure can be inspected.
 
 - `scores.json`: `{scored_at, scorer, rubric_version, note, scores[]}` where
   each entry has `run_id`, fractional `C1`..`C7` in `[0, 1]` (`C1`/`C2` may
-  be null), `total` (sum of `C3`..`C7`) and `justifications{}`. The Exp4
-  layout (`scores-main-run.json`: a list of `{run_id, scores: {Cn: {score}}}`,
-  `total`) is accepted through the same loader.
+  be null), `total` (sum of `C3`..`C7`), `primary_total` (= `C3 + C4 + C5`,
+  required) and `justifications{}`. A record without `primary_total`, or with
+  a null `C5`, raises `ValueError`. The Exp4 layout (`scores-main-run.json`: a
+  list of `{run_id, scores: {Cn: {score}}}`, `total`) is accepted through the
+  same loader and is the only case where `total` stands in for
+  `primary_total`.
 - `label-map.json`: `{sealed_at, assignments: {run_id: {group, model, ...,
   sha256_runner_prompt, sha256_scorer, sha256_analysis}}, sha256}`. A flat
   `run_id -> "control" | "treatment"` map and Exp4's
@@ -37,14 +57,21 @@ outputs are still written so the failure can be inspected.
 
 ## Outputs (in `--out`)
 
-- `analysis.json`: per-arm means with Wilson 95% intervals, per-model
-  Mann-Whitney U and rank-biserial r with a seeded bootstrap CI, the pooled
-  per-model effect, an exploratory model x treatment interaction note,
-  `assertions[]`, cache-adjusted USD cost per run and per arm, and the raw
-  token totals. Written with sorted keys and fixed rounding; `analyzed_at` is
-  the latest `end_ts` in the latency log, so repeated runs are byte-identical.
+- `analysis.json`: `outcome` (the outcome variables above), per-arm means of
+  `primary_total` with Wilson 95% intervals on the C3..C5 pass proportion and,
+  under `minus_c5`, the same summary for the co-reported outcome; `criteria_means`
+  per arm and `criteria_by_model` (C3..C7); `effect_size` and
+  `effect_size_minus_c5`, each with per-model Mann-Whitney U and rank-biserial
+  r with a seeded bootstrap CI (seed 20261127, 1000 resamples), the pooled
+  per-model effect (unweighted mean of r) and an exploratory model x treatment
+  interaction note; `assertions[]`; cache-adjusted USD cost per run and per
+  arm, and the raw token totals. Written with sorted keys and fixed rounding;
+  `analyzed_at` is the latest `end_ts` in the latency log, so repeated runs
+  are byte-identical.
 - `table_means.tex`, `table_effects.tex`, `table_cost.tex`: LaTeX table
-  fragments with special characters escaped.
+  fragments with special characters escaped. The means and effects tables
+  carry `primary_total = C3 + C4 + C5` and `primary_total` minus C5 side by
+  side, named in their headers.
 
 ## Conventions
 
@@ -55,5 +82,6 @@ outputs are still written so the failure can be inspected.
 - Wilson z is fixed at `1.959963984540054`.
 - `thinking_tokens=null` means not captured and is skipped; `0` counts as
   captured and zero.
-- `claude-haiku-5-5` cache rates are unverified (`verified: false`): runs
-  with cache tokens on that model get a null cost with a note.
+- Both models' rates are verified (`verified: true`, retrieved 2026-11-27;
+  the `claude-haiku-5-5` cache read and write rates were confirmed by the
+  owner). A null rate would give a null cost with a note rather than a guess.

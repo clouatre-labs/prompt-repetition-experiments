@@ -14,7 +14,7 @@ Exp5 asks the Exp1 to Exp4 question (does a verbatim second copy of the prompt i
 
 ## Files
 
-`gen_recipes.py` (plan CSV to recipes), `run.py` (seal, spawn, backfill), `runner-prompt.md`, `plans/` (`pilot.csv` with 4 runs, `smoke-haiku45.csv`), `tests/`. Generated and not tracked: `recipes/recipe-*.yaml`, `label-map.json`, `latency-log.jsonl`, `tool-log.jsonl`.
+`gen_recipes.py` (plan CSV to recipes), `run.py` (seal, spawn, backfill), `runner-prompt.md`, `plans/` (`main.csv` with 80 runs, `pilot.csv` with 4 runs, `pilot-h45-recheck.csv`, `smoke-haiku45.csv`), `tests/`, `scorer/` (offline scorer, rubric record `HEADROOM-pilot.md`, pilot evidence), `analysis/` (statistics and cost). Generated and not tracked: `recipes/recipe-*.yaml`, `label-map.json`, `latency-log.jsonl`, `tool-log.jsonl`.
 
 ## Commands
 
@@ -31,20 +31,31 @@ uv run run.py --plan plans/pilot.csv --scratch /tmp/exp5-scratch --concurrency 2
 
 ## Exp5
 
-The pre-registration package is `protocol.md` (fixed design, 13 sections), `PRE-REGISTRATION.md`, `AMENDMENTS.md` (empty at deposit), `plans/main.csv` (80 runs) and `.zenodo.json`. Every value that waits on the pilot is a `PILOT:` token in `protocol.md`.
+The pre-registration package is `protocol.md` (fixed design, 13 sections, every pilot-dependent value filled from the fenced re-pilot, #105), `PRE-REGISTRATION.md` (file list with sha256, DOI), `AMENDMENTS.md` (empty at deposit), `plans/main.csv` (80 runs) and `.zenodo.json`.
 
-Pilot (4 runs):
+Pilot (4 runs, fenced instrument, the run that `protocol.md` cites):
 
 ```bash
 uv run gen_recipes.py --plan plans/pilot.csv
-uv run run.py --plan plans/pilot.csv --scratch /tmp/exp5-scratch --concurrency 2
+uv run run.py --plan plans/pilot.csv --scratch /tmp/exp5-fenced-pilot --out-dir /tmp/exp5-fenced-pilot/out --concurrency 2 --max-turns 60
 ```
 
-Main run (80 runs, interleaved within model):
+Pilot result (`scorer/HEADROOM-pilot.md`, evidence `scorer/pilot-evidence/fenced-repilot/`, 2026-11-27; `primary_total = C3 + C4 + C5` on the 3.0 scale, gate band [0.9, 2.1] on the control):
+
+| run | C3 | C4 | C5 | primary_total | primary_total minus C5 | total | cost USD |
+|---|---|---|---|---|---|---|---|
+| h45-control | 0.0 | 0.75 | 0.0 | 0.75 | 0.75 | 2.55 | 0.2263425 |
+| h45-treatment | 1.0 | 0.6 | 0.0 | 1.6 | 1.6 | 3.2 | 0.19733615 |
+| h55-control | 1.0 | 0.6429 | 0.0 | 1.6429 | 1.6429 | 2.5116 | 0.15489437 |
+| h55-treatment | 0.0 | 0.6 | 0.0 | 0.6 | 0.6 | 2.2521 | 0.081134605 |
+
+Gate verdict: FLOOR. The `claude-haiku-4-5` control (0.75, and 0.75 / 0.75 / 1.00 / 0.75 over four controls including the three earlier ones, mean 0.8125) is below 0.9; `claude-haiku-5-5` (1.6429) is inside the band. The floor is a model-level finding, not a stop condition: the main run proceeds with both models. C5 is 0.0 in every run, so `primary_total` minus C5 is the co-reported outcome. No contamination hit and no blocked `gh` call in any run.
+
+Main run (80 runs, interleaved within model, `--max-turns 60` in both arms, only after the DOI is recorded in `PRE-REGISTRATION.md`):
 
 ```bash
 uv run gen_recipes.py --plan plans/main.csv
-uv run run.py --plan plans/main.csv --scratch /tmp/exp5-main-scratch --concurrency 2
+uv run run.py --plan plans/main.csv --scratch /tmp/exp5-main-scratch --concurrency 2 --max-turns 60
 ```
 
 `label-map.json` seals `sha256_runner_prompt`, `sha256_scorer` and `sha256_analysis` before the first spawn; the last two are the `tree_sha256` of `scorer/` and `analysis/`.
@@ -79,4 +90,4 @@ uv run run.py --plan plans/smoke-haiku45.csv --recipes-dir /tmp/exp5-smoke/recip
 - **Thinking tokens are not observable.** goose JSON `metadata` carries `total_tokens`, `input_tokens`, `output_tokens`, `cache_read_input_tokens`, `cache_write_input_tokens`, `cost_usd` and `status`; per-message usage carries the same token fields plus timing. Neither has a thinking or reasoning token count, so `thinking_tokens` is `null` and `thinking_capture` is `not_captured`. `thinking_blocks` and `thinking_chars` are recorded as a proxy: haiku-5-5 emitted one thinking block, haiku-4-5 none.
 - **The fresh clones were at the pin** and clean after the runs.
 
-Not yet done: the pilot itself and the analysis of its results. The scorer and analysis trees are sealed by hash at run time and may still change after the pilot, which `AMENDMENTS.md` would record.
+The fenced re-pilot that followed (2026-11-27) is recorded in `scorer/HEADROOM-pilot.md`; the scorer and analysis trees are sealed by hash at run time, and any change to them after deposit is recorded in `AMENDMENTS.md`.
