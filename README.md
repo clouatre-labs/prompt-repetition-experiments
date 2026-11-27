@@ -407,6 +407,13 @@ prompt-repetition-experiments/
       sessions/                            # Structured delegate outputs
         scout-run-{01..16}.json
       SUMMARY.md                           # Pilot history and main-run notes
+    exp5-php-grammar-powered/                 # Experiment 5: PHP grammar scout, model as a factor (in progress)
+      gen_recipes.py, run.py                 # Recipe generator and run harness
+      runner-prompt.md                      # Scout prompt re-targeted to aptu-coder#1864
+      plans/                                # Run plans (pilot.csv, smoke-haiku45.csv)
+      recipes/                              # Generated recipes (not tracked)
+      label-map.json                       # Group assignments (sealed before the first spawn)
+      latency-log.jsonl, tool-log.jsonl    # Per-run tokens, wall clock, failure modes, tool calls
 ```
 
 ### Data Files
@@ -453,6 +460,7 @@ To reproduce with different tasks or models, follow the protocols in `experiment
 |---|---|
 | Goose (Exp1, Exp2) | 1.25.0 |
 | Goose (Exp3) | 1.31.1 |
+| Goose (Exp5, harness only) | 1.61.1 |
 | Orchestrator model | Claude Sonnet 4.6 (`claude-sonnet-4-6@default`) |
 | Delegate model | Claude Haiku 4.5 (`claude-haiku-4-5@20251001`) |
 | Provider | GCP Vertex AI |

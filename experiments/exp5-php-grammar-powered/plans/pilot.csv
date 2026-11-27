@@ -1,0 +1,5 @@
+run_id,group,model
+h45-control,control,claude-haiku-4-5
+h45-treatment,treatment,claude-haiku-4-5
+h55-control,control,claude-haiku-5-5
+h55-treatment,treatment,claude-haiku-5-5
