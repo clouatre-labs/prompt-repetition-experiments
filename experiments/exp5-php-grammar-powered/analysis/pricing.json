@@ -16,12 +16,12 @@
     "claude-haiku-5-5": {
       "input": 0.1,
       "output": 0.5,
-      "cache_read": null,
-      "cache_write": null,
-      "verified": false,
+      "cache_read": 0.01,
+      "cache_write": 0.125,
+      "verified": true,
       "source": "https://platform.claude.com/docs/en/about-claude/pricing",
-      "tier": "standard: prompt length at or below 100k tokens; a higher input/output tier applies above 100k and is not priced here",
-      "note": "input and output listed are the at-or-below-100k tier; cache read and cache write rates were not verified at retrieval time"
+      "tier": "standard: prompt length at or below 100k tokens; a higher tier applies above 100k (cache write $0.625, cache read $0.05) and is not priced here",
+      "note": "all rates listed are the at-or-below-100k tier; prompt caching: 5-minute cache write, base cache read rate; verified against the live pricing page on 2026-11-27"
     }
   }
 }
