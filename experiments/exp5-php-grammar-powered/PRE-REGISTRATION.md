@@ -111,4 +111,9 @@ e72dcea0f5baf23a7ff4ac369e1d7ffcb5d4cf1459ee9cc150f573aed9f885af  tests/test_pre
 
 ## DOI
 
-Zenodo DOI, recorded by the owner at deposit before the first main-run spawn:
+The pre-registration is published as version 1.1.0 of the dataset record, before the first main-run spawn:
+
+- Concept DOI (all versions): `10.5281/zenodo.19696593`, https://zenodo.org/records/19696593.
+- Version 1.1.0, the pre-registration to cite: `10.5281/zenodo.24611615`, https://zenodo.org/records/24611615, published `2026-11-27T22:54:59Z`.
+- Content: one file, `prompt-repetition-experiments-v1.1.0.zip` (1,839,288 bytes, md5 `912c2928e5e00f061cab265de26881bc`, sha256 `2876818f3a602a3d3771774cfd4aa43f86965bdfb8d2b383e08fa16db0a0f2e2`), the source archive of GitHub release `v1.1.0` (tag on commit `8223be6`). It holds the complete package listed above with every sha256 unchanged, Experiment 4, and the Experiment 1 to 3 data of version 1.0.9. It holds no main-run output.
+- The main-run data (`outputs/`, scores, analysis output) will be published as the next version of the same record after the run.
