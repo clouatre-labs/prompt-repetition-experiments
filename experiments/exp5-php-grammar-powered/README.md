@@ -31,7 +31,7 @@ uv run run.py --plan plans/pilot.csv --scratch /tmp/exp5-scratch --concurrency 2
 
 ## Exp5
 
-The pre-registration package is `protocol.md` (fixed design, 13 sections, every pilot-dependent value filled from the fenced re-pilot, #105), `PRE-REGISTRATION.md` (file list with sha256, DOI), `AMENDMENTS.md` (empty at deposit), `plans/main.csv` (80 runs) and `.zenodo.json`.
+The pre-registration package is `protocol.md` (fixed design, 13 sections, every pilot-dependent value filled from the fenced re-pilot, #105), `PRE-REGISTRATION.md` (file list with sha256, DOI), `AMENDMENTS.md` (one pre-deposit amendment, #131: mechanical contamination exclusion, output overlap descriptive), `plans/main.csv` (80 runs) and `.zenodo.json`.
 
 Pilot (4 runs, fenced instrument, the run that `protocol.md` cites):
 
@@ -49,7 +49,7 @@ Pilot result (`scorer/HEADROOM-pilot.md`, evidence `scorer/pilot-evidence/fenced
 | h55-control | 1.0 | 0.6429 | 0.0 | 1.6429 | 1.6429 | 2.5116 | 0.15489437 |
 | h55-treatment | 0.0 | 0.6 | 0.0 | 0.6 | 0.6 | 2.2521 | 0.081134605 |
 
-Gate verdict: FLOOR. The `claude-haiku-4-5` control (0.75, and 0.75 / 0.75 / 1.00 / 0.75 over four controls including the three earlier ones, mean 0.8125) is below 0.9; `claude-haiku-5-5` (1.6429) is inside the band. The floor is a model-level finding, not a stop condition: the main run proceeds with both models. C5 is 0.0 in every run, so `primary_total` minus C5 is the co-reported outcome. No contamination hit and no blocked `gh` call in any run.
+Gate verdict: FLOOR. The `claude-haiku-4-5` control (0.75, and 0.75 / 0.75 / 1.00 / 0.75 over four controls including the three earlier ones, mean 0.8125) is below 0.9; `claude-haiku-5-5` (1.6429) is inside the band. The floor is a model-level finding, not a stop condition: the main run proceeds with both models. C5 is 0.0 in every run, so `primary_total` minus C5 is the co-reported outcome. No contamination hit (0 hits in all four runs, confirmed by `analysis/contamination.py` on the committed exports under `analysis/tests/fixtures/transcripts/`) and no blocked `gh` call in any run.
 
 Main run (80 runs, interleaved within model, `--max-turns 60` in both arms, only after the DOI is recorded in `PRE-REGISTRATION.md`):
 
@@ -57,6 +57,19 @@ Main run (80 runs, interleaved within model, `--max-turns 60` in both arms, only
 uv run gen_recipes.py --plan plans/main.csv
 uv run run.py --plan plans/main.csv --scratch /tmp/exp5-main-scratch --concurrency 2 --max-turns 60
 ```
+
+Before scoring and analysis, export each run's output and transcript to `outputs/<run_id>/` (the scratch clones are disposable; `run.py` leaves `exp5-output.json` inside each clone and the analysis reads `outputs/<run_id>/exp5-output.json` for the overlap value and `outputs/<run_id>/transcript.json` for the contamination scan):
+
+```bash
+for row in $(jq -r '.assignments | to_entries[] | "\(.key) \(.value.goose_session_id)"' label-map.json); do
+  set -- $row
+  mkdir -p "outputs/$1"
+  cp "/tmp/exp5-main-scratch/$1/aptu-coder/exp5-output.json" "outputs/$1/exp5-output.json"
+  goose session export --session-id "$2" --format json -o "outputs/$1/transcript.json"
+done
+```
+
+A run with `failure_mode` has no backfilled session id and nothing to export; it is excluded by the analysis on its `failure_mode` alone.
 
 `label-map.json` seals `sha256_runner_prompt`, `sha256_scorer` and `sha256_analysis` before the first spawn; the last two are the `tree_sha256` of `scorer/` and `analysis/`.
 
