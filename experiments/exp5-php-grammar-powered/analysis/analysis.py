@@ -24,6 +24,7 @@ from pathlib import Path
 
 import numpy as np
 
+from overlap import DRAFTS, THRESHOLD, jaccard_by_draft
 from stats import EFFECT_SIZE_NOTE, bootstrap_ci, mann_whitney_r, wilson_ci
 
 CRITERIA = ["C3", "C4", "C5", "C6", "C7"]
@@ -35,12 +36,14 @@ OUTCOMES = {
 }
 PASS_THRESHOLD = 0.5
 DEFAULT_SEED = 20261127
+EXCLUSION_REASONS = ("turn_cap", "output_overlap")  # protocol.md Exclusions: failure_mode, or overlap above THRESHOLD
 HASH_FILES = {  # label-map hash key -> file it is expected to cover
     "sha256_runner_prompt": "runner-prompt.md",
     "sha256_scorer": "scorer-prompt.md",
     "sha256_analysis": "analysis.py",
 }
 HERE = Path(__file__).resolve().parent
+NODE_TYPES = HERE.parent / "scorer" / "vendor" / "tree-sitter-php-node-types.json"
 
 
 # ---------------------------------------------------------------- loaders
@@ -113,7 +116,7 @@ def load_scores(path: Path) -> list:
         if total is None:
             total = sum(v or 0 for v in crit.values())
         out.append({"run_id": row["run_id"], **crit, "total": float(total),
-                    **_outcome_fields(row, crit, exp4_layout)})
+                    "failure_mode": row.get("failure_mode"), **_outcome_fields(row, crit, exp4_layout)})
     return out
 
 
@@ -121,6 +124,55 @@ def load_latency(path: Path) -> list:
     if not path.exists():
         return []
     return [json.loads(line) for line in path.read_text().splitlines() if line.strip()]
+
+
+def find_output(outputs_dir: Path | None, run_id: str) -> Path | None:
+    """The run's output file: ``<outputs_dir>/<run_id>/*.json`` (one file) or ``<outputs_dir>/<run_id>.json``."""
+    if outputs_dir is None:
+        return None
+    flat = outputs_dir / f"{run_id}.json"
+    if flat.is_file():
+        return flat
+    nested = sorted(p for p in (outputs_dir / run_id).glob("*.json") if p.is_file()) if (outputs_dir / run_id).is_dir() else []
+    return nested[0] if len(nested) == 1 else None
+
+
+# ---------------------------------------------------------------- exclusions
+
+def apply_exclusions(scores: list, latency: list, outputs_dir: Path | None, node_types=NODE_TYPES) -> dict:
+    """Exclusion step (protocol.md Exclusions and Stopping Rule), run before any effect.
+
+    Per run: ``excluded`` and ``reason`` in {turn_cap, output_overlap}. A run
+    is excluded when its latency or score record carries ``failure_mode``
+    (reason ``turn_cap``; a turn-cap run is recorded as ``goose_exit_1``, the
+    exact value is kept in ``failure_mode``), or when its output overlap is
+    above ``THRESHOLD`` (reason ``output_overlap``). No imputation, no
+    replacement, no re-weighting: the remaining runs are what the effects
+    use. Returns ``{"per_run": {...}, "kept": [run_id], "excluded": [run_id]}``.
+    """
+    failures = {}
+    for row in latency:
+        if row.get("failure_mode"):
+            failures[row["run_id"]] = row["failure_mode"]
+    per_run = {}
+    for s in scores:
+        failure = s.get("failure_mode") or failures.get(s["run_id"])
+        path = find_output(outputs_dir, s["run_id"])
+        overlap = None
+        if path is not None:
+            overlap = jaccard_by_draft(json.loads(path.read_text(encoding="utf-8")), node_types)
+        if failure:
+            excluded, reason = True, "turn_cap"
+        elif overlap is not None and max(v or 0.0 for v in overlap.values()) > THRESHOLD:
+            excluded, reason = True, "output_overlap"
+        else:
+            excluded, reason = False, None
+        per_run[s["run_id"]] = {
+            "excluded": excluded, "reason": reason, "failure_mode": failure,
+            "overlap": overlap, "overlap_available": overlap is not None,
+        }
+    kept = sorted(r for r, v in per_run.items() if not v["excluded"])
+    return {"per_run": per_run, "kept": kept, "excluded": sorted(r for r, v in per_run.items() if v["excluded"])}
 
 
 def sha256_file(path: Path) -> str | None:
@@ -166,7 +218,8 @@ def run_cost(row: dict, pricing: dict) -> dict:
 
 # ---------------------------------------------------------------- assertions
 
-def build_assertions(scores, labels, latency, exp_dir: Path) -> list:
+def build_assertions(scores, labels, latency, exp_dir: Path, exclusions: dict | None = None) -> list:
+    kept = exclusions["kept"] if exclusions else [s["run_id"] for s in scores]
     scored = {s["run_id"] for s in scores}
     logged = {r["run_id"] for r in latency}
     labelled = set(labels)
@@ -193,6 +246,9 @@ def build_assertions(scores, labels, latency, exp_dir: Path) -> list:
             ok = len(expected) == 1 and actual is not None and actual in expected
             add("label_map_hashes", ok, f"{key}: expected {sorted(expected)}, computed {actual} for {files[key].name}")
 
+    if exclusions is not None:  # the overlap rule needs each kept run's output file
+        missing = sorted(r for r in kept if not exclusions["per_run"][r]["overlap_available"])
+        add("exclusion_overlap_available", not missing, f"{len(missing)} kept runs without an output file to overlap-score: {missing}" if missing else f"overlap scored for all {len(kept)} kept runs")
     captured = [r for r in latency if r.get("thinking_tokens") is not None]
     positive = [r["run_id"] for r in captured if r["thinking_tokens"]]
     add("thinking_tokens_zero", not positive, f"{len(captured)} rows captured, {len(latency) - len(captured)} not captured (null), {len(positive)} with positive thinking tokens")
@@ -263,7 +319,12 @@ def _effect_block(by_outcome: dict, seed: int) -> dict:
             "convention": EFFECT_SIZE_NOTE}
 
 
-def analyse(scores, labels, latency, pricing, exp_dir: Path, seed: int) -> dict:
+def analyse(scores, labels, latency, pricing, exp_dir: Path, seed: int, exclusions: dict | None = None) -> dict:
+    if exclusions is None:  # no exclusion step requested (Exp4 fixtures): every scored run is kept
+        exclusions = {"per_run": {s["run_id"]: {"excluded": False, "reason": None, "failure_mode": s.get("failure_mode"), "overlap": None, "overlap_available": False} for s in scores},
+                      "kept": sorted(s["run_id"] for s in scores), "excluded": []}
+    all_scores = list(scores)  # coverage assertions cover every scored run, excluded or not
+    scores = [s for s in scores if s["run_id"] in set(exclusions["kept"])]  # effects use the remaining runs only
     fields = [o["field"] for o in OUTCOMES.values()]
     by_outcome = {f: {} for f in fields}
     overall = {a: [] for a in ARMS}
@@ -325,6 +386,20 @@ def analyse(scores, labels, latency, pricing, exp_dir: Path, seed: int) -> dict:
             "note": "primary_total is taken as the scorer emits it and is never recomputed from the criteria; no criterion is dropped after the main run begins",
         },
         "n_runs": len(scores),
+        "n_scored": len(exclusions["kept"]) + len(exclusions["excluded"]),
+        "exclusions": {
+            "rule": "a run is excluded when its latency or score record carries failure_mode (reason turn_cap) or when its output overlap is above the threshold (reason output_overlap); no imputation, replacement or re-weighting",
+            "overlap_method": "per draft, |cited ∩ vocabulary| / |vocabulary|; cited = lowercase snake_case tokens (\\b[a-z]+(?:_[a-z]+)+\\b) of element_query_draft and defuse_query_draft after ';' comments are dropped; vocabulary = named node types and field names of scorer/vendor/tree-sitter-php-node-types.json",
+            "overlap_threshold": THRESHOLD,
+            "overlap_drafts": list(DRAFTS),
+            "per_run": exclusions["per_run"],
+            "excluded": [{"run_id": r, "reason": exclusions["per_run"][r]["reason"],
+                          "failure_mode": exclusions["per_run"][r]["failure_mode"],
+                          "overlap": exclusions["per_run"][r]["overlap"]} for r in exclusions["excluded"]],
+            "n_excluded": len(exclusions["excluded"]),
+            "n_kept": len(exclusions["kept"]),
+            "kept": exclusions["kept"],
+        },
         "arms": arms,
         "criteria_by_model": criteria_by_model,
         "effect_size": {**_effect_block(by_outcome["primary_total"], seed), "outcome": "primary_total"},
@@ -332,7 +407,7 @@ def analyse(scores, labels, latency, pricing, exp_dir: Path, seed: int) -> dict:
         "cost": {"unit": "USD", "pricing_retrieved_on": pricing.get("retrieved_on"),
                  "note": "cache-adjusted: input, output, cache read and cache write billed at their own rates; null when a rate is unverified or the model is unknown",
                  "per_run": costs, "per_arm": cost_by_arm},
-        "assertions": build_assertions(scores, labels, latency, exp_dir),
+        "assertions": build_assertions(all_scores, labels, latency, exp_dir, exclusions),
     }
 
 
@@ -358,12 +433,26 @@ def write_latex(result: dict, out: Path) -> None:
         "\\begin{tabular}{lrrr}\n\\toprule\nArm & USD & Input tokens & Cache-read tokens \\\\\n\\midrule\n" + "\n".join(rows) + "\n\\bottomrule\n\\end{tabular}\n")
 
 
+def write_exclusions_latex(result: dict, out: Path) -> None:
+    def overlap_fmt(e, draft):
+        value = (e["overlap"] or {}).get(draft)
+        return "--" if value is None else fmt(value)
+
+    rows = [f"{tex(e['run_id'])} & {tex(e['reason'])} & {tex(e['failure_mode']) if e['failure_mode'] else '--'} & {overlap_fmt(e, 'element_query_draft')} & {overlap_fmt(e, 'defuse_query_draft')} \\\\"
+            for e in result["exclusions"]["excluded"]]
+    (out / "table_exclusions.tex").write_text(
+        "\\begin{tabular}{lllrr}\n\\toprule\nRun & Reason & failure\\_mode & Overlap element & Overlap defuse \\\\\n\\midrule\n" + ("\n".join(rows) + "\n" if rows else "\\multicolumn{5}{l}{no excluded runs} \\\\\n") + "\\bottomrule\n\\end{tabular}\n")
+
+
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("experiment_dir", type=Path)
     parser.add_argument("--out", type=Path, default=None)
     parser.add_argument("--scores", default="scores.json")
     parser.add_argument("--seed", type=int, default=DEFAULT_SEED)
+    parser.add_argument("--outputs", type=Path, default=None,
+                        help="directory of delegate output files for the overlap rule: <run_id>/exp5-output.json or <run_id>.json (default: <experiment_dir>/outputs)")
+    parser.add_argument("--node-types", type=Path, default=NODE_TYPES, help="vendored tree-sitter-php node-types.json")
     args = parser.parse_args(argv)
     exp_dir = args.experiment_dir.resolve()
     out = (args.out or exp_dir / "analysis-output").resolve()
@@ -375,10 +464,17 @@ def main(argv=None) -> int:
     labels = load_label_map(exp_dir / "label-map.json")
     latency = load_latency(exp_dir / "latency-log.jsonl")
     pricing = json.loads((HERE / "pricing.json").read_text())
-    result = analyse(scores, labels, latency, pricing["models"], exp_dir, args.seed)
+    outputs = (args.outputs or exp_dir / "outputs") if (args.outputs or (exp_dir / "outputs")).exists() else None
+    if outputs is not None and not args.node_types.exists():
+        parser.error(f"--node-types not found: {args.node_types}")
+    exclusions = apply_exclusions(scores, latency, outputs, args.node_types)
+    result = analyse(scores, labels, latency, pricing["models"], exp_dir, args.seed, exclusions)
 
     (out / "analysis.json").write_text(json.dumps(result, indent=2, sort_keys=True, allow_nan=False) + "\n")
     write_latex(result, out)
+    write_exclusions_latex(result, out)
+    print(f"excluded {result['exclusions']['n_excluded']} of {result['n_scored']} scored runs: "
+          + (", ".join(f"{e['run_id']} ({e['reason']})" for e in result["exclusions"]["excluded"]) or "none"))
     failed = [a["name"] for a in result["assertions"] if a["status"] == "fail"]
     for a in result["assertions"]:
         print(f"[{a['status']}] {a['name']}: {a['detail']}")
