@@ -1,4 +1,4 @@
-"""Tests for analysis.py: loaders, assertions, cost, determinism, Exp4 regression."""
+"""Tests for analysis.py: loaders, outcome variables, assertions, cost, determinism, Exp4 regression."""
 
 import json
 import shutil
@@ -47,9 +47,12 @@ def test_cost_matches_hand_computation():
     assert costs["run-c4"]["cost_usd"] == pytest.approx(0.15)
     assert costs["run-c1"]["cost_usd"] + costs["run-c4"]["cost_usd"] == pytest.approx(2.75)
 
-    unpriced = dict(next(r for r in rows if r["run_id"] == "run-c4"), cache_read_tokens=10)
-    assert mod.run_cost(unpriced, pricing)["cost_usd"] is None  # unverified haiku-5-5 cache rate
-    assert mod.run_cost({**unpriced, "model": "mystery"}, pricing)["cost_usd"] is None
+    # claude-haiku-5-5 cache rates are verified (owner, 2026-11-27): a cache read is priced, not null
+    cached = dict(next(r for r in rows if r["run_id"] == "run-c4"), cache_read_tokens=10)
+    assert mod.run_cost(cached, pricing)["cost_usd"] == pytest.approx(0.15 + 10 * 0.01 / 1_000_000)
+    unverified = {**pricing, "claude-haiku-5-5": {**pricing["claude-haiku-5-5"], "cache_read": None}}
+    assert mod.run_cost(cached, unverified)["cost_usd"] is None  # a null rate stays a null cost with a note
+    assert mod.run_cost({**cached, "model": "mystery"}, pricing)["cost_usd"] is None
 
 
 def test_cost_does_not_subtract_cache_tokens_from_input():
@@ -136,3 +139,95 @@ def test_exp4_regression_control_4_2_vs_treatment_4_0():
     assert result["arms"]["control"]["mean"] == 4.2
     assert result["arms"]["treatment"]["mean"] == 4.0
     assert result["arms"]["control"]["n"] == result["arms"]["treatment"]["n"] == 5
+
+
+# ---------------------------------------------------------------- outcome variables
+
+def test_exp5_record_without_primary_total_fails_loudly(tmp_path):
+    """An Exp5 score file that lacks primary_total raises instead of scoring total."""
+    raw = json.loads((FIXTURES / "scores.json").read_text())
+    del raw["scores"][0]["primary_total"]
+    (tmp_path / "scores.json").write_text(json.dumps(raw))
+
+    with pytest.raises(ValueError, match="run-c1.*no primary_total"):
+        mod.load_scores(tmp_path / "scores.json")
+    with pytest.raises(ValueError, match="primary_total"):
+        mod.main([str(tmp_path), "--out", str(tmp_path / "out")])
+
+
+def test_null_c5_in_exp5_record_fails_loudly(tmp_path):
+    raw = json.loads((FIXTURES / "scores.json").read_text())
+    raw["scores"][0]["C5"] = None
+    (tmp_path / "scores.json").write_text(json.dumps(raw))
+
+    with pytest.raises(ValueError, match="null C5"):
+        mod.load_scores(tmp_path / "scores.json")
+
+
+def test_exp4_layout_without_primary_total_falls_back_to_total():
+    """Pre-#123 Exp4 fixtures (nested scores, no primary_total) are the only fallback to total."""
+    exp4 = REPO / "experiments" / "exp-swift-grammar-mercury"
+    if not exp4.exists():
+        pytest.skip("exp4 fixture directory not available")
+    rows = mod.load_scores(exp4 / "scores-main-run.json")
+
+    assert rows and all(r["primary_total"] == r["total"] for r in rows)
+    assert all(r["primary_total_source"].startswith("total") for r in rows)
+
+
+def test_co_reported_outcome_is_primary_total_minus_c5():
+    rows = mod.load_scores(FIXTURES / "scores.json")
+
+    assert all(r["primary_total"] == pytest.approx(r["C3"] + r["C4"] + r["C5"]) for r in rows)
+    assert all(r["primary_total_minus_c5"] == pytest.approx(r["primary_total"] - r["C5"]) for r in rows)
+    assert all(r["primary_total_minus_c5"] == pytest.approx(r["C3"] + r["C4"]) for r in rows)
+    assert all(0 <= r["primary_total"] <= 3 and 0 <= r["primary_total_minus_c5"] <= 2 for r in rows)
+    assert any(r["C5"] != r["total"] - r["primary_total"] for r in rows)  # C6/C7 stay in total only
+    assert all(r["primary_total_source"] == "primary_total" for r in rows)
+
+
+def test_analysis_json_keys_every_effect_off_primary_total(experiment, tmp_path):
+    out = tmp_path / "out"
+    assert mod.main([str(experiment), "--out", str(out)]) == 0
+    result = json.loads((out / "analysis.json").read_text())
+    rows = mod.load_scores(experiment / "scores.json")
+    labels = mod.load_label_map(experiment / "label-map.json")
+
+    assert result["outcome"]["primary"]["field"] == "primary_total"
+    assert result["outcome"]["co_reported"]["field"] == "primary_total_minus_c5"
+    assert result["outcome"]["secondary"] == ["C6", "C7"] and result["outcome"]["record_only"] == ["total"]
+    for arm in mod.ARMS:
+        ids = result["arms"][arm]["runs"]
+        expected = [r["primary_total"] for r in rows if r["run_id"] in ids]
+        expected_total = [r["total"] for r in rows if r["run_id"] in ids]
+        expected_minus = [r["primary_total_minus_c5"] for r in rows if r["run_id"] in ids]
+        assert result["arms"][arm]["mean"] == pytest.approx(sum(expected) / len(expected), abs=1e-4)
+        assert result["arms"][arm]["mean"] != pytest.approx(sum(expected_total) / len(expected_total), abs=1e-4)
+        assert result["arms"][arm]["scores"] == sorted(round(v, 4) for v in expected)
+        assert result["arms"][arm]["minus_c5"]["mean"] == pytest.approx(sum(expected_minus) / len(expected_minus), abs=1e-4)
+    for block in (result["effect_size"], result["effect_size_minus_c5"]):
+        field = block["outcome"]
+        for model, eff in block["per_model"].items():
+            t = [r[field] for r in rows if labels[r["run_id"]]["model"] == model and labels[r["run_id"]]["group"] == "treatment"]
+            c = [r[field] for r in rows if labels[r["run_id"]]["model"] == model and labels[r["run_id"]]["group"] == "control"]
+            assert len(t) == len(c) >= 1
+            assert eff["r"] == pytest.approx(mod.mann_whitney_r(t, c)["r"])
+            assert eff["bootstrap"]["seed"] == mod.DEFAULT_SEED
+    assert result["effect_size"]["outcome"] == "primary_total"
+    assert result["effect_size_minus_c5"]["outcome"] == "primary_total_minus_c5"
+    assert set(result["criteria_by_model"]) == set(labels[r["run_id"]]["model"] for r in rows)
+    assert set(result["arms"]["control"]["criteria_means"]) == set(mod.CRITERIA)
+
+
+def test_latex_headers_name_both_outcomes(experiment, tmp_path):
+    out = tmp_path / "out"
+    assert mod.main([str(experiment), "--out", str(out)]) == 0
+    means = (out / "table_means.tex").read_text()
+    effects = (out / "table_effects.tex").read_text()
+
+    assert "primary\\_total = C3 + C4 + C5" in means and "minus C5" in means
+    assert "primary\\_total = C3 + C4 + C5" in effects and "minus C5" in effects
+    data_rows = [l for l in means.splitlines() if l.startswith(("control", "treatment"))]
+    assert len(data_rows) == 2 and all(l.count(" & ") == 8 for l in data_rows)  # 9 columns per arm row
+    data_rows = [l for l in effects.splitlines() if l.startswith("claude")]
+    assert len(data_rows) == 2 and all(l.count(" & ") == 5 for l in data_rows)  # 6 columns per model row

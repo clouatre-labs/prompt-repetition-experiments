@@ -3,6 +3,13 @@
 cache-adjusted cost. Deterministic: analyzed_at derives from the inputs, keys
 are sorted and every float has fixed rounding. No network calls.
 
+Outcome variables (protocol.md, Primary Outcome): the primary outcome is
+``primary_total = C3 + C4 + C5`` (range [0, 3]) exactly as the scorer emits it;
+``primary_total`` minus C5 (range [0, 2]) is the co-reported outcome and is
+computed for every run. C6 and C7 and ``total`` (max 5) are retained in the
+record only. Only pre-#123 Exp4 fixtures, which lack ``primary_total``, fall
+back to ``total``.
+
 Usage: python analysis.py <experiment_dir> [--out DIR] [--seed N]
 Exit status is 1 when any recorded assertion fails; outputs are still written.
 """
@@ -20,7 +27,12 @@ import numpy as np
 from stats import EFFECT_SIZE_NOTE, bootstrap_ci, mann_whitney_r, wilson_ci
 
 CRITERIA = ["C3", "C4", "C5", "C6", "C7"]
+PRIMARY_CRITERIA = ["C3", "C4", "C5"]
 ARMS = ["control", "treatment"]
+OUTCOMES = {
+    "primary": {"field": "primary_total", "label": "primary_total = C3 + C4 + C5", "range": [0, 3]},
+    "minus_c5": {"field": "primary_total_minus_c5", "label": "primary_total minus C5 = C3 + C4", "range": [0, 2]},
+}
 PASS_THRESHOLD = 0.5
 DEFAULT_SEED = 20261127
 HASH_FILES = {  # label-map hash key -> file it is expected to cover
@@ -67,18 +79,41 @@ def _criterion(value) -> float | None:
     return float(value["score"]) if isinstance(value, dict) else float(value)
 
 
+def _outcome_fields(row: dict, crit: dict, exp4_layout: bool) -> dict:
+    """primary_total and primary_total_minus_c5 for one scored run.
+
+    Exp5 records must carry ``primary_total`` as the scorer emitted it: a
+    missing field is an error, never a silent fallback to ``total``. Exp5's
+    C5 must be numeric so the co-reported outcome can be formed. The Exp4
+    layout (pre-#123 fixtures) has no ``primary_total`` and uses ``total``.
+    """
+    if exp4_layout:
+        primary = float(row["total"])
+        return {"primary_total": primary, "primary_total_source": "total (Exp4 fixture without primary_total)",
+                "primary_total_minus_c5": round(primary - (crit["C5"] or 0.0), 6)}
+    if "primary_total" not in row:
+        raise ValueError(f"Exp5 score record {row.get('run_id')!r} has no primary_total: refusing to score total")
+    if crit["C5"] is None:
+        raise ValueError(f"Exp5 score record {row.get('run_id')!r} has a null C5: primary_total minus C5 is undefined")
+    primary = float(row["primary_total"])
+    return {"primary_total": primary, "primary_total_source": "primary_total",
+            "primary_total_minus_c5": round(primary - crit["C5"], 6)}
+
+
 def load_scores(path: Path) -> list:
-    """Return [{run_id, C3..C7, total}] from the Exp5 or Exp4 layout."""
+    """Return [{run_id, C3..C7, total, primary_total, primary_total_minus_c5}] from the Exp5 or Exp4 layout."""
     raw = json.loads(path.read_text())
     rows = raw if isinstance(raw, list) else raw.get("scores", [])
     out = []
     for row in rows:
+        exp4_layout = isinstance(raw, list) or "scores" in row
         src = row.get("scores", row)
         crit = {c: _criterion(src.get(c)) for c in CRITERIA}
         total = row.get("total")
         if total is None:
             total = sum(v or 0 for v in crit.values())
-        out.append({"run_id": row["run_id"], **crit, "total": float(total)})
+        out.append({"run_id": row["run_id"], **crit, "total": float(total),
+                    **_outcome_fields(row, crit, exp4_layout)})
     return out
 
 
@@ -179,47 +214,37 @@ def fmt(value, digits=4) -> str:
 
 # ---------------------------------------------------------------- analysis
 
-def arm_summary(values: list, passes: int, trials: int) -> dict:
+def value_summary(values: list) -> dict:
+    """n, scores, mean, median and sd of one outcome in one arm."""
     arr = np.asarray(values, dtype=float)
-    low, high = wilson_ci(passes, trials)
     return {
         "n": int(arr.size),
         "scores": sorted(round(float(v), 4) for v in arr),
         "mean": round(float(arr.mean()), 4),
         "median": round(float(np.median(arr)), 4),
         "sd": round(float(arr.std(ddof=1)), 4) if arr.size > 1 else 0.0,
+    }
+
+
+def arm_summary(values: list, passes: int, trials: int) -> dict:
+    """Primary-outcome summary plus the Wilson interval on C3..C5 passed (>= 0.5)."""
+    low, high = wilson_ci(passes, trials)
+    return {
+        **value_summary(values),
         "criteria_passed": passes,
         "criteria_total": trials,
         "pass_proportion": round(passes / trials, 4) if trials else 0.0,
         "wilson_low": low,
         "wilson_high": high,
-        "wilson_note": "Wilson 95% interval on the proportion of C3..C7 criteria scored >= 0.5 (z = 1.959963984540054)",
+        "wilson_note": "Wilson 95% interval on the proportion of C3, C4, C5 criteria scored >= 0.5 (z = 1.959963984540054)",
     }
 
 
-def analyse(scores, labels, latency, pricing, exp_dir: Path, seed: int) -> dict:
-    by_model: dict[str, dict[str, list]] = {}
-    overall = {a: [] for a in ARMS}
-    for s in scores:
-        label = labels.get(s["run_id"], {})
-        if label.get("group") not in ARMS:
-            continue
-        model = label.get("model") or "unknown"
-        by_model.setdefault(model, {a: [] for a in ARMS})[label["group"]].append(s["total"])
-        overall[label["group"]].append(s)
-
-    def passes(rows):
-        return sum(1 for r in rows for c in CRITERIA if (r[c] or 0) >= PASS_THRESHOLD)
-
-    arms = {}
-    for arm, rows in overall.items():
-        if rows:
-            arms[arm] = arm_summary([r["total"] for r in rows], passes(rows), len(rows) * len(CRITERIA))
-            arms[arm]["runs"] = sorted(r["run_id"] for r in rows)
-
+def _effect_block(by_outcome: dict, seed: int) -> dict:
+    """Per-model Mann-Whitney r, seeded bootstrap CI, pooled r and exploratory interaction for one outcome."""
     effects = {}
-    for model in sorted(by_model):
-        t, c = by_model[model]["treatment"], by_model[model]["control"]
+    for model in sorted(by_outcome):
+        t, c = by_outcome[model]["treatment"], by_outcome[model]["control"]
         eff = mann_whitney_r(t, c)
         eff["bootstrap"] = bootstrap_ci(t, c, seed)
         effects[model] = eff
@@ -232,6 +257,46 @@ def analyse(scores, labels, latency, pricing, exp_dir: Path, seed: int) -> dict:
         interaction_note = f"exploratory: difference of per-model effects r[{first}] - r[{second}]; not a tested interaction"
     else:
         interaction_note = "exploratory: fewer than two models with a defined effect; interaction not computed"
+    return {"per_model": effects, "pooled_r": pooled,
+            "pooled_note": "unweighted mean of per-model r (not of raw scores)",
+            "interaction_r": interaction, "interaction_note": interaction_note,
+            "convention": EFFECT_SIZE_NOTE}
+
+
+def analyse(scores, labels, latency, pricing, exp_dir: Path, seed: int) -> dict:
+    fields = [o["field"] for o in OUTCOMES.values()]
+    by_outcome = {f: {} for f in fields}
+    overall = {a: [] for a in ARMS}
+    for s in scores:
+        label = labels.get(s["run_id"], {})
+        if label.get("group") not in ARMS:
+            continue
+        model = label.get("model") or "unknown"
+        for f in fields:
+            by_outcome[f].setdefault(model, {a: [] for a in ARMS})[label["group"]].append(s[f])
+        overall[label["group"]].append(s)
+
+    def passes(rows):
+        return sum(1 for r in rows for c in PRIMARY_CRITERIA if (r[c] or 0) >= PASS_THRESHOLD)
+
+    def model_of(row):
+        return labels.get(row["run_id"], {}).get("model") or "unknown"
+
+    arms = {}
+    for arm, rows in overall.items():
+        if rows:
+            arms[arm] = arm_summary([r["primary_total"] for r in rows], passes(rows), len(rows) * len(PRIMARY_CRITERIA))
+            arms[arm]["runs"] = sorted(r["run_id"] for r in rows)
+            arms[arm]["primary_total_source"] = sorted({r["primary_total_source"] for r in rows})
+            arms[arm]["minus_c5"] = value_summary([r["primary_total_minus_c5"] for r in rows])
+            arms[arm]["criteria_means"] = {c: round(float(np.mean([(r[c] or 0) for r in rows])), 4) for c in CRITERIA}
+    criteria_by_model = {}
+    for model in sorted({model_of(r) for r in scores}):
+        criteria_by_model[model] = {}
+        for arm in ARMS:
+            rows = [r for r in overall[arm] if model_of(r) == model]
+            criteria_by_model[model][arm] = (
+                {c: round(float(np.mean([(r[c] or 0) for r in rows])), 4) for c in CRITERIA} if rows else None)
 
     costs = {r["run_id"]: run_cost(r, pricing) for r in latency}
     cost_by_arm = {}
@@ -252,12 +317,18 @@ def analyse(scores, labels, latency, pricing, exp_dir: Path, seed: int) -> dict:
         "analyzed_at_note": "max end_ts across latency-log.jsonl; no wall clock is consulted",
         "bootstrap_seed": seed,
         "criteria": CRITERIA,
+        "outcome": {
+            "primary": {**OUTCOMES["primary"], "field_source": "scorer"},
+            "co_reported": {**OUTCOMES["minus_c5"], "computed_for_every_run": True},
+            "secondary": ["C6", "C7"],
+            "record_only": ["total"],
+            "note": "primary_total is taken as the scorer emits it and is never recomputed from the criteria; no criterion is dropped after the main run begins",
+        },
         "n_runs": len(scores),
         "arms": arms,
-        "effect_size": {"per_model": effects, "pooled_r": pooled,
-                        "pooled_note": "unweighted mean of per-model r (not of raw scores)",
-                        "interaction_r": interaction, "interaction_note": interaction_note,
-                        "convention": EFFECT_SIZE_NOTE},
+        "criteria_by_model": criteria_by_model,
+        "effect_size": {**_effect_block(by_outcome["primary_total"], seed), "outcome": "primary_total"},
+        "effect_size_minus_c5": {**_effect_block(by_outcome["primary_total_minus_c5"], seed), "outcome": "primary_total_minus_c5"},
         "cost": {"unit": "USD", "pricing_retrieved_on": pricing.get("retrieved_on"),
                  "note": "cache-adjusted: input, output, cache read and cache write billed at their own rates; null when a rate is unverified or the model is unknown",
                  "per_run": costs, "per_arm": cost_by_arm},
@@ -270,15 +341,17 @@ def write_latex(result: dict, out: Path) -> None:
     for arm in ARMS:
         a = result["arms"].get(arm)
         if a:
-            rows.append(f"{tex(arm)} & {a['n']} & {fmt(a['mean'])} & {fmt(a['median'])} & {fmt(a['sd'])} & {fmt(a['pass_proportion'])} & [{fmt(a['wilson_low'])}, {fmt(a['wilson_high'])}] \\\\")
+            m = a["minus_c5"]
+            rows.append(f"{tex(arm)} & {a['n']} & {fmt(a['mean'])} & {fmt(a['median'])} & {fmt(a['sd'])} & {fmt(a['pass_proportion'])} & [{fmt(a['wilson_low'])}, {fmt(a['wilson_high'])}] & {fmt(m['mean'])} & {fmt(m['median'])} \\\\")
     (out / "table_means.tex").write_text(
-        "\\begin{tabular}{lrrrrrr}\n\\toprule\nArm & n & Mean & Median & SD & Pass & Wilson 95\\% CI \\\\\n\\midrule\n" + "\n".join(rows) + "\n\\bottomrule\n\\end{tabular}\n")
+        "\\begin{tabular}{lrrrrrrrr}\n\\toprule\nArm & n & Mean & Median & SD & Pass & Wilson 95\\% CI & Mean & Median \\\\\n & & \\multicolumn{6}{{c}}{{primary\\_total = C3 + C4 + C5 (0 to 3)}} & \\multicolumn{2}{{c}}{{primary\\_total minus C5 (0 to 2)}} \\\\\n\\midrule\n" + "\n".join(rows) + "\n\\bottomrule\n\\end{tabular}\n")
     rows = []
     for model, e in result["effect_size"]["per_model"].items():
         b = e["bootstrap"]
-        rows.append(f"{tex(model)} & {fmt(e['r'])} & {fmt(e['p'])} & [{fmt(b['low'])}, {fmt(b['high'])}] \\\\")
+        m = result["effect_size_minus_c5"]["per_model"][model]
+        rows.append(f"{tex(model)} & {fmt(e['r'])} & {fmt(e['p'])} & [{fmt(b['low'])}, {fmt(b['high'])}] & {fmt(m['r'])} & [{fmt(m['bootstrap']['low'])}, {fmt(m['bootstrap']['high'])}] \\\\")
     (out / "table_effects.tex").write_text(
-        "\\begin{tabular}{lrrr}\n\\toprule\nModel & r & p & Bootstrap 95\\% CI \\\\\n\\midrule\n" + "\n".join(rows) + "\n\\bottomrule\n\\end{tabular}\n")
+        "\\begin{tabular}{lrrrrr}\n\\toprule\nModel & r & p & Bootstrap 95\\% CI & r & Bootstrap 95\\% CI \\\\\n & \\multicolumn{4}{{c}}{{primary\\_total = C3 + C4 + C5}} & \\multicolumn{2}{{c}}{{primary\\_total minus C5 (co-reported)}} \\\\\n\\midrule\n" + "\n".join(rows) + "\n\\bottomrule\n\\end{tabular}\n")
     rows = [f"{tex(arm)} & {fmt(result['cost']['per_arm'][arm]['cost_usd'], 6)} & {result['cost']['per_arm'][arm]['tokens']['input_tokens']} & {result['cost']['per_arm'][arm]['tokens']['cache_read_tokens']} \\\\"
             for arm in ARMS if arm in result["cost"]["per_arm"]]
     (out / "table_cost.tex").write_text(
