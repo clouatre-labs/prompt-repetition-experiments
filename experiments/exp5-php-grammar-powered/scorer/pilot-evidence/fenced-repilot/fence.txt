@@ -1,0 +1,48 @@
+# Fence evidence, 2026-11-27, scratch root /tmp/exp5-fenced-pilot (commands below run from that root; clones are not committed)
+== h45-control
+$ git -C scratch/h45-control/aptu-coder rev-parse HEAD
+132ea687e09a916091699a562da3c96c86ec1fd8
+$ git -C scratch/h45-control/aptu-coder remote -v
+(no output)
+$ grep -c BLOCKED scratch/h45-control/aptu-coder/.exp5-fence/gh-fence.log
+0 (file absent: no blocked attempt was logged)
+$ git -C scratch/h45-control/aptu-coder status --short
+?? exp5-output.json
+
+== h45-treatment
+$ git -C scratch/h45-treatment/aptu-coder rev-parse HEAD
+132ea687e09a916091699a562da3c96c86ec1fd8
+$ git -C scratch/h45-treatment/aptu-coder remote -v
+(no output)
+$ grep -c BLOCKED scratch/h45-treatment/aptu-coder/.exp5-fence/gh-fence.log
+0 (file absent: no blocked attempt was logged)
+$ git -C scratch/h45-treatment/aptu-coder status --short
+?? exp5-output.json
+
+== h55-control
+$ git -C scratch/h55-control/aptu-coder rev-parse HEAD
+132ea687e09a916091699a562da3c96c86ec1fd8
+$ git -C scratch/h55-control/aptu-coder remote -v
+(no output)
+$ grep -c BLOCKED scratch/h55-control/aptu-coder/.exp5-fence/gh-fence.log
+0 (file absent: no blocked attempt was logged)
+$ git -C scratch/h55-control/aptu-coder status --short
+?? exp5-output.json
+
+== h55-treatment
+$ git -C scratch/h55-treatment/aptu-coder rev-parse HEAD
+132ea687e09a916091699a562da3c96c86ec1fd8
+$ git -C scratch/h55-treatment/aptu-coder remote -v
+(no output)
+$ grep -c BLOCKED scratch/h55-treatment/aptu-coder/.exp5-fence/gh-fence.log
+0 (file absent: no blocked attempt was logged)
+$ git -C scratch/h55-treatment/aptu-coder status --short
+?? exp5-output.json
+
+
+# goose sessions.db (read-only) accumulated_cost
+id|name|accumulated_cost
+20261127_91|exp5-h45-control|0.2263425
+20261127_90|exp5-h45-treatment|0.19733615
+20261127_92|exp5-h55-control|0.15489437
+20261127_93|exp5-h55-treatment|0.081134605

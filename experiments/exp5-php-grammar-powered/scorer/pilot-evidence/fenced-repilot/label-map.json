@@ -1,0 +1,46 @@
+{
+  "sealed_at": "2026-11-27T17:40:16+00:00",
+  "assignments": {
+    "h45-control": {
+      "group": "control",
+      "model": "claude-haiku-4-5",
+      "goose_session_id": "20261127_91",
+      "sealed_at": "2026-11-27T17:40:16+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "d136db8769b343b947748c621b14c9961b987092f6fcb53680f78b331e328cb4",
+      "sha256_analysis": "0789f51850d51e83d4d7f538f25d1c0c4d053e8dcab2c3a9a0c1d41f24194795",
+      "concurrency_limit": 2
+    },
+    "h45-treatment": {
+      "group": "treatment",
+      "model": "claude-haiku-4-5",
+      "goose_session_id": "20261127_90",
+      "sealed_at": "2026-11-27T17:40:16+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "d136db8769b343b947748c621b14c9961b987092f6fcb53680f78b331e328cb4",
+      "sha256_analysis": "0789f51850d51e83d4d7f538f25d1c0c4d053e8dcab2c3a9a0c1d41f24194795",
+      "concurrency_limit": 2
+    },
+    "h55-control": {
+      "group": "control",
+      "model": "claude-haiku-5-5",
+      "goose_session_id": "20261127_92",
+      "sealed_at": "2026-11-27T17:40:16+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "d136db8769b343b947748c621b14c9961b987092f6fcb53680f78b331e328cb4",
+      "sha256_analysis": "0789f51850d51e83d4d7f538f25d1c0c4d053e8dcab2c3a9a0c1d41f24194795",
+      "concurrency_limit": 2
+    },
+    "h55-treatment": {
+      "group": "treatment",
+      "model": "claude-haiku-5-5",
+      "goose_session_id": "20261127_93",
+      "sealed_at": "2026-11-27T17:40:16+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "d136db8769b343b947748c621b14c9961b987092f6fcb53680f78b331e328cb4",
+      "sha256_analysis": "0789f51850d51e83d4d7f538f25d1c0c4d053e8dcab2c3a9a0c1d41f24194795",
+      "concurrency_limit": 2
+    }
+  },
+  "sha256": "d712a2cb77c62c1e29d9ae8f7e787102d36e118e92461f6987b292265bea61b0"
+}

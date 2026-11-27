@@ -1,0 +1,92 @@
+{
+  "scored_at": "2026-11-27T17:50:00Z",
+  "scorer": "exp5-php-scorer/0.1.0 (tree-sitter 0.25.2, tree-sitter-php 0.25.2)",
+  "rubric_version": "exp5-rubric-v1-fractional",
+  "note": "C3..C7 are fractional in [0,1]; total = sum(C3..C7); primary_total = C3 + C4 + C5 (C6, C7 excluded under the protocol floor/ceiling rule, reported). C1/C2 copied verbatim when present, else null.",
+  "scores": [
+    {
+      "run_id": "unknown",
+      "C1": null,
+      "C2": null,
+      "C3": 0.0,
+      "C4": 0.75,
+      "C5": 0.0,
+      "C6": 1.0,
+      "C7": 0.8,
+      "total": 2.55,
+      "primary_total": 0.75,
+      "justifications": {
+        "C1": "not executable offline: null",
+        "C2": "not executable offline: null",
+        "C3": "C3: element_query_draft does not compile: 'r\"\\x00(function_definition\\n  name: (name) @function_name) @function\\n(method_declara'",
+        "C4": "C4: 3/4 cited kinds/fields exist in node-types.json; invented ['named_child']",
+        "C5": "C5: defuse_query_draft does not compile: 'r\"\\x00(simple_variable) @read.usage\\n(variable_declaration\\n  name: (variable_name) @'",
+        "C6": "C6: 12/12 snippets parse; dimensions covered 12/12 ['call_extraction', 'class_extraction', 'defuse_assignment', 'defuse_local_variable', 'enum_extraction', 'function_extraction', 'inheritance_combined', 'inheritance_extends', 'inheritance_implements', 'interface_extraction', 'method_extraction', 'trait_extraction']",
+        "C7": "C7: 4/5 wiring facts match the vendored snapshot; failing ['mod_registration']"
+      }
+    },
+    {
+      "run_id": "unknown",
+      "C1": null,
+      "C2": null,
+      "C3": 1.0,
+      "C4": 0.6,
+      "C5": 0.0,
+      "C6": 1.0,
+      "C7": 0.6,
+      "total": 3.2,
+      "primary_total": 1.6,
+      "justifications": {
+        "C1": "not executable offline: null",
+        "C2": "not executable offline: null",
+        "C3": "C3: 6/6 declaration kinds matched on the fixture corpus",
+        "C4": "C4: 3/5 cited kinds/fields exist in node-types.json; invented ['end_byte', 'start_byte']",
+        "C5": "C5: defuse_query_draft does not compile: '(\\x00local_variable_declaration declarator: (variable_declarator name: (variable_na'",
+        "C6": "C6: 10/10 snippets parse; dimensions covered 10/10 ['class_declaration', 'defuse_read_usage', 'defuse_write_local', 'enum_declaration', 'function_declaration', 'inheritance_extends', 'inheritance_implements', 'interface_declaration', 'method_declaration', 'trait_declaration']",
+        "C7": "C7: 3/5 wiring facts match the vendored snapshot; failing ['workspace_dependency', 'mod_registration']"
+      }
+    },
+    {
+      "run_id": "unknown",
+      "C1": null,
+      "C2": null,
+      "C3": 1.0,
+      "C4": 0.6429,
+      "C5": 0.0,
+      "C6": 0.8688,
+      "C7": 0.0,
+      "total": 2.5116,
+      "primary_total": 1.6429,
+      "justifications": {
+        "C1": "not executable offline: null",
+        "C2": "not executable offline: null",
+        "C3": "C3: 6/6 declaration kinds matched on the fixture corpus",
+        "C4": "C4: 9/14 cited kinds/fields exist in node-types.json; invented ['child_by_field_name', 'extract_inheritance', 'get_node_text', 'named_children', 'parser_elements']",
+        "C5": "C5: defuse query compiles; write captures=0, read captures=0",
+        "C6": "C6: 16/17 snippets parse; dimensions covered 12/13 ['call_extraction', 'defuse_read_usage', 'defuse_write_site', 'element_extraction', 'empty_input', 'end_to_end_analyze_file', 'extension_registration', 'import_extraction', 'inheritance_happy_path', 'inheritance_no_clause_edge_case', 'query_compilation', 'registry_table']; unparsable ['test_php_mixed_html_template_has_no_error_nodes']",
+        "C7": "C7: 0/5 wiring facts match the vendored snapshot; failing ['workspace_dependency', 'unconditional_dependency', 'extension_map_entry', 'mod_registration', 'match_arms']"
+      }
+    },
+    {
+      "run_id": "unknown",
+      "C1": null,
+      "C2": null,
+      "C3": 0.0,
+      "C4": 0.6,
+      "C5": 0.0,
+      "C6": 0.8521,
+      "C7": 0.8,
+      "total": 2.2521,
+      "primary_total": 0.6,
+      "justifications": {
+        "C1": "not executable offline: null",
+        "C2": "not executable offline: null",
+        "C3": "C3: element_query_draft does not compile: 'ELEMENT_QUERY (6 patterns):\\x00(function_definition\\n  name: (name) @func_name) @fun'",
+        "C4": "C4: 9/15 cited kinds/fields exist in node-types.json; invented ['base_classes', 'child_by_field_name', 'class_node', 'extract_inheritance', 'named_child', 'parent_class']",
+        "C5": "C5: defuse_query_draft does not compile: 'DEFUSE_QUERY (5 patterns), adapted from java.rs DEFUSE_QUERY (write.local / writ'",
+        "C6": "C6: 12/13 snippets parse; dimensions covered 12/13 ['call_free_member_static', 'defuse_write_read', 'element_class_like_kinds', 'element_free_function', 'element_method', 'empty_file_edge', 'end_to_end_analyze_file', 'import_use_statement', 'inheritance_happy_path', 'inheritance_interface_extends', 'inheritance_no_clause_edge', 'query_compiles']; unparsable ['test_php_mixed_html_parses_without_error_nodes']",
+        "C7": "C7: 4/5 wiring facts match the vendored snapshot; failing ['mod_registration']"
+      }
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+Narrowed rule (this re-pilot): a hit is opening, searching or reading #1861; any aptu-coder pull request; or any commit/file that adds PHP support.
+Scanned: every message item (text, thinking, toolRequest, toolResult) of the four goose sessions, plus out/tool-log.jsonl targets.
+Not hits under the narrowed rule but listed for the record: the #1864 body and CONTRIBUTING.md prose mentioning 'pull request'; sibling-language commits (Swift dbc2971, CSS/YAML 07c50d4) read via git show/diff --stat; the Swift PR number #1742 appearing inside a commit subject in git log output.
+
+######## h45-control 20261127_91
+  raw counts: '1861'=0  '/pull/'=0  '/pulls/'=0  'gh pr'=0  aptu-coder#refs=[]  issues URLs=[]
+  #1861 hits: 0
+  aptu-coder PR hits: 0
+  PHP-support commit/file hits: 0
+  network/other gh requests (curl, wget, fetch, gh pr/search/issue N): 0
+  sibling-language commit reads (not hits): 1
+      (4815, 'git show dbc2971 --stat')
+
+######## h45-treatment 20261127_90
+  raw counts: '1861'=0  '/pull/'=0  '/pulls/'=0  'gh pr'=0  aptu-coder#refs=[]  issues URLs=[]
+  #1861 hits: 0
+  aptu-coder PR hits: 0
+  PHP-support commit/file hits: 0
+  network/other gh requests (curl, wget, fetch, gh pr/search/issue N): 0
+  sibling-language commit reads (not hits): 0
+
+######## h55-control 20261127_92
+  raw counts: '1861'=0  '/pull/'=0  '/pulls/'=0  'gh pr'=0  aptu-coder#refs=[]  issues URLs=[]
+  #1861 hits: 0
+  aptu-coder PR hits: 0
+  PHP-support commit/file hits: 0
+  network/other gh requests (curl, wget, fetch, gh pr/search/issue N): 0
+  sibling-language commit reads (not hits): 3
+      (4928, 'git show --stat dbc2971')
+      (5022, 'git show --stat dbc2971')
+      (5049, 'git diff-tree --no-commit-id --name-only -r dbc2971 2>/dev/null')
+
+######## h55-treatment 20261127_93
+  raw counts: '1861'=0  '/pull/'=0  '/pulls/'=0  'gh pr'=0  aptu-coder#refs=[]  issues URLs=[]
+  #1861 hits: 0
+  aptu-coder PR hits: 0
+  PHP-support commit/file hits: 0
+  network/other gh requests (curl, wget, fetch, gh pr/search/issue N): 0
+  sibling-language commit reads (not hits): 4
+      (4947, 'git show --stat dbc2971')
+      (4947, 'git show --stat 07c50d4')
+      (4950, 'git diff --stat dbc2971^ dbc2971 2>')
+      (4950, 'git diff --stat 07c50d4^ 07c50d4 2>')
+
+######## tool-log.jsonl targets
+  hits: 0
+
+######## tool-log.jsonl requests per run
+  h45-control: 40 requests; {'shell': 34, 'tree': 2, 'context7__resolve-library-id': 1, 'context7__query-docs': 2, 'write': 1}
+  h45-treatment: 36 requests; {'shell': 30, 'tree': 1, 'context7__resolve-library-id': 1, 'context7__query-docs': 3, 'write': 1}
+  h55-control: 36 requests; {'shell': 34, 'context7__resolve-library-id': 1, 'context7__query-docs': 1}
+  h55-treatment: 36 requests; {'shell': 34, 'context7__resolve-library-id': 1, 'context7__query-docs': 1}
