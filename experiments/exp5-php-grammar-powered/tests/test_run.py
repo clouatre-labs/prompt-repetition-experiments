@@ -1,6 +1,7 @@
 import json
 import os
 import sqlite3
+import subprocess
 import threading
 import time
 from pathlib import Path
@@ -9,7 +10,7 @@ import pytest
 import yaml
 
 from gen_recipes import build_recipe, prompt_body, read_plan, sha256_text, write_recipe
-from run import Config, SpawnResult, assignments_sha256, child_env, find_session, run_all, utcnow
+from run import Config, SpawnResult, assignments_sha256, child_env, find_session, fresh_clone, install_gh_fence, run_all, utcnow
 
 HERE = Path(__file__).resolve().parents[1]
 PLAN = "run_id,group,model\nr1,control,m\nr2,treatment,m\nr3,control,m\nr4,treatment,m\n"
@@ -148,3 +149,48 @@ def test_summary_records_null_max_turns_when_unset(tmp_path):
     run_all(cfg, spawner=ok)
     log = rows(cfg.out_dir / "latency-log.jsonl")
     assert len(log) == 4 and all(r["env"]["GOOSE_MAX_TURNS"] is None for r in log)
+
+
+def _gh(env, *args):
+    return subprocess.run(["gh", *args], env=env, capture_output=True, text=True).returncode
+
+
+def test_gh_fence_blocks_leaks_and_passes_task_reads(tmp_path):
+    clone = tmp_path / "aptu-coder"
+    clone.mkdir()
+    fence = install_gh_fence(clone)
+    shim = fence / "bin" / "gh"
+    assert shim.stat().st_mode & 0o111
+    env = child_env(0, fence)
+    assert env["PATH"].split(os.pathsep)[0] == str(fence / "bin")
+    assert env["GH_FENCE_LOG"] == str(fence / "gh-fence.log")
+    # Reads the task needs reach the real gh (exit code is whatever gh returns, never 77).
+    for args in (["--version"], ["issue", "view", "1864"], ["api", "repos/tree-sitter/tree-sitter-php/contents/Cargo.toml"]):
+        assert _gh(env, *args) != 77, args
+    # Every leak path is blocked with 77 and leaves a log line.
+    leaks = [["issue", "view", "1861"], ["issue", "view", "--comments", "1861"], ["pr", "list"], ["pr", "view", "1742"],
+             ["api", "repos/clouatre-labs/aptu-coder/issues/1861"], ["search", "issues", "php"], ["issue", "list"], ["api", "user"]]
+    for args in leaks:
+        assert _gh(env, *args) == 77, args
+    log = (fence / "gh-fence.log").read_text().splitlines()
+    assert len(log) == len(leaks) and all(line.startswith("BLOCKED:") for line in log)
+
+
+def test_fresh_clone_has_no_remote(tmp_path, monkeypatch):
+    # clone=False in make_config skips cloning; exercise fresh_clone directly with a local git repo.
+    src = tmp_path / "src"
+    src.mkdir()
+    (src / "README").write_text("x")
+    def git(*a, cwd=src):
+        subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "-c", "commit.gpgsign=false", *a], cwd=cwd, check=True, capture_output=True,
+                       env={**os.environ, "GIT_AUTHOR_NAME": "t", "GIT_AUTHOR_EMAIL": "t@t", "GIT_COMMITTER_NAME": "t", "GIT_COMMITTER_EMAIL": "t@t"})
+    git("init", "-q")
+    git("add", ".")
+    git("commit", "-q", "-m", "init")
+    sha = subprocess.run(["git", "rev-parse", "HEAD"], cwd=src, capture_output=True, text=True).stdout.strip()
+    run = read_plan(HERE / "plans" / "pilot.csv")[0]
+    clone_dir = fresh_clone(tmp_path / "scratch", run, str(src), sha)
+    remotes = subprocess.run(["git", "-C", str(clone_dir), "remote"], capture_output=True, text=True).stdout.strip()
+    assert remotes == ""
+    assert (clone_dir / ".exp5-fence" / "bin" / "gh").exists()
+    assert subprocess.run(["git", "-C", str(clone_dir), "rev-parse", "HEAD"], capture_output=True, text=True).stdout.strip() == sha

@@ -21,9 +21,9 @@ EXTENSIONS = [
     {"type": "builtin", "name": "developer"},
     {"type": "streamable_http", "name": "context7", "uri": "https://mcp.context7.com/mcp",
      "env_keys": ["CONTEXT7_API_KEY"], "headers": {"Authorization": "Bearer $CONTEXT7_API_KEY"}},
-    {"type": "stdio", "name": "brave_search", "cmd": "npx",
-     "args": ["-y", "@brave/brave-search-mcp-server", "--transport", "stdio"], "env_keys": ["BRAVE_API_KEY"]},
 ]
+# brave_search is deliberately absent: it surfaced upstream #1861 in the first pilot. The task
+# needs the grammar docs (Context7) and the pinned clone; web search is a leak path, not a tool.
 UNRESOLVED = ("{NN}", "{group}", "{WORKTREE}", "{HEAD_SHA}")
 
 @dataclass(frozen=True)

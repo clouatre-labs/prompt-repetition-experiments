@@ -15,7 +15,7 @@ TASK: clouatre-labs/aptu-coder#1864 -- add PHP language support via tree-sitter-
 Repository: https://github.com/clouatre-labs/aptu-coder
 Issue: https://github.com/clouatre-labs/aptu-coder/issues/1864
 
-Off limits: upstream issue #1861 is closed and superseded by #1864; do not open, search for, or read it, and do not read any commit, pull request or comment that mentions PHP. Read the pinned commit only.
+Environment: the clone has no remote; `gh` reaches only this issue and the tree-sitter-php grammar repository; there is no web search. Everything you need is in the clone, `gh issue view 1864`, and Context7.
 HEAD SHA: 132ea687e09a916091699a562da3c96c86ec1fd8
 
 Your clone: your working directory is the root of a fresh clone of the repository, already checked out at HEAD SHA. Do not clone it again.
@@ -40,7 +40,7 @@ READ-ONLY. No code changes, no commits. Only write to {output_path}.
 4. Efficiency: Chain shell commands with `&&` to reduce turns
 5. Efficiency: Use `rg` with multiple patterns in one call
 6. Efficiency: Limit Context7 lookups to 2 libraries max
-7. Tool priority for research: (1) `gh` CLI for issues, PRs, repo metadata, cross-repo search; (2) Context7 for library docs and APIs; (3) brave_search as last resort for cross-project design rationale or blog posts (max 2 queries)
+7. Tool priority for research: (1) `gh` CLI for this issue's thread and the tree-sitter-php grammar repository; (2) Context7 for library docs and APIs; (3) the pinned clone's own git history for sibling languages. There is no web search.
 8. Do not let conciseness (Rule 3) or turn-efficiency (Rule 4) shorten Step 7's literal artifacts. Those fields must contain actual quoted text, not a description of what the text would contain.
 
 ## Step 1: Repo Structure
@@ -66,7 +66,7 @@ READ-ONLY. No code changes, no commits. Only write to {output_path}.
 
 ## Step 4: Ecosystem Research
 - From imports and manifest files found in Steps 1-3, identify the 2-3 libraries most relevant (tree-sitter, tree-sitter-php).
-- Use Context7 or brave_search to find tree-sitter-php's actual Cargo.toml manifest (tree-sitter/tree-sitter-php) and its grammar's `php/src/node-types.json` or `php/src/grammar.js` -- you need their literal content, not a paraphrase, for Step 7. Confirm every node kind and field name you use against those files.
+- Use Context7 or `gh api repos/tree-sitter/tree-sitter-php/contents/...` to find tree-sitter-php's actual Cargo.toml manifest and its grammar's `php/src/node-types.json` or `php/src/grammar.js` -- you need their literal content, not a paraphrase, for Step 7. Confirm every node kind and field name you use against those files.
 - Search for how similar language integrations were done in the repo (e.g., Java, Kotlin, Swift).
 
 ## Step 5: Issue Context

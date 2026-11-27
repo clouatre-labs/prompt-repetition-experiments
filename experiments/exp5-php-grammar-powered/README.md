@@ -7,9 +7,10 @@ Exp5 asks the Exp1 to Exp4 question (does a verbatim second copy of the prompt i
 - **Prompt.** The body of `runner-prompt.md` (the text after the `---` line) is the user `prompt` of every recipe, byte for byte and identical across arms. Its only placeholder is `{output_path}`, a relative path inside the clone.
 - **Control instructions.** One line: `Follow the task instructions given in the initial prompt exactly as written.`
 - **Treatment instructions.** That line, a blank line, then a byte-verbatim second copy of the whole prompt body. This repeats the task instructions as Exp1 to Exp3 did; Exp4 repeated the user `prompt` block instead.
-- **Settings.** Provider `anthropic`, model from the plan, temperature 0.5, extensions `developer`, `context7` and `brave_search`. No `thinking_effort` key (goose 1.61.1 drops it from recipe settings).
+- **Settings.** Provider `anthropic`, model from the plan, temperature 0.5, extensions `developer` and `context7`. No web search: `brave_search` was removed after the first pilot, when a search result surfaced upstream #1861. No `thinking_effort` key (goose 1.61.1 drops it from recipe settings).
 - **Sealing.** `run.py` refuses to spawn if any recipe differs from what the current plan and prompt generate, then writes and hashes `label-map.json` before the first spawn.
-- **Isolation.** Each run gets a fresh clone of aptu-coder at `132ea687e09a916091699a562da3c96c86ec1fd8` under an untracked scratch dir, hooks disabled. The experiment worktree is never the target.
+- **Isolation.** Each run gets a fresh clone of aptu-coder at `132ea687e09a916091699a562da3c96c86ec1fd8` under an untracked scratch dir, hooks disabled, and its remote is removed after checkout so nothing can be fetched past the pin. The experiment worktree is never the target.
+- **Containment.** The delegate's `gh` is a shim at `<clone>/.exp5-fence/bin/gh`, first on `PATH`. It passes `gh issue view ... 1864`, `gh api` against `tree-sitter/tree-sitter-php` only, `--version` and `auth status`; every other GitHub read (`pr`, `search`, `issue list`, any `clouatre-labs` endpoint, anything mentioning 1861 or a pull request) exits 77 and appends `BLOCKED: <args>` to `<clone>/.exp5-fence/gh-fence.log`. The fence log is evidence: a blocked attempt is recorded, not silently dropped. Residual path: the `developer` shell tool can still `curl` arbitrary URLs; the post-run transcript scan for leak patterns covers it and the protocol names it as a threat.
 
 ## Files
 
