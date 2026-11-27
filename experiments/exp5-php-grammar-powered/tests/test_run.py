@@ -1,4 +1,5 @@
 import json
+import os
 import sqlite3
 import threading
 import time
@@ -8,7 +9,7 @@ import pytest
 import yaml
 
 from gen_recipes import build_recipe, prompt_body, read_plan, sha256_text, write_recipe
-from run import Config, SpawnResult, assignments_sha256, find_session, run_all, utcnow
+from run import Config, SpawnResult, assignments_sha256, child_env, find_session, run_all, utcnow
 
 HERE = Path(__file__).resolve().parents[1]
 PLAN = "run_id,group,model\nr1,control,m\nr2,treatment,m\nr3,control,m\nr4,treatment,m\n"
@@ -74,7 +75,7 @@ def test_seal_precedes_spawn_and_session_is_backfilled_by_name(tmp_path):
     assert (r1["cache_read_tokens"], r1["cache_write_tokens"], r1["cost_usd"]) == (3, 1, 0.0)
     assert r1["thinking_tokens"] is None and r1["thinking_capture"] == "not_captured"
     assert (r1["thinking_blocks"], r1["thinking_chars"]) == (1, 3)
-    assert r1["env"] == {"GOOSE_MAX_TURNS": "0", "GOOSE_CONTEXT_LIMIT": None, "GOOSE_PROVIDER": "anthropic"}
+    assert r1["env"] == {"GOOSE_MAX_TURNS": None, "GOOSE_CONTEXT_LIMIT": None, "GOOSE_PROVIDER": "anthropic"}
     assert log["r2"]["failure_mode"] == "session_not_found"
     tools = rows(cfg.out_dir / "tool-log.jsonl")
     assert [(t["tool"], t["target"]) for t in tools] == [("shell", None), ("read", "src/lib.rs")]
@@ -134,3 +135,16 @@ def test_stale_recipe_aborts_before_seal(tmp_path):
     with pytest.raises(SystemExit, match="stale recipes"):
         run_all(cfg, spawner=ok)
     assert not (cfg.out_dir / "label-map.json").exists()
+
+def test_child_env_sets_max_turns_only_when_positive(monkeypatch):
+    monkeypatch.setenv("GOOSE_MAX_TURNS", "7")  # a stale value in the parent must never leak through
+    assert "GOOSE_MAX_TURNS" not in child_env(0)
+    assert child_env(60)["GOOSE_MAX_TURNS"] == "60"
+    assert child_env(0).get("ANTHROPIC_API_KEY") == os.environ.get("ANTHROPIC_API_KEY")
+
+def test_summary_records_null_max_turns_when_unset(tmp_path):
+    cfg = make_config(tmp_path, with_db=True)
+    cfg = Config(**{**vars(cfg), "max_turns": 0})
+    run_all(cfg, spawner=ok)
+    log = rows(cfg.out_dir / "latency-log.jsonl")
+    assert len(log) == 4 and all(r["env"]["GOOSE_MAX_TURNS"] is None for r in log)
