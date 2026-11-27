@@ -140,10 +140,48 @@ Experiment data is organized into three experiments (exp1-fastmcp-refactor, exp2
 | `bytes` | integer | Sum of assistant message content_json byte lengths for this session | sessions.db |
 | `goose_session_id` | string | Goose session ID captured post-run via sqlite3 (format YYYYMMDD_NN) | sessions.db |
 
+**Exp5 additional fields** (`experiments/exp5-php-grammar-powered/latency-log.jsonl`, written by `run.py`; missing values are `null`, never NaN):
+
+| Field | Type | Description | Source |
+|-------|------|-------------|--------|
+| `group` | string | `control` or `treatment` | label-map.json |
+| `model` | string | goose model id (for example `claude-haiku-4-5`) | Recipe settings |
+| `cache_read_tokens` | integer or null | Accumulated cache read tokens for the session | sessions.db |
+| `cache_write_tokens` | integer or null | Accumulated cache write tokens for the session | sessions.db |
+| `cost_usd` | number or null | Accumulated estimated cost for the session | sessions.db |
+| `thinking_tokens` | integer or null | Thinking token count, when goose output exposes one; `null` otherwise | goose JSON output |
+| `thinking_capture` | string | `observed` or `not_captured` | Derived from `thinking_tokens` |
+| `thinking_blocks` | integer or null | Number of thinking blocks in assistant messages (proxy for thinking effort) | sessions.db |
+| `thinking_chars` | integer or null | Total characters across thinking blocks | sessions.db |
+| `goose_version` | string or null | Output of `goose --version` at run time | Original |
+| `env` | object | `GOOSE_MAX_TURNS`, `GOOSE_CONTEXT_LIMIT` and `GOOSE_PROVIDER` in effect for the run | Original |
+| `exit_code` | integer or null | goose process exit status; `null` on timeout or clone failure | Original |
+| `failure_mode` | string or null | `goose_exit_<code>`, `timeout`, `clone_failed`, `session_not_found`, `session_ambiguous` or `sessions_db_unavailable`; `null` on success | Original |
+| `detail` | string or null | Last 300 characters of goose stderr | Original |
+
+
 **Example**:
 ```json
 {"run_id": "scout-control-1", "goose_session_id": "20260220_31", "start_ts": "2026-02-20T21:14:39Z", "end_ts": "2026-02-20T21:15:28Z", "wall_clock_seconds": 49}
 ```
+
+---
+
+## tool-log.jsonl
+
+**Purpose**: Per-run list of tool calls, with the tool name and target only. Introduced by Exp5.
+
+**Record schema** (one JSON object per line):
+
+| Field | Type | Description | Source |
+|-------|------|-------------|--------|
+| `run_id` | string | Unique run identifier | Original |
+| `goose_session_id` | string | Goose session ID | sessions.db |
+| `seq` | integer | Call order within the run, starting at 0 | sessions.db |
+| `tool` | string or null | Tool name from the tool request | sessions.db |
+| `target` | string or null | The path, URI, URL, library or query the call targets; `null` when the tool has no such argument (for example shell commands) | sessions.db |
+
+Tool arguments and tool results are never recorded; a shell call appears as its tool name with a `null` target.
 
 ---
 
@@ -190,6 +228,8 @@ Experiment data is organized into three experiments (exp1-fastmcp-refactor, exp2
 
 **Schema**: Object with run_id as key and label/group info as value. Format varies by experiment.
 
+**Exp5 schema** (`experiments/exp5-php-grammar-powered/label-map.json`): a top-level object with `sealed_at`, `assignments` and `sha256`. `assignments` is a flat map from run_id to an object with `group`, `model`, `goose_session_id`, `sealed_at`, `sha256_runner_prompt`, `sha256_scorer`, `sha256_analysis` and `concurrency_limit`. The file is written and hashed before the first run is spawned; `goose_session_id` is `null` at seal time and is filled in afterwards from the session name. `sha256_scorer` and `sha256_analysis` are `null` until those artifacts exist. `sha256` is the SHA-256 of the `assignments` block serialized as compact sorted-key JSON with every `goose_session_id` set to `null`, so it can be verified after the backfill.
+
 ---
 
 ## rubric.md
@@ -213,6 +253,8 @@ Experiment data is organized into three experiments (exp1-fastmcp-refactor, exp2
 - Instructions for the agent
 - Context and constraints
 - Expected output format
+
+In Exp5 (`experiments/exp5-php-grammar-powered/runner-prompt.md`) the text after the `---` line is the prompt body. `gen_recipes.py` copies it byte-verbatim into the recipe `prompt`, and the treatment arm repeats the same body a second time in the recipe `instructions`. Its SHA-256 is recorded as `sha256_runner_prompt` in `label-map.json`.
 
 ---
 

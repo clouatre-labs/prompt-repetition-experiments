@@ -1,0 +1,13 @@
+[project]
+name = "exp5-php-grammar-powered"
+version = "0.1.0"
+description = "Exp5: prompt repetition on a PHP grammar scout task, with model as a factor"
+requires-python = ">=3.11"
+dependencies = ["pyyaml>=6.0"]
+
+[dependency-groups]
+dev = ["pytest>=8.0", "pyflakes>=3.0"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]

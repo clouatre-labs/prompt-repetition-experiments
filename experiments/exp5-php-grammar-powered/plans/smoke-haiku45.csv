@@ -1,0 +1,3 @@
+run_id,group,model
+smoke-h45,control,claude-haiku-4-5
+smoke-h55,control,claude-haiku-5-5
