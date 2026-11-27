@@ -1,0 +1,156 @@
+{
+  "run_id": "scout-run-11",
+  "group": "control",
+  "started_at": "2026-09-07T03:13:13Z",
+  "finished_at": "2026-09-07T03:13:13Z",
+  "session_id": "20260907_14",
+  "lens": "scout",
+  "relevant_files": [
+    {
+      "path": "crates/aptu-coder-core/src/languages/mod.rs",
+      "line_range": "53-73",
+      "role": "LanguageInfo struct definition"
+    },
+    {
+      "path": "crates/aptu-coder-core/src/languages/java.rs",
+      "line_range": "3-37",
+      "role": "ELEMENT_QUERY and DEFUSE_QUERY patterns"
+    },
+    {
+      "path": "crates/aptu-coder-core/src/lang.rs",
+      "line_range": "13-45",
+      "role": "EXTENSION_MAP"
+    },
+    {
+      "path": "crates/aptu-coder-core/src/languages/java.rs",
+      "line_range": "102-133",
+      "role": "extract_inheritance implementation"
+    }
+  ],
+  "conventions": {
+    "commits": "Conventional Commits format with GPG signing and DCO sign-off",
+    "testing": "Unit tests in #[cfg(test)] mod with semantic extractor integration tests",
+    "linting": "cargo fmt --check, cargo clippy -- -D warnings",
+    "error_handling": "Option types, no unwrap() in production code"
+  },
+  "patterns": [
+    "LanguageInfo struct with optional query fields",
+    "extract_inheritance walks node fields for superclass/interfaces",
+    "DEFUSE_QUERY captures local_variable_declaration, assignment_expression, update_expression, identifier"
+  ],
+  "related_issues": [
+    {
+      "number": 648,
+      "title": "Add Swift grammar support via tree-sitter-swift 0.7.3",
+      "relevance": "Main task"
+    }
+  ],
+  "constraints": [
+    "Must follow existing language registration pattern (model after java.rs)",
+    "DEFUSE_QUERY is required for def-use analysis",
+    "No feature flags - unconditional compilation"
+  ],
+  "test_coverage": "Each language has unit tests for extract_function_name, find_receiver_type, extract_inheritance, and defuse_query integration",
+  "library_findings": [
+    {
+      "library": "tree-sitter-swift",
+      "version": "0.7.3",
+      "relevant_api": "tree_sitter_swift::LANGUAGE",
+      "notes": "Rust crate exports LANGUAGE constant; grammar.ts defines Swift syntax"
+    }
+  ],
+  "approaches": [
+    {
+      "name": "Follow java.rs pattern exactly",
+      "description": "Create swift.rs with ELEMENT_QUERY, DEFUSE_QUERY, extract_inheritance following java.rs structure",
+      "pros": [
+        "Consistent with existing code",
+        "Well-tested pattern",
+        "Minimal cognitive load"
+      ],
+      "cons": [
+        "Swift has different inheritance model (protocols vs interfaces)"
+      ],
+      "complexity": "simple",
+      "files_touched": 4
+    },
+    {
+      "name": "Adapt kotlin.rs pattern",
+      "description": "Kotlin has similar protocol/extension model to Swift",
+      "pros": [
+        "Better protocol handling",
+        "More similar to Swift"
+      ],
+      "cons": [
+        "More complex",
+        "Less tested pattern"
+      ],
+      "complexity": "medium",
+      "files_touched": 4
+    }
+  ],
+  "recommendation": "Follow java.rs pattern exactly - it's the simplest, most tested approach. Swift's inheritance (class/protocol) maps cleanly to Java's (class/interface).",
+  "language_info_struct_citation": "pub struct LanguageInfo {\n    pub name: &'static str,\n    pub language: Language,\n    pub element_query: &'static str,\n    pub call_query: &'static str,\n    pub reference_query: Option<&'static str>,\n    pub import_query: Option<&'static str>,\n    pub impl_query: Option<&'static str>,\n    pub impl_trait_query: Option<&'static str>,\n    pub defuse_query: Option<&'static str>,\n    pub extract_function_name: Option<ExtractFunctionNameHandler>,\n    pub find_method_for_receiver: Option<FindMethodForReceiverHandler>,\n    pub find_receiver_type: Option<FindReceiverTypeHandler>,\n    pub extract_inheritance: Option<ExtractInheritanceHandler>,\n}",
+  "element_query_draft": "(function_declaration\n  name: (simple_identifier) @function_name) @function\n(class_declaration\n  name: (type_identifier) @class_name) @class\n(protocol_declaration\n  name: (type_identifier) @protocol_name) @class\n(struct_declaration\n  name: (type_identifier) @struct_name) @class\n(enum_declaration\n  name: (type_identifier) @enum_name) @class\n(actor_declaration\n  name: (type_identifier) @actor_name) @class",
+  "defuse_query_draft": "(function_declaration\n  parameters: (parameter_list\n    (parameter\n      name: (simple_identifier) @write.param)))\n(variable_declaration\n  pattern: (simple_identifier) @write.var)\n(assignment_expression\n  left: (simple_identifier) @write.assign)\n(simple_identifier) @read.usage",
+  "inheritance_walk_citation": "From tree-sitter-swift grammar.ts: class_declaration has 'inheritance_clause' child containing 'inheritance_specifier' with 'inherits_from' array of 'user_type' nodes, each having 'type_identifier' field for the base type name.",
+  "test_snippets": [
+    {
+      "dimension": "declaration_kind",
+      "declaration_kind": "class",
+      "swift_code": "class MyClass {}",
+      "test_name": "test_swift_class_declaration"
+    },
+    {
+      "dimension": "declaration_kind",
+      "declaration_kind": "struct",
+      "swift_code": "struct MyStruct {}",
+      "test_name": "test_swift_struct_declaration"
+    },
+    {
+      "dimension": "declaration_kind",
+      "declaration_kind": "actor",
+      "swift_code": "actor MyActor {}",
+      "test_name": "test_swift_actor_declaration"
+    },
+    {
+      "dimension": "declaration_kind",
+      "declaration_kind": "enum",
+      "swift_code": "enum MyEnum {}",
+      "test_name": "test_swift_enum_declaration"
+    },
+    {
+      "dimension": "declaration_kind",
+      "declaration_kind": "extension",
+      "swift_code": "extension MyClass {}",
+      "test_name": "test_swift_extension_declaration"
+    },
+    {
+      "dimension": "inheritance_shape",
+      "declaration_kind": "class",
+      "swift_code": "class Dog: Animal {}",
+      "test_name": "test_swift_single_superclass"
+    },
+    {
+      "dimension": "inheritance_shape",
+      "declaration_kind": "class",
+      "swift_code": "class Dog: Equatable, CustomStringConvertible {}",
+      "test_name": "test_swift_multiple_protocols"
+    },
+    {
+      "dimension": "inheritance_shape",
+      "declaration_kind": "class",
+      "swift_code": "class Dog: Animal, Equatable {}",
+      "test_name": "test_swift_mixed_inheritance"
+    }
+  ],
+  "wiring_summary": {
+    "workspace_dependency": "tree-sitter-swift = \"=0.7.3\"",
+    "unconditional_dependency": "tree-sitter-swift = { workspace = true }",
+    "extension_map_entry": "(\"swift\", \"swift\")",
+    "mod_registration": "pub mod swift; // in mod.rs after yaml",
+    "match_arms": "swift => Some(LanguageInfo { name: \"swift\", language: tree_sitter_swift::LANGUAGE.into(), element_query: swift::ELEMENT_QUERY, call_query: swift::CALL_QUERY, reference_query: Some(swift::REFERENCE_QUERY), import_query: Some(swift::IMPORT_QUERY), impl_query: None, impl_trait_query: None, defuse_query: Some(swift::DEFUSE_QUERY), extract_function_name: Some(swift::extract_function_name), find_method_for_receiver: Some(swift::find_method_for_receiver), find_receiver_type: Some(swift::find_receiver_type), extract_inheritance: Some(swift::extract_inheritance) });\n\nswift => Some(tree_sitter_swift::LANGUAGE.into())"
+  },
+  "latency_seconds": 0,
+  "message_count": 0
+}

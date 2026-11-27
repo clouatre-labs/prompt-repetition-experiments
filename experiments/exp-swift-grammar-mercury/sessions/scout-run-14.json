@@ -1,0 +1,161 @@
+{
+  "run_id": "scout-run-14",
+  "group": "treatment",
+  "started_at": "2026-09-07T03:27:49Z",
+  "finished_at": "2026-09-07T03:35:00Z",
+  "session_id": "20260907_19",
+  "lens": "scout",
+  "relevant_files": [
+    {
+      "path": "crates/aptu-coder-core/src/languages/mod.rs",
+      "line_range": "46-65",
+      "role": "LanguageInfo struct definition"
+    },
+    {
+      "path": "crates/aptu-coder-core/src/languages/java.rs",
+      "line_range": "3-28",
+      "role": "Query constants and extract_inheritance handler"
+    },
+    {
+      "path": "crates/aptu-coder-core/src/lang.rs",
+      "line_range": "13-46",
+      "role": "EXTENSION_MAP definition"
+    },
+    {
+      "path": "crates/aptu-coder-core/Cargo.toml",
+      "line_range": "1-30",
+      "role": "Dependency configuration"
+    }
+  ],
+  "conventions": {
+    "commits": "Conventional commits enforced via .commitlintrc.yml",
+    "testing": "Unit tests in #[cfg(test)] modules with semantic extraction verification",
+    "linting": "clippy.toml with deny-level lints for undocumented_unsafe_blocks, unwrap_used, expect_used",
+    "error_handling": "Option/Result types with explicit error propagation"
+  },
+  "patterns": [
+    "Language registration via get_language_info() match arm with full LanguageInfo struct",
+    "Query constants (ELEMENT_QUERY, CALL_QUERY, REFERENCE_QUERY, IMPORT_QUERY, DEFUSE_QUERY) as pub const &str",
+    "extract_inheritance handler walks node tree via child_by_field_name and named_child iteration"
+  ],
+  "related_issues": [
+    {
+      "number": 648,
+      "title": "feat(lang): add Swift grammar support",
+      "relevance": "Primary task - adds Swift via tree-sitter-swift 0.7.3"
+    }
+  ],
+  "constraints": [
+    "DEFUSE_QUERY is mandatory - LanguageInfo.defuse_query field is Option<&'static str> and every language sets it",
+    "No feature flags - all languages unconditionally compiled in per lang.rs comment",
+    "tree-sitter-swift 0.7.3 depends on tree-sitter-language ^0.1.0 only (dev-only tree-sitter dependency)"
+  ],
+  "test_coverage": "Existing language tests verify ELEMENT_QUERY compilation, extract_inheritance correctness, and defuse_query write/read site extraction via SemanticExtractor",
+  "library_findings": [
+    {
+      "library": "tree-sitter-swift",
+      "version": "0.7.3",
+      "relevant_api": "tree_sitter_swift::LANGUAGE.into()",
+      "notes": "Dev-only tree-sitter dependency; tree-sitter-language ^0.1.0 is runtime dep"
+    },
+    {
+      "library": "tree-sitter-java",
+      "version": "0.23.5",
+      "relevant_api": "tree_sitter_java::LANGUAGE.into()",
+      "notes": "Reference implementation for Swift integration"
+    }
+  ],
+  "approaches": [
+    {
+      "name": "Direct Java Pattern",
+      "description": "Create swift.rs with identical structure to java.rs: ELEMENT_QUERY, CALL_QUERY, REFERENCE_QUERY, IMPORT_QUERY, DEFUSE_QUERY constants and extract_inheritance handler",
+      "pros": [
+        "Minimal deviation from existing patterns",
+        "Well-tested approach",
+        "Easy to review"
+      ],
+      "cons": [
+        "May need Swift-specific query adjustments"
+      ],
+      "complexity": "simple",
+      "files_touched": 5
+    },
+    {
+      "name": "Minimal Query Set",
+      "description": "Only implement ELEMENT_QUERY and DEFUSE_QUERY, skip optional queries (CALL_QUERY, REFERENCE_QUERY, IMPORT_QUERY)",
+      "pros": [
+        "Faster initial implementation"
+      ],
+      "cons": [
+        "Incomplete feature set",
+        "Requires future PRs for missing queries"
+      ],
+      "complexity": "simple",
+      "files_touched": 5
+    }
+  ],
+  "recommendation": "Direct Java Pattern - follows established conventions, provides complete feature set from day one, and matches the issue's explicit guidance to model after java.rs",
+  "language_info_struct_citation": "pub struct LanguageInfo {\n    pub name: &'static str,\n    pub language: Language,\n    pub element_query: &'static str,\n    pub call_query: &'static str,\n    pub reference_query: Option<&'static str>,\n    pub import_query: Option<&'static str>,\n    pub impl_query: Option<&'static str>,\n    pub impl_trait_query: Option<&'static str>,\n    pub defuse_query: Option<&'static str>,\n    pub extract_function_name: Option<ExtractFunctionNameHandler>,\n    pub find_method_for_receiver: Option<FindMethodForReceiverHandler>,\n    pub find_receiver_type: Option<FindReceiverTypeHandler>,\n    pub extract_inheritance: Option<ExtractInheritanceHandler>,\n}",
+  "element_query_draft": "(function_declaration name: (simple_identifier) @function_name) @function\n(class_declaration name: (type_identifier) @class_name) @class\n(protocol_declaration name: (type_identifier) @protocol_name) @class",
+  "defuse_query_draft": "(variable_declaration pattern: (identifier) @write.local)\n(assignment_expression left: (identifier) @write.assign)\n(simple_identifier) @read.usage",
+  "inheritance_walk_citation": "From tree-sitter-swift grammar.ts: Walk class_declaration's _inheritance_specifiers child; for each inheritance_specifier node, read inherits_from field which contains user_type; extract type_identifier text from user_type. Multiple specifiers appear as siblings (superclass + protocols).",
+  "test_snippets": [
+    {
+      "dimension": "declaration_kind",
+      "declaration_kind": "class",
+      "swift_code": "class Animal {}",
+      "test_name": "test_swift_class_declaration"
+    },
+    {
+      "dimension": "declaration_kind",
+      "declaration_kind": "struct",
+      "swift_code": "struct Point {}",
+      "test_name": "test_swift_struct_declaration"
+    },
+    {
+      "dimension": "declaration_kind",
+      "declaration_kind": "actor",
+      "swift_code": "actor Database {}",
+      "test_name": "test_swift_actor_declaration"
+    },
+    {
+      "dimension": "declaration_kind",
+      "declaration_kind": "enum",
+      "swift_code": "enum Direction {}",
+      "test_name": "test_swift_enum_declaration"
+    },
+    {
+      "dimension": "declaration_kind",
+      "declaration_kind": "extension",
+      "swift_code": "extension String {}",
+      "test_name": "test_swift_extension_declaration"
+    },
+    {
+      "dimension": "inheritance_shape",
+      "declaration_kind": "class",
+      "swift_code": "class Dog: Animal {}",
+      "test_name": "test_swift_single_superclass"
+    },
+    {
+      "dimension": "inheritance_shape",
+      "declaration_kind": "class",
+      "swift_code": "class Dog: Equatable, Hashable {}",
+      "test_name": "test_swift_multiple_protocols"
+    },
+    {
+      "dimension": "inheritance_shape",
+      "declaration_kind": "class",
+      "swift_code": "class Dog: Animal, Equatable {}",
+      "test_name": "test_swift_mixed_inheritance"
+    }
+  ],
+  "wiring_summary": {
+    "workspace_dependency": "tree-sitter-swift = \"0.7.3\"",
+    "unconditional_dependency": "tree-sitter-swift.workspace = true",
+    "extension_map_entry": "(\"swift\", \"swift\")",
+    "mod_registration": "pub mod swift; in crates/aptu-coder-core/src/languages/mod.rs after pub mod yaml;",
+    "match_arms": "In get_language_info(): \"swift\" => Some(LanguageInfo { name: \"swift\", language: tree_sitter_swift::LANGUAGE.into(), element_query: swift::ELEMENT_QUERY, call_query: swift::CALL_QUERY, reference_query: Some(swift::REFERENCE_QUERY), import_query: Some(swift::IMPORT_QUERY), impl_query: None, impl_trait_query: None, defuse_query: Some(swift::DEFUSE_QUERY), extract_function_name: Some(swift::extract_function_name), find_method_for_receiver: Some(swift::find_method_for_receiver), find_receiver_type: Some(swift::find_receiver_type), extract_inheritance: Some(swift::extract_inheritance) })\n\nIn get_ts_language(): \"swift\" => Some(tree_sitter_swift::LANGUAGE.into())"
+  },
+  "latency_seconds": 441,
+  "message_count": 1
+}

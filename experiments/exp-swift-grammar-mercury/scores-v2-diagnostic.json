@@ -1,0 +1,28 @@
+[
+  {
+    "run_id": "scout-run-01",
+    "scores": {
+      "C1": {"score": 0, "justification": "Asserts no version conflict between tree-sitter-swift 0.7.3 and workspace tree-sitter 0.26.13 but does not cite tree-sitter-swift's actual Cargo.toml manifest."},
+      "C2": {"score": 0, "justification": "References declaration_kind field and its values but does not cite actual field definition from grammar source (node-types.json or grammar.js)."},
+      "C3": {"score": 0, "justification": "Names node kinds (function_declaration, class_declaration, protocol_declaration) and lists query constants but does not identify specific node fields like name or declaration_kind."},
+      "C4": {"score": 0, "justification": "Recommends extract_inheritance handler for class/protocol declarations but does not describe the inheritance_specifier → inherits_from → user_type walk or Swift's inheritance syntax properties."},
+      "C5": {"score": 0, "justification": "Lists DEFUSE_QUERY as mandatory constraint but does not independently verify LanguageInfo struct definition or cite java.rs's actual 4-line DEFUSE_QUERY pattern."},
+      "C6": {"score": 0, "justification": "No concrete Swift test code snippets or specific Swift test function names provided; mentions Java coverage but not a Swift-specific unit test plan."},
+      "C7": {"score": 1, "justification": "Explicitly describes workspace dependency, mod swift; registration in constraints, Extension mapping in patterns, feature-flag constraint, and match-arm registration."}
+    },
+    "total": 1
+  },
+  {
+    "run_id": "scout-run-02",
+    "scores": {
+      "C1": {"score": 0, "justification": "States tree-sitter-swift is compatible with tree-sitter 0.26.x API but does not independently verify by citing actual tree-sitter-swift Cargo.toml manifest."},
+      "C2": {"score": 0, "justification": "Does not identify or discuss class_declaration's declaration_kind field; treats Swift AST structure generically without grammar-source field citations."},
+      "C3": {"score": 0, "justification": "Lists query constants generically (ELEMENT_QUERY, CALL_QUERY, etc.) but does not name specific node fields such as name or declaration_kind for those queries."},
+      "C4": {"score": 0, "justification": "Mentions extract_inheritance as required handler without describing the field walk through inheritance_specifier or discussing Swift's inheritance syntax distinctiveness."},
+      "C5": {"score": 0, "justification": "States DEFUSE_QUERY is required but does not independently verify LanguageInfo struct or cite java.rs's actual DEFUSE_QUERY pattern as reference."},
+      "C6": {"score": 0, "justification": "Provides Java test examples but no concrete Swift-specific code snippets or test function names for each declaration_kind and inheritance shape."},
+      "C7": {"score": 0, "justification": "Covers workspace/crate dependencies and match-arm registration but omits explicit mention of .swift EXTENSION_MAP entry and does not explicitly name mod swift; registration."}
+    },
+    "total": 0
+  }
+]

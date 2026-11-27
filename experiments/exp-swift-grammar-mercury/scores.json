@@ -1,0 +1,70 @@
+[
+  {
+    "run_id": "scout-run-01",
+    "scores": {
+      "C1": {
+        "score": 0,
+        "justification": "States tree-sitter-swift dependency version constraints and compatibility but does not cite the actual alex-pinkus/tree-sitter-swift Cargo.toml manifest content."
+      },
+      "C2": {
+        "score": 0,
+        "justification": "Mentions class_declaration's declaration_kind field and enum values but does not cite node-types.json or grammar.js from the tree-sitter-swift grammar source."
+      },
+      "C3": {
+        "score": 0,
+        "justification": "Discusses implementing ELEMENT_QUERY, CALL_QUERY, and IMPORT_QUERY but provides no actual query patterns or citations to java.rs's real query structure."
+      },
+      "C4": {
+        "score": 0,
+        "justification": "Recommends implementing extract_inheritance for class_declaration/protocol_declaration but shows no field walk (inheritance_specifier→inherits_from→user_type) or citation of existing handlers like kotlin.rs."
+      },
+      "C5": {
+        "score": 0,
+        "justification": "Constraints list LanguageInfo.defuse_query field name but no actual DEFUSE_QUERY pattern from java.rs is shown or adapted for Swift local declarations and assignments."
+      },
+      "C6": {
+        "score": 0,
+        "justification": "Test coverage describes general patterns (#[cfg(test)] modules, 8+ tests) but lists no concrete Swift code snippets for each declaration_kind (class/struct/actor/enum/extension) or specific Swift test function names."
+      },
+      "C7": {
+        "score": 0,
+        "justification": "Does not describe workspace.dependencies entry for tree-sitter-swift, .swift entry in EXTENSION_MAP, mod swift; registration, or get_language_info()/get_ts_language() match arms modeled on css pattern."
+      }
+    },
+    "total": 0
+  },
+  {
+    "run_id": "scout-run-02",
+    "scores": {
+      "C1": {
+        "score": 0,
+        "justification": "Library findings state tree-sitter-swift exposes LANGUAGE constant and is MIT licensed but do not cite the actual alex-pinkus/tree-sitter-swift Cargo.toml manifest content or dependency versions."
+      },
+      "C2": {
+        "score": 0,
+        "justification": "Mentions 'declaration_kind field' in patterns but does not cite the actual field definition from node-types.json or grammar.js in the tree-sitter-swift grammar source."
+      },
+      "C3": {
+        "score": 0,
+        "justification": "Approach 1 states 'define all query constants (ELEMENT_QUERY, CALL_QUERY, REFERENCE_QUERY, IMPORT_QUERY, DEFUSE_QUERY)' but provides no actual query pattern examples modeled on java.rs's real query structure."
+      },
+      "C4": {
+        "score": 0,
+        "justification": "Describes 'implement extract_inheritance for class_declaration/protocol_declaration' but shows no concrete field walk to inheritance_specifier→inherits_from→user_type and cites no existing handlers like kotlin.rs."
+      },
+      "C5": {
+        "score": 0,
+        "justification": "Constraints reference 'DEFUSE_QUERY constant required' and recommendation names 'java.rs template' but no actual LanguageInfo struct definition or concrete DEFUSE_QUERY pattern adapted to Swift is shown."
+      },
+      "C6": {
+        "score": 0,
+        "justification": "Test coverage cites java.rs test names (test_extract_function_name, test_java_element_query_happy_path) but provides no concrete Swift code snippets for each declaration_kind or specific Swift test function names."
+      },
+      "C7": {
+        "score": 0,
+        "justification": "Constraints list wiring requirements but do not describe workspace.dependencies entry, .swift in EXTENSION_MAP, mod swift; registration, or both match arms in mod.rs modeled on css wiring pattern."
+      }
+    },
+    "total": 0
+  }
+]

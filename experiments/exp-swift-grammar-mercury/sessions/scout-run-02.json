@@ -1,0 +1,74 @@
+{
+  "run_id": "scout-run-02",
+  "group": "treatment",
+  "started_at": "2026-09-07T01:44:00Z",
+  "finished_at": "2026-09-07T01:44:20Z",
+  "session_id": "20260907_3",
+  "lens": "scout",
+  "relevant_files": [
+    {"path": "crates/aptu-coder-core/src/languages/mod.rs", "line_range": "1-250", "role": "Language registration and get_language_info/get_ts_language functions"},
+    {"path": "crates/aptu-coder-core/src/languages/java.rs", "line_range": "1-150", "role": "Template for language implementation (model as per issue)"},
+    {"path": "crates/aptu-coder-core/src/languages/python.rs", "line_range": "1-60", "role": "DEFUSE_QUERY pattern example"},
+    {"path": "crates/aptu-coder-core/src/parser.rs", "line_range": "1-100", "role": "Parser integration with language info"},
+    {"path": "Cargo.toml", "line_range": "1-50", "role": "Dependency management for tree-sitter crates"}
+  ],
+  "conventions": {
+    "commits": "Conventional Commits format with GPG signing (-S) and sign-off (--signoff)",
+    "testing": "Unit tests in same file with #[cfg(test)] mod tests; integration tests in crates/*/tests/",
+    "linting": "cargo fmt --check, cargo clippy -- -D warnings, cargo deny check advisories licenses",
+    "error_handling": "Result types with thiserror; no unwrap() in production code paths"
+  },
+  "patterns": [
+    "Language-specific module in crates/aptu-coder-core/src/languages/{lang}.rs",
+    "Query constants: ELEMENT_QUERY, CALL_QUERY, REFERENCE_QUERY, IMPORT_QUERY, DEFUSE_QUERY",
+    "Handler functions: extract_function_name, find_receiver_type, find_method_for_receiver, extract_inheritance",
+    "LanguageInfo struct registration in get_language_info() match arm",
+    "get_ts_language() match arm for Language object retrieval",
+    "SPDX header on all .rs files: SPDX-FileCopyrightText: 2026 aptu-coder contributors"
+  ],
+  "related_issues": [
+    {"number": 648, "title": "Add Swift grammar support via tree-sitter-swift 0.7.3", "relevance": "Primary task - add Swift language support following Java pattern"}
+  ],
+  "constraints": [
+    "Must add tree-sitter-swift 0.7.3 to workspace dependencies in Cargo.toml",
+    "Must create swift.rs module following java.rs template",
+    "Must register swift in get_language_info() and get_ts_language() match arms",
+    "DEFUSE_QUERY constant required for definition-use site extraction (used by SemanticExtractor)",
+    "All new files must include SPDX license header",
+    "Must pass cargo fmt --check, cargo clippy -- -D warnings, cargo test"
+  ],
+  "test_coverage": "Language registration has unit tests in mod.rs (test_get_language_info_known, test_get_language_info_unknown, test_get_ts_language_known, test_get_ts_language_unknown). Individual language modules have integration tests for query compilation and extraction functions (e.g., java.rs has test_extract_function_name, test_find_receiver_type, test_java_element_query_happy_path, test_java_extract_inheritance, test_defuse_query_write_site).",
+  "library_findings": [
+    {"library": "tree-sitter-swift", "version": "0.7.3", "relevant_api": "tree_sitter_swift::LANGUAGE", "notes": "Rust crate exposes LANGUAGE constant compatible with tree-sitter 0.26.x API. MIT licensed. Grammar supports .swift files."},
+    {"library": "tree-sitter", "version": "0.26.13", "relevant_api": "Parser, Query, QueryCursor", "notes": "Core parsing library used by all language handlers. Swift grammar must be compatible with this version."}
+  ],
+  "approaches": [
+    {
+      "name": "Approach 1: Full Java-style implementation",
+      "description": "Create swift.rs following java.rs template exactly: define all query constants (ELEMENT_QUERY, CALL_QUERY, REFERENCE_QUERY, IMPORT_QUERY, DEFUSE_QUERY), implement all handler functions (extract_function_name, find_receiver_type, find_method_for_receiver, extract_inheritance), and register in mod.rs match arms.",
+      "pros": ["Complete feature parity with other languages", "Full DEFUSE_QUERY support for def-use analysis", "Consistent with project patterns", "All extraction features available"],
+      "cons": ["More files to create", "More handlers to implement", "Requires understanding Swift AST structure"],
+      "complexity": "medium",
+      "files_touched": 3
+    },
+    {
+      "name": "Approach 2: Minimal implementation with stubs",
+      "description": "Create swift.rs with minimal query constants (ELEMENT_QUERY, CALL_QUERY) and stub handlers returning None. Add DEFUSE_QUERY as required. Register in mod.rs. Defer full implementation to follow-up PR.",
+      "pros": ["Fastest to implement", "Gets Swift support working quickly", "Can iterate based on real usage"],
+      "cons": ["Limited functionality initially", "Requires follow-up work", "Some features unavailable until expanded"],
+      "complexity": "simple",
+      "files_touched": 3
+    },
+    {
+      "name": "Approach 3: Kotlin-style implementation",
+      "description": "Follow kotlin.rs pattern which has comprehensive handlers. Kotlin is similar to Swift (modern, typed, JVM/native target) so query structures may be more similar than Java.",
+      "pros": ["Kotlin patterns may map better to Swift", "Comprehensive from the start", "Good balance of features"],
+      "cons": ["Kotlin grammar differs from Swift", "Still requires Swift-specific query design"],
+      "complexity": "medium",
+      "files_touched": 3
+    }
+  ],
+  "recommendation": "Approach 1 (Full Java-style implementation) is recommended because: (1) The issue explicitly references modeling after java.rs; (2) DEFUSE_QUERY is required for proper def-use analysis which is a core feature; (3) Complete implementation avoids technical debt and follow-up work; (4) The project already has well-tested patterns for all handler functions.",
+  "latency_seconds": 20,
+  "message_count": 0
+}

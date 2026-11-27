@@ -1,0 +1,53 @@
+{
+  "repo_head": "c3d3669c50f14ea0214f1edb4d0f9abb1d8324ac",
+  "experiment": "clouatre-labs/aptu-coder#648",
+  "sealed_at": "2026-09-07T01:44:30Z",
+  "pilot_assignments": {
+    "scout-run-01": "control",
+    "scout-run-02": "treatment"
+  },
+  "control_group": ["scout-run-01"],
+  "treatment_group": ["scout-run-02"],
+  "main_run": {
+    "runner_prompt": "runner-prompt-v3.md",
+    "rubric": "rubric.md (C1/C2/C6) + rubric-v3.md (C3/C4/C5/C7)",
+    "sealed_at": "2026-09-07T03:00:00Z",
+    "n_per_group": 5,
+    "assignments": {
+      "scout-run-07": "control",
+      "scout-run-08": "treatment",
+      "scout-run-09": "control",
+      "scout-run-10": "treatment",
+      "scout-run-11": "control",
+      "scout-run-12": "treatment",
+      "scout-run-13": "control",
+      "scout-run-14": "treatment",
+      "scout-run-15": "control",
+      "scout-run-16": "treatment"
+    },
+    "control_group": ["scout-run-07", "scout-run-09", "scout-run-11", "scout-run-13", "scout-run-15"],
+    "treatment_group": ["scout-run-08", "scout-run-10", "scout-run-12", "scout-run-14", "scout-run-16"]
+  },
+  "pilot_round_2": {
+    "runner_prompt": "runner-prompt-v2.md",
+    "rubric": "rubric.md (unchanged from round 1)",
+    "sealed_at": "2026-09-07T02:33:45Z",
+    "assignments": {
+      "scout-run-03": "control",
+      "scout-run-04": "treatment"
+    },
+    "control_group": ["scout-run-03"],
+    "treatment_group": ["scout-run-04"]
+  },
+  "pilot_round_3": {
+    "runner_prompt": "runner-prompt-v3.md",
+    "rubric": "rubric.md (C1/C2/C6) + rubric-v3.md (C3/C4/C5/C7)",
+    "sealed_at": "2026-09-07T02:55:30Z",
+    "assignments": {
+      "scout-run-05": "control",
+      "scout-run-06": "treatment"
+    },
+    "control_group": ["scout-run-05"],
+    "treatment_group": ["scout-run-06"]
+  }
+}

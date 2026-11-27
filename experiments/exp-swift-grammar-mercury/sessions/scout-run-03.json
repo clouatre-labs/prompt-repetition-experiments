@@ -1,0 +1,80 @@
+{
+  "run_id": "scout-run-03",
+  "group": "control",
+  "started_at": "2026-09-07T02:32:18Z",
+  "finished_at": "2026-09-07T02:32:50Z",
+  "session_id": "20260907_4",
+  "lens": "scout",
+  "relevant_files": [
+    {"path": "crates/aptu-coder-core/src/languages/mod.rs", "line_range": "42-66", "role": "LanguageInfo struct definition"},
+    {"path": "crates/aptu-coder-core/src/languages/java.rs", "line_range": "1-50", "role": "ELEMENT_QUERY and DEFUSE_QUERY templates"},
+    {"path": "crates/aptu-coder-core/src/languages/lang.rs", "line_range": "1-100", "role": "EXTENSION_MAP registration"},
+    {"path": "Cargo.toml", "line_range": "1-60", "role": "workspace dependencies"}
+  ],
+  "conventions": {
+    "commits": "Conventional commits via .commitlintrc.yml",
+    "testing": "Unit tests in mod tests blocks with SemanticExtractor integration",
+    "linting": "clippy with -D warnings, just lint/lint-fix commands",
+    "error_handling": "Option/Result patterns, SPDX Apache-2.0 headers"
+  },
+  "patterns": [
+    "LanguageInfo struct with element_query, call_query, reference_query, import_query, defuse_query",
+    "Language-specific module with ELEMENT_QUERY, CALL_QUERY, REFERENCE_QUERY, IMPORT_QUERY, DEFUSE_QUERY constants",
+    "extract_inheritance handler walking field_name descendants",
+    "get_language_info() and get_ts_language() match arms"
+  ],
+  "related_issues": [
+    {"number": 648, "title": "feat(lang): add Swift grammar support", "relevance": "Primary task specification"}
+  ],
+  "constraints": [
+    "DEFUSE_QUERY is mandatory for all languages",
+    "No impl_query or impl_trait_query for Swift (no impl blocks)",
+    "tree-sitter-swift 0.7.3 as workspace dependency",
+    "Swift declaration kinds (class/struct/actor/enum/extension) use class_declaration node with declaration_kind field"
+  ],
+  "test_coverage": "Existing language modules have unit tests for element_query, extract_inheritance, and defuse_query. Java tests verify ELEMENT_QUERY compilation, extract_inheritance with extends/implements, and defuse_query write sites.",
+  "library_findings": [
+    {"library": "tree-sitter-swift", "version": "0.7.3", "relevant_api": "tree_sitter_swift::LANGUAGE.into()", "notes": "alex-pinkus/tree-sitter-swift; dev-only tree-sitter dependency; no version conflict with workspace tree-sitter 0.26.13"},
+    {"library": "tree-sitter-language", "version": "0.1.0", "relevant_api": "LANGUAGE trait", "notes": "Normal dependency of tree-sitter-swift; provides into() conversion"}
+  ],
+  "approaches": [
+    {
+      "name": "Direct Java Pattern Adaptation",
+      "description": "Create swift.rs following java.rs structure: ELEMENT_QUERY for function_declaration/class_declaration/protocol_declaration, DEFUSE_QUERY for property_declaration/assignment/call_expression, extract_inheritance walking inheritance_specifier.",
+      "pros": ["Proven pattern in codebase", "Minimal cognitive overhead", "Consistent with existing tests"],
+      "cons": ["Swift declaration_kind field requires runtime filtering", "No direct struct/enum/extension node types"],
+      "complexity": "medium",
+      "files_touched": 5
+    },
+    {
+      "name": "Enhanced Declaration Kind Handling",
+      "description": "Add declaration_kind-aware ELEMENT_QUERY patterns using capture groups to distinguish class/struct/actor/enum/extension/protocol at query time.",
+      "pros": ["More precise element extraction", "No runtime filtering needed"],
+      "cons": ["More complex queries", "May require grammar inspection"],
+      "complexity": "complex",
+      "files_touched": 5
+    },
+    {
+      "name": "Minimal Stub Approach",
+      "description": "Register Swift with minimal queries (ELEMENT_QUERY only, DEFUSE_QUERY as empty/placeholder), add extract_inheritance stub.",
+      "pros": ["Fastest to implement", "Meets basic registration"],
+      "cons": ["Incomplete functionality", "Requires follow-up work"],
+      "complexity": "simple",
+      "files_touched": 4
+    }
+  ],
+  "recommendation": "Direct Java Pattern Adaptation - follows established codebase patterns, balances completeness with implementation effort, and aligns with issue acceptance criteria.",
+  "language_info_struct_citation": "pub struct LanguageInfo {\n    pub name: &'static str,\n    pub language: Language,\n    pub element_query: &'static str,\n    pub call_query: &'static str,\n    pub reference_query: Option<&'static str>,\n    pub import_query: Option<&'static str>,\n    pub impl_query: Option<&'static str>,\n    pub impl_trait_query: Option<&'static str>,\n    pub defuse_query: Option<&'static str>,\n    pub extract_function_name: Option<ExtractFunctionNameHandler>,\n    pub find_method_for_receiver: Option<FindMethodForReceiverHandler>,\n    pub find_receiver_type: Option<FindReceiverTypeHandler>,\n    pub extract_inheritance: Option<ExtractInheritanceHandler>,\n}",
+  "element_query_draft": "(function_declaration\n  name: (simple_identifier) @method_name) @function\n(class_declaration\n  name: (type_identifier) @class_name) @class\n(protocol_declaration\n  name: (type_identifier) @protocol_name) @class",
+  "defuse_query_draft": "(property_declaration\n  (value_binding_pattern)\n  (pattern\n    (simple_identifier) @write.local))\n(assignment\n  (directly_assignable_expression\n    (simple_identifier) @write.assign))\n(simple_identifier) @read.usage",
+  "inheritance_walk_citation": "From tree-sitter-swift grammar.js and node-types.json: Walk class_declaration's _inheritance_specifiers children. For each inheritance_specifier node, read the inherits_from field which points to a user_type node. Extract the type_identifier text from user_type's children. Multiple specifiers are comma-separated siblings under _inheritance_specifiers.",
+  "test_snippets": [
+    {"declaration_kind": "class", "swift_code": "class MyClass { func foo() {} }", "test_name": "test_swift_class_declaration"},
+    {"declaration_kind": "struct", "swift_code": "struct MyStruct { func bar() {} }", "test_name": "test_swift_struct_declaration"},
+    {"declaration_kind": "protocol", "swift_code": "protocol MyProtocol { func baz() }", "test_name": "test_swift_protocol_declaration"},
+    {"declaration_kind": "enum", "swift_code": "enum MyEnum { case a, b }", "test_name": "test_swift_enum_declaration"},
+    {"declaration_kind": "extension", "swift_code": "extension String { func custom() {} }", "test_name": "test_swift_extension_declaration"}
+  ],
+  "latency_seconds": 32,
+  "message_count": 0
+}

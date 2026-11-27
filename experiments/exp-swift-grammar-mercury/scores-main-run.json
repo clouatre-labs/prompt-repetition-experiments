@@ -1,0 +1,132 @@
+[
+  {
+    "run_id": "scout-run-07",
+    "scores": {
+      "C1": {"score": 0, "justification": "Constraint states tree-sitter-swift dependency relationship but does not cite actual tree-sitter-swift Cargo.toml manifest content."},
+      "C2": {"score": 0, "justification": "Constraint mentions class_declaration covers class/struct/actor/enum/extension via declaration_kind field but does not cite node-types.json or grammar.js source."},
+      "C3": {"score": 1, "justification": "Provides 3 literal tree-sitter query patterns (function_declaration, class_declaration, protocol_declaration) with correct name fields and capture labels."},
+      "C4": {"score": 0, "justification": "Inheritance walk citation describes the field structure but cites only 'tree-sitter-swift grammar' without referencing actual grammar.js or node-types.json content."},
+      "C5": {"score": 1, "justification": "Provides literal DEFUSE_QUERY text covering variable_declaration, assignment_expression, and identifier reads; LanguageInfo struct citation included."},
+      "C6": {"score": 1, "justification": "Provides 8 concrete test snippets with specific test names covering all 5 declaration kinds and all 3 inheritance shapes."},
+      "C7": {"score": 1, "justification": "Wiring summary includes all 5 facts: workspace dependency, unconditional dependency, extension map entry, mod registration, and both match arms."}
+    },
+    "total": 4
+  },
+  {
+    "run_id": "scout-run-08",
+    "scores": {
+      "C1": {"score": 0, "justification": "Constraint states the dependency relationship but does not cite actual tree-sitter-swift Cargo.toml manifest."},
+      "C2": {"score": 0, "justification": "Constraint mentions the field but does not cite grammar source documentation."},
+      "C3": {"score": 1, "justification": "Provides 3 literal query patterns with correct fields and capture labels (@function_name, @class_name, @protocol_name)."},
+      "C4": {"score": 0, "justification": "Describes inheritance walk structure but does not cite actual grammar.js or node-types.json content."},
+      "C5": {"score": 1, "justification": "Provides literal DEFUSE_QUERY text with variable_declaration, assignment_expression, and identifier patterns; struct citation present."},
+      "C6": {"score": 1, "justification": "Provides 8 concrete test snippets with named test functions covering all declaration kinds and inheritance shapes."},
+      "C7": {"score": 1, "justification": "Wiring summary contains all 5 required facts with proper descriptions for each component."}
+    },
+    "total": 4
+  },
+  {
+    "run_id": "scout-run-09",
+    "scores": {
+      "C1": {"score": 0, "justification": "Constraint states the dependency relationship but provides no citation of tree-sitter-swift's actual manifest."},
+      "C2": {"score": 0, "justification": "Constraint mentions the field exists but does not cite grammar source."},
+      "C3": {"score": 1, "justification": "Provides 3 literal query patterns with correct name fields and capture labels."},
+      "C4": {"score": 0, "justification": "Inheritance walk cites alex-pinkus/tree-sitter-swift grammar but does not reference actual grammar.js or node-types.json content."},
+      "C5": {"score": 1, "justification": "Provides literal DEFUSE_QUERY with variable_declaration, assignment_expression, and identifier patterns; struct is cited."},
+      "C6": {"score": 1, "justification": "Contains 8 concrete test snippets with specific test names covering all required dimensions."},
+      "C7": {"score": 1, "justification": "Wiring summary lists all 5 facts including workspace/unconditional dependencies, extension map, mod registration, and match arms."}
+    },
+    "total": 4
+  },
+  {
+    "run_id": "scout-run-10",
+    "scores": {
+      "C1": {"score": 0, "justification": "No explicit citation of tree-sitter-swift's actual Cargo.toml manifest content."},
+      "C2": {"score": 0, "justification": "Constraint mentions declaration_kind field but does not cite node-types.json or grammar.js."},
+      "C3": {"score": 1, "justification": "Provides 7 literal query patterns (more than 3 required) with correct node fields and capture labels for all declaration types."},
+      "C4": {"score": 0, "justification": "Inheritance walk references 'tree-sitter-swift grammar.ts structure' but does not cite actual grammar source content."},
+      "C5": {"score": 1, "justification": "Provides literal DEFUSE_QUERY covering variable_declaration, assignment_expression, and identifier reads; struct citation included."},
+      "C6": {"score": 1, "justification": "Provides 8 concrete test snippets with named test functions for all declaration kinds and inheritance shapes."},
+      "C7": {"score": 1, "justification": "Wiring summary includes all 5 facts: workspace dependency, unconditional dependency, extension map, mod registration, and match arms."}
+    },
+    "total": 4
+  },
+  {
+    "run_id": "scout-run-11",
+    "scores": {
+      "C1": {"score": 0, "justification": "Constraint states tree-sitter dependency information but does not cite the actual tree-sitter-swift manifest."},
+      "C2": {"score": 0, "justification": "Constraint mentions the field but does not cite grammar source documentation."},
+      "C3": {"score": 1, "justification": "Provides 6 literal query patterns with correct name fields and capture labels for functions, classes, protocols, structs, enums, and actors."},
+      "C4": {"score": 0, "justification": "Inheritance walk describes the structure derived from tree-sitter-swift grammar but does not cite actual grammar.js or node-types.json."},
+      "C5": {"score": 1, "justification": "Provides literal DEFUSE_QUERY with function parameters, variable declarations, assignments, and identifier reads; struct cited."},
+      "C6": {"score": 1, "justification": "Provides 8 concrete test snippets with specific test names covering all required declaration kinds and inheritance shapes."},
+      "C7": {"score": 1, "justification": "Wiring summary includes all 5 required facts with clear specifications for each registration point."}
+    },
+    "total": 4
+  },
+  {
+    "run_id": "scout-run-12",
+    "scores": {
+      "C1": {"score": 0, "justification": "No explicit citation of tree-sitter-swift's actual Cargo.toml manifest."},
+      "C2": {"score": 0, "justification": "Constraint mentions the field but does not cite grammar source."},
+      "C3": {"score": 1, "justification": "Provides 7 literal query patterns with correct fields and capture labels for multiple declaration types."},
+      "C4": {"score": 0, "justification": "Inheritance walk references 'tree-sitter-swift grammar structure' but does not cite actual grammar.js or node-types.json content."},
+      "C5": {"score": 1, "justification": "Provides literal DEFUSE_QUERY covering variable_declaration, assignment_expression, and identifier reads; struct citation present."},
+      "C6": {"score": 1, "justification": "Provides 8 concrete test snippets with named test functions for all required dimensions."},
+      "C7": {"score": 1, "justification": "Wiring summary includes all 5 facts: workspace dependency, unconditional dependency, extension map, mod registration, and match arms."}
+    },
+    "total": 4
+  },
+  {
+    "run_id": "scout-run-13",
+    "scores": {
+      "C1": {"score": 0, "justification": "No explicit citation of tree-sitter-swift's actual manifest content."},
+      "C2": {"score": 0, "justification": "Constraint mentions the field but does not cite node-types.json or grammar.js."},
+      "C3": {"score": 1, "justification": "Provides 3 literal query patterns with correct name fields and capture labels."},
+      "C4": {"score": 1, "justification": "Inheritance walk explicitly cites 'tree-sitter-swift node-types.json' and describes the inheritance_specifier structure and inherits_from field with type details."},
+      "C5": {"score": 1, "justification": "Provides literal DEFUSE_QUERY with var_declaration, let_declaration, assignment, and identifier patterns; LanguageInfo struct is cited."},
+      "C6": {"score": 1, "justification": "Provides 8 concrete test snippets with specific test names covering all 5 declaration kinds and 3 inheritance shapes."},
+      "C7": {"score": 1, "justification": "Wiring summary includes all 5 facts with clear specifications for each component."}
+    },
+    "total": 5
+  },
+  {
+    "run_id": "scout-run-14",
+    "scores": {
+      "C1": {"score": 0, "justification": "No explicit citation of tree-sitter-swift's actual Cargo.toml manifest."},
+      "C2": {"score": 0, "justification": "Constraint mentions the field but does not cite grammar source."},
+      "C3": {"score": 1, "justification": "Provides 3 literal query patterns with correct name fields and capture labels."},
+      "C4": {"score": 0, "justification": "Inheritance walk describes the structure but references only 'tree-sitter-swift grammar.ts' without citing actual grammar.js or node-types.json."},
+      "C5": {"score": 1, "justification": "Provides literal DEFUSE_QUERY covering variable_declaration, assignment_expression, and identifier reads; struct citation included."},
+      "C6": {"score": 1, "justification": "Provides 8 concrete test snippets with named test functions for all declaration kinds and inheritance shapes."},
+      "C7": {"score": 1, "justification": "Wiring summary includes all 5 required facts."}
+    },
+    "total": 4
+  },
+  {
+    "run_id": "scout-run-15",
+    "scores": {
+      "C1": {"score": 0, "justification": "Constraint states the relationship but does not cite tree-sitter-swift's actual manifest."},
+      "C2": {"score": 0, "justification": "Constraint mentions the field but does not cite grammar source documentation."},
+      "C3": {"score": 1, "justification": "Provides 6 literal query patterns with correct name fields and capture labels for multiple declaration types."},
+      "C4": {"score": 0, "justification": "Inheritance walk references 'tree-sitter-swift grammar (alex-pinkus)' but does not cite actual grammar.js or node-types.json content."},
+      "C5": {"score": 1, "justification": "Provides literal DEFUSE_QUERY with variable_declaration, assignment_expression, and identifier patterns; struct is cited."},
+      "C6": {"score": 1, "justification": "Provides 8 concrete test snippets with specific test names covering all required dimensions."},
+      "C7": {"score": 1, "justification": "Wiring summary includes all 5 facts with clear specifications."}
+    },
+    "total": 4
+  },
+  {
+    "run_id": "scout-run-16",
+    "scores": {
+      "C1": {"score": 0, "justification": "No explicit citation of tree-sitter-swift's actual Cargo.toml manifest."},
+      "C2": {"score": 0, "justification": "Constraint mentions the field but does not cite grammar source."},
+      "C3": {"score": 1, "justification": "Provides 3 literal query patterns with correct name fields and capture labels."},
+      "C4": {"score": 0, "justification": "Inheritance walk references 'tree-sitter-swift grammar.js/node-types.json' but does not cite actual content from those files."},
+      "C5": {"score": 1, "justification": "Provides literal DEFUSE_QUERY covering variable_declaration, assignment_expression, and identifier reads; struct citation present."},
+      "C6": {"score": 1, "justification": "Provides 8 concrete test snippets with named test functions for all declaration kinds and inheritance shapes."},
+      "C7": {"score": 1, "justification": "Wiring summary includes all 5 facts: workspace dependency, unconditional dependency, extension map, mod registration, and match arms."}
+    },
+    "total": 4
+  }
+]

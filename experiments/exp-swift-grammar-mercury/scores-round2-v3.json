@@ -1,0 +1,70 @@
+[
+  {
+    "run_id": "scout-run-03",
+    "scores": {
+      "C1": {
+        "score": 0,
+        "justification": "library_findings notes \"no version conflict\" but does not cite actual manifest content from tree-sitter-swift's Cargo.toml; restates the issue claim without independent verification."
+      },
+      "C2": {
+        "score": 0,
+        "justification": "constraints list the five declaration kinds but do not cite the actual field definition from node-types.json or grammar.js; lacks grammar source verification."
+      },
+      "C3": {
+        "score": 1,
+        "justification": "element_query_draft contains literal tree-sitter query text for three correct patterns (function_declaration, class_declaration, protocol_declaration) with proper node fields (name) and capture labels (@method_name, @class_name, @protocol_name)."
+      },
+      "C4": {
+        "score": 1,
+        "justification": "inheritance_walk_citation explicitly cites grammar.js and node-types.json and correctly describes the walk: class_declaration → _inheritance_specifiers → inheritance_specifier → inherits_from → user_type → type_identifier."
+      },
+      "C5": {
+        "score": 1,
+        "justification": "Cites actual LanguageInfo struct showing defuse_query: Option<&'static str> as mandatory, and defuse_query_draft provides literal query text covering property_declaration (local writes), assignment (assignments), and simple_identifier (reads)."
+      },
+      "C6": {
+        "score": 0,
+        "justification": "test_snippets covers only 4 of 5 declaration kinds (missing actor; has class/struct/enum/extension with protocol instead) and contains zero inheritance shape examples (single superclass, multiple protocols, mixed); criterion requires both dimensions."
+      },
+      "C7": {
+        "score": 0,
+        "justification": "All five wiring facts (workspace.dependencies entry, unconditional Cargo.toml dependency, .swift EXTENSION_MAP entry, mod swift; registration, get_language_info/get_ts_language match arms) are not explicitly stated anywhere in the run output."
+      }
+    },
+    "total": 3
+  },
+  {
+    "run_id": "scout-run-04",
+    "scores": {
+      "C1": {
+        "score": 0,
+        "justification": "library_findings states dependency structure (tree-sitter-language ^0.1.0; tree-sitter is dev-only) but does not cite actual manifest content from tree-sitter-swift's Cargo.toml; no independent verification provided."
+      },
+      "C2": {
+        "score": 0,
+        "justification": "No explicit citation of declaration_kind field definition from node-types.json or grammar.js; grammar source verification is absent."
+      },
+      "C3": {
+        "score": 1,
+        "justification": "element_query_draft contains literal tree-sitter query text for three correct patterns (function_declaration, class_declaration, protocol_declaration) with proper node fields (name) and capture labels (@function_name, @class_name, @protocol_name)."
+      },
+      "C4": {
+        "score": 1,
+        "justification": "inheritance_walk_citation explicitly cites grammar.ts and correctly describes the walk: _inheritance_specifiers → inheritance_specifier → inherits_from → user_type → type_identifier."
+      },
+      "C5": {
+        "score": 1,
+        "justification": "Cites actual LanguageInfo struct showing defuse_query: Option<&'static str> as mandatory, and defuse_query_draft provides literal query text covering variable_declaration (local writes), assignment_expression (assignments), and simple_identifier (reads)."
+      },
+      "C6": {
+        "score": 0,
+        "justification": "test_snippets covers all 5 declaration kinds (class/struct/actor/enum/extension) with concrete code and test names, but contains zero inheritance shape examples (single superclass, multiple protocols, mixed); criterion requires both dimensions."
+      },
+      "C7": {
+        "score": 0,
+        "justification": "All five wiring facts (workspace.dependencies entry, unconditional Cargo.toml dependency, .swift EXTENSION_MAP entry, mod swift; registration, get_language_info/get_ts_language match arms) are not explicitly stated anywhere in the run output."
+      }
+    },
+    "total": 3
+  }
+]

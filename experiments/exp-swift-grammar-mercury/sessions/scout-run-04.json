@@ -1,0 +1,78 @@
+{
+  "run_id": "scout-run-04",
+  "group": "treatment",
+  "started_at": "2026-09-07T02:33:18Z",
+  "finished_at": "2026-09-07T02:33:18Z",
+  "session_id": "20260907_5",
+  "lens": "scout",
+  "relevant_files": [
+    {"path": "crates/aptu-coder-core/src/languages/mod.rs", "line_range": "52-73", "role": "LanguageInfo struct definition"},
+    {"path": "crates/aptu-coder-core/src/languages/java.rs", "line_range": "1-45", "role": "Query constants template"},
+    {"path": "crates/aptu-coder-core/src/lang.rs", "line_range": "15-52", "role": "EXTENSION_MAP"},
+    {"path": "crates/aptu-coder-core/Cargo.toml", "line_range": "1-50", "role": "Dependencies"}
+  ],
+  "conventions": {
+    "commits": "Conventional commits via commitlintrc.yml",
+    "testing": "Unit tests in mod tests blocks within each language file",
+    "linting": "clippy with -D warnings, rustfmt",
+    "error_handling": "Option/Result patterns, thiserror for custom errors"
+  },
+  "patterns": [
+    "LanguageInfo struct with query constants and handler functions",
+    "DEFUSE_QUERY covers local declarations, assignments, and identifier reads",
+    "extract_inheritance walks field-based inheritance specifiers"
+  ],
+  "related_issues": [
+    {"number": 648, "title": "feat(lang): add Swift grammar support", "relevance": "Primary task - adds Swift via tree-sitter-swift 0.7.3"}
+  ],
+  "constraints": [
+    "DEFUSE_QUERY is required - LanguageInfo.defuse_query is mandatory (typed Option<&'static str>)",
+    "No feature flags - tree-sitter-swift added unconditionally",
+    "Follow java.rs pattern for handlers and queries"
+  ],
+  "test_coverage": "Each language file has unit tests for extract_function_name, find_receiver_type, element_query, and extract_inheritance. Java has 7 tests covering happy paths and edge cases.",
+  "library_findings": [
+    {"library": "tree-sitter-swift", "version": "0.7.3", "relevant_api": "tree_sitter_swift::LANGUAGE.into()", "notes": "Dependency on tree-sitter-language ^0.1.0 only; tree-sitter is dev-only"},
+    {"library": "tree-sitter", "version": "0.26.13", "relevant_api": "Language type", "notes": "Workspace dependency; swift uses tree-sitter-language for compatibility"}
+  ],
+  "approaches": [
+    {
+      "name": "Follow java.rs pattern (Recommended)",
+      "description": "Create swift.rs with ELEMENT_QUERY, CALL_QUERY, REFERENCE_QUERY, IMPORT_QUERY, DEFUSE_QUERY, and extract_inheritance. Register in mod.rs and lang.rs.",
+      "pros": ["Consistent with existing patterns", "Minimal cognitive load", "Proven test structure"],
+      "cons": ["May need Swift-specific adjustments for protocol handling"],
+      "complexity": "medium",
+      "files_touched": 4
+    },
+    {
+      "name": "Minimal stub approach",
+      "description": "Add swift.rs with only ELEMENT_QUERY and DEFUSE_QUERY. Defer CALL_QUERY and handlers until needed.",
+      "pros": ["Faster initial implementation", "Fewer files to write"],
+      "cons": ["Incomplete feature set", "May require refactor later"],
+      "complexity": "simple",
+      "files_touched": 3
+    },
+    {
+      "name": "Full Kotlin-style approach",
+      "description": "Model after kotlin.rs which has more extensive handler implementations.",
+      "pros": ["Comprehensive feature set from start"],
+      "cons": ["More complex", "Overkill for initial Swift support"],
+      "complexity": "complex",
+      "files_touched": 4
+    }
+  ],
+  "recommendation": "Follow java.rs pattern (Approach 1). It balances completeness with simplicity, matches the issue's explicit guidance, and leverages proven patterns from the codebase.",
+  "language_info_struct_citation": "pub struct LanguageInfo {\n    pub name: &'static str,\n    pub language: Language,\n    pub element_query: &'static str,\n    pub call_query: &'static str,\n    pub reference_query: Option<&'static str>,\n    pub import_query: Option<&'static str>,\n    pub impl_query: Option<&'static str>,\n    pub impl_trait_query: Option<&'static str>,\n    pub defuse_query: Option<&'static str>,\n    pub extract_function_name: Option<ExtractFunctionNameHandler>,\n    pub find_method_for_receiver: Option<FindMethodForReceiverHandler>,\n    pub find_receiver_type: Option<FindReceiverTypeHandler>,\n    pub extract_inheritance: Option<ExtractInheritanceHandler>,\n}",
+  "element_query_draft": "(function_declaration\n  name: (simple_identifier) @function_name) @function\n(class_declaration\n  name: (type_identifier) @class_name) @class\n(protocol_declaration\n  name: (type_identifier) @protocol_name) @class",
+  "defuse_query_draft": "(variable_declaration pattern: (simple_identifier) @write.local)\n(assignment_expression left: (simple_identifier) @write.assign)\n(simple_identifier) @read.usage",
+  "inheritance_walk_citation": "From tree-sitter-swift grammar.ts: Walk _inheritance_specifiers children; for each inheritance_specifier node, read the inherits_from field which points to a user_type node; extract the type_identifier text from user_type's children. Multiple specifiers are comma-separated siblings.",
+  "test_snippets": [
+    {"declaration_kind": "class", "swift_code": "class MyClass { func foo() {} }", "test_name": "test_class_declaration"},
+    {"declaration_kind": "struct", "swift_code": "struct MyStruct { func bar() {} }", "test_name": "test_struct_declaration"},
+    {"declaration_kind": "actor", "swift_code": "actor MyActor { func baz() {} }", "test_name": "test_actor_declaration"},
+    {"declaration_kind": "enum", "swift_code": "enum MyEnum { case a; func qux() {} }", "test_name": "test_enum_declaration"},
+    {"declaration_kind": "extension", "swift_code": "extension String { func custom() {} }", "test_name": "test_extension_declaration"}
+  ],
+  "latency_seconds": 0,
+  "message_count": 0
+}

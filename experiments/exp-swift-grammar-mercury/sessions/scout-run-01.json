@@ -1,0 +1,71 @@
+{
+  "run_id": "scout-run-01",
+  "group": "control",
+  "started_at": "2026-09-07T01:42:55Z",
+  "finished_at": "2026-09-07T01:43:10Z",
+  "session_id": "20260907_2",
+  "lens": "scout",
+  "relevant_files": [
+    {"path": "crates/aptu-coder-core/src/languages/java.rs", "line_range": "1-200", "role": "Reference handler for Swift implementation"},
+    {"path": "crates/aptu-coder-core/src/languages/mod.rs", "line_range": "1-150", "role": "Language registration (get_language_info, get_ts_language)"},
+    {"path": "crates/aptu-coder-core/src/lang.rs", "line_range": "1-100", "role": "EXTENSION_MAP and supported_languages()"},
+    {"path": "crates/aptu-coder-core/Cargo.toml", "line_range": "1-50", "role": "Tree-sitter dependencies"},
+    {"path": "Cargo.toml", "line_range": "1-80", "role": "Workspace dependencies"}
+  ],
+  "conventions": {
+    "commits": "Conventional commits (feat, chore, ci, docs, security)",
+    "testing": "Unit tests in #[cfg(test)] modules, uses tree-sitter parser for verification",
+    "linting": "clippy with deny for undocumented_unsafe_blocks, unwrap_used, expect_used",
+    "error_handling": "Uses thiserror for error types, Option/Result patterns"
+  },
+  "patterns": [
+    "Language-specific handler file with query constants (ELEMENT_QUERY, CALL_QUERY, etc.)",
+    "Registration in mod.rs get_language_info() and get_ts_language() match arms",
+    "Extension mapping in lang.rs EXTENSION_MAP",
+    "extract_inheritance handler for class/type hierarchies",
+    "DEFUSE_QUERY for variable definition/use tracking"
+  ],
+  "related_issues": [
+    {"number": 648, "title": "feat(lang): add Swift grammar support", "relevance": "Primary task specification"}
+  ],
+  "constraints": [
+    "DEFUSE_QUERY is mandatory (LanguageInfo.defuse_query is Option<&'static str>)",
+    "tree-sitter-swift 0.7.3 normal dependency is tree-sitter-language ^0.1.0 only",
+    "No feature flags for language registration (all languages unconditionally compiled)",
+    "Must follow existing pattern: mod swift; in mod.rs, swift in get_language_info/get_ts_language"
+  ],
+  "test_coverage": "Each language handler has #[cfg(test)] module with tests for query validation, extraction functions, and semantic analysis integration. Java has 8+ tests covering element extraction, inheritance, and defuse sites.",
+  "library_findings": [
+    {"library": "tree-sitter-swift", "version": "0.7.3", "relevant_api": "tree_sitter_swift::LANGUAGE.into()", "notes": "Normal dep: tree-sitter-language ^0.1.0; dev dep: tree-sitter (no conflict with workspace 0.26.13)"},
+    {"library": "tree-sitter-java", "version": "0.23.5", "relevant_api": "tree_sitter_java::LANGUAGE.into()", "notes": "Reference implementation pattern"}
+  ],
+  "approaches": [
+    {
+      "name": "Full Java-style implementation",
+      "description": "Create swift.rs with all query constants (ELEMENT_QUERY, CALL_QUERY, REFERENCE_QUERY, IMPORT_QUERY, DEFUSE_QUERY) and handlers (extract_function_name, find_receiver_type, extract_inheritance). Model after java.rs.",
+      "pros": ["Complete feature parity with other languages", "Full inheritance tracking", "Defuse analysis support"],
+      "cons": ["More code to maintain", "Requires implementing Swift-specific node traversal"],
+      "complexity": "medium",
+      "files_touched": 4
+    },
+    {
+      "name": "Minimal CSS-style implementation",
+      "description": "Create swift.rs with only ELEMENT_QUERY and IMPORT_QUERY. Set DEFUSE_QUERY to None, handlers to None. Follow css.rs pattern.",
+      "pros": ["Fastest to implement", "Minimal code"],
+      "cons": ["No defuse analysis", "No inheritance tracking", "Limited feature set"],
+      "complexity": "simple",
+      "files_touched": 3
+    },
+    {
+      "name": "Hybrid Swift-optimized implementation",
+      "description": "Implement ELEMENT_QUERY, CALL_QUERY, IMPORT_QUERY, and DEFUSE_QUERY. Skip extract_function_name/find_receiver_type (use None). Implement extract_inheritance for class_declaration/protocol_declaration. Use declaration_kind field to distinguish struct/enum/extension.",
+      "pros": ["Balanced feature set", "Swift-specific optimizations", "Handles all declaration kinds via class_declaration"],
+      "cons": ["Requires understanding Swift grammar node types"],
+      "complexity": "medium",
+      "files_touched": 4
+    }
+  ],
+  "recommendation": "Approach 3 (Hybrid Swift-optimized). The issue explicitly requires DEFUSE_QUERY and extract_inheritance. Swift's class_declaration node with declaration_kind field elegantly handles class/struct/actor/enum/extension/protocol. This approach provides full functionality without unnecessary handlers.",
+  "latency_seconds": 15,
+  "message_count": 0
+}

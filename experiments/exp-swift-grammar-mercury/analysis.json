@@ -1,0 +1,456 @@
+{
+  "schema_version": "full-v1",
+  "experiment": "exp-swift-grammar-mercury",
+  "title": "Experiment 4 (Exploratory, non-confirmatory): Swift Grammar Support via Tree-sitter (aptu-coder#648)",
+  "issue": "clouatre-labs/aptu-coder#648",
+  "model": "inception/mercury-2.5-preview",
+  "date": "2026-09-07",
+  "n_per_group": 5,
+  "control_condition": "x1 user prompt block (runner-prompt-v3, one copy)",
+  "treatment_condition": "x2 user prompt block duplicated verbatim (runner-prompt-v3 appended twice); system instructions unchanged",
+  "rubric_version": "rubric.md (C1, C2, C6) + rubric-v3.md (C3, C4, C5, C7)",
+  "goose_version": "1.49.0",
+  "orchestrator_session": null,
+  "repo_head": "c3d3669c50f14ea0214f1edb4d0f9abb1d8324ac",
+  "experiment_start": "2026-09-07T03:03:15Z",
+  "experiment_end": "2026-09-07T03:36:39Z",
+  "analyzed_at": "2026-11-27T13:16:00Z",
+  "data_note": "Exploratory and non-confirmatory: Experiment 4 is not part of the paper's confirmatory series (Exp1-Exp3) and is not in Table 7 or the paper. Only the main run (scout-run-07..16, n=5+5) is analysed here; pilot rounds 01-06 (runner prompts v1/v2 and rubric v1/v2, three rounds of n=1+1 with scores 0/7, 3/7, 5/7) are tracked in this directory but excluded. Treatment definition differs from Exp1-Exp3: the entire user prompt block is duplicated verbatim and the system instructions are unchanged, whereas Exp1-Exp3 repeat the Scout instructions. Delegate model inception/mercury-2.5-preview via OpenRouter, temperature 0.5. messages is taken from the session file's message_count field, the only available source; those values are 0/1 and are not turn counts, so they are not comparable to Exp1-Exp3 and are excluded from the published message totals. Judge 1 is a single blind Claude Haiku 4.5 pass over scores-main-run.json; the rubric was authored across three revision rounds for this experiment and was not independently inter-rater-checked before the run (second-judge rescore: irr/exp4-scores.json). Two slots (scout-run-13, scout-run-15) needed retries after a repeat-tool-call failure; only the first successful completion per slot is scored, and the per-run tokens, wall clock and bytes are those of that successful attempt. recipes/*.yaml keep run-specific absolute output paths and worktree paths from the machine that ran the experiment.",
+  "runs": {
+    "scout-run-07": {
+      "group": "control",
+      "goose_session_id": "20260907_9",
+      "messages": 1,
+      "input_tokens": 1073239,
+      "output_tokens": 6024,
+      "total_tokens": 1079263,
+      "wall_clock_seconds": 143,
+      "bytes": 8792,
+      "note": "messages = session message_count (0/1 flag, not a turn count)",
+      "scores": {
+        "C1": 0,
+        "C2": 0,
+        "C3": 1,
+        "C4": 0,
+        "C5": 1,
+        "C6": 1,
+        "C7": 1
+      }
+    },
+    "scout-run-08": {
+      "group": "treatment",
+      "goose_session_id": "20260907_10",
+      "messages": 1,
+      "input_tokens": 673713,
+      "output_tokens": 5703,
+      "total_tokens": 679416,
+      "wall_clock_seconds": 50,
+      "bytes": 7980,
+      "note": "messages = session message_count (0/1 flag, not a turn count)",
+      "scores": {
+        "C1": 0,
+        "C2": 0,
+        "C3": 1,
+        "C4": 0,
+        "C5": 1,
+        "C6": 1,
+        "C7": 1
+      }
+    },
+    "scout-run-09": {
+      "group": "control",
+      "goose_session_id": "20260907_11",
+      "messages": 1,
+      "input_tokens": 745385,
+      "output_tokens": 5543,
+      "total_tokens": 750928,
+      "wall_clock_seconds": 115,
+      "bytes": 7777,
+      "note": "messages = session message_count (0/1 flag, not a turn count)",
+      "scores": {
+        "C1": 0,
+        "C2": 0,
+        "C3": 1,
+        "C4": 0,
+        "C5": 1,
+        "C6": 1,
+        "C7": 1
+      }
+    },
+    "scout-run-10": {
+      "group": "treatment",
+      "goose_session_id": "20260907_12",
+      "messages": 1,
+      "input_tokens": 831608,
+      "output_tokens": 4994,
+      "total_tokens": 836602,
+      "wall_clock_seconds": 203,
+      "bytes": 9181,
+      "note": "messages = session message_count (0/1 flag, not a turn count)",
+      "scores": {
+        "C1": 0,
+        "C2": 0,
+        "C3": 1,
+        "C4": 0,
+        "C5": 1,
+        "C6": 1,
+        "C7": 1
+      }
+    },
+    "scout-run-11": {
+      "group": "control",
+      "goose_session_id": "20260907_14",
+      "messages": 0,
+      "input_tokens": 952552,
+      "output_tokens": 5045,
+      "total_tokens": 957597,
+      "wall_clock_seconds": 144,
+      "bytes": 7365,
+      "note": "messages = session message_count (0/1 flag, not a turn count)",
+      "scores": {
+        "C1": 0,
+        "C2": 0,
+        "C3": 1,
+        "C4": 0,
+        "C5": 1,
+        "C6": 1,
+        "C7": 1
+      }
+    },
+    "scout-run-12": {
+      "group": "treatment",
+      "goose_session_id": "20260907_15",
+      "messages": 0,
+      "input_tokens": 848902,
+      "output_tokens": 4827,
+      "total_tokens": 853729,
+      "wall_clock_seconds": 35,
+      "bytes": 9339,
+      "note": "messages = session message_count (0/1 flag, not a turn count)",
+      "scores": {
+        "C1": 0,
+        "C2": 0,
+        "C3": 1,
+        "C4": 0,
+        "C5": 1,
+        "C6": 1,
+        "C7": 1
+      }
+    },
+    "scout-run-13": {
+      "group": "control",
+      "goose_session_id": "20260907_18",
+      "messages": 0,
+      "input_tokens": 804990,
+      "output_tokens": 6219,
+      "total_tokens": 811209,
+      "wall_clock_seconds": 37,
+      "bytes": 8973,
+      "note": "third attempt; first two attempts looped on a repeated tool call and produced no output; messages = session message_count (0/1 flag, not a turn count)",
+      "scores": {
+        "C1": 0,
+        "C2": 0,
+        "C3": 1,
+        "C4": 1,
+        "C5": 1,
+        "C6": 1,
+        "C7": 1
+      }
+    },
+    "scout-run-14": {
+      "group": "treatment",
+      "goose_session_id": "20260907_19",
+      "messages": 1,
+      "input_tokens": 959325,
+      "output_tokens": 5710,
+      "total_tokens": 965035,
+      "wall_clock_seconds": 35,
+      "bytes": 7773,
+      "note": "messages = session message_count (0/1 flag, not a turn count)",
+      "scores": {
+        "C1": 0,
+        "C2": 0,
+        "C3": 1,
+        "C4": 0,
+        "C5": 1,
+        "C6": 1,
+        "C7": 1
+      }
+    },
+    "scout-run-15": {
+      "group": "control",
+      "goose_session_id": "20260907_22",
+      "messages": 1,
+      "input_tokens": 1445928,
+      "output_tokens": 5293,
+      "total_tokens": 1451221,
+      "wall_clock_seconds": 167,
+      "bytes": 8464,
+      "note": "second attempt; first attempt looped on a repeated tool call and was interrupted; messages = session message_count (0/1 flag, not a turn count)",
+      "scores": {
+        "C1": 0,
+        "C2": 0,
+        "C3": 1,
+        "C4": 0,
+        "C5": 1,
+        "C6": 1,
+        "C7": 1
+      }
+    },
+    "scout-run-16": {
+      "group": "treatment",
+      "goose_session_id": "20260907_21",
+      "messages": 0,
+      "input_tokens": 565534,
+      "output_tokens": 4953,
+      "total_tokens": 570487,
+      "wall_clock_seconds": 26,
+      "bytes": 8358,
+      "note": "messages = session message_count (0/1 flag, not a turn count)",
+      "scores": {
+        "C1": 0,
+        "C2": 0,
+        "C3": 1,
+        "C4": 0,
+        "C5": 1,
+        "C6": 1,
+        "C7": 1
+      }
+    }
+  },
+  "scores": {
+    "control": {
+      "runs": [
+        "scout-run-07",
+        "scout-run-09",
+        "scout-run-11",
+        "scout-run-13",
+        "scout-run-15"
+      ],
+      "scores": [
+        4,
+        4,
+        4,
+        5,
+        4
+      ],
+      "median": 4.0,
+      "mean": 4.2
+    },
+    "treatment": {
+      "runs": [
+        "scout-run-08",
+        "scout-run-10",
+        "scout-run-12",
+        "scout-run-14",
+        "scout-run-16"
+      ],
+      "scores": [
+        4,
+        4,
+        4,
+        4,
+        4
+      ],
+      "median": 4.0,
+      "mean": 4
+    }
+  },
+  "statistical_test": {
+    "test": "Mann-Whitney U",
+    "U": 15.0,
+    "p_value": 1.0,
+    "alpha": 0.05,
+    "result": "fail to reject H0",
+    "note": "n=5 per group; two-sided exact permutation over all 252 group assignments (computed in pure Python; scipy not available); descriptive only, no confirmatory test was pre-registered for this experiment"
+  },
+  "conclusion": "Exploratory and non-confirmatory; not in Table 7 or the paper. Control mean 4.2/7 vs treatment mean 4.0/7 (Mann-Whitney U=15.0, exact two-sided p=1.0, rank-biserial r=-0.20). The two groups are indistinguishable on this rubric at n=5+5: C1 and C2 are 0/10 in both groups (floor), C3, C5, C6 and C7 are 10/10 in both groups (ceiling), and the only criterion with variance (C4, 1/10) differs by a single run. The instrument has too little headroom to show an effect either way.",
+  "pre_acknowledged_limitations": [
+    "exploratory and non-confirmatory: not part of the paper's confirmatory series, no pre-registered hypothesis test, results reported descriptively only",
+    "n=5+5 is under-powered",
+    "rubric authored across three pilot revision rounds and not independently inter-rater-checked before the run; single blind Haiku 4.5 judge (see irr/exp4-scores.json for the second-judge rescore)",
+    "pilot rounds 01-06 are tracked but excluded from this analysis",
+    "treatment definition differs from Exp1-Exp3 (user prompt block duplicated verbatim, system instructions unchanged), so groups are not comparable across experiments",
+    "different delegate model and provider (inception/mercury-2.5-preview via OpenRouter, temperature 0.5) and Goose 1.49.0, unlike Exp1-Exp3 (Haiku 4.5, Goose 1.25.0/1.31.1)",
+    "two slots (scout-run-13, scout-run-15) required retries after a repeat-tool-call failure; only the successful attempt is scored",
+    "messages is a 0/1 flag from the session files, not a turn count"
+  ],
+  "token_analysis": {
+    "source": "latency-log.jsonl; first successful attempt per slot; added_at: 2026-11-27",
+    "added_at": "2026-11-27T13:16:00Z",
+    "note": "input, output and total tokens and wall clock are copied from latency-log.jsonl; messages is not summarised because session message_count values are 0/1 flags rather than turn counts",
+    "output_tokens": {
+      "all_runs": {
+        "control": {
+          "values": [
+            6024,
+            5543,
+            5045,
+            6219,
+            5293
+          ],
+          "mean": 5624.8,
+          "median": 5543,
+          "stdev": 491.3
+        },
+        "treatment": {
+          "values": [
+            5703,
+            4994,
+            4827,
+            5710,
+            4953
+          ],
+          "mean": 5237.4,
+          "median": 4994,
+          "stdev": 432.6
+        },
+        "diff_pct": -6.9
+      }
+    },
+    "input_tokens": {
+      "all_runs": {
+        "control": {
+          "values": [
+            1073239,
+            745385,
+            952552,
+            804990,
+            1445928
+          ],
+          "mean": 1004418.8,
+          "median": 952552,
+          "stdev": 278041.0
+        },
+        "treatment": {
+          "values": [
+            673713,
+            831608,
+            848902,
+            959325,
+            565534
+          ],
+          "mean": 775816.4,
+          "median": 831608,
+          "stdev": 155542.1
+        },
+        "diff_pct": -22.8
+      }
+    },
+    "total_tokens": {
+      "all_runs": {
+        "control": {
+          "values": [
+            1079263,
+            750928,
+            957597,
+            811209,
+            1451221
+          ],
+          "mean": 1010043.6,
+          "median": 957597,
+          "stdev": 277873.9
+        },
+        "treatment": {
+          "values": [
+            679416,
+            836602,
+            853729,
+            965035,
+            570487
+          ],
+          "mean": 781053.8,
+          "median": 836602,
+          "stdev": 155631.8
+        },
+        "diff_pct": -22.7
+      }
+    },
+    "wall_clock_seconds": {
+      "all_runs": {
+        "control": {
+          "values": [
+            143,
+            115,
+            144,
+            37,
+            167
+          ],
+          "mean": 121.2,
+          "median": 143,
+          "stdev": 50.5
+        },
+        "treatment": {
+          "values": [
+            50,
+            203,
+            35,
+            35,
+            26
+          ],
+          "mean": 69.8,
+          "median": 35,
+          "stdev": 75.0
+        },
+        "diff_pct": -42.4
+      }
+    }
+  },
+  "criterion_pass_rates": {
+    "C1": {
+      "pass_rate": 0.0,
+      "passed": 0,
+      "total": 10,
+      "wilson_low": 0,
+      "wilson_high": 0.2775
+    },
+    "C2": {
+      "pass_rate": 0.0,
+      "passed": 0,
+      "total": 10,
+      "wilson_low": 0,
+      "wilson_high": 0.2775
+    },
+    "C3": {
+      "pass_rate": 1.0,
+      "passed": 10,
+      "total": 10,
+      "wilson_low": 0.7225,
+      "wilson_high": 1
+    },
+    "C4": {
+      "pass_rate": 0.1,
+      "passed": 1,
+      "total": 10,
+      "wilson_low": 0.0179,
+      "wilson_high": 0.4042
+    },
+    "C5": {
+      "pass_rate": 1.0,
+      "passed": 10,
+      "total": 10,
+      "wilson_low": 0.7225,
+      "wilson_high": 1
+    },
+    "C6": {
+      "pass_rate": 1.0,
+      "passed": 10,
+      "total": 10,
+      "wilson_low": 0.7225,
+      "wilson_high": 1
+    },
+    "C7": {
+      "pass_rate": 1.0,
+      "passed": 10,
+      "total": 10,
+      "wilson_low": 0.7225,
+      "wilson_high": 1
+    }
+  },
+  "effect_size": {
+    "metric": "rank_biserial_r",
+    "value": -0.2,
+    "interpretation": "small negative effect (treatment slightly worse)",
+    "note": "r = 1 - 2U/(n1*n2) = 1 - 2*15.0/(5*5); Kerby (2014)"
+  }
+}
