@@ -97,10 +97,21 @@ def sha256_file(path: Path) -> str | None:
 # ---------------------------------------------------------------- cost
 
 def run_cost(row: dict, pricing: dict) -> dict:
-    """Cache-adjusted USD for one latency row; null with a note if unpriced."""
+    """Cache-adjusted USD for one latency row; null with a note if unpriced.
+
+    Anthropic usage semantics: ``input_tokens`` already excludes cached
+    tokens, so cache reads and writes are billed in full on top of the input
+    charge. Nothing is subtracted from ``input_tokens``; the formula is
+    input*in + cache_read*read + cache_write*write + output*out.
+    """
     model = row.get("model")
     key = next((k for k in pricing if model == k or (model or "").startswith(k)), None)
-    tokens = {k: int(row.get(k) or 0) for k in ("input_tokens", "output_tokens", "cache_read_tokens", "cache_write_tokens")}
+    fields = ("input_tokens", "output_tokens", "cache_read_tokens", "cache_write_tokens")
+    try:
+        tokens = {k: int(row.get(k) or 0) for k in fields}
+    except (TypeError, ValueError):
+        tokens = {k: None for k in fields}
+        return {"model": model, "pricing_key": key, "cost_usd": None, "tokens": tokens, "note": "invalid token count: not an integer"}
     if key is None:
         return {"model": model, "pricing_key": None, "cost_usd": None, "tokens": tokens, "note": "unknown model: no pricing entry"}
     price = pricing[key]
@@ -109,7 +120,11 @@ def run_cost(row: dict, pricing: dict) -> dict:
     missing = [t for t, rate in rates.items() if rate is None and tokens[t] > 0]
     if missing:
         return {"model": model, "pricing_key": key, "cost_usd": None, "tokens": tokens, "note": f"unverified rate for {', '.join(missing)} on {key}"}
+    if any(rate is not None and not np.isfinite(rate) for rate in rates.values()):
+        return {"model": model, "pricing_key": key, "cost_usd": None, "tokens": tokens, "note": f"invalid rate in pricing for {key}"}
     cost = sum(tokens[t] * rate / 1_000_000 for t, rate in rates.items() if rate is not None)
+    if not np.isfinite(cost):
+        return {"model": model, "pricing_key": key, "cost_usd": None, "tokens": tokens, "note": "non-finite cost"}
     note = None if price["verified"] else f"pricing for {key} unverified ({price.get('tier')})"
     return {"model": model, "pricing_key": key, "cost_usd": round(cost, 6), "tokens": tokens, "note": note}
 

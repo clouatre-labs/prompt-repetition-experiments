@@ -52,6 +52,28 @@ def test_cost_matches_hand_computation():
     assert mod.run_cost({**unpriced, "model": "mystery"}, pricing)["cost_usd"] is None
 
 
+def test_cost_does_not_subtract_cache_tokens_from_input():
+    # input_tokens excludes cached tokens (Anthropic usage), so a run whose
+    # cache_read equals its input still pays the full input charge: no
+    # subtraction, no double counting.
+    pricing = json.loads((ANALYSIS / "pricing.json").read_text())["models"]["claude-haiku-4-5"]
+    row = {"model": "claude-haiku-4-5", "input_tokens": 1_000_000, "output_tokens": 0,
+           "cache_read_tokens": 1_000_000, "cache_write_tokens": 0}
+
+    assert mod.run_cost(row, {"claude-haiku-4-5": pricing})["cost_usd"] == pytest.approx(1.1)  # 1.0 + 0.1, not 0.1
+
+
+def test_cost_is_null_and_finite_json_on_invalid_inputs():
+    pricing = json.loads((ANALYSIS / "pricing.json").read_text())["models"]
+    base = {"model": "claude-haiku-4-5", "input_tokens": 10, "output_tokens": 10, "cache_read_tokens": 0, "cache_write_tokens": 0}
+
+    bad_tokens = mod.run_cost({**base, "input_tokens": "not-a-number"}, pricing)
+    assert bad_tokens["cost_usd"] is None and "invalid token count" in bad_tokens["note"]
+    bad_rate = mod.run_cost(base, {"claude-haiku-4-5": {**pricing["claude-haiku-4-5"], "input": float("nan")}})
+    assert bad_rate["cost_usd"] is None and "invalid rate" in bad_rate["note"]
+    json.dumps({"a": bad_tokens, "b": bad_rate}, allow_nan=False)
+
+
 def test_determinism_two_runs_are_byte_identical(experiment, tmp_path):
     outputs = []
     for i in range(2):
