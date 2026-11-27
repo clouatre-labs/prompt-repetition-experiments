@@ -58,7 +58,7 @@ Scoring is binary per criterion (1 = met, 0 = not met). Half-credit is not permi
 
 ## References
 
-- Leviathan, Y. et al., "Prompt Repetition Improves Non-Reasoning LLMs" (2025) - https://arxiv.org/abs/2502.07869
+- Leviathan, Y. et al., "Prompt Repetition Improves Non-Reasoning LLMs" (2025) - https://arxiv.org/abs/2512.14982
 - Experiment 1: [exp1-fastmcp-refactor](../exp1-fastmcp-refactor/protocol.md)
 - Experiment 2: [exp2-treesitter-synthesis](../exp2-treesitter-synthesis/protocol.md)
 - Target issue: https://github.com/clouatre-labs/code-analyze-mcp/issues/649

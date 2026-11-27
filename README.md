@@ -10,7 +10,7 @@
 
 ## Abstract
 
-Verbatim duplication of an input prompt (prompt repetition) has been shown to improve accuracy for non-reasoning LLMs on retrieval and multiple-choice benchmarks (Leviathan et al., 2025). We ask whether the same intervention applied to fixed delegate instructions produces similar gains in multi-step agentic pipelines. We present three pre-registered controlled experiments in which Claude Haiku 4.5 delegates (n=5 per condition, temperature 0.5) were assigned either a single-copy or a repeated-prompt instruction under blinded binary rubric scoring, totalling 30 sessions and 3,196 messages. Experiment 1 (session-ID refactoring, 6 criteria) yielded a non-significant score delta of +0.30, with five of six criteria saturated at 100% in both groups. Experiment 2 (tree-sitter scanner evaluation, 7 criteria) produced a complete ceiling effect with all 10 runs scoring 7/7 (Mann-Whitney U=12.5, p=1.000). Experiment 3 (Kotlin grammar synthesis, 7 criteria) revealed a distinct failure mode: three of seven criteria scored 0/10 across both groups due to rubric-runner co-design failure, where criteria required investigations absent from the runner prompt; on the four reachable criteria the treatment effect was non-significant (U=15, p=0.607). Across all three experiments we detect no effect of prompt repetition on task success. Two calibration failure modes suppressed treatment signal: performance saturation (Experiments 1 and 2) and rubric-runner misalignment (Experiment 3); both are identifiable from the data and constitute methodological findings in their own right.
+Verbatim duplication of an input prompt (prompt repetition) has been shown to improve accuracy for non-reasoning LLMs on retrieval and multiple-choice benchmarks (Leviathan et al., 2025). We ask whether the same intervention applied to fixed delegate instructions produces similar gains in multi-step agentic pipelines. We present three pre-registered controlled experiments in which Claude Haiku 4.5 delegates (n=5 per condition, temperature 0.5) were assigned either a single-copy or a repeated-prompt instruction under blinded binary rubric scoring, totalling 30 sessions and 3,707 messages. Experiment 1 (session-ID refactoring, 6 criteria) yielded a non-significant score delta of +0.30, with five of six criteria saturated at 100% in both groups. Experiment 2 (tree-sitter scanner evaluation, 7 criteria) produced a complete ceiling effect with all 10 runs scoring 7/7 (Mann-Whitney U=12.5, p=1.000). Experiment 3 (Kotlin grammar synthesis, 7 criteria) revealed a distinct failure mode: three of seven criteria scored 0/10 across both groups due to rubric-runner co-design failure, where criteria required investigations absent from the runner prompt; on the four reachable criteria the treatment effect was non-significant (U=15, p=0.607). Across all three experiments we detect no effect of prompt repetition on task success. Two calibration failure modes suppressed treatment signal: performance saturation (Experiments 1 and 2) and rubric-runner misalignment (Experiment 3); both are identifiable from the data and constitute methodological findings in their own right.
 
 Supplementary data for [Ceiling Effects and Convergence: Null Results for Instruction Repetition in LLM-Agent Pipelines](https://clouatre.ca/posts/prompt-repetition-agent-evaluation/). Clouatre, HEC Montréal, 2026.
 
@@ -41,7 +41,7 @@ Experiment setup:
   +-- Treatment group:  5 delegates with repeated instructions (x2)
   +-- Blind scorer:     Rubric-based evaluation (sealed before scoring)
 
-  x3 experiments = 30 delegates total, 3,196 messages, 30 session logs
+  x3 experiments = 30 delegates total, 3,707 messages (3,800 including the excluded Exp1 drift run), 30 session logs
 ```
 
 ---
@@ -391,7 +391,7 @@ This repository contains everything needed to verify our claims and reproduce th
 
 - **Pre-registered protocols** with sealed group assignments (`label-map.json` timestamps predate all scoring)
 - **Exact delegate prompts** preserved as the first message in each `raw/*.jsonl` session log
-- **Full conversation traces** (3,196 messages across 30 session logs) for auditing agent behavior
+- **Full conversation traces** (3,707 messages across 29 valid sessions; 3,800 across all 30 session logs) for auditing agent behavior
 - **Per-criterion scoring justifications** in `scores.json`, not just aggregate numbers
 
 To reproduce with different tasks or models, follow the protocols in `experiments/*/protocol.md` and substitute your target issue and model. The recipe (`recipe/goose-coder-v4.1.0.yaml`) defines the full agent architecture.

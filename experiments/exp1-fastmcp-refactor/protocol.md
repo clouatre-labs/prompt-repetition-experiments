@@ -6,7 +6,7 @@
 
 ## Context
 
-This experiment tests whether [prompt repetition](https://arxiv.org/abs/2502.07869) (repeating delegate instructions verbatim) improves AI agent accuracy on a structured engineering research task.
+This experiment tests whether [prompt repetition](https://arxiv.org/abs/2512.14982) (repeating delegate instructions verbatim) improves AI agent accuracy on a structured engineering research task.
 
 The paper reports that repeating the input prompt verbatim improves non-reasoning LLM accuracy (47/70 wins, 0 losses across 7 models). This experiment applies the technique to a real-world engineering task executed by parallel AI agent delegates.
 
@@ -64,5 +64,5 @@ After this experiment completes, use the highest-scoring Scout output (control o
 
 ## References
 
-- Leviathan, Y. et al., "Prompt Repetition Improves Non-Reasoning LLMs" (2025) -- https://arxiv.org/abs/2502.07869
+- Leviathan, Y. et al., "Prompt Repetition Improves Non-Reasoning LLMs" (2025) -- https://arxiv.org/abs/2512.14982
 - Target issue: https://github.com/clouatre-labs/math-mcp-learning-server/issues/222

@@ -19,7 +19,7 @@ These amendments are administrative and methodological. Neither changes rubric c
 
 The target issue [clouatre-labs/code-analyze-mcp#649](https://github.com/clouatre-labs/code-analyze-mcp/issues/649) asks for adding Kotlin grammar support using `tree-sitter-kotlin` version 0.3.8. This requires code synthesis beyond the issue text: confirming language registration, ABI compatibility, node-kind handling, and test coverage for both `.kt` and `.kts` files. The prior experiment (exp2) showed ceiling effects when the rubric was too easy; here the rubric includes six synthesis criteria (C1-C6) and one verification criterion (C7).
 
-Paper: [Leviathan et al. (2025)](https://arxiv.org/abs/2502.07869) - repeating the input prompt verbatim improves non-reasoning LLM accuracy (47/70 wins, 0 losses across 7 models).
+Paper: [Leviathan et al. (2025)](https://arxiv.org/abs/2512.14982) - repeating the input prompt verbatim improves non-reasoning LLM accuracy (47/70 wins, 0 losses across 7 models).
 
 ---
 
@@ -154,7 +154,7 @@ Scoring is binary per criterion (1 = met, 0 = not met). Half-credit is not permi
 
 ## References
 
-- Leviathan, Y. et al., "Prompt Repetition Improves Non-Reasoning LLMs" (2025) - https://arxiv.org/abs/2502.07869
+- Leviathan, Y. et al., "Prompt Repetition Improves Non-Reasoning LLMs" (2025) - https://arxiv.org/abs/2512.14982
 - Experiment 1: [exp1-fastmcp-refactor](../exp1-fastmcp-refactor/protocol.md)
 - Experiment 2: [exp2-treesitter-synthesis](../exp2-treesitter-synthesis/protocol.md)
 - Target issue: https://github.com/clouatre-labs/code-analyze-mcp/issues/649

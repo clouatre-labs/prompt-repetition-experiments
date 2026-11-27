@@ -10,7 +10,7 @@ This is the second experiment in the prompt repetition series, designed to addre
 
 The first experiment (FastMCP refactor analysis) produced a null result because the task was too easy: C1-C4 and C6 hit 100% in both groups. This experiment targets a harder issue that requires synthesis across the codebase, external API research, and judgment under ambiguity -- not just information retrieval. Ceiling effect is unlikely.
 
-Paper: [Leviathan et al. (2025)](https://arxiv.org/abs/2502.07869) -- repeating the input prompt verbatim improves non-reasoning LLM accuracy (47/70 wins, 0 losses across 7 models).
+Paper: [Leviathan et al. (2025)](https://arxiv.org/abs/2512.14982) -- repeating the input prompt verbatim improves non-reasoning LLM accuracy (47/70 wins, 0 losses across 7 models).
 
 ## Why This Task is Harder
 
@@ -139,7 +139,7 @@ Scoring is binary per criterion (1 = met, 0 = not met). Half-credit is not permi
 
 ## References
 
-- Leviathan, Y. et al., "Prompt Repetition Improves Non-Reasoning LLMs" (2025) -- https://arxiv.org/abs/2502.07869
+- Leviathan, Y. et al., "Prompt Repetition Improves Non-Reasoning LLMs" (2025) -- https://arxiv.org/abs/2512.14982
 - First experiment: [exp1-fastmcp-refactor](../exp1-fastmcp-refactor/protocol.md)
 - Target issue: https://github.com/clouatre-labs/aptu/issues/737
 - SecurityScanner context: [aptu#735](https://github.com/clouatre-labs/aptu/issues/735), [PR #736](https://github.com/clouatre-labs/aptu/pull/736)

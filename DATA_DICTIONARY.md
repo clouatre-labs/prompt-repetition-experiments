@@ -107,6 +107,8 @@ Experiment data is organized into three experiments (exp1-fastmcp-refactor, exp2
 
 **Schema normalization note**: As of this PR, `latency_seconds`, `message_count`, and `goose_session_id` are present in all experiments' session files, providing consistent provenance tracking across all three experimental runs.
 
+**Message count definition**: All published message counts (README, paper, `.zenodo.json`, `CITATION.cff`, `turn-efficiency.json`, and Figure 3) are defined as the sum of `runs[*].messages` in each `experiments/exp*/analysis.json`. These values are sourced from `sessions.db` and total 3,800 messages across all 30 session logs, including the excluded Exp1 drift run `scout-control-1` (93 messages); the headline total of 3,707 covers the 29 valid sessions. The run-time `message_count` fields in `efficiency.json` and `latency-log.jsonl` are a different measure and are not authoritative (null or absent for Exp3), so they must not be used for published counts.
+
 **Scores object** (within run record):
 
 | Field | Type | Description | Source |
