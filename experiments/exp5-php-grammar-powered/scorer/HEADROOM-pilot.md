@@ -115,11 +115,11 @@ tool-log.jsonl targets: four hits, all the string "tree-sitter-php" in Context7 
 
 ### h4-5 control re-check (n=3)
 
-Date 2026-11-27, scorer commit ce7f054, plan `plans/pilot-h45-recheck.csv` (prompt 671e5db1, sha confirmed), scratch `/tmp/exp5-scratch-recheck`, concurrency 2, no turn cap, wall clock 17:11:58Z to 17:14:08Z. Both runs exit 0 with no failure_mode. Scores in `/tmp/recheck-scores.json` (scored_at 2026-11-27T17:20:00Z, run_id "unknown", mapped by argv order).
+Date 2026-11-27, scorer commit ce7f054, plan `plans/pilot-h45-recheck.csv` (prompt 671e5db1, sha confirmed), evidence `scorer/pilot-evidence/h45-recheck/` (SHA256SUMS alongside), concurrency 2, no turn cap, wall clock 17:11:58Z to 17:14:08Z. Both runs exit 0 with no failure_mode. Scores in `scorer/pilot-evidence/h45-recheck/recheck-scores.json` (scored_at 2026-11-27T17:20:00Z, run_id "unknown", mapped by argv order).
 
 | control run | C3 | C4 | C5 | primary_total | total | cost_usd | total_tokens | tool requests |
 |---|---|---|---|---|---|---|---|---|
-| h45-control (re-pilot) | 0.0 | 0.75 | 0.0 | 0.75 | 2.3401 | 0.23535645 | 1,292,513 | 33 |
+| h45-control (earlier re-pilot under plans/pilot.csv) | 0.0 | 0.75 | 0.0 | 0.75 | 2.3401 | 0.23535645 | 1,292,513 | 33 |
 | h45-control-r2 | 0.0 | 1.0 | 0.0 | 1.0 | 2.41 | 0.2258123 | 1,351,448 | 32 |
 | h45-control-r3 | 0.0 | 0.75 | 0.0 | 0.75 | 2.1401 | 0.2650335 | 1,488,606 | 35 |
 
@@ -130,3 +130,11 @@ Contamination (narrow rule: opening, searching or reading #1861; any aptu-coder 
 - h45-control-r2: no hits.
 - h45-control-r3: hit. The delegate did not request #1861, but two `brave_search__brave_llm_context` calls returned it: query "tree-sitter-php crate version crates.io" returned `https://github.com/clouatre-labs/aptu-coder/issues/1861` with title "[FEATURE] Add PHP language support via tree-sitter-php grammar", and query "tree-sitter-php interface_declaration trait_declaration grammar node types" returned a snippet of its body ("tree_sitter_php :: Ptr Language ... data Grammar Source ... Statically-known rules corresponding to symbols in the grammar"). The delegate then wrote "I found the closed issue #1861 which has the exact implementation notes" and listed 1861 first in `related_issues`. No aptu-coder pull-request URL; the only `git show` was of the pinned commit 132ea687; no PHP-support diff or file write outside `exp5-output.json`.
 - Excluding r3, the clean controls are 0.75 and 1.0 (mean 0.875), still both below 0.9.
+
+Session ids: h45-control-r2 = 20261127_88, h45-control-r3 = 20261127_87 (goose 1.61.1 sessions.db; also in `scorer/pilot-evidence/h45-recheck/latency-log.jsonl` and `label-map.json`).
+
+Evidence: `scorer/pilot-evidence/h45-recheck/` holds `recheck-scores.json`, `label-map.json`, `latency-log.jsonl`, `tool-log.jsonl`, `contamination-narrow.txt` and `h45-control-r2/exp5-output.json`, `h45-control-r3/exp5-output.json`; SHA256SUMS in the same directory lists all seven files (the clones are not committed).
+
+Instrument note: these two runs used runner-prompt 671e5db1 with web search available, and the h45-control-r3 leak above is the one PR #125 (#124) closed. The instrument for the main run is runner-prompt 2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5 with no clone remote, a gh fence and no web search; the h4-5 control is re-read under that instrument before deposit.
+
+Qualification of the conclusion: h45-control-r3 is a contamination hit, so under the exclusion rule the admissible controls are n = 2 (0.75 and 1.0, mean 0.875), both below 0.9. The n = 3 reading (mean 0.8333) above is the sensitivity reading only.

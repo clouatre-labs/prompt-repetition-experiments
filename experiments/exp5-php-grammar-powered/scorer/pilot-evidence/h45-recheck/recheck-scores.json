@@ -1,0 +1,50 @@
+{
+  "scored_at": "2026-11-27T17:20:00Z",
+  "scorer": "exp5-php-scorer/0.1.0 (tree-sitter 0.25.2, tree-sitter-php 0.25.2)",
+  "rubric_version": "exp5-rubric-v1-fractional",
+  "note": "C3..C7 are fractional in [0,1]; total = sum(C3..C7); primary_total = C3 + C4 + C5 (C6, C7 excluded under the protocol floor/ceiling rule, reported). C1/C2 copied verbatim when present, else null.",
+  "scores": [
+    {
+      "run_id": "unknown",
+      "C1": null,
+      "C2": null,
+      "C3": 0.0,
+      "C4": 1.0,
+      "C5": 0.0,
+      "C6": 0.81,
+      "C7": 0.6,
+      "total": 2.41,
+      "primary_total": 1.0,
+      "justifications": {
+        "C1": "not executable offline: null",
+        "C2": "not executable offline: null",
+        "C3": "C3: element_query_draft does not compile: 'r\"\\x00(function_definition\\n  name: (name) @func_name) @function\\n(method_declaration'",
+        "C4": "C4: 4/4 cited kinds/fields exist in node-types.json",
+        "C5": "C5: defuse_query_draft does not compile: 'r\"\\x00(simple_parameter\\n  name: (variable_name (name) @write.param))\\n(assignment_ex'",
+        "C6": "C6: 9/10 snippets parse; dimensions covered 9/10 ['class_declaration', 'enum_declaration', 'function_declaration', 'inheritance_combined', 'inheritance_extends', 'inheritance_implements', 'interface_declaration', 'method_declaration', 'trait_declaration']; unparsable ['test_html_embedded_php_parses_without_error']",
+        "C7": "C7: 3/5 wiring facts match the vendored snapshot; failing ['mod_registration', 'match_arms']"
+      }
+    },
+    {
+      "run_id": "unknown",
+      "C1": null,
+      "C2": null,
+      "C3": 0.0,
+      "C4": 0.75,
+      "C5": 0.0,
+      "C6": 0.7901,
+      "C7": 0.6,
+      "total": 2.1401,
+      "primary_total": 0.75,
+      "justifications": {
+        "C1": "not executable offline: null",
+        "C2": "not executable offline: null",
+        "C3": "C3: element_query_draft does not compile: 'r\"\\x00(function_definition\\n  name: (name) @function_name) @function\\n(method_declara'",
+        "C4": "C4: 6/8 cited kinds/fields exist in node-types.json; invented ['interface_base_clause', 'named_children']",
+        "C5": "C5: defuse_query_draft does not compile: 'r\"\\x00(simple_parameter name: (variable_name (name)) @write.param)\\n(assignment_expr'",
+        "C6": "C6: 8/9 snippets parse; dimensions covered 8/9 ['class_declaration', 'enum_declaration', 'function_definition', 'inheritance_extends', 'inheritance_implements', 'interface_declaration', 'method_declaration', 'trait_declaration']; unparsable ['test_php_html_template_no_error_nodes']",
+        "C7": "C7: 3/5 wiring facts match the vendored snapshot; failing ['mod_registration', 'match_arms']"
+      }
+    }
+  ]
+}

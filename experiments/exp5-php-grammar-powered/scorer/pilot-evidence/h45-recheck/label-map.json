@@ -1,0 +1,26 @@
+{
+  "sealed_at": "2026-11-27T17:11:58+00:00",
+  "assignments": {
+    "h45-control-r2": {
+      "group": "control",
+      "model": "claude-haiku-4-5",
+      "goose_session_id": "20261127_88",
+      "sealed_at": "2026-11-27T17:11:58+00:00",
+      "sha256_runner_prompt": "671e5db1fe5326c9fc69ee01e59dec8d7b0b89ffc3286ad4876eec503ad09fbe",
+      "sha256_scorer": "d499cc673871183afa2b7312671bf656b324f4545f91b194e95b6e91684b7ead",
+      "sha256_analysis": "0789f51850d51e83d4d7f538f25d1c0c4d053e8dcab2c3a9a0c1d41f24194795",
+      "concurrency_limit": 2
+    },
+    "h45-control-r3": {
+      "group": "control",
+      "model": "claude-haiku-4-5",
+      "goose_session_id": "20261127_87",
+      "sealed_at": "2026-11-27T17:11:58+00:00",
+      "sha256_runner_prompt": "671e5db1fe5326c9fc69ee01e59dec8d7b0b89ffc3286ad4876eec503ad09fbe",
+      "sha256_scorer": "d499cc673871183afa2b7312671bf656b324f4545f91b194e95b6e91684b7ead",
+      "sha256_analysis": "0789f51850d51e83d4d7f538f25d1c0c4d053e8dcab2c3a9a0c1d41f24194795",
+      "concurrency_limit": 2
+    }
+  },
+  "sha256": "3778d4eec455f9168212a046665dd8b05dea20b17c25799b5012401bec4dbeba"
+}
