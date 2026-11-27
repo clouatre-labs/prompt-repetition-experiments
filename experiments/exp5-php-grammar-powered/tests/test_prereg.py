@@ -58,7 +58,13 @@ def test_protocol_headings():
 
     assert re.findall(r"^## .*$", text, flags=re.M) == HEADINGS
 
-def test_amendments_header_only():
+def test_amendments_record_the_pre_deposit_change_of_131():
+    """AMENDMENTS.md holds exactly one dated entry at deposit (#131, before deposit); later ones are appended."""
     lines = [l for l in (HERE / "AMENDMENTS.md").read_text(encoding="utf-8").splitlines() if l.strip()]
 
-    assert len(lines) == 2 and lines[0].startswith("# ") and "No amendments" in lines[1]
+    assert lines[0].startswith("# ")
+    sections = [l for l in lines if l.startswith("## ")]
+    assert sections == ["## 2026-11-27: mechanical contamination exclusion; output overlap no longer an exclusion trigger (issue #131, before deposit)"]
+    body = "\n".join(lines)
+    for phrase in ("contamination.py", "curl`, `wget`, `git fetch`, `git pull`, `cargo fetch`", "147/187 = 0.786", "`failed_run`", "`outputs/`"):
+        assert phrase in body, phrase

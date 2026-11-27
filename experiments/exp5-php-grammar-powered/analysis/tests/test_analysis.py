@@ -22,7 +22,17 @@ def experiment(tmp_path):
     for name in ("scores.json", "label-map.json", "latency-log.jsonl"):
         shutil.copy(FIXTURES / name, tmp_path / name)
     shutil.copytree(FIXTURES / "outputs", tmp_path / "outputs")  # delegate outputs for the overlap rule
+    for run in (FIXTURES / "outputs").iterdir():  # a clean exported transcript per run, for the contamination scan
+        (tmp_path / "outputs" / run.name / mod.TRANSCRIPT_NAME).write_text(json.dumps(_clean_transcript(run.name)))
     return tmp_path
+
+
+def _clean_transcript(run_id, *extra):
+    """A goose JSON export whose only tool traffic is `date` and `gh issue view 1864`."""
+    conversation = [{"role": "user", "content": [{"type": "text", "text": "TASK: clouatre-labs/aptu-coder#1864. Issue 1861 is off limits."}]},
+                    {"role": "assistant", "content": [{"type": "toolRequest", "id": "a", "toolCall": {"status": "success", "value": {"name": "shell", "arguments": {"command": "date -u"}}}}]},
+                    {"role": "user", "content": [{"type": "toolResponse", "id": "a", "toolResult": {"status": "success", "value": {"stdout": "2026-11-27T17:40:22Z"}}}]}]
+    return {"id": "20261127_00", "name": f"exp5-{run_id}", "conversation": conversation + list(extra)}
 
 
 def test_label_map_loader_normalises_flat_and_grouped(tmp_path):
@@ -236,7 +246,7 @@ def test_latex_headers_name_both_outcomes(experiment, tmp_path):
     assert len(data_rows) == 2 and all(l.count(" & ") == 5 for l in data_rows)  # 6 columns per model row
 
 
-# ---------------------------------------------------------------- exclusions (issue #129)
+# ---------------------------------------------------------------- exclusions (issues #129, #131)
 
 PILOT = ANALYSIS.parent / "scorer" / "pilot-evidence" / "fenced-repilot"
 # protocol.md ## Pilot Evidence, "Output overlap per pilot run" (element, defuse), two decimals
@@ -299,7 +309,8 @@ def test_overlap_method_details():
     assert overlap.cited(None, vocab) == set() and overlap.cited("Class_Declaration", vocab) == set()  # the regex is lowercase-only, as worded
 
 
-def test_overlap_above_threshold_is_excluded_with_reason_output_overlap(tmp_path):
+def test_overlap_above_the_old_threshold_is_reported_but_never_excludes(tmp_path):
+    """#131: the overlap is a descriptive value; even 1.0 under a synthetic vocabulary is not an exclusion trigger."""
     node_types = _synthetic_node_types()
     output = {"element_query_draft": _cites_all(node_types), "defuse_query_draft": "(simple_variable) @read"}
     assert overlap.jaccard(output, node_types) > overlap.THRESHOLD
@@ -308,22 +319,45 @@ def test_overlap_above_threshold_is_excluded_with_reason_output_overlap(tmp_path
 
     result = mod.apply_exclusions([_score("run-x")], [], tmp_path, node_types)
 
-    assert result["per_run"]["run-x"] == {"excluded": True, "reason": "output_overlap", "failure_mode": None,
-                                          "overlap": {"element_query_draft": 1.0, "defuse_query_draft": 0.0}, "overlap_available": True}
-    assert result["excluded"] == ["run-x"] and result["kept"] == []
-    assert overlap.jaccard(output, node_types) == pytest.approx(1.0)  # the signature named in #129
+    assert result["per_run"]["run-x"] == {"excluded": False, "reason": None, "failure_mode": None,
+                                          "overlap": {"element_query_draft": 1.0, "defuse_query_draft": 0.0}, "overlap_available": True,
+                                          "contamination_hits": [], "transcript_available": False}
+    assert result["kept"] == ["run-x"] and result["excluded"] == []
+    assert mod.OVERLAP_CEILING == pytest.approx(147 / 187)
 
 
-@pytest.mark.parametrize("failure_mode", ["goose_exit_1", "timeout", "clone_failed"])
-def test_failure_mode_is_excluded_with_reason_turn_cap(failure_mode):
+@pytest.mark.parametrize("failure_mode, reason", [("goose_exit_1", "turn_cap"), ("timeout", "failed_run"), ("clone_failed", "failed_run")])
+def test_failure_mode_is_excluded_turn_cap_only_for_goose_exit_1(failure_mode, reason):
     latency = mod.apply_exclusions([_score("run-f")], [{"run_id": "run-f", "failure_mode": failure_mode}], None, mod.NODE_TYPES)
     in_score = mod.apply_exclusions([_score("run-f", failure_mode=failure_mode)], [], None, mod.NODE_TYPES)
 
-    assert mod.EXCLUSION_REASONS == ("turn_cap", "output_overlap")
+    assert mod.EXCLUSION_REASONS == ("turn_cap", "failed_run", "contamination") and mod.TURN_CAP_MODE == "goose_exit_1"
     for result in (latency, in_score):
-        assert result["per_run"]["run-f"]["excluded"] is True and result["per_run"]["run-f"]["reason"] == "turn_cap"
+        assert result["per_run"]["run-f"]["excluded"] is True and result["per_run"]["run-f"]["reason"] == reason
         assert result["per_run"]["run-f"]["failure_mode"] == failure_mode and result["per_run"]["run-f"]["overlap"] is None
         assert result["excluded"] == ["run-f"] and result["kept"] == []
+
+
+def test_contamination_hit_is_excluded_with_reason_contamination(tmp_path):
+    (tmp_path / "run-x").mkdir()
+    (tmp_path / "run-x" / "exp5-output.json").write_text(json.dumps({"element_query_draft": "(class_declaration) @c"}))
+    (tmp_path / "run-x" / mod.TRANSCRIPT_NAME).write_text(json.dumps(_clean_transcript(
+        "run-x", {"role": "assistant", "content": [{"type": "toolRequest", "id": "c", "toolCall": {"status": "success", "value": {"name": "shell", "arguments": {"command": "curl -s https://example.org"}}}}]})))
+    (tmp_path / "run-y").mkdir()
+    (tmp_path / "run-y" / mod.TRANSCRIPT_NAME).write_text(json.dumps(_clean_transcript("run-y")))  # no output file, no hit
+
+    result = mod.apply_exclusions([_score("run-x"), _score("run-y")], [{"run_id": "run-y", "failure_mode": None}],
+                                  tmp_path, mod.NODE_TYPES, [{"run_id": "run-y", "seq": 0, "tool": "shell", "target": "gh issue view 1861"}])
+
+    x, y = result["per_run"]["run-x"], result["per_run"]["run-y"]
+    assert x["excluded"] is True and x["reason"] == "contamination" and x["failure_mode"] is None
+    assert [(h["category"], h["source"], h["message_index"]) for h in x["contamination_hits"]] == [("network_outside_fence", "tool_request", 3)]
+    assert y["excluded"] is True and y["reason"] == "contamination" and y["overlap"] is None and y["transcript_available"] is True
+    assert [(h["category"], h["source"], h["message_index"]) for h in y["contamination_hits"]] == [("issue_1861", "tool_log", 0)]
+    assert result["excluded"] == ["run-x", "run-y"] and result["kept"] == []
+    # a failure_mode takes precedence over contamination as the recorded reason; the hits stay in the record
+    both = mod.apply_exclusions([_score("run-x", failure_mode="timeout")], [], tmp_path, mod.NODE_TYPES)
+    assert both["per_run"]["run-x"]["reason"] == "failed_run" and len(both["per_run"]["run-x"]["contamination_hits"]) == 1
 
 
 def test_run_with_neither_is_kept(tmp_path):
@@ -342,20 +376,23 @@ def test_excluded_run_is_listed_n_drops_and_effect_uses_remaining_runs(experimen
     base = json.loads((tmp_path / "base" / "analysis.json").read_text())
     assert base["exclusions"]["n_excluded"] == 0 and base["n_runs"] == 10
     assert "no excluded runs" in (tmp_path / "base" / "table_exclusions.tex").read_text()
-    # exclude run-t1 (treatment, claude-haiku-4-5, primary_total 3.0) by output overlap, under a synthetic vocabulary
-    node_types = tmp_path / "node-types.json"
-    node_types.write_text(json.dumps(_synthetic_node_types()))
-    (experiment / "outputs" / "run-t1" / "exp5-output.json").write_text(json.dumps({"element_query_draft": _cites_all(_synthetic_node_types())}))
+    # exclude run-t1 (treatment, claude-haiku-4-5, primary_total 3.0) by contamination: its transcript requests `git pull`
+    transcript = json.loads((experiment / "outputs" / "run-t1" / mod.TRANSCRIPT_NAME).read_text())
+    transcript["conversation"].append({"role": "assistant", "content": [{"type": "toolRequest", "id": "g", "toolCall": {"status": "success", "value": {"name": "shell", "arguments": {"command": "git pull"}}}}]})
+    (experiment / "outputs" / "run-t1" / mod.TRANSCRIPT_NAME).write_text(json.dumps(transcript))
     labels = json.loads((experiment / "label-map.json").read_text())
     assert labels["assignments"]["run-t1"]["group"] == "treatment"
 
-    assert mod.main([str(experiment), "--out", str(tmp_path / "out"), "--node-types", str(node_types)]) == 0
+    assert mod.main([str(experiment), "--out", str(tmp_path / "out")]) == 0
     out = tmp_path / "out"
     result = json.loads((out / "analysis.json").read_text())
     assert result["n_scored"] == 10 and result["n_runs"] == 9
     assert result["exclusions"]["n_excluded"] == 1 and result["exclusions"]["n_kept"] == 9
-    assert [(e["run_id"], e["reason"], e["failure_mode"]) for e in result["exclusions"]["excluded"]] == [("run-t1", "output_overlap", None)]
+    assert [(e["run_id"], e["reason"], e["failure_mode"], e["contamination_hits"]) for e in result["exclusions"]["excluded"]] == [("run-t1", "contamination", None, 1)]
     assert result["exclusions"]["per_run"]["run-t1"]["excluded"] is True
+    assert result["exclusions"]["overlap_ceiling"] == pytest.approx(147 / 187, abs=1e-4) and "overlap_threshold" not in result["exclusions"]
+    assert set(result["exclusions"]["contamination_categories"]) == {"issue_1861", "aptu_coder_pull_request", "network_outside_fence"}
+    assert all(result["exclusions"]["per_run"][r]["overlap"] is not None for r in result["exclusions"]["per_run"])  # reported for every run, excluded or not
     assert all(result["exclusions"]["per_run"][r]["excluded"] is False for r in result["exclusions"]["kept"])
     assert "run-t1" not in result["arms"]["treatment"]["runs"] and "run-t1" not in result["arms"]["control"]["runs"]
     assert result["arms"]["treatment"]["n"] == base["arms"]["treatment"]["n"] - 1 == 4
@@ -363,7 +400,7 @@ def test_excluded_run_is_listed_n_drops_and_effect_uses_remaining_runs(experimen
     assert result["arms"]["treatment"]["scores"] == sorted(result["arms"]["treatment"]["scores"])
     assert "run-t1" not in (out / "table_means.tex").read_text()
     tex = (out / "table_exclusions.tex").read_text()
-    assert "run-t1" in tex and "output\\_overlap" in tex and "1.0000 & --" in tex
+    assert "run-t1 & contamination & -- & 0.0107 & 0.0053" in tex
 
     rows = mod.load_scores(experiment / "scores.json")
 
@@ -391,20 +428,58 @@ def test_failure_mode_run_excluded_end_to_end(experiment, tmp_path):
     result = json.loads((tmp_path / "out" / "analysis.json").read_text())
 
     assert [(e["run_id"], e["reason"], e["failure_mode"]) for e in result["exclusions"]["excluded"]] == [("run-c1", "turn_cap", "goose_exit_1")]
-    assert result["arms"]["control"]["n"] == 4 and result["n_runs"] == 9 and result["exclusions"]["overlap_threshold"] == 0.8
+    assert result["arms"]["control"]["n"] == 4 and result["n_runs"] == 9
     assert "run-c1 & turn\\_cap & goose\\_exit\\_1" in (tmp_path / "out" / "table_exclusions.tex").read_text()
 
 
-def test_missing_output_file_for_kept_run_fails_the_assertion_but_writes(experiment, tmp_path):
-    shutil.rmtree(experiment / "outputs" / "run-c2")
+@pytest.mark.parametrize("missing_file, assertion", [("exp5-output.json", "overlap_available"), (mod.TRANSCRIPT_NAME, "contamination_scan_available")])
+def test_missing_file_for_kept_run_fails_the_assertion_but_writes(experiment, tmp_path, missing_file, assertion):
+    (experiment / "outputs" / "run-c2" / missing_file).unlink()
 
     assert mod.main([str(experiment), "--out", str(tmp_path / "out")]) == 1
     result = json.loads((tmp_path / "out" / "analysis.json").read_text())
     failed = [a for a in result["assertions"] if a["status"] == "fail"]
-    assert [a["name"] for a in failed] == ["exclusion_overlap_available"] and "run-c2" in failed[0]["detail"]
-    assert result["exclusions"]["per_run"]["run-c2"]["overlap_available"] is False
+    assert [a["name"] for a in failed] == [assertion] and "run-c2" in failed[0]["detail"]
+    assert result["exclusions"]["per_run"]["run-c2"]["overlap_available"] is (missing_file != "exp5-output.json")
+    assert result["exclusions"]["per_run"]["run-c2"]["transcript_available"] is (missing_file != mod.TRANSCRIPT_NAME)
     assert result["exclusions"]["per_run"]["run-c2"]["excluded"] is False  # not a rule hit: kept, but flagged
     assert "no excluded runs" in (tmp_path / "out" / "table_exclusions.tex").read_text()
+
+
+def test_transcripts_directory_option_separate_from_outputs(experiment, tmp_path):
+    """--transcripts DIR reads <DIR>/<run_id>/transcript.json while the outputs stay where they are."""
+    transcripts = tmp_path / "transcripts"
+    shutil.copytree(experiment / "outputs", transcripts)
+    for run in transcripts.iterdir():
+        (run / "exp5-output.json").unlink()
+    (transcripts / "run-c2" / mod.TRANSCRIPT_NAME).unlink()
+    assert mod.main([str(experiment), "--out", str(tmp_path / "a"), "--transcripts", str(transcripts)]) == 1  # run-c2 has no transcript there
+    (transcripts / "run-c2" / mod.TRANSCRIPT_NAME).write_text(json.dumps(_clean_transcript("run-c2")))
+    assert mod.main([str(experiment), "--out", str(tmp_path / "b"), "--transcripts", str(transcripts)]) == 0
+    assert json.loads((tmp_path / "b" / "analysis.json").read_text())["n_runs"] == 10
+
+
+def test_fenced_repilot_evidence_with_the_committed_transcripts(tmp_path):
+    """scorer/pilot-evidence/fenced-repilot + the four committed exports: zero hits, zero exclusions. The only failing
+    assertion is label_map_hashes (the pilot sealed analysis.py before this change and runner-prompt.md is not in the
+    evidence directory), so main exits 1 with every other assertion passing."""
+    exp = tmp_path / "fenced-repilot"
+    shutil.copytree(PILOT, exp)  # label-map.json, latency-log.jsonl, tool-log.jsonl and <run>/exp5-output.json as deposited
+    for run_id in ("h45-control", "h45-treatment", "h55-control", "h55-treatment"):
+        shutil.copy(ANALYSIS / "tests" / "fixtures" / "transcripts" / f"{run_id}.json", exp / run_id / mod.TRANSCRIPT_NAME)
+    scores = json.loads((exp / "scores.json").read_text())  # records carry run_id "unknown": map by argv order, as HEADROOM-pilot.md does
+    order = ["h45-control", "h45-treatment", "h55-control", "h55-treatment"]
+    assert len(scores["scores"]) == len(order)
+    for row, run_id in zip(scores["scores"], order):
+        row["run_id"] = run_id
+    (exp / "scores.json").write_text(json.dumps(scores))
+
+    assert mod.main([str(exp), "--out", str(exp / "out"), "--outputs", str(exp), "--transcripts", str(exp)]) == 1
+    result = json.loads((exp / "out" / "analysis.json").read_text())
+    assert {a["name"] for a in result["assertions"] if a["status"] == "fail"} == {"label_map_hashes"}
+    assert result["n_scored"] == 4 and result["n_runs"] == 4 and result["exclusions"]["n_excluded"] == 0
+    assert all(v["contamination_hits"] == [] and v["overlap"] is not None and v["transcript_available"] for v in result["exclusions"]["per_run"].values())
+    assert result["arms"]["control"]["n"] == 2 and result["arms"]["treatment"]["n"] == 2
 
 
 def test_exp4_regression_has_no_exclusions():

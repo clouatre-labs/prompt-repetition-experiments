@@ -10,7 +10,7 @@ computed for every run. C6 and C7 and ``total`` (max 5) are retained in the
 record only. Only pre-#123 Exp4 fixtures, which lack ``primary_total``, fall
 back to ``total``.
 
-Usage: python analysis.py <experiment_dir> [--out DIR] [--seed N]
+Usage: python analysis.py <experiment_dir> [--out DIR] [--seed N] [--transcripts DIR]
 Exit status is 1 when any recorded assertion fails; outputs are still written.
 """
 
@@ -24,7 +24,8 @@ from pathlib import Path
 
 import numpy as np
 
-from overlap import DRAFTS, THRESHOLD, jaccard_by_draft
+from contamination import CATEGORIES as CONTAMINATION_CATEGORIES, scan_run
+from overlap import DRAFTS, jaccard_by_draft
 from stats import EFFECT_SIZE_NOTE, bootstrap_ci, mann_whitney_r, wilson_ci
 
 CRITERIA = ["C3", "C4", "C5", "C6", "C7"]
@@ -36,7 +37,10 @@ OUTCOMES = {
 }
 PASS_THRESHOLD = 0.5
 DEFAULT_SEED = 20261127
-EXCLUSION_REASONS = ("turn_cap", "output_overlap")  # protocol.md Exclusions: failure_mode, or overlap above THRESHOLD
+EXCLUSION_REASONS = ("turn_cap", "failed_run", "contamination")  # protocol.md Exclusions
+TURN_CAP_MODE = "goose_exit_1"  # the failure_mode goose records at --max-turns 60 (protocol.md Exclusions)
+OVERLAP_CEILING = 147 / 187  # only 147 of the 187 vendored entries are snake_case: the highest reachable overlap (overlap.py)
+TRANSCRIPT_NAME = "transcript.json"  # goose session export --format json, stored next to exp5-output.json
 HASH_FILES = {  # label-map hash key -> file it is expected to cover
     "sha256_runner_prompt": "runner-prompt.md",
     "sha256_scorer": "scorer-prompt.md",
@@ -120,56 +124,79 @@ def load_scores(path: Path) -> list:
     return out
 
 
-def load_latency(path: Path) -> list:
+def load_jsonl(path: Path) -> list:
     if not path.exists():
         return []
-    return [json.loads(line) for line in path.read_text().splitlines() if line.strip()]
+    return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
+
+
+load_latency = load_jsonl  # name kept for callers of the Exp4-era loader
 
 
 def find_output(outputs_dir: Path | None, run_id: str) -> Path | None:
-    """The run's output file: ``<outputs_dir>/<run_id>/*.json`` (one file) or ``<outputs_dir>/<run_id>.json``."""
+    """The run's output file: ``<outputs_dir>/<run_id>/exp5-output.json``, or the single ``*.json``
+    in that directory (or ``<outputs_dir>/<run_id>.json``) when the named file is absent."""
     if outputs_dir is None:
         return None
+    named = outputs_dir / run_id / "exp5-output.json"
+    if named.is_file():
+        return named
     flat = outputs_dir / f"{run_id}.json"
     if flat.is_file():
         return flat
-    nested = sorted(p for p in (outputs_dir / run_id).glob("*.json") if p.is_file()) if (outputs_dir / run_id).is_dir() else []
+    nested = sorted(p for p in (outputs_dir / run_id).glob("*.json") if p.is_file() and p.name != TRANSCRIPT_NAME) if (outputs_dir / run_id).is_dir() else []
     return nested[0] if len(nested) == 1 else None
+
+
+def find_transcript(outputs_dir: Path | None, run_id: str) -> Path | None:
+    """The run's exported session transcript: ``<outputs_dir>/<run_id>/transcript.json``."""
+    if outputs_dir is None:
+        return None
+    nested = outputs_dir / run_id / TRANSCRIPT_NAME
+    return nested if nested.is_file() else None
 
 
 # ---------------------------------------------------------------- exclusions
 
-def apply_exclusions(scores: list, latency: list, outputs_dir: Path | None, node_types=NODE_TYPES) -> dict:
+def apply_exclusions(scores: list, latency: list, outputs_dir: Path | None, node_types=NODE_TYPES, tool_log: list = (), transcripts_dir: Path | None = None) -> dict:
     """Exclusion step (protocol.md Exclusions and Stopping Rule), run before any effect.
 
-    Per run: ``excluded`` and ``reason`` in {turn_cap, output_overlap}. A run
-    is excluded when its latency or score record carries ``failure_mode``
-    (reason ``turn_cap``; a turn-cap run is recorded as ``goose_exit_1``, the
-    exact value is kept in ``failure_mode``), or when its output overlap is
-    above ``THRESHOLD`` (reason ``output_overlap``). No imputation, no
-    replacement, no re-weighting: the remaining runs are what the effects
-    use. Returns ``{"per_run": {...}, "kept": [run_id], "excluded": [run_id]}``.
+    Per run: ``excluded`` and ``reason`` in {turn_cap, failed_run, contamination}.
+    A ``failure_mode`` excludes with reason ``turn_cap`` when it is
+    ``goose_exit_1`` (the cap of ``--max-turns 60``) and ``failed_run``
+    otherwise (timeout, clone failure, ...); the exact value is kept in
+    ``failure_mode``. Otherwise a run with at least one contamination hit
+    (``contamination.scan`` over its exported transcript and tool-log rows)
+    is excluded with reason ``contamination``. The output overlap is reported
+    per run as a descriptive value and never excludes. No imputation, no
+    replacement, no re-weighting. Returns ``{"per_run": {...}, "kept": [run_id],
+    "excluded": [run_id]}``.
     """
     failures = {}
     for row in latency:
         if row.get("failure_mode"):
             failures[row["run_id"]] = row["failure_mode"]
+    by_run = {}
+    for row in tool_log:
+        by_run.setdefault(row.get("run_id"), []).append(row)
     per_run = {}
     for s in scores:
-        failure = s.get("failure_mode") or failures.get(s["run_id"])
-        path = find_output(outputs_dir, s["run_id"])
-        overlap = None
-        if path is not None:
-            overlap = jaccard_by_draft(json.loads(path.read_text(encoding="utf-8")), node_types)
+        run_id = s["run_id"]
+        failure = s.get("failure_mode") or failures.get(run_id)
+        path = find_output(outputs_dir, run_id)
+        overlap = jaccard_by_draft(json.loads(path.read_text(encoding="utf-8")), node_types) if path is not None else None
+        transcript = find_transcript(transcripts_dir or outputs_dir, run_id)
+        hits = scan_run(transcript, by_run.get(run_id, [])) if (transcript is not None or by_run.get(run_id)) else []
         if failure:
-            excluded, reason = True, "turn_cap"
-        elif overlap is not None and max(v or 0.0 for v in overlap.values()) > THRESHOLD:
-            excluded, reason = True, "output_overlap"
+            excluded, reason = True, "turn_cap" if failure == TURN_CAP_MODE else "failed_run"
+        elif hits:
+            excluded, reason = True, "contamination"
         else:
             excluded, reason = False, None
-        per_run[s["run_id"]] = {
+        per_run[run_id] = {
             "excluded": excluded, "reason": reason, "failure_mode": failure,
             "overlap": overlap, "overlap_available": overlap is not None,
+            "contamination_hits": hits, "transcript_available": transcript is not None,
         }
     kept = sorted(r for r, v in per_run.items() if not v["excluded"])
     return {"per_run": per_run, "kept": kept, "excluded": sorted(r for r, v in per_run.items() if v["excluded"])}
@@ -246,9 +273,11 @@ def build_assertions(scores, labels, latency, exp_dir: Path, exclusions: dict | 
             ok = len(expected) == 1 and actual is not None and actual in expected
             add("label_map_hashes", ok, f"{key}: expected {sorted(expected)}, computed {actual} for {files[key].name}")
 
-    if exclusions is not None:  # the overlap rule needs each kept run's output file
+    if exclusions is not None:  # the per-run overlap and contamination scan need each kept run's files
         missing = sorted(r for r in kept if not exclusions["per_run"][r]["overlap_available"])
-        add("exclusion_overlap_available", not missing, f"{len(missing)} kept runs without an output file to overlap-score: {missing}" if missing else f"overlap scored for all {len(kept)} kept runs")
+        add("overlap_available", not missing, f"{len(missing)} kept runs without an output file to overlap-score: {missing}" if missing else f"overlap scored for all {len(kept)} kept runs")
+        missing = sorted(r for r in kept if not exclusions["per_run"][r]["transcript_available"])
+        add("contamination_scan_available", not missing, f"{len(missing)} kept runs without an exported transcript to scan: {missing}" if missing else f"contamination scan ran for all {len(kept)} kept runs")
     captured = [r for r in latency if r.get("thinking_tokens") is not None]
     positive = [r["run_id"] for r in captured if r["thinking_tokens"]]
     add("thinking_tokens_zero", not positive, f"{len(captured)} rows captured, {len(latency) - len(captured)} not captured (null), {len(positive)} with positive thinking tokens")
@@ -321,7 +350,8 @@ def _effect_block(by_outcome: dict, seed: int) -> dict:
 
 def analyse(scores, labels, latency, pricing, exp_dir: Path, seed: int, exclusions: dict | None = None) -> dict:
     if exclusions is None:  # no exclusion step requested (Exp4 fixtures): every scored run is kept
-        exclusions = {"per_run": {s["run_id"]: {"excluded": False, "reason": None, "failure_mode": s.get("failure_mode"), "overlap": None, "overlap_available": False} for s in scores},
+        exclusions = {"per_run": {s["run_id"]: {"excluded": False, "reason": None, "failure_mode": s.get("failure_mode"), "overlap": None, "overlap_available": False,
+                                                 "contamination_hits": [], "transcript_available": False} for s in scores},
                       "kept": sorted(s["run_id"] for s in scores), "excluded": []}
     all_scores = list(scores)  # coverage assertions cover every scored run, excluded or not
     scores = [s for s in scores if s["run_id"] in set(exclusions["kept"])]  # effects use the remaining runs only
@@ -388,13 +418,19 @@ def analyse(scores, labels, latency, pricing, exp_dir: Path, seed: int, exclusio
         "n_runs": len(scores),
         "n_scored": len(exclusions["kept"]) + len(exclusions["excluded"]),
         "exclusions": {
-            "rule": "a run is excluded when its latency or score record carries failure_mode (reason turn_cap) or when its output overlap is above the threshold (reason output_overlap); no imputation, replacement or re-weighting",
+            "rule": "a run is excluded when its latency or score record carries failure_mode (reason turn_cap for goose_exit_1, failed_run for any other value) or when contamination.py reports at least one hit over its exported transcript and tool-log rows (reason contamination); the output overlap is a descriptive value and never excludes; no imputation, replacement or re-weighting",
+            "contamination_categories": {name: {"number": n, "label": label} for (name, n), label in zip(CONTAMINATION_CATEGORIES.items(), (
+                "the number 1861 in a tool request or tool result",
+                "an aptu-coder pull-request URL or aptu-coder pulls/ API path in a tool request or tool result",
+                "a tool request containing any of the tokens curl, wget, git fetch, git pull, cargo fetch, fetch("))},
             "overlap_method": "per draft, |cited ∩ vocabulary| / |vocabulary|; cited = lowercase snake_case tokens (\\b[a-z]+(?:_[a-z]+)+\\b) of element_query_draft and defuse_query_draft after ';' comments are dropped; vocabulary = named node types and field names of scorer/vendor/tree-sitter-php-node-types.json",
-            "overlap_threshold": THRESHOLD,
+            "overlap_ceiling": round(OVERLAP_CEILING, 4),
+            "overlap_note": "descriptive only: 147 of the 187 vendored entries are snake_case, so no draft can exceed 0.786; the value is reported per run and is not an exclusion trigger",
             "overlap_drafts": list(DRAFTS),
             "per_run": exclusions["per_run"],
             "excluded": [{"run_id": r, "reason": exclusions["per_run"][r]["reason"],
                           "failure_mode": exclusions["per_run"][r]["failure_mode"],
+                          "contamination_hits": len(exclusions["per_run"][r]["contamination_hits"]),
                           "overlap": exclusions["per_run"][r]["overlap"]} for r in exclusions["excluded"]],
             "n_excluded": len(exclusions["excluded"]),
             "n_kept": len(exclusions["kept"]),
@@ -452,6 +488,8 @@ def main(argv=None) -> int:
     parser.add_argument("--seed", type=int, default=DEFAULT_SEED)
     parser.add_argument("--outputs", type=Path, default=None,
                         help="directory of delegate output files for the overlap rule: <run_id>/exp5-output.json or <run_id>.json (default: <experiment_dir>/outputs)")
+    parser.add_argument("--transcripts", type=Path, default=None,
+                        help="directory of exported session transcripts for the contamination scan: <run_id>/transcript.json (default: the outputs directory)")
     parser.add_argument("--node-types", type=Path, default=NODE_TYPES, help="vendored tree-sitter-php node-types.json")
     args = parser.parse_args(argv)
     exp_dir = args.experiment_dir.resolve()
@@ -462,12 +500,13 @@ def main(argv=None) -> int:
 
     scores = load_scores(exp_dir / args.scores)
     labels = load_label_map(exp_dir / "label-map.json")
-    latency = load_latency(exp_dir / "latency-log.jsonl")
+    latency = load_jsonl(exp_dir / "latency-log.jsonl")
+    tool_log = load_jsonl(exp_dir / "tool-log.jsonl")
     pricing = json.loads((HERE / "pricing.json").read_text())
     outputs = (args.outputs or exp_dir / "outputs") if (args.outputs or (exp_dir / "outputs")).exists() else None
     if outputs is not None and not args.node_types.exists():
         parser.error(f"--node-types not found: {args.node_types}")
-    exclusions = apply_exclusions(scores, latency, outputs, args.node_types)
+    exclusions = apply_exclusions(scores, latency, outputs, args.node_types, tool_log, args.transcripts)
     result = analyse(scores, labels, latency, pricing["models"], exp_dir, args.seed, exclusions)
 
     (out / "analysis.json").write_text(json.dumps(result, indent=2, sort_keys=True, allow_nan=False) + "\n")
