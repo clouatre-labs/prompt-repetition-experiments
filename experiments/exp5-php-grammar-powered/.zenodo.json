@@ -1,6 +1,6 @@
 {
   "title": "Exp5 PHP Grammar Scout Pre-registration Package",
-  "description": "Pre-registration package for Experiment 5 of the prompt repetition experiments: a 2 x 2 design (claude-haiku-4-5 and claude-haiku-5-5, control and treatment, n = 20 each, 80 runs) testing whether a verbatim second copy of the task instructions improves the executable task-success score of non-reasoning LLM agents on a PHP grammar scout task. It contains the protocol, the main run plan, the run harness, the offline scorer, the analysis code and their tests. The three pre-registered pilot experiments (Exp1 to Exp3) and their data are deposited separately at https://doi.org/10.5281/zenodo.19696593; the exploratory Exp4 is in the code repository only.",
+  "description": "Pre-registration package for Experiment 5 of the prompt repetition experiments: a 2 x 2 design (claude-haiku-4-5 and claude-haiku-5-5, control and treatment, n = 20 each, 80 runs) testing whether a verbatim second copy of the task instructions improves the executable task-success score of non-reasoning LLM agents on a PHP grammar scout task. It contains the protocol, the main run plan, the run harness, the offline scorer, the analysis code and their tests. The four pilot experiments (Exp1 to Exp4) and their data are deposited separately at https://doi.org/10.5281/zenodo.19696593.",
   "upload_type": "dataset",
   "access_right": "open",
   "license": "Apache-2.0",

@@ -111,9 +111,9 @@ e72dcea0f5baf23a7ff4ac369e1d7ffcb5d4cf1459ee9cc150f573aed9f885af  tests/test_pre
 
 ## DOI
 
-Zenodo DOI, recorded by the owner at deposit before the first main-run spawn:
+The pre-registration is published as version 1.1.0 of the dataset record, before the first main-run spawn:
 
-- Concept DOI (all versions): `10.5281/zenodo.24603432`, https://zenodo.org/records/24603432. A record of its own, not a version of `10.5281/zenodo.19696593` or `10.5281/zenodo.20039271`.
-- Version 1.0.1, the deposit to cite: `10.5281/zenodo.24604327`, https://zenodo.org/records/24604327, published `2026-11-27T20:23:36Z`. One file, `exp5-prereg-v1.0.0.zip` (603,260 bytes), sha256 `ad110f47e2767b4f6e9e25f6f5e1e97813f872db417f49f6db0295b433b22e49`: the 82 files of the deposit list with their paths kept.
-- Version 1.0.0, the first publication: `10.5281/zenodo.24603433`, https://zenodo.org/records/24603433, deposited `2026-11-27T20:08:06Z` (record `created`; publish request sent at `20:08:05Z`). The same 82 files uploaded individually.
-- Metadata corrections of `2026-11-27` (DOI and files unchanged in both versions): the description now names the three pre-registered pilot experiments (Exp1 to Exp3) as deposited at `10.5281/zenodo.19696593`; Exp4 is exploratory and in the repository only. Version 1.0.1 edited at `20:29:29Z`; version 1.0.0 edited at `20:30:00Z`, which also sets the creator name to Clouâtre, Hugues and the language to eng. The `.zenodo.json` inside both published versions still carries the earlier sentence (sha256 `695cbbee6ed809fe3e44ba4809130ecac5328cc0083c4aededf0863fb416991c`); the corrected file (sha256 `7c9d73d4c396cb669fa6770a1437753f7851881b7c9f055223f6e0b6eced8be5`, that sentence only) is in the repository and not yet in the Zenodo files.
+- Concept DOI (all versions): `10.5281/zenodo.19696593`, https://zenodo.org/records/19696593.
+- Version 1.1.0, the pre-registration to cite: `10.5281/zenodo.24611615`, https://zenodo.org/records/24611615, published `2026-11-27T22:54:59Z`.
+- Content: one file, `prompt-repetition-experiments-v1.1.0.zip` (1,839,288 bytes, md5 `912c2928e5e00f061cab265de26881bc`, sha256 `2876818f3a602a3d3771774cfd4aa43f86965bdfb8d2b383e08fa16db0a0f2e2`), the source archive of GitHub release `v1.1.0` (tag on commit `8223be6`). It holds the complete package listed above with every sha256 unchanged, Experiment 4, and the Experiment 1 to 3 data of version 1.0.9. It holds no main-run output.
+- The main-run data (`outputs/`, scores, analysis output) will be published as the next version of the same record after the run.
