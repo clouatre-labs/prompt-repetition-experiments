@@ -1,0 +1,4 @@
+{
+ "element_query_draft": "(class_declaration name: (name) @class_name) @class\n(function_definition name: (name) @function_name) @function",
+ "defuse_query_draft": "; reads\n(simple_variable) @read.usage\n(variable_declaration name: (variable_name) @write.local)"
+}
