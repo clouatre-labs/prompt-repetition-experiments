@@ -28,9 +28,29 @@ uv run run.py --plan plans/pilot.csv --scratch /tmp/exp5-scratch --concurrency 2
 
 `run.py` options: `--recipes-dir`, `--out-dir` (default: this directory), `--scratch` (required, untracked), `--sessions-db`, `--concurrency` (default 2), `--max-turns` (sets `GOOSE_MAX_TURNS`; 0 leaves the goose default), `--timeout` (seconds per run; 0 means none), `--goose`. Credentials come from the environment only (`ANTHROPIC_API_KEY`, `CONTEXT7_API_KEY`, `BRAVE_API_KEY`); nothing writes them to a file.
 
+## Exp5
+
+The pre-registration package is `protocol.md` (fixed design, 13 sections), `PRE-REGISTRATION.md`, `AMENDMENTS.md` (empty at deposit), `plans/main.csv` (80 runs) and `.zenodo.json`. Every value that waits on the pilot is a `PILOT:` token in `protocol.md`.
+
+Pilot (4 runs):
+
+```bash
+uv run gen_recipes.py --plan plans/pilot.csv
+uv run run.py --plan plans/pilot.csv --scratch /tmp/exp5-scratch --concurrency 2
+```
+
+Main run (80 runs, interleaved within model):
+
+```bash
+uv run gen_recipes.py --plan plans/main.csv
+uv run run.py --plan plans/main.csv --scratch /tmp/exp5-main-scratch --concurrency 2
+```
+
+`label-map.json` seals `sha256_runner_prompt`, `sha256_scorer` and `sha256_analysis` before the first spawn; the last two are the `tree_sha256` of `scorer/` and `analysis/`.
+
 ## How a run is recorded
 
-1. `label-map.json` is written before any spawn. `assignments[run_id]` holds `group`, `model`, `goose_session_id` (null at seal time), `sealed_at`, `sha256_runner_prompt`, `sha256_scorer` (null), `sha256_analysis` (null) and `concurrency_limit`. The top-level `sha256` hashes the assignments block with every `goose_session_id` set to null, so it stays verifiable after backfill.
+1. `label-map.json` is written before any spawn. `assignments[run_id]` holds `group`, `model`, `goose_session_id` (null at seal time), `sealed_at`, `sha256_runner_prompt`, `sha256_scorer` and `sha256_analysis` (the `tree_sha256` of `scorer/` and `analysis/` at seal time) and `concurrency_limit`. The top-level `sha256` hashes the assignments block with every `goose_session_id` set to null, so it stays verifiable after backfill.
 2. goose runs as `goose run --recipe <recipe-NN.yaml> --name exp5-<run_id> --debug --output-format json` with the clone as working directory. goose stdout is kept at `<scratch>/<run_id>/goose-stdout.txt`.
 3. A non-zero exit, timeout or clone failure appends one `latency-log.jsonl` row with `failure_mode` and nothing backfilled. Failed runs are never retried or dropped.
 4. On exit 0 the session is resolved by `sessions.name = 'exp5-<run_id>'` equality and must match exactly one row. Token, cache and cost columns are copied into the row, and `tool-log.jsonl` gets one row per tool request with the tool name and target only.
@@ -58,4 +78,4 @@ uv run run.py --plan plans/smoke-haiku45.csv --recipes-dir /tmp/exp5-smoke/recip
 - **Thinking tokens are not observable.** goose JSON `metadata` carries `total_tokens`, `input_tokens`, `output_tokens`, `cache_read_input_tokens`, `cache_write_input_tokens`, `cost_usd` and `status`; per-message usage carries the same token fields plus timing. Neither has a thinking or reasoning token count, so `thinking_tokens` is `null` and `thinking_capture` is `not_captured`. `thinking_blocks` and `thinking_chars` are recorded as a proxy: haiku-5-5 emitted one thinking block, haiku-4-5 none.
 - **The fresh clones were at the pin** and clean after the runs.
 
-Not yet done: the pilot itself, the scorer and the analysis. `sha256_scorer` and `sha256_analysis` stay `null` until those exist.
+Not yet done: the pilot itself and the analysis of its results. The scorer and analysis trees are sealed by hash at run time and may still change after the pilot, which `AMENDMENTS.md` would record.

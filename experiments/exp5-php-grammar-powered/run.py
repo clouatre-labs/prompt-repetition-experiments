@@ -4,6 +4,7 @@ bounded concurrency in fresh clones, then backfill latency-log.jsonl and
 tool-log.jsonl from the goose sessions.db (session resolved by name only)."""
 
 import argparse
+import hashlib
 import json
 import os
 import shutil
@@ -68,12 +69,30 @@ def assignments_sha256(assignments: dict) -> str:
     blinded = {k: {**v, "goose_session_id": None} for k, v in assignments.items()}
     return sha256_text(json.dumps(blinded, sort_keys=True, separators=(",", ":")))
 
+TREE_SUFFIXES = (".py", ".md", ".json", ".toml", ".lock", ".csv")
+TREE_EXCLUDED_PARTS = ("__pycache__", ".venv", ".pytest_cache", "tests")
+
+def tree_sha256(root: Path) -> str:
+    """sha256 over the sorted included files of a tree: relative posix path + newline + bytes each."""
+    root = root.resolve()
+    files = sorted(
+        p for p in root.rglob("*")
+        if p.is_file() and p.suffix in TREE_SUFFIXES and not any(part in TREE_EXCLUDED_PARTS for part in Path(p).parts)
+    )
+    digest = hashlib.sha256()
+    for p in files:
+        digest.update(f"{p.relative_to(root).as_posix()}\n".encode("utf-8"))
+        digest.update(p.read_bytes())
+    return digest.hexdigest()
+
 def seal(runs: list[Run], concurrency_limit: int, prompt_sha256: str) -> dict:
     sealed_at = utcnow().isoformat(timespec="seconds")
+    here = Path(__file__).resolve().parent
+    sha_scorer, sha_analysis = tree_sha256(here / "scorer"), tree_sha256(here / "analysis")
     assignments = {
         run.run_id: {
             "group": run.group, "model": run.model, "goose_session_id": None, "sealed_at": sealed_at,
-            "sha256_runner_prompt": prompt_sha256, "sha256_scorer": None, "sha256_analysis": None,
+            "sha256_runner_prompt": prompt_sha256, "sha256_scorer": sha_scorer, "sha256_analysis": sha_analysis,
             "concurrency_limit": concurrency_limit,
         }
         for run in runs

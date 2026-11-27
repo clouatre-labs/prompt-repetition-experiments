@@ -15,6 +15,17 @@ uv run scorer.py --report-variance fixtures/sessions
 
 `--out` is optional (stdout otherwise). `--scored-at <ISO8601>` pins the timestamp so two runs are byte-identical; without it, two runs are byte-identical apart from `scored_at`. Directories are expanded to their sorted `*.json` files, so `run_id` ordering in `scores.json` is stable.
 
+### Pilot scoring
+
+Once the pilot sessions are exported as JSON into `<pilot-out>/sessions` (one `*.json` per session):
+
+```bash
+uv run scorer.py <pilot-out>/sessions --out <pilot-out>/scores.json
+uv run scorer.py --report-variance <pilot-out>/sessions
+```
+
+The first command writes the pilot scores; the second prints the per-criterion variance and `C7.<fact>` figures behind `HEADROOM-pilot.md`.
+
 ## What is scored
 
 Every criterion in `C3..C7` is a float in `[0,1]` with a justification naming the failing artifact; `total = C3 + C4 + C5 + C6 + C7` (max 5.0). `C1` and `C2` (external-citation criteria) are not executable offline: a numeric `C1`/`C2` on the session is copied verbatim, otherwise `null`. Nothing is ever `NaN`; not-applicable values are `null`.
