@@ -58,9 +58,33 @@ def test_no_snippets_scores_zero(lang):
 
 def test_defuse_query_capturing_no_variable_name_does_not_raise(lang):
     # Regression: a capture group with no variable_name used to read an unbound `parent`.
+    # Since the pilot, compiling alone earns nothing: no write and no read means 0.0.
     result = checks.check_defuse_query("(integer) @literal\n(name) @id", lang)
-    assert result.score == pytest.approx(1 / 3)
+    assert result.score == 0.0
     assert "write captures=0, read captures=0" in result.justification
+
+
+def test_defuse_query_write_only_scores_half(lang):
+    result = checks.check_defuse_query("(assignment_expression left: (variable_name (name)) @w)", lang)
+    assert result.score == pytest.approx(0.5)
+
+
+def test_wiring_is_key_agnostic(lang=None):
+    # The delegate names entries freely; each fact is matched on values across all entries.
+    good = checks.wiring_facts(GOOD["wiring_summary"])
+    renamed = {f"fact_{i}": v for i, v in enumerate(GOOD["wiring_summary"].values())}
+    assert checks.wiring_facts(renamed) == good
+    assert checks.check_wiring(renamed).score == 1.0
+
+
+def test_snippets_with_delegate_named_dimensions(lang):
+    snippets = [{"dimension": d, "code": "<?php function f_{}() {{}}".format(i), "test_name": f"t{i}"}
+                for i, d in enumerate(["declares", "inherits"])]
+    result = checks.check_snippets(snippets, lang)
+    assert result.score == pytest.approx(1.0)
+    assert "dimensions covered 2/2" in result.justification
+    no_dim = [{"code": "<?php 1;"}]
+    assert checks.check_snippets(no_dim, lang).score == 0.0
 
 
 def test_defuse_query_counts_every_captured_variable(lang):
@@ -117,7 +141,9 @@ def test_end_to_end_fixtures_are_valid_and_deterministic(tmp_path):
     assert good["C1"] is None and good["C2"] is None
     assert good["total"] == pytest.approx(sum(good[c] for c in scorer.CRITERIA))
     assert good["total"] == 5.0
+    assert good["primary_total"] == 3.0
     assert bad["total"] == 0.0
+    assert bad["primary_total"] == 0.0
     assert set(bad["justifications"]) == {"C1", "C2", "C3", "C4", "C5", "C6", "C7"}
 
 

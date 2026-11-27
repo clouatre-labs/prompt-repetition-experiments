@@ -31,7 +31,7 @@ DECLARATION_KINDS = (
     "enum_declaration",
 )
 INHERITANCE_KINDS = ("base_clause", "class_interface_clause")
-SNIPPET_DIMENSIONS = ("declaration_kind", "inheritance_shape")
+SNIPPET_DIMENSIONS: tuple[str, ...] = ()  # dimensions are delegate-named since the pilot; kept for the variance report
 WIRING_KEYS = (
     "workspace_dependency",
     "unconditional_dependency",
@@ -155,7 +155,7 @@ def check_defuse_query(text: str, lang: Language) -> Result:
                 writes += 1  # a variable_name directly under an assignment is its left-hand side
             else:
                 reads += 1
-    score = (1 + (writes > 0) + (reads > 0)) / 3
+    score = ((writes > 0) + (reads > 0)) / 2
     return Result(score, f"C5: defuse query compiles; write captures={writes}, read captures={reads}")
 
 
@@ -167,15 +167,21 @@ def _parses(src: str, lang: Language) -> bool:
 
 
 def check_snippets(snippets: list | None, lang: Language) -> Result:
-    """C6: share of snippets that parse, weighted by dimension coverage."""
+    """C6: share of snippets that parse, weighted by coverage of the dimensions the delegate named.
+    Dimension-agnostic since the runner prompt no longer names the dimensions: the denominator is
+    the number of distinct non-empty `dimension` values across all snippets; the numerator is the
+    number of those values that have at least one parsable snippet."""
     if not snippets:
         return Result(0.0, "C6: no test_snippets found")
     ok = [s for s in snippets if isinstance(s, dict) and _parses(str(s.get("code", "")), lang)]
     bad = [s.get("test_name", s.get("declaration_kind", "?")) for s in snippets if s not in ok]
-    dims = {str(s.get("dimension")) for s in ok} & set(SNIPPET_DIMENSIONS)
+    named = {str(s.get("dimension", "")).strip() for s in snippets if isinstance(s, dict)} - {"", "None"}
+    if not named:
+        return Result(0.0, "C6: no snippet carries a non-empty dimension value")
+    covered = {str(s.get("dimension")).strip() for s in ok} & named
     parse_share = len(ok) / len(snippets)
-    score = parse_share * len(dims) / len(SNIPPET_DIMENSIONS)
-    why = f"C6: {len(ok)}/{len(snippets)} snippets parse; dimensions covered {sorted(dims)}"
+    score = parse_share * len(covered) / len(named)
+    why = f"C6: {len(ok)}/{len(snippets)} snippets parse; dimensions covered {len(covered)}/{len(named)} {sorted(covered)}"
     if bad:
         why += f"; unparsable {bad}"
     return Result(score, why)
@@ -186,37 +192,33 @@ def _snapshot(name: str) -> str:
 
 
 def wiring_facts(wiring: object) -> dict[str, bool] | None:
-    """Per-fact booleans against the vendored snapshot; None if wiring_summary is not an object."""
+    """Per-fact booleans against the vendored snapshot; None if wiring_summary is not an object.
+    Key-agnostic: the delegate names entries freely, so each fact is matched against the value of
+    every entry, in the order the five sibling facts are declared here."""
     if not isinstance(wiring, dict):
         return None
     ws = _snapshot("workspace.Cargo.toml")
     core = _snapshot("core.Cargo.toml")
     lang_rs = _snapshot("lang.rs")
     mod_rs = _snapshot("mod.rs")
+    values = [str(v) for v in wiring.values()]
+
+    def any_value(pattern: str, flags: int = 0) -> bool:
+        return any(re.search(pattern, v, flags) for v in values)
+
     facts: dict[str, bool] = {
         # Sibling shape: `tree-sitter-java = "0.23.5"` under [workspace.dependencies].
-        "workspace_dependency": bool(
-            re.search(r'tree-sitter-php\s*=\s*"[^"]+"', str(wiring.get("workspace_dependency", "")))
-        )
-        and "tree-sitter-php" not in ws,
+        "workspace_dependency": any_value(r'tree-sitter-php\s*=\s*"[^"]+"') and "tree-sitter-php" not in ws,
         # Sibling shape: `tree-sitter-java = { workspace = true }` in the core crate.
-        "unconditional_dependency": bool(
-            re.search(r'tree-sitter-php\s*=\s*\{\s*workspace\s*=\s*true\s*\}', str(wiring.get("unconditional_dependency", "")))
-        )
+        "unconditional_dependency": any_value(r'tree-sitter-php\s*=\s*\{\s*workspace\s*=\s*true\s*\}')
         and "tree-sitter-php" not in core,
         # Sibling shape: `("java", "java"),` in EXTENSION_MAP.
-        "extension_map_entry": bool(
-            re.search(r'\(\s*"php"\s*,\s*"php"\s*\)', str(wiring.get("extension_map_entry", "")))
-        )
-        and '"php"' not in lang_rs,
+        "extension_map_entry": any_value(r'\(\s*"php"\s*,\s*"php"\s*\)') and '"php"' not in lang_rs,
         # Sibling shape: `pub mod java;` at the top of languages/mod.rs.
-        "mod_registration": bool(
-            re.search(r"^\s*(pub\s+)?mod\s+php\s*;", str(wiring.get("mod_registration", "")), re.M)
-        )
+        "mod_registration": any_value(r"^\s*(pub\s+)?mod\s+php\s*;", re.M)
         and not re.search(r"^\s*(pub\s+)?mod\s+php\s*;", mod_rs, re.M),
         # Sibling shape: `"java" => Some(tree_sitter_java::LANGUAGE.into()),` in both fns.
-        "match_arms": bool(re.search(r'"php"\s*=>', str(wiring.get("match_arms", ""))))
-        and "tree_sitter_php::LANGUAGE" in str(wiring.get("match_arms", "")),
+        "match_arms": any_value(r'"php"\s*=>') and any_value(r'tree_sitter_php::LANGUAGE'),
     }
     return facts
 

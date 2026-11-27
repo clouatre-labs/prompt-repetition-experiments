@@ -14,6 +14,8 @@ TASK: clouatre-labs/aptu-coder#1864 -- add PHP language support via tree-sitter-
 
 Repository: https://github.com/clouatre-labs/aptu-coder
 Issue: https://github.com/clouatre-labs/aptu-coder/issues/1864
+
+Off limits: upstream issue #1861 is closed and superseded by #1864; do not open, search for, or read it, and do not read any commit, pull request or comment that mentions PHP. Read the pinned commit only.
 HEAD SHA: 132ea687e09a916091699a562da3c96c86ec1fd8
 
 Your clone: your working directory is the root of a fresh clone of the repository, already checked out at HEAD SHA. Do not clone it again.
@@ -82,16 +84,8 @@ For your recommended approach, produce these as literal, quoted text (not descri
 - `element_query_draft`: the literal tree-sitter query text you propose for PHP's `ELEMENT_QUERY`, covering every declaration kind the grammar defines for functions, methods, classes, interfaces, traits and enums; name each node kind you use and the field you capture.
 - `defuse_query_draft`: the literal tree-sitter query text you propose for PHP's `DEFUSE_QUERY`, adapted from java.rs's actual pattern, covering local declarations, assignments, and identifier reads.
 - `inheritance_walk_citation`: a literal description of the exact field-by-field walk from a class declaration to its `extends` and `implements` names in the tree-sitter-php grammar, citing the grammar source you inspected in Step 4.
-- `test_snippets`: an array of at least 9 objects, tagged by a `dimension` field with value `"declaration_kind"` or `"inheritance_shape"`:
-  - 6 entries with `"dimension": "declaration_kind"`, one per PHP declaration kind (class, interface, trait, enum, function, method)
-  - 3 entries with `"dimension": "inheritance_shape"`, one per inheritance shape: single superclass, multiple interfaces, and mixed (superclass + interfaces)
-  - every entry has a literal PHP code snippet in its `code` field and a literal proposed test function name, regardless of dimension
-- `wiring_summary`: an object consolidating all 5 structural wiring facts in one place, each a literal one-line statement of that specific fact (not a paragraph):
-  - `workspace_dependency`: the literal `[workspace.dependencies]` entry you propose for tree-sitter-php
-  - `unconditional_dependency`: the literal dependency line you propose for `crates/aptu-coder-core/Cargo.toml`
-  - `extension_map_entry`: the literal `.php` entry you propose for `EXTENSION_MAP`
-  - `mod_registration`: the literal module registration statement you propose and the file it goes in
-  - `match_arms`: the literal match arms you propose, in each function that needs one
+- `test_snippets`: an array of at least 9 objects, each tagged by a `dimension` field. You choose the dimension values: name each one after a kind of behaviour a new language integration must test, as you learned it from the existing language modules and their tests in Steps 2 and 3. Cover every dimension you name, and give every entry a literal PHP code snippet in its `code` field and a literal proposed test function name.
+- `wiring_summary`: an object consolidating the structural wiring facts a new language needs, one entry per fact, each a literal one-line statement of that fact (not a paragraph). Derive the set of facts from the `"css"` integration you read in Step 3: every place that integration touches to make the language available is one fact. Name each entry after the file or structure it changes, in snake_case.
 
 ## Output
 Write the result as valid JSON to {output_path} with this schema:
@@ -116,13 +110,9 @@ Write the result as valid JSON to {output_path} with this schema:
   "element_query_draft": "<literal tree-sitter query text, >=5 patterns>",
   "defuse_query_draft": "<literal tree-sitter query text>",
   "inheritance_walk_citation": "<literal field-walk description citing grammar source>",
-  "test_snippets": [{"dimension": "declaration_kind|inheritance_shape", "declaration_kind": "...", "code": "...", "test_name": "..."}],
+  "test_snippets": [{"dimension": "<a dimension you named>", "declaration_kind": "...", "code": "...", "test_name": "..."}],
   "wiring_summary": {
-    "workspace_dependency": "<literal [workspace.dependencies] entry>",
-    "unconditional_dependency": "<literal Cargo.toml dependency line>",
-    "extension_map_entry": "<literal .php EXTENSION_MAP entry>",
-    "mod_registration": "<literal mod php; statement and location>",
-    "match_arms": "<literal match arms for get_language_info() and get_ts_language()>"
+    "<fact_named_after_the_file_or_structure>": "<literal one-line statement>",
   },
   "latency_seconds": 0,
   "message_count": 0

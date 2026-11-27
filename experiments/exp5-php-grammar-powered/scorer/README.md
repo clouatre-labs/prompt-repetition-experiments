@@ -28,15 +28,17 @@ The first command writes the pilot scores; the second prints the per-criterion v
 
 ## What is scored
 
-Every criterion in `C3..C7` is a float in `[0,1]` with a justification naming the failing artifact; `total = C3 + C4 + C5 + C6 + C7` (max 5.0). `C1` and `C2` (external-citation criteria) are not executable offline: a numeric `C1`/`C2` on the session is copied verbatim, otherwise `null`. Nothing is ever `NaN`; not-applicable values are `null`.
+Every criterion in `C3..C7` is a float in `[0,1]` with a justification naming the failing artifact; `total = C3 + C4 + C5 + C6 + C7` (max 5.0) is kept for the record, and `primary_total = C3 + C4 + C5` (max 3.0) is the primary outcome. `C1` and `C2` (external-citation criteria) are not executable offline: a numeric `C1`/`C2` on the session is copied verbatim, otherwise `null`. Nothing is ever `NaN`; not-applicable values are `null`.
 
 | ID | Artifact | Rule |
 |----|----------|------|
 | C3 | `element_query_draft` | 0 if it does not compile. Otherwise share of the 6 required declaration kinds whose pattern captures something on `fixtures/php/`. If fewer than 3 patterns, capped at 0.5. |
 | C4 | `inheritance_walk_citation` | 0 if it names no snake_case node kinds/fields, or cites neither `base_clause` nor `class_interface_clause`. Otherwise share of cited identifiers that exist in `vendor/tree-sitter-php-node-types.json`. |
-| C5 | `defuse_query_draft` | 0 if it does not compile. Otherwise `(1 + captures a write + captures a read) / 3` on `fixtures/php/defuse.php`. A write is a captured `variable_name` whose parent is an `*_assignment_expression`; any other captured `variable_name` counts as a read. |
-| C6 | `test_snippets[].code` | `(parse share) x (share of the two dimensions `declaration_kind`, `inheritance_shape` present among parsed snippets)`. A snippet parses when the tree has no error node and contains a `php_tag`; `<?php` is prepended when missing. Unparsable snippets are dropped from the share and named by `test_name`. |
-| C7 | `wiring_summary` | Mean of the 5 facts `workspace_dependency`, `unconditional_dependency`, `extension_map_entry`, `mod_registration`, `match_arms` (a missing key is 0). Each fact is matched by regex against the shape of its siblings in the vendored aptu-coder snapshot. |
+| C5 | `defuse_query_draft` | 0 if it does not compile. Otherwise `(captures a write + captures a read) / 2` on `fixtures/php/defuse.php`; compiling alone earns nothing. A write is a captured `variable_name` whose parent is an `*_assignment_expression`; any other captured `variable_name` counts as a read. |
+| C6 | `test_snippets[].code` | `(parse share) x (share of the delegate-named dimensions that have at least one parsed snippet)`. The denominator is the number of distinct non-empty `dimension` values across all snippets; 0 if none. A snippet parses when the tree has no error node and contains a `php_tag`; `<?php` is prepended when missing. Unparsable snippets are dropped from the share and named by `test_name`. |
+| C7 | `wiring_summary` | Mean of the 5 facts `workspace_dependency`, `unconditional_dependency`, `extension_map_entry`, `mod_registration`, `match_arms`. Key-agnostic since the pilot: the delegate names entries freely, and each fact is matched by regex on the value of every entry against the shape of its siblings in the vendored aptu-coder snapshot. |
+
+`C6` and `C7` are reported but excluded from `primary_total` under the protocol's floor and ceiling rule: in the 2026-11-27 pilot they were 1.0 in all four runs with zero variance (see `HEADROOM-pilot.md`).
 
 ### C7 fact patterns (tied to the vendored snapshot)
 
