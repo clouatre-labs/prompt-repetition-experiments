@@ -56,7 +56,7 @@ class Config:
     scratch: Path
     sessions_db: Path
     concurrency: int = 2
-    max_turns: int = 0  # GOOSE_MAX_TURNS; 0 leaves the goose default
+    max_turns: int = 0  # GOOSE_MAX_TURNS; 0 = not set, goose uses its own configured default
     timeout: float = 0.0  # seconds per goose run; 0 means none
     repo_url: str = REPO_URL
     pin: str = PIN
@@ -120,12 +120,21 @@ def fresh_clone(scratch: Path, run: Run, repo_url: str, pin: str) -> Path:
     subprocess.run(GIT + ["-C", str(clone_dir), "checkout", "--quiet", "--detach", pin], check=True, capture_output=True)
     return clone_dir
 
+def child_env(max_turns: int) -> dict:
+    """Environment for the goose child process. GOOSE_MAX_TURNS is set only when max_turns > 0:
+    goose honours 0 literally (a zero limit yields before inference), so it must not be exported."""
+    env = dict(os.environ)
+    env.pop("GOOSE_MAX_TURNS", None)
+    if max_turns > 0:
+        env["GOOSE_MAX_TURNS"] = str(max_turns)
+    return env
+
 def goose_spawn(req: SpawnRequest, cfg: Config) -> SpawnResult:
     cmd = [cfg.goose, "run", "--recipe", str(req.recipe_path), "--name", f"exp5-{req.run.run_id}",
            "--debug", "--output-format", "json"]
     started = utcnow()
     try:
-        proc = subprocess.run(cmd, cwd=req.clone_dir, env=dict(os.environ, GOOSE_MAX_TURNS=str(req.max_turns)),
+        proc = subprocess.run(cmd, cwd=req.clone_dir, env=child_env(req.max_turns),
                               capture_output=True, text=True, timeout=cfg.timeout or None)
     except subprocess.TimeoutExpired as exc:
         text = lambda v: v if isinstance(v, str) else ""
@@ -217,7 +226,8 @@ def execute_run(cfg: Config, run: Run, spawner, version: str | None) -> dict:
         "thinking_tokens": thinking_tokens,
         "thinking_capture": "observed" if thinking_tokens is not None else "not_captured",
         "goose_version": version,
-        "env": {"GOOSE_MAX_TURNS": str(cfg.max_turns), "GOOSE_CONTEXT_LIMIT": os.environ.get("GOOSE_CONTEXT_LIMIT"),
+        "env": {"GOOSE_MAX_TURNS": str(cfg.max_turns) if cfg.max_turns > 0 else None,
+                "GOOSE_CONTEXT_LIMIT": os.environ.get("GOOSE_CONTEXT_LIMIT"),
                 "GOOSE_PROVIDER": PROVIDER},
         "exit_code": result.returncode, "failure_mode": failure, "detail": detail,
     }
@@ -263,7 +273,8 @@ def main(argv=None) -> int:
     add("--scratch", type=Path, required=True, help="untracked dir for clones and goose stdout")
     add("--sessions-db", type=Path, default=Path.home() / ".local/share/goose/sessions/sessions.db")
     add("--concurrency", type=int, default=2)
-    add("--max-turns", type=int, default=0, help="GOOSE_MAX_TURNS (0 = goose default)")
+    add("--max-turns", type=int, default=0,
+        help="GOOSE_MAX_TURNS for the child (0 = not set; goose uses its configured default)")
     add("--timeout", type=float, default=0.0, help="seconds per goose run (0 = none)")
     add("--goose", default="goose")
     print(json.dumps(run_all(Config(**vars(p.parse_args(argv)))), indent=2))

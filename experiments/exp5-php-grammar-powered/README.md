@@ -26,7 +26,7 @@ uv run gen_recipes.py --plan plans/pilot.csv
 uv run run.py --plan plans/pilot.csv --scratch /tmp/exp5-scratch --concurrency 2
 ```
 
-`run.py` options: `--recipes-dir`, `--out-dir` (default: this directory), `--scratch` (required, untracked), `--sessions-db`, `--concurrency` (default 2), `--max-turns` (sets `GOOSE_MAX_TURNS`; 0 leaves the goose default), `--timeout` (seconds per run; 0 means none), `--goose`. Credentials come from the environment only (`ANTHROPIC_API_KEY`, `CONTEXT7_API_KEY`, `BRAVE_API_KEY`); nothing writes them to a file.
+`run.py` options: `--recipes-dir`, `--out-dir` (default: this directory), `--scratch` (required, untracked), `--sessions-db`, `--concurrency` (default 2), `--max-turns` (sets `GOOSE_MAX_TURNS` on the child; 0 leaves the variable unset so goose applies its own configured default, 1000 at the time of writing), `--timeout` (seconds per run; 0 means none), `--goose`. Credentials come from the environment only (`ANTHROPIC_API_KEY`, `CONTEXT7_API_KEY`, `BRAVE_API_KEY`); nothing writes them to a file.
 
 ## Exp5
 
@@ -73,7 +73,7 @@ uv run run.py --plan plans/smoke-haiku45.csv --recipes-dir /tmp/exp5-smoke/recip
 | `smoke-h55` | yes | 1 | `20261127_71` | `null` (`not_captured`; 1 thinking block, 126 chars) | `cache_read_tokens` 0, `cache_write_tokens` 28546 |
 
 - **Both model ids are valid** for the anthropic provider in goose 1.61.1: each session reports `requestedModel` equal to the requested id, with temperature 0.5.
-- **Exit 1 is the turn cap, not a rejection.** With `GOOSE_MAX_TURNS=1` goose stops after one turn with `Error: I've reached the maximum number of actions I can do without user input` and exits 1. The harness logged both as `goose_exit_1` with no backfill, as designed; the cache fields above were read from the two named sessions afterwards. A real run must not use `--max-turns 1`.
+- **Exit 1 is the turn cap, not a rejection.** With `GOOSE_MAX_TURNS=1` goose stops after one turn with `Error: I've reached the maximum number of actions I can do without user input` and exits 1. The harness logged both as `goose_exit_1` with no backfill, as designed; the cache fields above were read from the two named sessions afterwards. The cap of 1 was used only to prove the harness end to end at minimal cost. goose honours `GOOSE_MAX_TURNS=0` literally (a zero limit yields before inference), so `run.py` never exports it when `--max-turns` is 0; a real run uses either 0 or the cap pre-registered in `protocol.md`, identical in both arms.
 - **Session mapping by name works**: each `--name exp5-<run_id>` resolved to exactly one `sessions` row, and no session id was parsed from stdout.
 - **Thinking tokens are not observable.** goose JSON `metadata` carries `total_tokens`, `input_tokens`, `output_tokens`, `cache_read_input_tokens`, `cache_write_input_tokens`, `cost_usd` and `status`; per-message usage carries the same token fields plus timing. Neither has a thinking or reasoning token count, so `thinking_tokens` is `null` and `thinking_capture` is `not_captured`. `thinking_blocks` and `thinking_chars` are recorded as a proxy: haiku-5-5 emitted one thinking block, haiku-4-5 none.
 - **The fresh clones were at the pin** and clean after the runs.

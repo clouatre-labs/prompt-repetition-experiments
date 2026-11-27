@@ -67,7 +67,7 @@ Cost is reported as cache-adjusted USD with raw token totals alongside. When a r
 
 ## Pilot Evidence
 
-The pilot (4 runs, `plans/pilot.csv`) informs the pilot-dependent values. PILOT: scorer headroom per criterion (`scorer/HEADROOM-pilot.md`), the floor and ceiling list, the overlap threshold, the bootstrap seed, the turn cap, the cost table and the pooling estimator.
+The pilot (4 runs, `plans/pilot.csv`) informs the pilot-dependent values. PILOT: scorer headroom per criterion (`scorer/HEADROOM-pilot.md`), the floor and ceiling list, the overlap threshold, the bootstrap seed, the cost table and the pooling estimator.
 
 ## Deposit
 
