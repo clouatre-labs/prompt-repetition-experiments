@@ -111,6 +111,38 @@ def append_jsonl(path: Path, row: dict, lock: threading.Lock) -> None:
     with lock, path.open("a", encoding="utf-8") as fh:
         fh.write(json.dumps(row, allow_nan=False) + "\n")
 
+GH_SHIM = """#!/bin/sh
+# Containment shim for Exp5 delegates. Allow-list: `gh issue view ... 1864`, `gh api` against
+# tree-sitter/tree-sitter-php only, `--version`, `auth status`. Every other GitHub read is blocked
+# and logged. Real gh comes from REAL_GH (resolved before PATH was changed).
+log() { printf '%s\n' "$*" >> "$GH_FENCE_LOG"; }
+deny() { log "BLOCKED: $*"; echo "gh: this GitHub access is outside the experiment's fence" >&2; exit 77; }
+args="$*"
+case "$args" in *1861*|*"/pulls/"*|*"/pull/"*|*"repos/clouatre-labs/"*) deny "$args" ;; esac
+case "$args" in
+  *" repos/tree-sitter/tree-sitter-php/"*|"api repos/tree-sitter/tree-sitter-php/"*) exec "$REAL_GH" "$@" ;;
+  *"--version"*|*"auth status"*) exec "$REAL_GH" "$@" ;;
+  "issue view 1864"*|"issue view -R clouatre-labs/aptu-coder 1864"*|"issue view 1864 -R clouatre-labs/aptu-coder"*) exec "$REAL_GH" "$@" ;;
+esac
+case "$args" in
+  *issue*" view "*"1864"*) exec "$REAL_GH" "$@" ;;
+esac
+case "${1-}" in
+  pr|search|api|repo|gist|project|release|issue|alias|extension|run|workflow) deny "$args" ;;
+  *) exec "$REAL_GH" "$@" ;;
+esac
+"""
+
+def install_gh_fence(clone_dir: Path) -> Path:
+    """Write the gh shim into <clone>/.exp5-fence/bin, prepended to PATH by child_env.
+    The fence log is per run so blocked attempts are evidence, not a crash."""
+    fence = clone_dir / ".exp5-fence"
+    (fence / "bin").mkdir(parents=True, exist_ok=True)
+    shim = fence / "bin" / "gh"
+    shim.write_text(GH_SHIM, encoding="utf-8")
+    shim.chmod(0o755)
+    return fence
+
 def fresh_clone(scratch: Path, run: Run, repo_url: str, pin: str) -> Path:
     clone_dir = scratch / run.run_id / "aptu-coder"
     if clone_dir.exists():
@@ -118,15 +150,23 @@ def fresh_clone(scratch: Path, run: Run, repo_url: str, pin: str) -> Path:
     clone_dir.parent.mkdir(parents=True, exist_ok=True)
     subprocess.run(GIT + ["clone", "--quiet", "--filter=blob:none", repo_url, str(clone_dir)], check=True, capture_output=True)
     subprocess.run(GIT + ["-C", str(clone_dir), "checkout", "--quiet", "--detach", pin], check=True, capture_output=True)
+    # No remote after checkout: nothing can be fetched past the pin.
+    subprocess.run(GIT + ["-C", str(clone_dir), "remote", "remove", "origin"], check=True, capture_output=True)
+    install_gh_fence(clone_dir)
     return clone_dir
 
-def child_env(max_turns: int) -> dict:
+def child_env(max_turns: int, fence: Path | None = None) -> dict:
     """Environment for the goose child process. GOOSE_MAX_TURNS is set only when max_turns > 0:
-    goose honours 0 literally (a zero limit yields before inference), so it must not be exported."""
+    goose honours 0 literally (a zero limit yields before inference), so it must not be exported.
+    When a fence dir is given, its bin/ leads PATH so the delegate's `gh` is the shim."""
     env = dict(os.environ)
     env.pop("GOOSE_MAX_TURNS", None)
     if max_turns > 0:
         env["GOOSE_MAX_TURNS"] = str(max_turns)
+    if fence is not None:
+        env["PATH"] = f"{fence / 'bin'}{os.pathsep}{env.get('PATH', '')}"
+        env["REAL_GH"] = shutil.which("gh") or "/usr/bin/gh"
+        env["GH_FENCE_LOG"] = str(fence / "gh-fence.log")
     return env
 
 def goose_spawn(req: SpawnRequest, cfg: Config) -> SpawnResult:
@@ -134,7 +174,7 @@ def goose_spawn(req: SpawnRequest, cfg: Config) -> SpawnResult:
            "--debug", "--output-format", "json"]
     started = utcnow()
     try:
-        proc = subprocess.run(cmd, cwd=req.clone_dir, env=child_env(req.max_turns),
+        proc = subprocess.run(cmd, cwd=req.clone_dir, env=child_env(req.max_turns, req.clone_dir / ".exp5-fence"),
                               capture_output=True, text=True, timeout=cfg.timeout or None)
     except subprocess.TimeoutExpired as exc:
         text = lambda v: v if isinstance(v, str) else ""

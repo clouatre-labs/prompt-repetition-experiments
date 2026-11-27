@@ -18,7 +18,7 @@ def test_pilot_plan_emits_paired_recipes(tmp_path):
     assert [r["settings"]["goose_model"] for r in recipes] == [run.model for run in runs]
     assert {r["prompt"] for r in recipes} == {body}
     assert recipes[0]["settings"] == {"goose_provider": "anthropic", "goose_model": runs[0].model, "temperature": 0.5}
-    assert [e["name"] for e in recipes[0]["extensions"]] == ["developer", "context7", "brave_search"]
+    assert [e["name"] for e in recipes[0]["extensions"]] == ["developer", "context7"]
     assert recipes[1]["title"] == "exp5-h45-treatment"
     assert recipes[1]["instructions"].endswith(recipes[1]["prompt"])
     for control, treatment in ((0, 1), (2, 3)):
