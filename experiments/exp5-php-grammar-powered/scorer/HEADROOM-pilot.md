@@ -1,6 +1,6 @@
 # Exp5 HEADROOM pilot record
 
-Current verdict: re-pilot (prompt 671e5db1) is CONTAMINATED under the literal Step 3 rule and h45-control is also FLOOR; see "Re-pilot" below. The first pilot is superseded.
+Current verdict: fenced re-pilot (prompt 2878315307, 2026-11-27) is clean under the narrowed contamination rule and is FLOOR on the claude-haiku-4-5 control (0.75 < 0.9); see "Fenced re-pilot (prompt 2878315307)" at the end. The earlier re-pilot (prompt 671e5db1) is CONTAMINATED under the literal Step 3 rule and the first pilot is superseded.
 
 ## Superseded: first pilot (prompt 2d4f22e3)
 
@@ -138,3 +138,43 @@ Evidence: `scorer/pilot-evidence/h45-recheck/` holds `recheck-scores.json`, `lab
 Instrument note: these two runs used runner-prompt 671e5db1 with web search available, and the h45-control-r3 leak above is the one PR #125 (#124) closed. The instrument for the main run is runner-prompt 2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5 with no clone remote, a gh fence and no web search; the h4-5 control is re-read under that instrument before deposit.
 
 Qualification of the conclusion: h45-control-r3 is a contamination hit, so under the exclusion rule the admissible controls are n = 2 (0.75 and 1.0, mean 0.875), both below 0.9. The n = 3 reading (mean 0.8333) above is the sensitivity reading only.
+
+## Fenced re-pilot (prompt 2878315307)
+
+Date 2026-11-27, goose 1.61.1, experiment commit 5760358 on main (plus the untracked `plans/pilot-h45-recheck.csv` committed unchanged as 2c42f41), scorer tree `d136db8769b343b9` at seal time, plan `plans/pilot.csv` (2 models x 2 arms, the same four run ids as the previous re-pilot), `--max-turns 60`, concurrency 2, separate `--out-dir` so the h45-recheck evidence was not touched. Runner prompt sha256 `2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5` (regenerated with `gen_recipes.py`, identical in all four recipes and in `label-map.json`; treatment `instructions` carry the byte-verbatim second copy). Recipes list only the `developer` and `context7` extensions. Pre-flight: 18 harness tests and 16 scorer tests pass; eight leftover `exp5-*` sessions (smoke h45/h55, the four previous re-pilot runs, h45-control-r2/r3) were reported, exported and backed up (`/tmp/exp5-fenced-pilot/backups/`, full `sessions.db` copy) before removal, because the harness resolves sessions by exact name. Wall clock 17:40:16Z to 17:46:39Z. All four runs exit 0 with no failure_mode. Evidence: `scorer/pilot-evidence/fenced-repilot/` (`scores.json` scored_at 2026-11-27T17:50:00Z, `variance.txt`, `label-map.json`, `latency-log.jsonl`, `tool-log.jsonl`, `contamination-narrow.txt`, `fence.txt`, `<run>/exp5-output.json`; SHA256SUMS alongside). Scores are mapped by argv order (run_id "unknown" in every record).
+
+### Per-run table
+
+| run | C3 | C4 | C5 | C6 | C7 | primary_total | total | cost_usd | total_tokens | tool requests | wall clock s | failure_mode | session id |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| h45-control | 0.0 | 0.75 | 0.0 | 1.0 | 0.8 | 0.75 | 2.55 | 0.2263425 | 1,196,276 | 40 | 122 | none | 20261127_91 |
+| h45-treatment | 1.0 | 0.6 | 0.0 | 1.0 | 0.6 | 1.6 | 3.2 | 0.19733615 | 1,051,622 | 36 | 109 | none | 20261127_90 |
+| h55-control | 1.0 | 0.6429 | 0.0 | 0.8688 | 0.0 | 1.6429 | 2.5116 | 0.15489437 | 2,229,224 | 36 | 268 | none | 20261127_92 |
+| h55-treatment | 0.0 | 0.6 | 0.0 | 0.8521 | 0.8 | 0.6 | 2.2521 | 0.081134605 | 2,230,015 | 36 | 164 | none | 20261127_93 |
+
+Cost is `accumulated_cost` from the goose `sessions.db` (cross-checked against `latency-log.jsonl` in `fence.txt`); the four runs total 0.6597 USD. C7 facts failing: h45-control `mod_registration`; h45-treatment `workspace_dependency`, `mod_registration`; h55-control all five; h55-treatment `mod_registration`. C5 is 0.0 in all four runs (three defuse drafts do not compile; h55-control compiles with zero captures), so C5 contributes no variance and no headroom this time. C3 is bimodal again (1.0 in the two runs whose element query compiles and matches 6/6, 0.0 where it does not compile). Variance over the four runs: C3 0.25, C4 0.0038, C5 0.0, C6 0.0049, C7 0.1075; `C7.mod_registration` 0.0 in all four runs.
+
+### Fence evidence
+
+Per clone (`fence.txt`): `git rev-parse HEAD` = 132ea687e09a916091699a562da3c96c86ec1fd8 in all four; `git remote -v` prints nothing in all four; BLOCKED line count in `<clone>/.exp5-fence/gh-fence.log` is 0 in all four (the log file was never created, so no `gh` call was denied); `git status --short` shows only `?? exp5-output.json`.
+
+### Contamination scan (narrowed rule)
+
+Rule: a hit is opening, searching or reading #1861; any aptu-coder pull request; or any commit or file that adds PHP support. Scan: every message item (text, thinking, toolRequest, toolResult) of the four sessions plus the `tool-log.jsonl` targets (`contamination-narrow.txt`).
+
+- h45-control (20261127_91): 0 hits. "1861" 0, aptu-coder PR URL 0, PHP-support diff text 0, no curl/wget/fetch, no `gh` call other than `gh issue view 1864`.
+- h45-treatment (20261127_90): 0 hits, same categories.
+- h55-control (20261127_92): 0 hits. Other-commit reads, all `--stat` file lists and none PHP: message 4928 `git show --stat dbc2971`, 5022 `git show --stat dbc2971`, 5049 `git diff-tree --no-commit-id --name-only -r dbc2971`.
+- h55-treatment (20261127_93): 0 hits. Other-commit reads: message 4947 `git show --stat dbc2971` and `git show --stat 07c50d4`, message 4950 `git diff --stat dbc2971^ dbc2971` and `git diff --stat 07c50d4^ 07c50d4`.
+- Recorded as non-hits: dbc2971 (Swift support) and 07c50d4 (CSS/YAML) are sibling-language commits, not PHP; the Swift PR number #1742 appears only inside a commit subject returned by `git log` and in the delegates' own `related_issues` prose derived from it, and was never requested; "pull request" prose comes from the #1864 body and `CONTRIBUTING.md`. `tool-log.jsonl` targets: 0 hits.
+- No run reached #1861 or any aptu-coder pull request, so the stop rule did not trigger.
+
+### Gate verdict
+
+Gate arithmetic on primary_total (0 to 3.0), band [0.9, 2.1], control run only (n = 1 per model):
+
+- claude-haiku-4-5: control 0.75 (below the 0.9 floor); treatment 1.6.
+- claude-haiku-5-5: control 1.6429 (in band, below the 2.1 ceiling); treatment 0.6.
+- No failure_mode in any run; total cost 0.6597 USD.
+
+Verdict: FLOOR. claude-haiku-4-5 control primary_total 0.75 is below 0.9, matching the earlier re-pilot control (0.75) and the n = 3 h4-5 re-check (0.75, 1.0, 0.75; mean 0.8333) and its n = 2 admissible reading (0.75, 1.0; mean 0.875). The claude-haiku-5-5 control is inside the band. The pilot does not PASS; unlike the previous re-pilot, this reading is not confounded by contamination. The floor is driven by C5 (0.0 in every run) and by C3 in the h4-5 controls (the element query does not compile in h45-control and scored 0.0 in all three h4-5 re-check controls); C3 is bimodal across arms rather than by model (0.0 in h45-control and h55-treatment, 1.0 in the two others).
