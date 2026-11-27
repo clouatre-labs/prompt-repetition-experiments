@@ -113,6 +113,6 @@ e72dcea0f5baf23a7ff4ac369e1d7ffcb5d4cf1459ee9cc150f573aed9f885af  tests/test_pre
 
 Zenodo DOI, recorded by the owner at deposit before the first main-run spawn:
 
-- DOI: `10.5281/zenodo.24603433`, a new record (version 1.0.0), not a version of `10.5281/zenodo.19696593` or `10.5281/zenodo.20039271`.
-- Deposit timestamp (UTC): `2026-11-27T20:08:06Z`, the record's `created` time; the publish request was sent at `2026-11-27T20:08:05Z`.
-- Record URL: https://zenodo.org/records/24603433
+- Concept DOI (all versions): `10.5281/zenodo.24603432`, https://zenodo.org/records/24603432. A record of its own, not a version of `10.5281/zenodo.19696593` or `10.5281/zenodo.20039271`.
+- Version 1.0.1, the deposit to cite: `10.5281/zenodo.24604327`, https://zenodo.org/records/24604327, published `2026-11-27T20:23:36Z`. One file, `exp5-prereg-v1.0.0.zip` (603,260 bytes), sha256 `ad110f47e2767b4f6e9e25f6f5e1e97813f872db417f49f6db0295b433b22e49`: the 82 files of the deposit list with their paths kept.
+- Version 1.0.0, the first publication: `10.5281/zenodo.24603433`, https://zenodo.org/records/24603433, deposited `2026-11-27T20:08:06Z` (record `created`; publish request sent at `20:08:05Z`). The same 82 files uploaded individually.
