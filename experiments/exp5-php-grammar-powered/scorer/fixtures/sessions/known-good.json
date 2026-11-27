@@ -1,0 +1,67 @@
+{
+  "run_id": "known-good",
+  "group": "fixture",
+  "started_at": "2026-11-27T00:00:00Z",
+  "finished_at": "2026-11-27T00:00:00Z",
+  "session_id": "fixture-session",
+  "lens": "scout",
+  "relevant_files": [
+    {
+      "path": "crates/aptu-coder-core/src/languages/java.rs",
+      "line_range": "1-40",
+      "role": "Reference handler pattern"
+    }
+  ],
+  "conventions": {
+    "commits": "n/a",
+    "testing": "n/a",
+    "linting": "n/a",
+    "error_handling": "n/a"
+  },
+  "patterns": [],
+  "related_issues": [],
+  "constraints": [],
+  "test_coverage": "fixture",
+  "library_findings": [],
+  "approaches": [],
+  "recommendation": "fixture",
+  "language_info_struct_citation": "pub defuse_query: Option<&'static str>,",
+  "element_query_draft": "(function_definition name: (name) @function)\n(class_declaration name: (name) @class)\n\n(method_declaration name: (name) @method)\n(interface_declaration name: (name) @interface)\n(trait_declaration name: (name) @trait)\n(enum_declaration name: (name) @enum)",
+  "defuse_query_draft": "(assignment_expression left: (variable_name (name)) @write)\n(augmented_assignment_expression left: (variable_name (name)) @writeread)\n(variable_name (name)) @read",
+  "inheritance_walk_citation": "Walk class_declaration `base_clause` for `extends` and `class_interface_clause` for `implements` (node-types.json); the parent name node is field `name`.",
+  "test_snippets": [
+    {
+      "dimension": "declaration_kind",
+      "declaration_kind": "class",
+      "code": "<?php class A {}",
+      "test_name": "test_class"
+    },
+    {
+      "dimension": "declaration_kind",
+      "declaration_kind": "function",
+      "code": "<?php function f() { return 1; }",
+      "test_name": "test_function"
+    },
+    {
+      "dimension": "inheritance_shape",
+      "declaration_kind": "extends",
+      "code": "<?php class B extends A {}",
+      "test_name": "test_extends"
+    },
+    {
+      "dimension": "inheritance_shape",
+      "declaration_kind": "implements",
+      "code": "<?php class C implements I {}",
+      "test_name": "test_implements"
+    }
+  ],
+  "wiring_summary": {
+    "workspace_dependency": "tree-sitter-php = \"0.25.2\"",
+    "unconditional_dependency": "tree-sitter-php = { workspace = true }",
+    "extension_map_entry": "(\"php\", \"php\"),",
+    "mod_registration": "pub mod php; (top of crates/aptu-coder-core/src/languages/mod.rs)",
+    "match_arms": "\"php\" => Some(LanguageInfo { language: tree_sitter_php::LANGUAGE.into(), ... })\n\"php\" => Some(tree_sitter_php::LANGUAGE.into()),"
+  },
+  "latency_seconds": 0,
+  "message_count": 0
+}

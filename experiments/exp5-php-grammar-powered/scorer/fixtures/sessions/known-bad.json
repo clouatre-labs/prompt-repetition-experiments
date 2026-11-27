@@ -1,0 +1,46 @@
+{
+  "run_id": "known-bad",
+  "group": "fixture",
+  "started_at": "2026-11-27T00:00:00Z",
+  "finished_at": "2026-11-27T00:00:00Z",
+  "session_id": "fixture-session",
+  "lens": "scout",
+  "relevant_files": [
+    {
+      "path": "crates/aptu-coder-core/src/languages/java.rs",
+      "line_range": "1-40",
+      "role": "Reference handler pattern"
+    }
+  ],
+  "conventions": {
+    "commits": "n/a",
+    "testing": "n/a",
+    "linting": "n/a",
+    "error_handling": "n/a"
+  },
+  "patterns": [],
+  "related_issues": [],
+  "constraints": [],
+  "test_coverage": "fixture",
+  "library_findings": [],
+  "approaches": [],
+  "recommendation": "fixture",
+  "language_info_struct_citation": "defuse_query is mandatory",
+  "element_query_draft": "ELEMENT_QUERY will contain function and class patterns.",
+  "defuse_query_draft": "(function_declaration (identifier) @x)",
+  "inheritance_walk_citation": "Walk `inherits_from` then `user_type` to find the base class.",
+  "test_snippets": [
+    {
+      "dimension": "declaration_kind",
+      "declaration_kind": "class",
+      "code": "class A {",
+      "test_name": "test_broken"
+    }
+  ],
+  "wiring_summary": {
+    "workspace_dependency": "add the dependency",
+    "match_arms": "handle php"
+  },
+  "latency_seconds": 0,
+  "message_count": 0
+}

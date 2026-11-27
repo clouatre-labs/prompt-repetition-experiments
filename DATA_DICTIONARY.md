@@ -180,6 +180,8 @@ Experiment data is organized into three experiments (exp1-fastmcp-refactor, exp2
 | `C2` | string | Justification for C2 score |
 | ... | ... | Additional criteria |
 
+**Exp5 fractional extension** (`experiments/exp5-php-grammar-powered/scorer`, rubric `exp5-rubric-v1-fractional`): the executable scorer keeps the Exp4 criterion IDs but emits C3 to C7 as numbers in `[0,1]` (fractional share of satisfied sub-rules, never `NaN`; not-applicable values are `null`). `total` is the sum `C3 + C4 + C5 + C6 + C7` (max 5.0). `C1` and `C2` are not executable offline and are `null` unless the session carries a numeric value, in which case it is copied verbatim. Each `justifications` entry names the artifact that failed (for example `element_query_draft does not compile`). Top-level keys are written in fixed order `scored_at, scorer, rubric_version, note, scores`, so repeat runs over the same sessions are byte-identical apart from `scored_at`. Score records carry `run_id, C1, C2, C3, C4, C5, C6, C7, total, justifications` in that order.
+
 ---
 
 ## label-map.json
