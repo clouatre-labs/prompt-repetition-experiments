@@ -22,6 +22,9 @@ from checks import WIRING_KEYS, php_language, score_artifacts, wiring_facts
 SCORER = "exp5-php-scorer/0.1.0 (tree-sitter 0.25.2, tree-sitter-php 0.25.2)"
 RUBRIC_VERSION = "exp5-rubric-v1-fractional"
 CRITERIA = ("C3", "C4", "C5", "C6", "C7")
+# Primary score since the 2026-11-27 pilot: C6 and C7 were 1.0 in every pilot run (zero variance),
+# so the protocol's floor/ceiling rule excludes them; they stay in the record and are reported.
+PRIMARY_CRITERIA = ("C3", "C4", "C5")
 ARTIFACT_KEYS = (
     "element_query_draft",
     "inheritance_walk_citation",
@@ -47,6 +50,7 @@ def score_session(session: dict) -> dict:
     record: dict = {"run_id": str(session.get("run_id", "unknown")), "C1": _fmt(copied["C1"]), "C2": _fmt(copied["C2"])}
     record.update({c: _fmt(results[c].score) for c in CRITERIA})
     record["total"] = _fmt(sum(results[c].score for c in CRITERIA))
+    record["primary_total"] = _fmt(sum(results[c].score for c in PRIMARY_CRITERIA))
     justifications = {
         "C1": "copied verbatim from session" if copied["C1"] is not None else "not executable offline: null",
         "C2": "copied verbatim from session" if copied["C2"] is not None else "not executable offline: null",
@@ -61,7 +65,7 @@ def build_scores(sessions: list[dict], scored_at: str) -> dict:
         "scored_at": scored_at,
         "scorer": SCORER,
         "rubric_version": RUBRIC_VERSION,
-        "note": "C3..C7 are fractional in [0,1]; total = sum(C3..C7). C1/C2 copied verbatim when present, else null.",
+        "note": "C3..C7 are fractional in [0,1]; total = sum(C3..C7); primary_total = C3 + C4 + C5 (C6, C7 excluded under the protocol floor/ceiling rule, reported). C1/C2 copied verbatim when present, else null.",
         "scores": [score_session(s) for s in sessions],
     }
 
