@@ -1,0 +1,229 @@
+{
+  "started_at": "2026-11-28T00:21:22Z",
+  "finished_at": "2026-11-28T00:24:00Z",
+  "session_id": null,
+  "lens": "scout",
+  "relevant_files": [
+    {"path": "crates/aptu-coder-core/src/languages/mod.rs", "line_range": "54-69", "role": "LanguageInfo struct definition; new php arms go in get_language_info (line 72) and get_ts_language (line 317); add pub mod php near line 12-22"},
+    {"path": "crates/aptu-coder-core/src/languages/java.rs", "line_range": "1-41", "role": "Template for ELEMENT_QUERY, CALL_QUERY, REFERENCE_QUERY, IMPORT_QUERY, DEFUSE_QUERY constants"},
+    {"path": "crates/aptu-coder-core/src/languages/java.rs", "line_range": "131-158", "role": "extract_inheritance; uses child_by_field_name(superclass/interfaces) which PHP grammar does not provide, so the walk must be by child kind"},
+    {"path": "crates/aptu-coder-core/src/languages/swift.rs", "line_range": "1-178", "role": "Most recent language addition (#1742); queries_compile and set_language_smoke test pattern; kind-based inheritance walk"},
+    {"path": "crates/aptu-coder-core/src/languages/css.rs", "line_range": "1-78", "role": "Wiring reference for the css integration; inline tests for parse_and_query helper and empty-file case"},
+    {"path": "crates/aptu-coder-core/src/lang.rs", "line_range": "12-50", "role": "EXTENSION_MAP; add (\"php\", \"php\")"},
+    {"path": "crates/aptu-coder-core/src/lang.rs", "line_range": "81-95", "role": "supported_languages(); add \"php\". css and yaml are absent here, but QUERY_CACHE is built from this list, so php must be added"},
+    {"path": "crates/aptu-coder-core/src/parser.rs", "line_range": "191-196, 221-251", "role": "QUERY_CACHE built from supported_languages(); get_compiled_queries returns UnsupportedLanguage for any name not in that list"},
+    {"path": "crates/aptu-coder-core/src/parser.rs", "line_range": "549-600", "role": "extract_def_use_for_file; used by DEFUSE tests (java.rs test_defuse_query_write_site pattern)"},
+    {"path": "crates/aptu-coder-core/src/parser_elements.rs", "line_range": "276-300", "role": "Element capture consumer: reads capture names function, func_name, method_name, class, class_name, type_name"},
+    {"path": "crates/aptu-coder-core/src/parser_elements.rs", "line_range": "398-402", "role": "Calls lang_info.extract_inheritance(&class_node, source) for each class node"},
+    {"path": "crates/aptu-coder-core/src/parser_elements.rs", "line_range": "850-900", "role": "extract_def_use returns empty when compiled.defuse is None; matches capture prefixes write., read., writeread.; compares node text to bare symbol name"},
+    {"path": "Cargo.toml", "line_range": "15-16, 49", "role": "[workspace.dependencies]; tree-sitter = \"0.27.1\"; tree-sitter-css = \"0.25.0\" is the css wiring line"},
+    {"path": "crates/aptu-coder-core/Cargo.toml", "line_range": "28, 54", "role": "tree-sitter-css = { workspace = true } is the crate-level dependency line"},
+    {"path": "Cargo.lock", "line_range": "2279-2281, 2312-2313", "role": "Locked tree-sitter 0.27.2; tree-sitter-css 0.25.0 entry; no tree-sitter-php entry yet"},
+    {"path": "README.md", "line_range": "47, 53-55", "role": "Intro says 'It supports 18 languages'; Supported Languages list; must add PHP and update the count"},
+    {"path": "crates/aptu-coder-core/src/languages/mod.rs", "line_range": "1-8", "role": "Module doc comment lists supported languages; update to include PHP"},
+    {"path": "crates/aptu-coder-core/src/languages/mod.rs", "line_range": "383-411", "role": "test_get_language_info_covers_remaining_registered_languages table; candidate place for a php row"}
+  ],
+  "conventions": {
+    "commits": "Conventional Commits (e.g. 'feat(core): add Swift language support with tree-sitter-swift handler (#1742)'), GPG-signed and DCO signed off; CONTRIBUTING.md gives 'git commit -S --signoff -m ...'. Tags must be signed (git tag -s).",
+    "testing": "Inline #[cfg(test)] mod tests in each languages/*.rs file (queries_compile, set_language_smoke, element_query_matches_class_and_function, inheritance tests, defuse write-site test). Core integration tests in crates/aptu-coder-core/tests/integration_tests.rs (e.g. test_java_inheritance_extraction, test_csharp_parse_and_extract) using tempfile. MCP-level tests in crates/aptu-coder/tests/ using common::call_tool_raw and tempfile::NamedTempFile.",
+    "linting": "cargo fmt --check; cargo clippy --locked --profile ci -- -D warnings -W clippy::cognitive_complexity (ci.yml line 137); workspace lints deny undocumented_unsafe_blocks, unwrap_used, expect_used (test code exempt); cargo deny check advisories licenses bans (ci.yml line 211). New Cargo.lock entries must be >=7 days old unless SKIP_PACKAGE_AGE_CHECK=true.",
+    "error_handling": "Handlers return Option<String> or Vec<String>; no panics; source slicing guarded with get_node_text bounds check (mod.rs). Parser errors are ParserError::UnsupportedLanguage / QueryError / ParseError. Query compile failures are logged once via tracing::error in get_compiled_queries."
+  },
+  "patterns": [
+    "Each language handler file exposes pub const ELEMENT_QUERY, CALL_QUERY, REFERENCE_QUERY, IMPORT_QUERY, DEFUSE_QUERY as raw string S-expressions (java.rs, swift.rs, css.rs).",
+    "Handlers are registered in languages/mod.rs get_language_info() as a match arm returning Some(LanguageInfo { ... }) with Option fields for optional handlers (swift.rs, java.rs, css.rs).",
+    "get_ts_language() repeats the grammar selection in a second match arm (mod.rs line 317-334).",
+    "Extension to language mapping is a flat const EXTENSION_MAP slice of (ext, lang) tuples (lang.rs line 12).",
+    "Inheritance: swift.rs walks child(i) and matches child.kind() == 'inheritance_specifier' rather than using field names; java.rs uses child_by_field_name('superclass'/'interfaces'). PHP has no fields for extends/implements, so the Swift kind-based walk is the applicable pattern.",
+    "Defuse: capture names are prefixed write., read., writeread.; capture text must equal the symbol name exactly (parser_elements.rs 868-880), so a PHP variable capture must target the inner name node, not variable_name, to exclude the $ sigil.",
+    "Element consumer accepts capture names function, func_name, method_name, class, class_name, type_name (parser_elements.rs 282-292); java.rs uses @interface_name which the consumer ignores and falls back to the name field.",
+    "Tests per handler: queries_compile (Query::new for each constant), set_language_smoke (parse and assert !has_error), element_query_matches_class_and_function, inheritance happy path and empty case."
+  ],
+  "related_issues": [
+    {"number": 1742, "title": "Swift language support (tree-sitter-swift handler)", "relevance": "Most recent language addition; cited by #1864 as the second template; commit dbc2971 in the clone"},
+    {"number": 648, "title": "Referenced in #1864 related section (Swift integration)", "relevance": "Cited by #1864; title not retrieved, gh access to this issue is outside the experiment fence"},
+    {"number": 1063, "title": "CSS and YAML tree-sitter grammar support", "relevance": "Source of the css wiring pattern; commit 07c50d4 in the clone; also #1063 is cited for binary size delta reporting in #1864"},
+    {"number": 1807, "title": "Removed consumer of extract_function_name / find_method_for_receiver / find_receiver_type", "relevance": "#1864 Not in Scope excludes those three handlers because they have no consumer since #1807; title not retrieved, gh access outside fence"}
+  ],
+  "constraints": [
+    "Cargo deny age gate: new Cargo.lock entries must be >=7 days old. tree-sitter-php v0.25.2 GitHub release is 2026-11-19T16:26:36Z (9 days before 2026-11-28); crates.io publish date not verified. v0.25.1 (2026-10-06) is the safe fallback.",
+    "Use the php grammar entry point LANGUAGE_PHP (mixed HTML and PHP), not LANGUAGE_PHP_ONLY; the issue requires HTML-template files to parse with zero ERROR nodes.",
+    "tree-sitter-php depends on tree-sitter-language ^0.1 (already locked at 0.1.9), so no new core tree-sitter version is pulled in; tree-sitter-php dev-depends on tree-sitter 0.27, matching the workspace 0.27.1 pin.",
+    "PHP must be added to supported_languages() in lang.rs, otherwise QUERY_CACHE returns UnsupportedLanguage and element extraction fails for php.",
+    "DEFUSE_QUERY is an Option field, so the compiler does not force it. It is required by the issue scope and acceptance criteria and by parser_elements.rs extract_def_use, which returns an empty list when defuse is None.",
+    "Maintainer process: the issue states external pull requests for this issue are not being accepted; the maintainers are implementing it in-house.",
+    "AGENTS.md: do not modify files outside the scope of the assigned issue; README.md is in scope. Other docs listing languages (docs/ARCHITECTURE.md, crates/aptu-coder-core/README.md, crates/aptu-coder/src/lib.rs, crates/aptu-coder-core/src/lib.rs) are not named in the issue scope.",
+    "README links must be absolute; binary size delta must be stated in the PR description (issue acceptance)."
+  ],
+  "test_coverage": "Language-registration coverage: lang.rs has test_language_for_extension_happy_path and edge_case (no php row yet); languages/mod.rs has test_get_language_info_known, test_get_language_info_unknown, test_get_ts_language_known/unknown, and a table test test_get_language_info_covers_remaining_registered_languages (no php row yet). Handler coverage: java.rs and swift.rs carry queries_compile, element match, inheritance and defuse tests; css.rs covers element, import and empty-file. Integration coverage: crates/aptu-coder-core/tests/integration_tests.rs has parse-and-extract and inheritance tests for Python, Java, Go, C#, Fortran, C++; semantic_correctness.rs covers Python, Go, Java, C#. No existing test references .php (rg found zero matches outside Cargo.lock and docs).",
+  "library_findings": [
+    {
+      "library": "tree-sitter-php (grammar: github.com/tree-sitter/tree-sitter-php)",
+      "version": "0.25.2 (latest tag, 2026-11-19); 0.25.1 (2026-10-06) fallback",
+      "relevant_api": "pub const LANGUAGE_PHP: LanguageFn (bindings/rust/lib.rs); also LANGUAGE_PHP_ONLY, PHP_NODE_TYPES, TAGS_QUERY. Usage: tree_sitter_php::LANGUAGE_PHP.into()",
+      "notes": "Crate Cargo.toml (fetched via gh api): name = \"tree-sitter-php\", version = \"0.25.2\", license = \"MIT\", [dependencies] tree-sitter-language = \"0.1\", [dev-dependencies] tree-sitter = \"0.27\", build-dependency cc = \"1.2\". bindings/rust/lib.rs doc test: let language = tree_sitter_php::LANGUAGE_PHP; parser.set_language(&language.into()); assert!(!tree.root_node().has_error()). Grammar: php/src/grammar.json rules. The php/grammar.js file is only: const defineGrammar = require('../common/define-grammar.js'); module.exports = defineGrammar('php');"
+    },
+    {
+      "library": "tree-sitter (Rust crate)",
+      "version": "workspace 0.27.1; Cargo.lock 0.27.2",
+      "relevant_api": "pub fn Query::new(language: &Language, source: &str) -> Result<Self, QueryError> (Context7 /websites/rs_tree-sitter); Parser::set_language; QueryCursor::matches; node.child(i), named_child(i), child_by_field_name, kind()",
+      "notes": "Context7 confirms Query::new signature. Field-name lookup via child_by_field_name only works for fields in the grammar; PHP base_clause and class_interface_clause are unfielded children, so use child(i).kind()."
+    }
+  ],
+  "approaches": [
+    {
+      "name": "A: Mirror Java/Swift handler with grammar LANGUAGE_PHP, kind-based inheritance walk (RECOMMENDED)",
+      "description": "Add crates/aptu-coder-core/src/languages/php.rs with the five constants and extract_inheritance; pin tree-sitter-php 0.25.2 (fallback 0.25.1 if crates.io publish date fails the 7-day gate); use LANGUAGE_PHP; add php to EXTENSION_MAP, supported_languages, get_language_info, get_ts_language, pub mod php, README list and count; unit tests in php.rs; one integration test in crates/aptu-coder/tests/. ELEMENT_QUERY captures @function and @class with @func_name, @method_name, @class_name so the existing consumer reads names. DEFUSE captures the inner name node of variable_name so the sigil is excluded.",
+      "pros": [
+        "Matches the Java and Swift registry pattern exactly; the consumer already reads these capture names",
+        "Covers every acceptance criterion: five queries, extract_inheritance, HTML template via LANGUAGE_PHP, defuse sites",
+        "No new core tree-sitter version: tree-sitter-language 0.1.9 already locked",
+        "Grammar node and field names verified against php/src/node-types.json and php/src/grammar.json"
+      ],
+      "cons": [
+        "The Java extract_inheritance cannot be copied: PHP has no superclass/interfaces fields, so the walk is by child kind (Swift pattern)",
+        "Defuse on a bare name also matches same-named functions, classes, and properties (same trade-off as Java identifier matching)",
+        "Binary size increases by the PHP grammar parser.c (about 7.5 MB source) compiled into the release binary; delta must be measured for the PR"
+      ],
+      "complexity": "medium",
+      "files_touched": 9
+    },
+    {
+      "name": "B: Use LANGUAGE_PHP_ONLY grammar for .php files",
+      "description": "Same handler as A but register tree_sitter_php::LANGUAGE_PHP_ONLY so the grammar has no HTML text rule.",
+      "pros": [
+        "Slightly smaller parse surface; PHP-only files parse without the text rule",
+        "Same registry wiring as A"
+      ],
+      "cons": [
+        "Fails the issue acceptance criterion: a .php file mixing HTML and <?php ... ?> must parse with zero ERROR nodes",
+        "Real-world .php templates are mixed-mode, so most files would produce ERROR nodes",
+        "No dependency benefit: both entry points live in the same crate build"
+      ],
+      "complexity": "simple",
+      "files_touched": 9
+    },
+    {
+      "name": "C: Regex-based extractor (no tree-sitter grammar)",
+      "description": "Implement a regex scanner for function, class, interface, trait, enum, use and call patterns, following the regex approach used for Astro, CSS, YAML, JSON and TOML in commit 2b32268 (#1069) before the grammar upgrade in 07c50d4 (#1063).",
+      "pros": [
+        "No new Cargo.lock entry, so no 7-day age gate or cargo deny churn",
+        "Smaller binary delta"
+      ],
+      "cons": [
+        "Contradicts the issue: scope requires tree-sitter-php and node kinds from the grammar",
+        "Misses structure inside strings and comments; the repo already moved away from regex for CSS and YAML (audit doc 2026-06-unsupported-extension-handling.md line 148)",
+        "Cannot support def-use or structural inheritance reliably"
+      ],
+      "complexity": "medium",
+      "files_touched": 6
+    }
+  ],
+  "recommendation": "Approach A. It is the only option that meets every acceptance criterion in #1864 (mixed HTML via LANGUAGE_PHP, five query constants, extract_inheritance, def-use sites) and it reuses the existing consumer capture names and the Swift kind-based inheritance pattern. Pin tree-sitter-php to 0.25.2 only after confirming its crates.io publish date is at least 7 days old; otherwise use 0.25.1. Add php to supported_languages() (mandatory; css and yaml are missing from that list, and that gap should not be copied). Keep DEFUSE_QUERY: it is an Option field, so the compiler will not enforce it, but the issue scope requires it and without it extract_def_use returns no sites for PHP.",
+  "language_info_struct_citation": "From crates/aptu-coder-core/src/languages/mod.rs lines 54-67, verbatim:\n\npub struct LanguageInfo {\n    pub name: &'static str,\n    pub language: Language,\n    pub element_query: &'static str,\n    pub call_query: &'static str,\n    pub reference_query: Option<&'static str>,\n    pub import_query: Option<&'static str>,\n    pub impl_query: Option<&'static str>,\n    pub impl_trait_query: Option<&'static str>,\n    pub defuse_query: Option<&'static str>,\n    pub extract_function_name: Option<ExtractFunctionNameHandler>,\n    pub find_method_for_receiver: Option<FindMethodForReceiverHandler>,\n    pub find_receiver_type: Option<FindReceiverTypeHandler>,\n    pub extract_inheritance: Option<ExtractInheritanceHandler>,\n}\n\nHandler type: pub type ExtractInheritanceHandler = fn(&Node, &str) -> Vec<String>; (mod.rs line 42-43).",
+  "element_query_draft": "pub const ELEMENT_QUERY: &str = r\"\n(function_definition\n  name: (name) @func_name) @function\n(method_declaration\n  name: (name) @method_name) @function\n(class_declaration\n  name: (name) @class_name) @class\n(interface_declaration\n  name: (name) @class_name) @class\n(trait_declaration\n  name: (name) @class_name) @class\n(enum_declaration\n  name: (name) @class_name) @class\n\";\n\nNode kinds and captured fields (each verified in php/src/node-types.json):\n- function_definition: field name -> name node, capture func_name; outer node captured as function. Free functions only.\n- method_declaration: field name -> name node, capture method_name; outer node captured as function.\n- class_declaration: field name -> name node, capture class_name; outer node captured as class.\n- interface_declaration: field name -> name node, capture class_name; outer node captured as class.\n- trait_declaration: field name -> name node, capture class_name; outer node captured as class.\n- enum_declaration: field name -> name node, capture class_name; outer node captured as class.",
+  "defuse_query_draft": "pub const DEFUSE_QUERY: &str = r\"\n(assignment_expression left: (variable_name (name) @write.assign))\n(reference_assignment_expression left: (variable_name (name) @write.assign))\n(simple_parameter name: (variable_name (name) @write.local))\n(static_variable_declaration name: (variable_name (name) @write.local))\n(augmented_assignment_expression left: (variable_name (name) @writeread.update))\n(update_expression argument: (variable_name (name) @writeread.update))\n(variable_name (name) @read.usage)\n\";\n\nAdapted from java.rs DEFUSE_QUERY, which is:\n\npub const DEFUSE_QUERY: &str = r\"\n(local_variable_declaration declarator: (variable_declarator name: (identifier) @write.local))\n(assignment_expression left: (identifier) @write.assign)\n(update_expression (identifier) @writeread.update)\n(identifier) @read.usage\n\";\n\nWhy the PHP version differs: PHP has no local declaration keyword, so the local-declaration analogue is simple_parameter and static_variable_declaration. PHP variables are variable_name nodes whose text includes the $ sigil; capturing the inner name child (text without $) lets parser_elements.rs line 870 match the bare symbol name. Capture prefixes write., writeread., read. are required by parser_elements.rs 878-884. Verified in node-types: assignment_expression.left, reference_assignment_expression.left, augmented_assignment_expression.left, update_expression.argument, simple_parameter.name and static_variable_declaration.name all accept variable_name; variable_name has child name.",
+  "inheritance_walk_citation": "Source: php/src/grammar.json rules, fetched via gh api repos/tree-sitter/tree-sitter-php/contents/php/src/grammar.json, and cross-checked with php/src/node-types.json.\n\nclass_declaration rule (verbatim structure): SEQ of [ CHOICE(FIELD attributes: attribute_list | BLANK), REPEAT(_modifier), ALIAS 'class' (anonymous), FIELD name: RESERVED(name, context 'classes'), CHOICE(SYMBOL base_clause | BLANK), CHOICE(SYMBOL class_interface_clause | BLANK), FIELD body: declaration_list ].\n\nThe walk: (1) start at a class_declaration node; (2) base_clause and class_interface_clause are NOT fields, so iterate node.child(i) for i in 0..child_count() and match child.kind(); (3) for kind == 'base_clause' (the extends list), iterate its named children; each is one of name, qualified_name, relative_name (from the _name rule: CHOICE of name, qualified_name, relative_name alternatives); emit 'extends {text}' for each; (4) for kind == 'class_interface_clause' (the implements list), iterate named children the same way and emit 'implements {text}' for each.\n\nbase_clause rule: SEQ [ ALIAS 'extends' (anonymous, named:false), SEQ [ SYMBOL _name, REPEAT(SEQ [ STRING ',', SYMBOL _name ]) ] ]. class_interface_clause rule: SEQ [ ALIAS 'implements' (anonymous), SEQ [ SYMBOL _name, REPEAT(SEQ [ ',', _name ]) ] ]. Keywords are anonymous, so named_child iteration yields only the type names.\n\nNode-level confirmation: class_declaration CHILDREN include base_clause and class_interface_clause (node-types.json); base_clause and class_interface_clause CHILDREN are name, qualified_name, relative_name (multiple). interface_declaration has base_clause only (multiple parent interfaces, emitted as extends). enum_declaration has class_interface_clause (implements) and an optional primitive_type backing type. trait_declaration has no clauses.\n\nExpected output for 'class Foo extends Bar implements A, B': [\"extends Bar\", \"implements A\", \"implements B\"]; for a class with no clauses: [].",
+  "test_snippets": [
+    {
+      "dimension": "query_compile",
+      "declaration_kind": "all five constants",
+      "code": "let lang = tree_sitter_php::LANGUAGE_PHP.into();\ntree_sitter::Query::new(&lang, ELEMENT_QUERY).expect(\"ELEMENT_QUERY must be valid\");\ntree_sitter::Query::new(&lang, CALL_QUERY).expect(\"CALL_QUERY must be valid\");\ntree_sitter::Query::new(&lang, REFERENCE_QUERY).expect(\"REFERENCE_QUERY must be valid\");\ntree_sitter::Query::new(&lang, IMPORT_QUERY).expect(\"IMPORT_QUERY must be valid\");\ntree_sitter::Query::new(&lang, DEFUSE_QUERY).expect(\"DEFUSE_QUERY must be valid\");",
+      "test_name": "queries_compile"
+    },
+    {
+      "dimension": "parse_smoke",
+      "declaration_kind": "program",
+      "code": "let mut parser = tree_sitter::Parser::new();\nparser.set_language(&tree_sitter_php::LANGUAGE_PHP.into()).unwrap();\nlet tree = parser.parse(\"<?php echo 1;\", None).unwrap();\nassert!(!tree.root_node().has_error());",
+      "test_name": "set_language_smoke"
+    },
+    {
+      "dimension": "element_extraction_function_and_method",
+      "declaration_kind": "function_definition, method_declaration",
+      "code": "<?php\nfunction greet() { return 1; }\nclass Greeter { public function hello() {} }",
+      "test_name": "element_query_matches_function_and_method"
+    },
+    {
+      "dimension": "element_extraction_type_declarations",
+      "declaration_kind": "class_declaration, interface_declaration, trait_declaration, enum_declaration",
+      "code": "<?php\nclass Animal {}\ninterface Runner {}\ntrait Logs {}\nenum Suit { case Hearts; }",
+      "test_name": "element_query_matches_class_interface_trait_enum"
+    },
+    {
+      "dimension": "inheritance_happy_path",
+      "declaration_kind": "class_declaration with base_clause and class_interface_clause",
+      "code": "<?php\nclass Foo extends Bar implements A, B {}",
+      "test_name": "test_php_extract_inheritance_extends_and_implements"
+    },
+    {
+      "dimension": "inheritance_no_clause_edge",
+      "declaration_kind": "class_declaration without base_clause or class_interface_clause",
+      "code": "<?php\nclass Plain {}",
+      "test_name": "test_php_extract_inheritance_no_clauses"
+    },
+    {
+      "dimension": "call_extraction_free_arrow_double_colon",
+      "declaration_kind": "function_call_expression, member_call_expression, scoped_call_expression",
+      "code": "<?php\nstrlen($s);\n$obj->run();\nFoo::make();",
+      "test_name": "call_query_matches_free_arrow_and_static_calls"
+    },
+    {
+      "dimension": "import_extraction",
+      "declaration_kind": "namespace_use_declaration",
+      "code": "<?php\nuse App\\Models\\User;\nuse App\\Services\\{Mailer, Logger};",
+      "test_name": "import_query_matches_use_declarations"
+    },
+    {
+      "dimension": "type_reference_extraction",
+      "declaration_kind": "named_type",
+      "code": "<?php\nfunction f(User $u): ?Repo { return null; }",
+      "test_name": "reference_query_matches_named_types"
+    },
+    {
+      "dimension": "defuse_write_site",
+      "declaration_kind": "assignment_expression, simple_parameter",
+      "code": "<?php\nfunction m(int $z) { $z = 5; }",
+      "test_name": "test_defuse_query_write_site"
+    },
+    {
+      "dimension": "defuse_read_site",
+      "declaration_kind": "variable_name (read)",
+      "code": "<?php\n$total = $count + 1;",
+      "test_name": "test_defuse_query_read_site"
+    },
+    {
+      "dimension": "html_template_mixed_mode",
+      "declaration_kind": "program with text node and php_tag",
+      "code": "<h1><?= $title ?></h1>\n<?php function render() {} ?>\n<p>done</p>",
+      "test_name": "test_php_html_template_no_error_nodes"
+    },
+    {
+      "dimension": "empty_file",
+      "declaration_kind": "program (empty)",
+      "code": "",
+      "test_name": "test_php_empty_file"
+    },
+    {
+      "dimension": "integration_analyze_file_language_label",
+      "declaration_kind": "file-level analyze_file output",
+      "code": "use tempfile::NamedTempFile;\nlet f = NamedTempFile::with_suffix_in(\".php\", &cwd).unwrap();\n// expect output.language == \"php\" and functions include greet",
+      "test_name": "test_php_analyze_file_happy_path"
+    }
+  ],
+  "wiring_summary": {
+    "root_cargo_toml_workspace_dependencies": "Add line tree-sitter-php = \"0.25.2\" under [workspace.dependencies], after tree-sitter-css = \"0.25.0\" (Cargo.toml line 49).",
+    "crates_aptu_coder_core_cargo_toml_dependencies": "Add line tree-sitter-php = { workspace = true } under [dependencies], after tree-sitter-css = { workspace = true } (crates/aptu-coder-core/Cargo.toml line 54).",
+    "cargo_lock_tree_sitter_php_package": "Cargo.lock gains a name = \"tree-sitter-php\" version = \"0.25.2\" package entry and a \"tree-sitter-php\" line in the aptu-coder-core dependency list, as tree-sitter-css appears at Cargo.lock line 2312.",
+    "lang_rs_extension_map": "Add entry (\"php\", \"php\"), after (\"css\", \"css\") at lang.rs line 45.",
+    "lang_rs_supported_languages": "Add \"php\" to the array returned by supported_languages() at lang.rs line 81.",
+    "languages_mod_rs_pub_mod": "Add pub mod php; between pub mod markdown; and pub mod python; (mod.rs line 12-22 block, alphabetical).",
+    "languages_mod_rs_get_language_info_match_arm": "Add a match arm \"php\" => Some(LanguageInfo { name: \"php\", language: tree_sitter_php::LANGUAGE_PHP.into(), element_query: php::ELEMENT_QUERY, ... }) in get_language_info (mod.rs line 72).",
+    "languages_mod_rs_get_ts_language_match_arm": "Add arm \"php\" => Some(tree_sitter_php::LANGUAGE_PHP.into()), in get_ts_language (mod.rs line 317-334, next to the css arm at line 330).",
+    "languages_mod_rs_module_doc_comment": "Add PHP to the language list in the module doc comment at mod.rs lines 6-8.",
+    "languages_mod_rs_tests_registered_languages_table": "Add a row (\"php\", <has_references>, <has_imports>) to the table in test_get_language_info_covers_remaining_registered_languages (mod.rs line 383).",
+    "languages_php_rs_handler_file": "Create crates/aptu-coder-core/src/languages/php.rs with the SPDX header, five query constants, extract_inheritance, and inline tests.",
+    "readme_md_supported_languages": "Add PHP to the Supported Languages list at README.md line 55 and change 'supports 18 languages' to 19 at line 47."
+  },
+  "latency_seconds": 180,
+  "message_count": 36
+}

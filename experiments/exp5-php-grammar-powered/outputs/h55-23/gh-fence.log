@@ -1,0 +1,6 @@
+BLOCKED: issue view 648 -R clouatre-labs/aptu-coder --json number,title,state,closedAt -q "\(.number) \(.state) \(.closedAt) \(.title)"
+BLOCKED: issue view 1742 -R clouatre-labs/aptu-coder --json number,title,state,closedAt -q "\(.number) \(.state) \(.closedAt) \(.title)"
+BLOCKED: issue view 1063 -R clouatre-labs/aptu-coder --json number,title,state,closedAt -q "\(.number) \(.state) \(.closedAt) \(.title)"
+BLOCKED: issue view 1807 -R clouatre-labs/aptu-coder --json number,title,state,closedAt -q "\(.number) \(.state) \(.closedAt) \(.title)"
+BLOCKED: issue view 1819 -R clouatre-labs/aptu-coder --json number,title,state,closedAt -q "\(.number) \(.state) \(.closedAt) \(.title)"
+BLOCKED: issue list -R clouatre-labs/aptu-coder --search language support in:title --state all --limit 15 --json number,title,state -q .[] | "\(.number) \(.state) \(.title)"

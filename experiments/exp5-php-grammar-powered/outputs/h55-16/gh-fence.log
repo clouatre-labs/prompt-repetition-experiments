@@ -1,0 +1,6 @@
+BLOCKED: issue view 648 --repo clouatre-labs/aptu-coder --json number,title,state --jq "#\(.number) [\(.state)] \(.title)"
+BLOCKED: issue view 1742 --repo clouatre-labs/aptu-coder --json number,title,state --jq "#\(.number) [\(.state)] \(.title)"
+BLOCKED: issue view 1063 --repo clouatre-labs/aptu-coder --json number,title,state --jq "#\(.number) [\(.state)] \(.title)"
+BLOCKED: issue view 1807 --repo clouatre-labs/aptu-coder --json number,title,state --jq "#\(.number) [\(.state)] \(.title)"
+BLOCKED: issue view 969 --repo clouatre-labs/aptu-coder --json number,title,state --jq "#\(.number) [\(.state)] \(.title)"
+BLOCKED: issue view 1063 --repo clouatre-labs/aptu-coder --json number,title,state --jq "#\(.number) [\(.state)] \(.title)"
