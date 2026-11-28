@@ -26,6 +26,8 @@ Dataset archived at Zenodo: [10.5281/zenodo.19696593](https://doi.org/10.5281/ze
 
 Paper source: [`paper/paper.tex`](paper/paper.tex); compiled PDF: [`paper/paper.pdf`](paper/paper.pdf).
 
+The paper has two parts. Part I is the pilot series (Exp1 to Exp4), labelled exploratory: one model per experiment, $n=5$ per condition, binary rubric scoring by a single LLM judge that was not independently validated. Part II is the pre-registered confirmatory experiment (Exp5, [`experiments/exp5-php-grammar-powered/`](experiments/exp5-php-grammar-powered/)): two models (`claude-haiku-4-5`, `claude-haiku-5-5`), $n=20$ per arm and model, executable fractional scoring, pre-registration deposited as version 1.1.0 of the dataset ([10.5281/zenodo.24611615](https://doi.org/10.5281/zenodo.24611615), 2026-11-27, before the main run). After 10 exclusions under the pre-registered exclusion rule the per-model rank-biserial effect of repetition is 0.1667 (bootstrap 95% CI [-0.2254, 0.5494]) and -0.0069 ([-0.3681, 0.3958]); the dated record is `experiments/exp5-php-grammar-powered/MAIN-RUN-2026-11-27.md`, and the paper's `paper/tables/*.tex` are byte-identical copies of its `analysis-output/` fragments.
+
 Companion blog post: [What a Null Result Taught Us About AI Agent Evaluation](https://clouatre.ca/posts/prompt-repetition-agent-evaluation/).
 
 ## The Question
@@ -222,7 +224,7 @@ The treatment comparison is therefore restricted to the 4 reachable criteria: C2
 
 ### Experiment 4 (exploratory, non-confirmatory)
 
-Experiment 4 (`experiments/exp-swift-grammar-mercury/`) is **exploratory and non-confirmatory**. It is not one of the three pre-registered experiments, it is not in Table 7, and it is not in the paper. Its results are reported descriptively only and do not enter any pooled count above (30 sessions, 3,707 / 3,800 messages, which cover Exp1 to Exp3 only).
+Experiment 4 (`experiments/exp-swift-grammar-mercury/`) is **exploratory and non-confirmatory**. It is not one of the three experiments with sealed label maps, it is not in Table 7, and in the paper it appears only in Part I (the pilot series): one design paragraph, one results paragraph and its per-run table in the appendix. Its results are reported descriptively only and do not enter any pooled count above (30 sessions, 3,707 / 3,800 messages, which cover Exp1 to Exp3 only).
 
 **Do not read the Exp4 scores as evidence in either direction.** The second judge agreed with Judge 1 on only 20% of session-level pass/fail decisions (kappa 0.00) and rejected Judge 1's C5 passes in 8 of 10 sessions, so Judge 1's Exp4 scores, C5 in particular, are not reliable measurements. The pass rates in Table 6b and the 4.2 vs 4.0 means must not be interpreted as showing an effect, an absence of effect, or equivalence. See the limitations below.
 
