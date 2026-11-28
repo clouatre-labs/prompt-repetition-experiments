@@ -88,30 +88,30 @@ On positional retrieval tasks such as NameIndex it gains up to 76 percentage poi
 The mechanism is efficient: repeated tokens produce no additional output and impose
 no mandatory latency penalty on most providers.
 
-Multi-step LLM-agent pipelines are a structurally different evaluation setting.
-Agents execute multi-step tool-call loops, accumulate context across hundreds of messages,
+Multi-step LLM-agent pipelines are a structurally different evaluation setting:
+agents execute multi-step tool-call loops, accumulate context across hundreds of messages,
 and produce structured artifacts graded against rubrics.
-Whether the analogous repetition of fixed delegate instructions produces similar gains in multi-step agentic pipelines remains untested.
-
 The publicly available AIDev dataset \citep{li2026aidev} captures approximately one million
 agent-authored pull requests from real-world GitHub repositories.
-Our study complements this observational corpus with a controlled laboratory design.
-That design enables causal inference over a single variable, instruction repetition, while holding task, model and temperature constant.
+Our controlled laboratory design complements this observational corpus:
+it enables causal inference over a single variable, instruction repetition, while holding task, model and temperature constant.
+Whether the analogous repetition of fixed delegate instructions produces similar gains in multi-step agentic pipelines remains untested.
 
 \textbf{RQ:} Does prompt repetition, meaning the duplicate-query pattern applied to delegate instructions, improve task-success rates for non-reasoning LLM agents in multi-step pipelines, and does the answer depend on the model?
 
 The paper has two parts.
 Part~I is a pilot series of four exploratory experiments (Exp1 to Exp4) with one model each and a single LLM judge.
 The research question was formulated and registered before any experiment was run \citep{kitchenham2002guidelines}.
-The pilots were underpowered and their judge was not independently validated, so they are used only to motivate the design of Part~II.
-Part~II is the pre-registered, powered confirmatory experiment (Exp5) with model as a factor, executable scoring and a deposited protocol \citep{clouatre2026prereg}.
+Underpowered and scored by an unvalidated judge, the pilots only motivate Part~II:
+the pre-registered, powered confirmatory experiment (Exp5) with model as a factor, executable scoring and a deposited protocol \citep{clouatre2026prereg}.
 
 This paper contributes three things.
 First, the Exp5 result: a null effect of prompt repetition on executable task success for two non-reasoning models at $n{=}20$ per arm.
 Second, a formal characterization of \emph{rubric-runner co-design failure} as a distinct evaluation failure mode, shown in Exp3 and addressed by the runner-prompt manipulation of Exp4.
 Third, open datasets of session logs, scoring records, executable scorers and pre-registration materials archived at \href{https://doi.org/10.5281/zenodo.19696593}{DOI:10.5281/zenodo.19696593} \citep{clouatre2026dataset}, which enable replication and secondary analysis.
-Negative results remain rare in software engineering research despite explicit calls to value them \citep{paige2017negative}.
-Without published null results, a positive finding risks being generalized to untested settings \citep{wieringa2015generalizing}; we report this result to constrain that generalization.
+Negative results remain rare in software engineering research despite explicit calls to value them \citep{paige2017negative},
+and without published null results a positive finding risks being generalized to untested settings \citep{wieringa2015generalizing}.
+We report this result to constrain that generalization.
 
 \section{Related Work}
 
@@ -123,7 +123,7 @@ This mirrors Experiments~1 and~2: below the discriminability threshold, outcome 
 \citet{zheng2023} establish LLM-as-judge as a practical but validity-limited approach, recommend inter-rater reliability measures, and report over 80\% agreement between GPT-4 judgments and human preferences on MT-Bench, while noting position bias.
 \citet{shen2023} find that single-judge alignment with human raters is candidate-, dimension- and quality-dependent, with per-system correlation spread of up to 0.5.
 Rubric-based scoring with judge calibration has been proposed to address this variability \citep{hashemi2024llmrubric}.
-The MSR~2026 Mining Challenge applied AIDev to characterise agent failure taxonomies, task-stratified acceptance and review effort \citep{failureMSR2026,comparingMSR2026,revieweffortMSR2026}.
+The MSR~2026 Mining Challenge applied AIDev to characterize agent failure taxonomies, task-stratified acceptance and review effort \citep{failureMSR2026,comparingMSR2026,revieweffortMSR2026}.
 None of these observational studies isolates instruction repetition as a controlled pre-registered independent variable.
 The pilot series (Part~I) uses a single Haiku~4.5 judge.
 A post hoc second-judge check is reported in Section~\ref{subsec:scoring-validation}, but it was not an independent re-scoring and leaves judge reliability untested.
@@ -136,7 +136,7 @@ Substantive null results from sound designs are distinct from methodological fai
 
 Experiments~1 to~4 are exploratory.
 Each used one delegate model and $n{=}5$ per condition.
-Scoring was binary rubric scoring by a single LLM judge, Claude Haiku~4.5, that was not independently validated; the second-judge check of Section~\ref{subsec:scoring-validation} is a score-reconstruction exercise only.
+Scoring was binary rubric scoring by a single LLM judge, Claude Haiku~4.5, that was not independently validated. The second-judge check of Section~\ref{subsec:scoring-validation} is a score-reconstruction exercise only.
 Each experiment targeted an open, unimplemented GitHub issue as the task source, so no published solution existed (\autoref{tab:experiments}).
 Part~I scores are therefore used only to motivate the design changes of Part~II and carry no confirmatory weight.
 
@@ -221,7 +221,7 @@ Session-level pass/fail agreement was also 100\%, though Cohen's $\kappa$ was un
 The second judge did not see the delegate outputs.
 The check is therefore a score reconstruction, not an independent re-scoring, and judge reliability remains untested (Section~\ref{sec:threats}).
 The inferential test was Mann-Whitney U, two-tailed, at $\alpha{=}0.05$, with the rank-biserial $r$ of \citet{kerby2014} as effect size; both were pre-specified from Exp2 onward.
-The rank-biserial $r$ ranges from $-1$ to $1$ and is the difference between the proportion of run pairs that favour treatment and the proportion that favour control.
+The rank-biserial $r$ ranges from $-1$ to $1$ and is the difference between the proportion of run pairs that favor treatment and the proportion that favor control.
 For Exp1, Fisher's exact test was used post hoc when the valid-run count fell to $n{=}4$ control and $n{=}5$ treatment.
 
 \paragraph{Statistical power.}
@@ -256,7 +256,7 @@ Five of six criteria reached 100\% pass rate in both groups; only criterion C5 d
 In Experiment~2, all ten runs scored 7/7, so the test is uninformative ($U{=}12.5$, $p{=}1.000$, $r$ undefined).
 Every criterion reached 100\% in both groups.
 This saturation is consistent with the task-dependent discriminability limits reported by \citet{qian2026} and the causal analysis of \citet{chen2026causal}.
-\autoref{tab:results} summarises Experiments~1 to~3.
+\autoref{tab:results} summarizes Experiments~1 to~3.
 
 \begin{table}[h]
 \centering
@@ -296,7 +296,7 @@ Appendix~\ref{app:partIdesign} records the amendments.
 On the restricted set of C2, C3, C4 and C7, the means are 0.500 in control and 0.600 in treatment on the 0--1 normalized scale; the full-rubric means are 0.286 and 0.343.
 Both analyses give $U{=}15.0$ and $p{=}0.607$, so the restricted and full-rubric comparisons agree.
 Criterion C7 reached 100\% and criterion C3 reached 80\% in both groups, so agents perform structured synthesis when the task is explicitly set.
-We summarise the failure with a rubric-runner alignment score, $A = k_r / k$, where $k$ is the total number of rubric criteria and $k_r$ is the number traceable to at least one explicit instruction in the runner prompt.
+We summarize the failure with a rubric-runner alignment score, $A = k_r / k$, where $k$ is the total number of rubric criteria and $k_r$ is the number traceable to at least one explicit instruction in the runner prompt.
 $A$ is $4/7 = 0.57$ for Exp3 and 1.0 for Exp1 and Exp2.
 We recommend $A{=}1.0$ as a necessary, though not sufficient, pre-registration gate: any criterion with $A{<}1.0$ should be revised or removed before the rubric is sealed.
 \citet{midolo2026guidelines} find that explicitly specifying output post-conditions and I/O contracts produces the largest gains in test-pass rates, while structural repetition does not appear among their improvement patterns.
@@ -368,7 +368,7 @@ Appendix~\ref{app:partIdesign} details the cap.
 \subsection{Design and pre-registration}
 \label{subsec:exp5design}
 
-Does a verbatim second copy of the task instructions improve the executable task-success score of non-reasoning LLM agents on the PHP grammar scout task,\footnote{\url{https://github.com/clouatre-labs/aptu-coder/issues/1864}} and does the answer depend on the model?
+Does a verbatim second copy of the task instructions improve the executable task-success score of non-reasoning LLM agents on the PHP grammar scout task?\footnote{\url{https://github.com/clouatre-labs/aptu-coder/issues/1864}} Does the answer depend on the model?
 The pre-registered hypothesis is no effect of verbatim instruction repetition on the executable task-success score, for each model; the test has no assumed direction.
 Two delegate models, \texttt{claude-haiku-4-5} and \texttt{claude-haiku-5-5}, are each crossed with the two arms.
 The per-model effect is the unit of analysis, and the difference between the two per-model effects is reported as an exploratory interaction.
@@ -501,52 +501,39 @@ The assertion is a check-implementation mismatch; the sealed hashes were re-veri
 
 \subsection{Construct Validity}
 
-Four aspects of the rubric design threaten construct validity.
-First, Section~\ref{subsec:codesign} documents a rubric-runner co-design failure in Part~I: three of seven criteria in Experiment~3 scored 0/1 because the runner prompt lacked instructions for the required investigations.
-Those criteria therefore measure runner-prompt completeness rather than agent capability, which limits any conclusion about repetition on structurally unreachable items.
-Part~II removed the failure by measuring headroom before the main run and by scoring the artifacts the prompt literally requires.
-Second, the binary pass/fail granularity of each criterion compresses within-condition variance.
-It was chosen to enable blinded automated scoring across 30 sessions; polytomous scales would require judge calibration beyond the project's budget.
-It reduces sensitivity to partial improvements that a polytomous or continuous scoring scheme might detect.
-Third, scoring stability across alternative rubric phrasings was not tested in Part~I; a replication with criteria written for full rubric-runner alignment ($A{=}1.0$, \S\ref{sec:discussion}) would test whether the observed effects hold under corrected instructions.
-Fourth, the primary scale of Part~II is bounded at 0 and 3, and its C5 component stayed near the floor, so effects that require headroom on C5 cannot be detected with this task.
+Structurally unreachable criteria measure runner-prompt completeness rather than agent capability, which limits any conclusion about repetition on those items (Section~\ref{subsec:codesign}).
+The binary pass/fail granularity of each Part~I criterion, chosen to enable blinded automated scoring across 30 sessions, compresses within-condition variance and reduces sensitivity to partial improvements that a polytomous scale would detect.
+Scoring stability across alternative rubric phrasings was not tested in Part~I; a replication with fully aligned criteria ($A{=}1.0$, \S\ref{sec:discussion}) would test whether the observed effects hold.
+The primary scale of Part~II is bounded at 0 and 3, and its C5 component stayed near the floor, so effects that require headroom on C5 cannot be detected with this task.
 
 \subsection{Internal Validity}
 
-Several uncontrolled sources of variance limit internal validity.
-First, Goose version 1.25.0 was used for Experiments~1 and~2 and version 1.31.1 for Experiment~3; version-specific changes in agent scheduling or tool-handling logic cannot be ruled out as confounds.
-Second, three runs in Experiment~3 fell back to Bedrock owing to stream-decode errors and Vertex AI rate limits before retrying successfully on Vertex.
-All token and score data derive from the successful Vertex runs, but the transient provider switch cannot be ruled out as a minor infrastructure variable.
-Third, in Part~I a single LLM judge (Claude Haiku~4.5) performed all rubric scoring with no human calibration.
-The post hoc second-judge check (\S\ref{subsec:scoring-validation}) was a score reconstruction, not an independent re-scoring, so it does not establish that the scores are reproducible.
-Whether they are reproducible across judges, LLM or human, is untested, and a human--model cross-validation remains future work.
-In Experiment~1 the scorer also knew each run's condition (\S\ref{sec:preregistration}), so condition-related scoring bias cannot be excluded for that experiment.
+Goose version 1.25.0 was used for Experiments~1 and~2 and version 1.31.1 for Experiment~3; version-specific changes in agent scheduling or tool-handling logic cannot be ruled out as confounds.
+Three Experiment~3 runs fell back to Bedrock before retrying successfully on Vertex AI, so the transient provider switch cannot be excluded as a minor infrastructure variable.
+In Part~I a single LLM judge (Claude Haiku~4.5) performed all rubric scoring with no human calibration, and in Experiment~1 it knew each run's condition (\S\ref{sec:preregistration}).
+Whether those scores are reproducible across judges, LLM or human, is untested (\S\ref{subsec:scoring-validation}); a human--model cross-validation remains future work.
 This threat is confined to Part~I: Part~II is scored by an executable program with no judge in the loop.
-Fourth, task ordering within each session was not randomized or counterbalanced, so order effects such as fatigue, learning or context carry-over are uncontrolled.
-Fifth, the \texttt{GOOSE\_MAX\_BACKGROUND\_TASKS} concurrency cap serialized Experiment~2 delegates into two batches (Section~\ref{subsec:infrastructure}).
-This did not affect the statistical conclusion in the ceiling-affected data, but it means latency or delegation dynamics cannot be assumed uniform across the experiment.
-Sixth, the pre-registered exclusion rule in Part~II is mechanical and over-inclusive: two excluded runs were flagged for a PHP snippet, not a network call, and one for reading the fence's own source.
+Task ordering within each session was not randomized or counterbalanced, so order effects such as fatigue, learning or context carry-over are uncontrolled.
+The \texttt{GOOSE\_MAX\_BACKGROUND\_TASKS} concurrency cap serialized Experiment~2 delegates into two batches (Section~\ref{subsec:infrastructure}), so latency or delegation dynamics cannot be assumed uniform across the experiment.
+The pre-registered exclusion rule in Part~II is mechanical and over-inclusive: two excluded runs were flagged for a PHP snippet, not a network call, and one for reading the fence's own source.
 The exclusions were applied as pre-registered and the all-runs sensitivity table (Table~\ref{tab:exp5s1}) does not change the conclusion.
 
 \subsection{External Validity}
 
-The experimental design constrains external validity along four dimensions.
-First, only four software-engineering tasks were sampled: session-ID refactoring, tree-sitter scanner implementation, Kotlin grammar synthesis, and Swift and PHP grammar synthesis for the Exp4 and Exp5 variants.
+Only four software-engineering tasks were sampled: session-ID refactoring, tree-sitter scanner implementation, Kotlin grammar synthesis, and Swift and PHP grammar synthesis for the Exp4 and Exp5 variants.
 This limits generalization to the broader distribution of SWE-bench-style tasks and to non-engineering domains such as data analysis or creative writing.
-Second, Part~I used a single Haiku model at a single temperature, $0.5$, chosen as a compromise between eliminating within-condition variance at temperature 0 and inflating task-failure noise at $n{=}5$.
+Part~I used a single Haiku model at a single temperature, $0.5$, chosen as a compromise between eliminating within-condition variance at temperature 0 and inflating task-failure noise at $n{=}5$.
 Part~II adds a second model as a factor, but both are two generations of one small tier from one vendor, so results may not generalize to reasoning models, larger tiers or other providers.
-Third, a single agentic framework, Goose, was used. Framework-specific features such as delegate spawning semantics or context-window boundaries may interact with prompt repetition in ways that limit generalizability to other frameworks such as LangGraph or CrewAI.
-Fourth, the lab setting used pre-defined tasks, isolated repositories and scripted pipeline execution, so the null results may not hold in production pipelines, which face variable task difficulty, real-time API failures and human-in-the-loop interruptions.
+A single agentic framework, Goose, was used; framework-specific features such as delegate spawning semantics or context-window boundaries may interact with prompt repetition in ways that limit generalization to frameworks such as LangGraph or CrewAI.
+The lab setting used pre-defined tasks, isolated repositories and scripted pipeline execution, so the null results may not hold in production pipelines, which face variable task difficulty, real-time API failures and human-in-the-loop interruptions.
 
 \subsection{Conclusion Validity}
 
-Statistical power and design choices constrain conclusion validity.
 The Part~I sample size of $n{=}5$ per condition was underpowered for medium effects (Cohen's $d \approx 0.5$), so the pilots cannot conclude that prompt repetition has no practically meaningful effect at smaller effect sizes.
 Part~II, with $n{=}20$ per arm and model, narrows the per-model intervals to about half a point of $r$ on either side of zero but still cannot exclude small effects.
 No multiple-comparison correction was applied across the Part~I experiments, which inflates the family-wise error rate; Part~II runs two pre-registered tests, one per model.
 Ceiling effects in Experiments~1, 2 and~4 compress variance and further reduce statistical power.
-Finally, Experiment~1 was not fully pre-registered: the statistical test was not pre-specified.
-This partial pre-registration mitigates but does not eliminate the risk of HARKing (hypothesizing after results are known) and is one reason the whole pilot series is labelled exploratory.
+Experiment~1 was not fully pre-registered: the statistical test was not pre-specified, which mitigates but does not eliminate the risk of HARKing (hypothesizing after results are known).
 Only Experiment~5 is confirmatory, and its one timing deviation is reported in Section~\ref{subsec:exp5deviations}.
 
 \section{Conclusion}
@@ -554,8 +541,8 @@ Only Experiment~5 is confirmatory, and its one timing deviation is reported in S
 
 Prompt repetition shows no effect for either model in a pre-registered experiment with two non-reasoning models, $n{=}20$ per arm and model, and executable scoring on a structured software-engineering task in multi-step pipelines.
 The per-model rank-biserial effects are $0.1667$ and $-0.0069$, both bootstrap intervals include zero, and the co-reported outcome and the all-runs sensitivity table agree.
-The exploratory pilots that motivated the design add two calibration failure modes: ceiling in Exp1, Exp2 and Exp4, and rubric-runner co-design failure in Exp3.
-They also add a judge whose passes a second judge rejected in most Exp4 sessions, and the containment without which the task's predecessor issue leaked into pilot runs.
+The exploratory pilots that motivated the design contribute two calibration failure modes: ceiling in Exp1, Exp2 and Exp4, and rubric-runner co-design failure in Exp3.
+They also contribute a judge whose passes a second judge rejected in most Exp4 sessions, and the containment without which the task's predecessor issue leaked into pilot runs.
 The evidence points to rubric-runner alignment, headroom measurement and executable scoring as the higher-leverage design investments over instruction emphasis.
 These findings do not extend to the positional-retrieval and multiple-choice settings where prompt repetition's gains are established, nor to reasoning models.
 
@@ -565,7 +552,7 @@ These findings do not extend to the positional-retrieval and multiple-choice set
 
 \noindent\textbf{Funding.} The authors received no financial support for the research, authorship, and/or publication of this article.
 
-\noindent\textbf{Use of large language models.} Three uses are declared. (1) \emph{LLMs as subjects:} all delegates in Experiments~1 to~5 were LLM agents (Claude Haiku~4.5, Mercury 2.5 Preview, Claude Haiku~5-5) working under the conditions described above; their outputs are the study's data. (2) \emph{LLM as judge, Part~I only:} the rubric scores of Experiments~1 to~4 were produced by a single Claude Haiku~4.5 judge, with the limited second-judge checks reported in Section~\ref{subsec:scoring-validation} and Section~\ref{subsec:exp4results}; Experiment~5 has no LLM judge. (3) \emph{LLM-based coding assistance:} LLM-based coding assistants were used in building the experiment harnesses, scorers and analysis scripts; the test suites shipped with the Experiment~5 harness, scorer and analysis code (18, 16 and 56 tests) are the verification of that code, and no paper text is LLM-generated.
+\noindent\textbf{Use of large language models.} Three uses are declared. (1) \emph{LLMs as subjects:} all delegates in Experiments~1 to~5 were LLM agents (Claude Haiku~4.5, Mercury 2.5 Preview, Claude Haiku~5-5) working under the conditions described above; their outputs are the study's data. (2) \emph{LLM as judge, Part~I only:} the rubric scores of Experiments~1 to~4 were produced by a single Claude Haiku~4.5 judge, with the limited second-judge checks reported in Section~\ref{subsec:scoring-validation} and Section~\ref{subsec:exp4results}. Experiment~5 has no LLM judge. (3) \emph{LLM-based coding assistance:} LLM-based coding assistants were used in building the experiment harnesses, scorers and analysis scripts. The test suites shipped with the Experiment~5 harness, scorer and analysis code (18, 16 and 56 tests) are the verification of that code, and no paper text is LLM-generated.
 
 \noindent\textbf{Data availability.} The dataset is archived at
 \href{https://doi.org/10.5281/zenodo.19696593}{DOI:\allowbreak{}10.5281/zenodo.19696593}
@@ -729,30 +716,21 @@ scout-run-16 & Treatment & 4/7 &   570{,}487 &  26 & \\
 \section{Part I Design Details}
 \label{app:partIdesign}
 
-\subsection{Pre-registration protocol}
-
-The evaluation rubric was locked before any delegate was spawned.
-Group assignments were sealed in a \texttt{label-map.json} file before scoring began, with file creation timestamps serving as the pre-registration record, archived in the supplementary dataset \citep{clouatre2026dataset}.
-A separate Haiku~4.5 instance performed the scoring.
-It received the delegate output JSON and the rubric criteria.
-In Experiments~2 and~3 the output files were named neutrally (\texttt{scout-run-NN}), so no group labels, run metadata, or other outputs were visible.
-In Experiment~1 the scoring prompt listed the files by condition (\texttt{scout-control-N}, \texttt{scout-treatment-N}) and noted that one control run had failed, so the scorer knew each run's condition.
-
 \subsection{Second-judge sample}
 
 The second-judge check of Section~\ref{subsec:scoring-validation} used a stratified sample of five sessions.
-It comprised one control and one treatment session from Experiment~1 on the FastMCP refactor, one from each condition in Experiment~2 on the tree-sitter abstract syntax tree scanner, and one treatment session from Experiment~3 on the Kotlin grammar.
+It comprised one control and one treatment session from Experiment~1 on the FastMCP refactor. It comprised one session from each condition in Experiment~2 on the tree-sitter abstract syntax tree scanner, and one treatment session from Experiment~3 on the Kotlin grammar.
 The check shows only that the two judges' criterion-level scores were consistent given the totals.
 It provides no evidence that the primary judge's scores are reproducible from the delegate outputs alone.
 
 \subsection{Tasks}
 
-Each experiment targeted an open, unimplemented GitHub issue as the task source, ensuring no published solution existed.
-Experiment~1 targeted issue \texttt{math-mcp-learning-server\#222},\footnote{\url{https://github.com/clouatre-labs/math-mcp-learning-server/issues/222}} a read-only source analysis task: characterise a FastMCP session ID refactor.
+File creation timestamps of the sealed \texttt{label-map.json} serve as the pre-registration record, archived in the supplementary dataset \citep{clouatre2026dataset}.
+In Experiment~1 the scoring prompt listed the files by condition (\texttt{scout-control-N}, \texttt{scout-treatment-N}) and noted that one control run had failed.
+Experiment~1 targeted issue \texttt{math-mcp-learning-server\#222},\footnote{\url{https://github.com/clouatre-labs/math-mcp-learning-server/issues/222}} a read-only source analysis task: characterize a FastMCP session ID refactor.
 One control run drifted at 93 messages producing no output; it was excluded, yielding $n{=}4$ valid runs.
 Experiment~2 targeted \texttt{aptu\#737},\footnote{\url{https://github.com/clouatre-labs/aptu/issues/737}} a code synthesis task evaluating a tree-sitter AST scanner.
 All 10 runs produced valid output.
-An undocumented concurrency cap split Exp2 into two batches (Section~\ref{subsec:infrastructure}).
 Experiment~3 targeted issue \texttt{aptu-coder\#649},\footnote{\url{https://github.com/clouatre-labs/aptu-coder/issues/649}} a code synthesis task requiring deep inspection of Kotlin grammar application binary interface (ABI) compatibility, node kind taxonomy, and struct fields.
 Three runs fell back to Bedrock; all produced output and were included.
 Experiment~4 targeted issue \texttt{aptu-coder\#648},\footnote{\url{https://github.com/clouatre-labs/aptu-coder/issues/648}} Swift grammar support via tree-sitter-swift.
@@ -764,18 +742,13 @@ The delegate temperature was 0.5 in Exp4.
 \subsection{Pre-analysis amendments}
 \label{sec:amendments}
 
-After scoring was complete, criteria C1, C5, and C6 each scored 0/1 across both groups in Experiment~3.
-Inspection of the runner prompt (\texttt{runner-prompt.md}) confirmed that it contained no instruction directing agents to investigate ABI compatibility between \texttt{tree-sitter-kotlin} 0.3.8 and \texttt{tree-sitter} 0.26.6, which criterion C1 scores.
-It also lacked any instruction to write test cases exercising \texttt{.kts} file parsing, which C5 scores, or to inspect the \texttt{LanguageInfo} struct fields or \texttt{aptu-coder}\#649 to determine whether a \texttt{DEFUSE\_QUERY} constant was required, which C6 scores.
-
-Both groups scored identically (0/1) on C1, C5, and C6, so excluding them cannot bias the treatment comparison in either direction.
-The exclusion was determined after scoring but before any group labels were inspected, aligning with registered-report amendment practice \citep{ernst2023registered}.
-All three criteria are retained in the full rubric table (Appendix~\ref{app:rubrics}); the primary comparison is restricted to C2, C3, C4, and C7.
+The runner prompt (\texttt{runner-prompt.md}) contained no instruction directing agents to investigate ABI compatibility between \texttt{tree-sitter-kotlin} 0.3.8 and \texttt{tree-sitter} 0.26.6, which criterion C1 scores.
+It also lacked any instruction to write test cases exercising \texttt{.kts} file parsing, which C5 scores, or to inspect the \texttt{LanguageInfo} struct fields or \texttt{aptu-coder}\#649 for whether a \texttt{DEFUSE\_QUERY} constant was required, which C6 scores.
+All three criteria are retained in the full rubric table (Appendix~\ref{app:rubrics}).
 
 \subsection{Infrastructure confound}
 
-The concurrency cap of Section~\ref{subsec:infrastructure} defaults to 5 and has been configurable since Goose 1.29.\footnote{\url{https://github.com/aaif-goose/goose/pull/7940}}
-The serialization does not affect the statistical conclusion, but it illustrates a broader risk.
+The cap of Section~\ref{subsec:infrastructure} has been configurable since Goose 1.29.\footnote{\url{https://github.com/aaif-goose/goose/pull/7940}}
 Undocumented serialization can bias latency measurements and, in non-ceiling experiments, interact with task difficulty.
 
 \subsection{Token crossover}
@@ -853,7 +826,7 @@ The per-run record (\autoref{tab:exp5perrun}) marks each excluded run with the r
 \section{Per-Run Scores, Experiment 5}
 \label{app:exp5}
 
-\autoref{tab:exp5perrun} lists all 80 runs of Experiment~5 in spawn order with the scorer's per-criterion values, \texttt{primary\_total} (PT), the record-only \texttt{total}, wall clock, cost and the number of blocked \texttt{gh} calls. Source: the dated main-run record; the transcripts and output files are in the dataset. Excluded runs are marked with the pre-registered reason.
+\autoref{tab:exp5perrun} lists all 80 runs of Experiment~5 in spawn order with the scorer's per-criterion values and \texttt{primary\_total} (PT). It also lists the record-only \texttt{total}, wall clock, cost and the number of blocked \texttt{gh} calls. Source: the dated main-run record; the transcripts and output files are in the dataset. Excluded runs are marked with the pre-registered reason.
 
 \begin{footnotesize}
 \begin{longtable}{llrrrrrrrrrrl}
@@ -976,7 +949,7 @@ claude-haiku-5-5 & treatment & 16 & 0.625  & 0.8569 & 0.125  & 0.7854 & 0.8 \\
 \section{Experiment 5 Pilot Evidence}
 \label{app:headroom}
 
-\autoref{tab:headroom} reproduces the fenced re-pilot that the Experiment~5 pre-registration cites as its headroom evidence: four runs, one per model and arm, under the main-run instrument and scorer. The pre-registered band for the control value on the primary scale is [0.9, 2.1]; the \texttt{claude-haiku-4-5} control (0.75) is below it and the \texttt{claude-haiku-5-5} control (1.6429) is inside it, so the gate verdict is FLOOR and is reported as a finding.
+\autoref{tab:headroom} reproduces the fenced re-pilot that the Experiment~5 pre-registration cites as its headroom evidence: four runs, one per model and arm, under the main-run instrument and scorer. The pre-registered band for the control value on the primary scale is [0.9, 2.1]. The \texttt{claude-haiku-4-5} control (0.75) is below it and the \texttt{claude-haiku-5-5} control (1.6429) is inside it. The gate verdict is therefore FLOOR, and it is reported as a finding.
 
 \begin{table}[h]
 \centering\small
