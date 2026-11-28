@@ -1,0 +1,2750 @@
+{
+  "analyzed_at": "2026-11-28T01:24:12+00:00",
+  "analyzed_at_note": "max end_ts across latency-log.jsonl; no wall clock is consulted",
+  "arms": {
+    "control": {
+      "criteria_means": {
+        "C3": 0.5463,
+        "C4": 0.7521,
+        "C5": 0.0833,
+        "C6": 0.9032,
+        "C7": 0.6944
+      },
+      "criteria_passed": 57,
+      "criteria_total": 108,
+      "mean": 1.3818,
+      "median": 1.6099,
+      "minus_c5": {
+        "mean": 1.2984,
+        "median": 1.6099,
+        "n": 36,
+        "scores": [
+          0.4286,
+          0.4286,
+          0.5,
+          0.6,
+          0.625,
+          0.6364,
+          0.6667,
+          0.6667,
+          0.7,
+          0.7143,
+          0.8,
+          0.8,
+          0.8571,
+          1.0,
+          1.0,
+          1.0,
+          1.5,
+          1.5833,
+          1.6364,
+          1.6667,
+          1.6667,
+          1.7143,
+          1.7143,
+          1.7273,
+          1.7778,
+          1.8,
+          1.8,
+          1.8,
+          1.8182,
+          1.8182,
+          1.8333,
+          1.8571,
+          1.875,
+          1.8889,
+          1.9091,
+          1.9333
+        ],
+        "sd": 0.5504
+      },
+      "n": 36,
+      "pass_proportion": 0.5278,
+      "primary_total_source": [
+        "primary_total"
+      ],
+      "runs": [
+        "h45-01",
+        "h45-03",
+        "h45-05",
+        "h45-07",
+        "h45-09",
+        "h45-11",
+        "h45-15",
+        "h45-17",
+        "h45-19",
+        "h45-21",
+        "h45-23",
+        "h45-25",
+        "h45-27",
+        "h45-29",
+        "h45-31",
+        "h45-35",
+        "h45-37",
+        "h45-39",
+        "h55-01",
+        "h55-03",
+        "h55-05",
+        "h55-07",
+        "h55-09",
+        "h55-11",
+        "h55-15",
+        "h55-19",
+        "h55-21",
+        "h55-23",
+        "h55-25",
+        "h55-27",
+        "h55-29",
+        "h55-31",
+        "h55-33",
+        "h55-35",
+        "h55-37",
+        "h55-39"
+      ],
+      "scores": [
+        0.4286,
+        0.4286,
+        0.5,
+        0.6,
+        0.625,
+        0.6364,
+        0.6667,
+        0.6667,
+        0.7,
+        0.7143,
+        0.8,
+        0.8,
+        0.8571,
+        1.0,
+        1.0,
+        1.0,
+        1.5,
+        1.5833,
+        1.6364,
+        1.6667,
+        1.7143,
+        1.7143,
+        1.7778,
+        1.8,
+        1.8,
+        1.8182,
+        1.8182,
+        1.8333,
+        1.8571,
+        1.875,
+        1.8889,
+        1.9091,
+        1.9333,
+        2.6667,
+        2.7273,
+        2.8
+      ],
+      "sd": 0.6751,
+      "wilson_high": 0.6194,
+      "wilson_low": 0.4343,
+      "wilson_note": "Wilson 95% interval on the proportion of C3, C4, C5 criteria scored >= 0.5 (z = 1.959963984540054)"
+    },
+    "treatment": {
+      "criteria_means": {
+        "C3": 0.4608,
+        "C4": 0.8181,
+        "C5": 0.0882,
+        "C6": 0.899,
+        "C7": 0.7529
+      },
+      "criteria_passed": 52,
+      "criteria_total": 102,
+      "mean": 1.3671,
+      "median": 1.2916,
+      "minus_c5": {
+        "mean": 1.2788,
+        "median": 1.0,
+        "n": 34,
+        "scores": [
+          0.4286,
+          0.5,
+          0.5,
+          0.7143,
+          0.75,
+          0.75,
+          0.8,
+          0.8333,
+          0.8333,
+          0.8462,
+          0.8462,
+          0.875,
+          0.8889,
+          0.9,
+          0.9091,
+          1.0,
+          1.0,
+          1.0,
+          1.5833,
+          1.625,
+          1.6667,
+          1.7692,
+          1.7778,
+          1.7857,
+          1.8,
+          1.8182,
+          1.8333,
+          1.8333,
+          1.8947,
+          1.9,
+          1.9091,
+          1.9091,
+          2.0,
+          2.0
+        ],
+        "sd": 0.5374
+      },
+      "n": 34,
+      "pass_proportion": 0.5098,
+      "primary_total_source": [
+        "primary_total"
+      ],
+      "runs": [
+        "h45-02",
+        "h45-04",
+        "h45-06",
+        "h45-08",
+        "h45-10",
+        "h45-12",
+        "h45-14",
+        "h45-16",
+        "h45-18",
+        "h45-20",
+        "h45-22",
+        "h45-24",
+        "h45-26",
+        "h45-28",
+        "h45-30",
+        "h45-32",
+        "h45-36",
+        "h45-38",
+        "h55-02",
+        "h55-04",
+        "h55-06",
+        "h55-08",
+        "h55-10",
+        "h55-12",
+        "h55-18",
+        "h55-22",
+        "h55-24",
+        "h55-26",
+        "h55-30",
+        "h55-32",
+        "h55-34",
+        "h55-36",
+        "h55-38",
+        "h55-40"
+      ],
+      "scores": [
+        0.4286,
+        0.5,
+        0.5,
+        0.7143,
+        0.75,
+        0.75,
+        0.8,
+        0.8333,
+        0.8333,
+        0.8462,
+        0.8462,
+        0.875,
+        0.8889,
+        0.9091,
+        1.0,
+        1.0,
+        1.0,
+        1.5833,
+        1.625,
+        1.6667,
+        1.7692,
+        1.7778,
+        1.8182,
+        1.8333,
+        1.8333,
+        1.8947,
+        1.9,
+        1.9,
+        1.9091,
+        1.9091,
+        2.0,
+        2.0,
+        2.7857,
+        2.8
+      ],
+      "sd": 0.6411,
+      "wilson_high": 0.6047,
+      "wilson_low": 0.4142,
+      "wilson_note": "Wilson 95% interval on the proportion of C3, C4, C5 criteria scored >= 0.5 (z = 1.959963984540054)"
+    }
+  },
+  "assertions": [
+    {
+      "detail": "0 scored runs missing from label-map",
+      "name": "coverage_scores_in_label_map",
+      "status": "pass"
+    },
+    {
+      "detail": "0 scored runs missing from latency-log",
+      "name": "coverage_scores_in_latency_log",
+      "status": "pass"
+    },
+    {
+      "detail": "0 latency rows without scores",
+      "name": "coverage_latency_in_scores",
+      "status": "pass"
+    },
+    {
+      "detail": "sha256_analysis: expected ['14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02'], computed 66a4beed8837808b7e5bf608842dbb6da7da7f7751aadf06870261a0977bc445 for analysis.py",
+      "name": "label_map_hashes",
+      "status": "fail"
+    },
+    {
+      "detail": "sha256_runner_prompt: expected ['2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5'], computed aacb053091f6157478d126ad8429e040c295e89d3aec09a3dead330833c33ec6 for runner-prompt.md",
+      "name": "label_map_hashes",
+      "status": "fail"
+    },
+    {
+      "detail": "sha256_scorer: expected ['1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba'], computed None for scorer-prompt.md",
+      "name": "label_map_hashes",
+      "status": "fail"
+    },
+    {
+      "detail": "overlap scored for all 70 kept runs",
+      "name": "overlap_available",
+      "status": "pass"
+    },
+    {
+      "detail": "contamination scan ran for all 70 kept runs",
+      "name": "contamination_scan_available",
+      "status": "pass"
+    },
+    {
+      "detail": "0 rows captured, 80 not captured (null), 0 with positive thinking tokens",
+      "name": "thinking_tokens_zero",
+      "status": "pass"
+    }
+  ],
+  "bootstrap_seed": 20261127,
+  "cost": {
+    "note": "cache-adjusted: input, output, cache read and cache write billed at their own rates; null when a rate is unverified or the model is unknown",
+    "per_arm": {
+      "control": {
+        "cost_usd": 26.004417,
+        "priced_runs": 36,
+        "tokens": {
+          "cache_read_tokens": 45956450,
+          "cache_write_tokens": 2542201,
+          "input_tokens": 48502943,
+          "output_tokens": 926008
+        },
+        "unpriced_runs": 0
+      },
+      "treatment": {
+        "cost_usd": 27.991932,
+        "priced_runs": 34,
+        "tokens": {
+          "cache_read_tokens": 51017387,
+          "cache_write_tokens": 2395316,
+          "input_tokens": 53417088,
+          "output_tokens": 791240
+        },
+        "unpriced_runs": 0
+      }
+    },
+    "per_run": {
+      "h45-01": {
+        "cost_usd": 1.191209,
+        "model": "claude-haiku-4-5",
+        "note": null,
+        "pricing_key": "claude-haiku-4-5",
+        "tokens": {
+          "cache_read_tokens": 943601,
+          "cache_write_tokens": 49573,
+          "input_tokens": 993353,
+          "output_tokens": 8306
+        }
+      },
+      "h45-02": {
+        "cost_usd": 1.874461,
+        "model": "claude-haiku-4-5",
+        "note": null,
+        "pricing_key": "claude-haiku-4-5",
+        "tokens": {
+          "cache_read_tokens": 1530459,
+          "cache_write_tokens": 61604,
+          "input_tokens": 1592275,
+          "output_tokens": 10427
+        }
+      },
+      "h45-03": {
+        "cost_usd": 1.493567,
+        "model": "claude-haiku-4-5",
+        "note": null,
+        "pricing_key": "claude-haiku-4-5",
+        "tokens": {
+          "cache_read_tokens": 1212399,
+          "cache_write_tokens": 49648,
+          "input_tokens": 1262237,
+          "output_tokens": 9606
+        }
+      },
+      "h45-04": {
+        "cost_usd": 1.099827,
+        "model": "claude-haiku-4-5",
+        "note": null,
+        "pricing_key": "claude-haiku-4-5",
+        "tokens": {
+          "cache_read_tokens": 889965,
+          "cache_write_tokens": 31570,
+          "input_tokens": 921718,
+          "output_tokens": 9930
+        }
+      },
+      "h45-05": {
+        "cost_usd": 1.319229,
+        "model": "claude-haiku-4-5",
+        "note": null,
+        "pricing_key": "claude-haiku-4-5",
+        "tokens": {
+          "cache_read_tokens": 1070896,
+          "cache_write_tokens": 37400,
+          "input_tokens": 1108489,
+          "output_tokens": 11380
+        }
+      },
+      "h45-06": {
+        "cost_usd": 1.131444,
+        "model": "claude-haiku-4-5",
+        "note": null,
+        "pricing_key": "claude-haiku-4-5",
+        "tokens": {
+          "cache_read_tokens": 914128,
+          "cache_write_tokens": 35727,
+          "input_tokens": 950042,
+          "output_tokens": 9066
+        }
+      },
+      "h45-07": {
+        "cost_usd": 1.102412,
+        "model": "claude-haiku-4-5",
+        "note": null,
+        "pricing_key": "claude-haiku-4-5",
+        "tokens": {
+          "cache_read_tokens": 879645,
+          "cache_write_tokens": 40166,
+          "input_tokens": 919980,
+          "output_tokens": 8852
+        }
+      },
+      "h45-08": {
+        "cost_usd": 1.398024,
+        "model": "claude-haiku-4-5",
+        "note": null,
+        "pricing_key": "claude-haiku-4-5",
+        "tokens": {
+          "cache_read_tokens": 1136209,
+          "cache_write_tokens": 44998,
+          "input_tokens": 1181391,
+          "output_tokens": 9353
+        }
+      },
+      "h45-09": {
+        "cost_usd": 1.22754,
+        "model": "claude-haiku-4-5",
+        "note": null,
+        "pricing_key": "claude-haiku-4-5",
+        "tokens": {
+          "cache_read_tokens": 985768,
+          "cache_write_tokens": 41283,
+          "input_tokens": 1027234,
+          "output_tokens": 10025
+        }
+      },
+      "h45-10": {
+        "cost_usd": 1.489935,
+        "model": "claude-haiku-4-5",
+        "note": null,
+        "pricing_key": "claude-haiku-4-5",
+        "tokens": {
+          "cache_read_tokens": 1207209,
+          "cache_write_tokens": 52006,
+          "input_tokens": 1259387,
+          "output_tokens": 8964
+        }
+      },
+      "h45-11": {
+        "cost_usd": 0.914966,
+        "model": "claude-haiku-4-5",
+        "note": null,
+        "pricing_key": "claude-haiku-4-5",
+        "tokens": {
+          "cache_read_tokens": 719329,
+          "cache_write_tokens": 34924,
+          "input_tokens": 754408,
+          "output_tokens": 8994
+        }
+      },
+      "h45-12": {
+        "cost_usd": 1.354623,
+        "model": "claude-haiku-4-5",
+        "note": null,
+        "pricing_key": "claude-haiku-4-5",
+        "tokens": {
+          "cache_read_tokens": 1098274,
+          "cache_write_tokens": 44845,
+          "input_tokens": 1143304,
+          "output_tokens": 9087
+        }
+      },
+      "h45-13": {
+        "cost_usd": 1.420819,
+        "model": "claude-haiku-4-5",
+        "note": null,
+        "pricing_key": "claude-haiku-4-5",
+        "tokens": {
+          "cache_read_tokens": 1151480,
+          "cache_write_tokens": 47769,
+          "input_tokens": 1199430,
+          "output_tokens": 9306
+        }
+      },
+      "h45-14": {
+        "cost_usd": 1.725575,
+        "model": "claude-haiku-4-5",
+        "note": null,
+        "pricing_key": "claude-haiku-4-5",
+        "tokens": {
+          "cache_read_tokens": 1413239,
+          "cache_write_tokens": 46772,
+          "input_tokens": 1460216,
+          "output_tokens": 13114
+        }
+      },
+      "h45-15": {
+        "cost_usd": 1.215754,
+        "model": "claude-haiku-4-5",
+        "note": null,
+        "pricing_key": "claude-haiku-4-5",
+        "tokens": {
+          "cache_read_tokens": 947989,
+          "cache_write_tokens": 49818,
+          "input_tokens": 997983,
+          "output_tokens": 12140
+        }
+      },
+      "h45-16": {
+        "cost_usd": 1.141425,
+        "model": "claude-haiku-4-5",
+        "note": null,
+        "pricing_key": "claude-haiku-4-5",
+        "tokens": {
+          "cache_read_tokens": 910705,
+          "cache_write_tokens": 40139,
+          "input_tokens": 951026,
+          "output_tokens": 9831
+        }
+      },
+      "h45-17": {
+        "cost_usd": 1.427155,
+        "model": "claude-haiku-4-5",
+        "note": null,
+        "pricing_key": "claude-haiku-4-5",
+        "tokens": {
+          "cache_read_tokens": 1150550,
+          "cache_write_tokens": 49506,
+          "input_tokens": 1200252,
+          "output_tokens": 9993
+        }
+      },
+      "h45-18": {
+        "cost_usd": 1.1645,
+        "model": "claude-haiku-4-5",
+        "note": null,
+        "pricing_key": "claude-haiku-4-5",
+        "tokens": {
+          "cache_read_tokens": 942303,
+          "cache_write_tokens": 38414,
+          "input_tokens": 980892,
+          "output_tokens": 8272
+        }
+      },
+      "h45-19": {
+        "cost_usd": 1.274411,
+        "model": "claude-haiku-4-5",
+        "note": null,
+        "pricing_key": "claude-haiku-4-5",
+        "tokens": {
+          "cache_read_tokens": 1025320,
+          "cache_write_tokens": 42524,
+          "input_tokens": 1068029,
+          "output_tokens": 10139
+        }
+      },
+      "h45-20": {
+        "cost_usd": 1.277235,
+        "model": "claude-haiku-4-5",
+        "note": null,
+        "pricing_key": "claude-haiku-4-5",
+        "tokens": {
+          "cache_read_tokens": 1010636,
+          "cache_write_tokens": 53593,
+          "input_tokens": 1064390,
+          "output_tokens": 8958
+        }
+      },
+      "h45-21": {
+        "cost_usd": 1.071312,
+        "model": "claude-haiku-4-5",
+        "note": null,
+        "pricing_key": "claude-haiku-4-5",
+        "tokens": {
+          "cache_read_tokens": 863084,
+          "cache_write_tokens": 34590,
+          "input_tokens": 897856,
+          "output_tokens": 8782
+        }
+      },
+      "h45-22": {
+        "cost_usd": 1.538004,
+        "model": "claude-haiku-4-5",
+        "note": null,
+        "pricing_key": "claude-haiku-4-5",
+        "tokens": {
+          "cache_read_tokens": 1276746,
+          "cache_write_tokens": 39088,
+          "input_tokens": 1316029,
+          "output_tokens": 9088
+        }
+      },
+      "h45-23": {
+        "cost_usd": 1.465866,
+        "model": "claude-haiku-4-5",
+        "note": null,
+        "pricing_key": "claude-haiku-4-5",
+        "tokens": {
+          "cache_read_tokens": 1190585,
+          "cache_write_tokens": 44408,
+          "input_tokens": 1235183,
+          "output_tokens": 11223
+        }
+      },
+      "h45-24": {
+        "cost_usd": 1.469003,
+        "model": "claude-haiku-4-5",
+        "note": null,
+        "pricing_key": "claude-haiku-4-5",
+        "tokens": {
+          "cache_read_tokens": 1190967,
+          "cache_write_tokens": 48621,
+          "input_tokens": 1239765,
+          "output_tokens": 9873
+        }
+      },
+      "h45-25": {
+        "cost_usd": 1.290986,
+        "model": "claude-haiku-4-5",
+        "note": null,
+        "pricing_key": "claude-haiku-4-5",
+        "tokens": {
+          "cache_read_tokens": 1050575,
+          "cache_write_tokens": 38638,
+          "input_tokens": 1089401,
+          "output_tokens": 9646
+        }
+      },
+      "h45-26": {
+        "cost_usd": 0.909528,
+        "model": "claude-haiku-4-5",
+        "note": null,
+        "pricing_key": "claude-haiku-4-5",
+        "tokens": {
+          "cache_read_tokens": 726376,
+          "cache_write_tokens": 30720,
+          "input_tokens": 757265,
+          "output_tokens": 8245
+        }
+      },
+      "h45-27": {
+        "cost_usd": 1.095359,
+        "model": "claude-haiku-4-5",
+        "note": null,
+        "pricing_key": "claude-haiku-4-5",
+        "tokens": {
+          "cache_read_tokens": 875168,
+          "cache_write_tokens": 37526,
+          "input_tokens": 912875,
+          "output_tokens": 9612
+        }
+      },
+      "h45-28": {
+        "cost_usd": 1.315768,
+        "model": "claude-haiku-4-5",
+        "note": null,
+        "pricing_key": "claude-haiku-4-5",
+        "tokens": {
+          "cache_read_tokens": 1071587,
+          "cache_write_tokens": 41270,
+          "input_tokens": 1113032,
+          "output_tokens": 8798
+        }
+      },
+      "h45-29": {
+        "cost_usd": 1.394425,
+        "model": "claude-haiku-4-5",
+        "note": null,
+        "pricing_key": "claude-haiku-4-5",
+        "tokens": {
+          "cache_read_tokens": 1131053,
+          "cache_write_tokens": 44444,
+          "input_tokens": 1175685,
+          "output_tokens": 10016
+        }
+      },
+      "h45-30": {
+        "cost_usd": 1.13098,
+        "model": "claude-haiku-4-5",
+        "note": null,
+        "pricing_key": "claude-haiku-4-5",
+        "tokens": {
+          "cache_read_tokens": 912894,
+          "cache_write_tokens": 33820,
+          "input_tokens": 946896,
+          "output_tokens": 10104
+        }
+      },
+      "h45-31": {
+        "cost_usd": 1.012174,
+        "model": "claude-haiku-4-5",
+        "note": null,
+        "pricing_key": "claude-haiku-4-5",
+        "tokens": {
+          "cache_read_tokens": 803375,
+          "cache_write_tokens": 36923,
+          "input_tokens": 840458,
+          "output_tokens": 9045
+        }
+      },
+      "h45-32": {
+        "cost_usd": 1.436042,
+        "model": "claude-haiku-4-5",
+        "note": null,
+        "pricing_key": "claude-haiku-4-5",
+        "tokens": {
+          "cache_read_tokens": 1174869,
+          "cache_write_tokens": 43405,
+          "input_tokens": 1218464,
+          "output_tokens": 9167
+        }
+      },
+      "h45-33": {
+        "cost_usd": 1.335381,
+        "model": "claude-haiku-4-5",
+        "note": null,
+        "pricing_key": "claude-haiku-4-5",
+        "tokens": {
+          "cache_read_tokens": 1067338,
+          "cache_write_tokens": 43483,
+          "input_tokens": 1111018,
+          "output_tokens": 12655
+        }
+      },
+      "h45-34": {
+        "cost_usd": 1.137911,
+        "model": "claude-haiku-4-5",
+        "note": null,
+        "pricing_key": "claude-haiku-4-5",
+        "tokens": {
+          "cache_read_tokens": 917535,
+          "cache_write_tokens": 33107,
+          "input_tokens": 950829,
+          "output_tokens": 10789
+        }
+      },
+      "h45-35": {
+        "cost_usd": 1.150663,
+        "model": "claude-haiku-4-5",
+        "note": null,
+        "pricing_key": "claude-haiku-4-5",
+        "tokens": {
+          "cache_read_tokens": 920135,
+          "cache_write_tokens": 38958,
+          "input_tokens": 959272,
+          "output_tokens": 10136
+        }
+      },
+      "h45-36": {
+        "cost_usd": 1.212779,
+        "model": "claude-haiku-4-5",
+        "note": null,
+        "pricing_key": "claude-haiku-4-5",
+        "tokens": {
+          "cache_read_tokens": 986083,
+          "cache_write_tokens": 36503,
+          "input_tokens": 1022767,
+          "output_tokens": 9155
+        }
+      },
+      "h45-37": {
+        "cost_usd": 1.395973,
+        "model": "claude-haiku-4-5",
+        "note": null,
+        "pricing_key": "claude-haiku-4-5",
+        "tokens": {
+          "cache_read_tokens": 1123525,
+          "cache_write_tokens": 43922,
+          "input_tokens": 1167643,
+          "output_tokens": 12215
+        }
+      },
+      "h45-38": {
+        "cost_usd": 1.15864,
+        "model": "claude-haiku-4-5",
+        "note": null,
+        "pricing_key": "claude-haiku-4-5",
+        "tokens": {
+          "cache_read_tokens": 939926,
+          "cache_write_tokens": 33741,
+          "input_tokens": 973851,
+          "output_tokens": 9724
+        }
+      },
+      "h45-39": {
+        "cost_usd": 1.083422,
+        "model": "claude-haiku-4-5",
+        "note": null,
+        "pricing_key": "claude-haiku-4-5",
+        "tokens": {
+          "cache_read_tokens": 870988,
+          "cache_write_tokens": 34466,
+          "input_tokens": 905636,
+          "output_tokens": 9521
+        }
+      },
+      "h45-40": {
+        "cost_usd": 1.401479,
+        "model": "claude-haiku-4-5",
+        "note": null,
+        "pricing_key": "claude-haiku-4-5",
+        "tokens": {
+          "cache_read_tokens": 1146011,
+          "cache_write_tokens": 38957,
+          "input_tokens": 1185157,
+          "output_tokens": 10605
+        }
+      },
+      "h55-01": {
+        "cost_usd": 0.187118,
+        "model": "claude-haiku-5-5",
+        "note": null,
+        "pricing_key": "claude-haiku-5-5",
+        "tokens": {
+          "cache_read_tokens": 1322431,
+          "cache_write_tokens": 98855,
+          "input_tokens": 1421338,
+          "output_tokens": 38806
+        }
+      },
+      "h55-02": {
+        "cost_usd": 0.271424,
+        "model": "claude-haiku-5-5",
+        "note": null,
+        "pricing_key": "claude-haiku-5-5",
+        "tokens": {
+          "cache_read_tokens": 2096188,
+          "cache_write_tokens": 108279,
+          "input_tokens": 2204541,
+          "output_tokens": 32946
+        }
+      },
+      "h55-03": {
+        "cost_usd": 0.210189,
+        "model": "claude-haiku-5-5",
+        "note": null,
+        "pricing_key": "claude-haiku-5-5",
+        "tokens": {
+          "cache_read_tokens": 1540681,
+          "cache_write_tokens": 97914,
+          "input_tokens": 1638651,
+          "output_tokens": 37356
+        }
+      },
+      "h55-04": {
+        "cost_usd": 0.292078,
+        "model": "claude-haiku-5-5",
+        "note": null,
+        "pricing_key": "claude-haiku-5-5",
+        "tokens": {
+          "cache_read_tokens": 2328175,
+          "cache_write_tokens": 95974,
+          "input_tokens": 2424239,
+          "output_tokens": 28752
+        }
+      },
+      "h55-05": {
+        "cost_usd": 0.14587,
+        "model": "claude-haiku-5-5",
+        "note": null,
+        "pricing_key": "claude-haiku-5-5",
+        "tokens": {
+          "cache_read_tokens": 955345,
+          "cache_write_tokens": 94138,
+          "input_tokens": 1049521,
+          "output_tokens": 39195
+        }
+      },
+      "h55-06": {
+        "cost_usd": 0.267449,
+        "model": "claude-haiku-5-5",
+        "note": null,
+        "pricing_key": "claude-haiku-5-5",
+        "tokens": {
+          "cache_read_tokens": 2067100,
+          "cache_write_tokens": 98985,
+          "input_tokens": 2166159,
+          "output_tokens": 35577
+        }
+      },
+      "h55-07": {
+        "cost_usd": 0.200049,
+        "model": "claude-haiku-5-5",
+        "note": null,
+        "pricing_key": "claude-haiku-5-5",
+        "tokens": {
+          "cache_read_tokens": 1424369,
+          "cache_write_tokens": 97050,
+          "input_tokens": 1521473,
+          "output_tokens": 43054
+        }
+      },
+      "h55-08": {
+        "cost_usd": 0.246218,
+        "model": "claude-haiku-5-5",
+        "note": null,
+        "pricing_key": "claude-haiku-5-5",
+        "tokens": {
+          "cache_read_tokens": 1809081,
+          "cache_write_tokens": 108384,
+          "input_tokens": 1917527,
+          "output_tokens": 45653
+        }
+      },
+      "h55-09": {
+        "cost_usd": 0.203934,
+        "model": "claude-haiku-5-5",
+        "note": null,
+        "pricing_key": "claude-haiku-5-5",
+        "tokens": {
+          "cache_read_tokens": 1463519,
+          "cache_write_tokens": 97712,
+          "input_tokens": 1561283,
+          "output_tokens": 41914
+        }
+      },
+      "h55-10": {
+        "cost_usd": 0.270423,
+        "model": "claude-haiku-5-5",
+        "note": null,
+        "pricing_key": "claude-haiku-5-5",
+        "tokens": {
+          "cache_read_tokens": 2123708,
+          "cache_write_tokens": 90948,
+          "input_tokens": 2214734,
+          "output_tokens": 32688
+        }
+      },
+      "h55-11": {
+        "cost_usd": 0.159696,
+        "model": "claude-haiku-5-5",
+        "note": null,
+        "pricing_key": "claude-haiku-5-5",
+        "tokens": {
+          "cache_read_tokens": 1081359,
+          "cache_write_tokens": 91238,
+          "input_tokens": 1172641,
+          "output_tokens": 40427
+        }
+      },
+      "h55-12": {
+        "cost_usd": 0.196195,
+        "model": "claude-haiku-5-5",
+        "note": null,
+        "pricing_key": "claude-haiku-5-5",
+        "tokens": {
+          "cache_read_tokens": 1379152,
+          "cache_write_tokens": 103832,
+          "input_tokens": 1483030,
+          "output_tokens": 42242
+        }
+      },
+      "h55-13": {
+        "cost_usd": 0.27213,
+        "model": "claude-haiku-5-5",
+        "note": null,
+        "pricing_key": "claude-haiku-5-5",
+        "tokens": {
+          "cache_read_tokens": 2107934,
+          "cache_write_tokens": 96857,
+          "input_tokens": 2204869,
+          "output_tokens": 36913
+        }
+      },
+      "h55-14": {
+        "cost_usd": 0.24468,
+        "model": "claude-haiku-5-5",
+        "note": null,
+        "pricing_key": "claude-haiku-5-5",
+        "tokens": {
+          "cache_read_tokens": 1915359,
+          "cache_write_tokens": 88526,
+          "input_tokens": 2003959,
+          "output_tokens": 28129
+        }
+      },
+      "h55-15": {
+        "cost_usd": 0.152951,
+        "model": "claude-haiku-5-5",
+        "note": null,
+        "pricing_key": "claude-haiku-5-5",
+        "tokens": {
+          "cache_read_tokens": 1038663,
+          "cache_write_tokens": 88227,
+          "input_tokens": 1126934,
+          "output_tokens": 37686
+        }
+      },
+      "h55-16": {
+        "cost_usd": 0.242148,
+        "model": "claude-haiku-5-5",
+        "note": null,
+        "pricing_key": "claude-haiku-5-5",
+        "tokens": {
+          "cache_read_tokens": 1750268,
+          "cache_write_tokens": 115769,
+          "input_tokens": 1866091,
+          "output_tokens": 47130
+        }
+      },
+      "h55-17": {
+        "cost_usd": 0.240029,
+        "model": "claude-haiku-5-5",
+        "note": null,
+        "pricing_key": "claude-haiku-5-5",
+        "tokens": {
+          "cache_read_tokens": 1762869,
+          "cache_write_tokens": 108422,
+          "input_tokens": 1871353,
+          "output_tokens": 43424
+        }
+      },
+      "h55-18": {
+        "cost_usd": 0.248513,
+        "model": "claude-haiku-5-5",
+        "note": null,
+        "pricing_key": "claude-haiku-5-5",
+        "tokens": {
+          "cache_read_tokens": 1887932,
+          "cache_write_tokens": 93650,
+          "input_tokens": 1981644,
+          "output_tokens": 39527
+        }
+      },
+      "h55-19": {
+        "cost_usd": 0.255734,
+        "model": "claude-haiku-5-5",
+        "note": null,
+        "pricing_key": "claude-haiku-5-5",
+        "tokens": {
+          "cache_read_tokens": 1912170,
+          "cache_write_tokens": 101493,
+          "input_tokens": 2013733,
+          "output_tokens": 45105
+        }
+      },
+      "h55-20": {
+        "cost_usd": 0.274588,
+        "model": "claude-haiku-5-5",
+        "note": null,
+        "pricing_key": "claude-haiku-5-5",
+        "tokens": {
+          "cache_read_tokens": 2097975,
+          "cache_write_tokens": 105007,
+          "input_tokens": 2203052,
+          "output_tokens": 40355
+        }
+      },
+      "h55-21": {
+        "cost_usd": 0.267383,
+        "model": "claude-haiku-5-5",
+        "note": null,
+        "pricing_key": "claude-haiku-5-5",
+        "tokens": {
+          "cache_read_tokens": 2082974,
+          "cache_write_tokens": 97170,
+          "input_tokens": 2180218,
+          "output_tokens": 32771
+        }
+      },
+      "h55-22": {
+        "cost_usd": 0.233453,
+        "model": "claude-haiku-5-5",
+        "note": null,
+        "pricing_key": "claude-haiku-5-5",
+        "tokens": {
+          "cache_read_tokens": 1756986,
+          "cache_write_tokens": 95607,
+          "input_tokens": 1852663,
+          "output_tokens": 37331
+        }
+      },
+      "h55-23": {
+        "cost_usd": 0.198535,
+        "model": "claude-haiku-5-5",
+        "note": null,
+        "pricing_key": "claude-haiku-5-5",
+        "tokens": {
+          "cache_read_tokens": 1380055,
+          "cache_write_tokens": 109099,
+          "input_tokens": 1489200,
+          "output_tokens": 44354
+        }
+      },
+      "h55-24": {
+        "cost_usd": 0.267574,
+        "model": "claude-haiku-5-5",
+        "note": null,
+        "pricing_key": "claude-haiku-5-5",
+        "tokens": {
+          "cache_read_tokens": 2074106,
+          "cache_write_tokens": 96675,
+          "input_tokens": 2170851,
+          "output_tokens": 35326
+        }
+      },
+      "h55-25": {
+        "cost_usd": 0.21305,
+        "model": "claude-haiku-5-5",
+        "note": null,
+        "pricing_key": "claude-haiku-5-5",
+        "tokens": {
+          "cache_read_tokens": 1479869,
+          "cache_write_tokens": 108695,
+          "input_tokens": 1588612,
+          "output_tokens": 51606
+        }
+      },
+      "h55-26": {
+        "cost_usd": 0.308607,
+        "model": "claude-haiku-5-5",
+        "note": null,
+        "pricing_key": "claude-haiku-5-5",
+        "tokens": {
+          "cache_read_tokens": 2430040,
+          "cache_write_tokens": 111426,
+          "input_tokens": 2541540,
+          "output_tokens": 32448
+        }
+      },
+      "h55-27": {
+        "cost_usd": 0.241869,
+        "model": "claude-haiku-5-5",
+        "note": null,
+        "pricing_key": "claude-haiku-5-5",
+        "tokens": {
+          "cache_read_tokens": 1823973,
+          "cache_write_tokens": 92876,
+          "input_tokens": 1916927,
+          "output_tokens": 40654
+        }
+      },
+      "h55-28": {
+        "cost_usd": 0.28395,
+        "model": "claude-haiku-5-5",
+        "note": null,
+        "pricing_key": "claude-haiku-5-5",
+        "tokens": {
+          "cache_read_tokens": 2224853,
+          "cache_write_tokens": 99481,
+          "input_tokens": 2324408,
+          "output_tokens": 33651
+        }
+      },
+      "h55-29": {
+        "cost_usd": 0.219194,
+        "model": "claude-haiku-5-5",
+        "note": null,
+        "pricing_key": "claude-haiku-5-5",
+        "tokens": {
+          "cache_read_tokens": 1602286,
+          "cache_write_tokens": 97802,
+          "input_tokens": 1700146,
+          "output_tokens": 41863
+        }
+      },
+      "h55-30": {
+        "cost_usd": 0.198422,
+        "model": "claude-haiku-5-5",
+        "note": null,
+        "pricing_key": "claude-haiku-5-5",
+        "tokens": {
+          "cache_read_tokens": 1414577,
+          "cache_write_tokens": 98634,
+          "input_tokens": 1513261,
+          "output_tokens": 41242
+        }
+      },
+      "h55-31": {
+        "cost_usd": 0.2458,
+        "model": "claude-haiku-5-5",
+        "note": null,
+        "pricing_key": "claude-haiku-5-5",
+        "tokens": {
+          "cache_read_tokens": 1821533,
+          "cache_write_tokens": 103170,
+          "input_tokens": 1924763,
+          "output_tokens": 44424
+        }
+      },
+      "h55-32": {
+        "cost_usd": 0.249624,
+        "model": "claude-haiku-5-5",
+        "note": null,
+        "pricing_key": "claude-haiku-5-5",
+        "tokens": {
+          "cache_read_tokens": 1879628,
+          "cache_write_tokens": 100849,
+          "input_tokens": 1980535,
+          "output_tokens": 40337
+        }
+      },
+      "h55-33": {
+        "cost_usd": 0.263583,
+        "model": "claude-haiku-5-5",
+        "note": null,
+        "pricing_key": "claude-haiku-5-5",
+        "tokens": {
+          "cache_read_tokens": 2040231,
+          "cache_write_tokens": 98141,
+          "input_tokens": 2138446,
+          "output_tokens": 34137
+        }
+      },
+      "h55-34": {
+        "cost_usd": 0.293718,
+        "model": "claude-haiku-5-5",
+        "note": null,
+        "pricing_key": "claude-haiku-5-5",
+        "tokens": {
+          "cache_read_tokens": 2250681,
+          "cache_write_tokens": 105341,
+          "input_tokens": 2356112,
+          "output_tokens": 44865
+        }
+      },
+      "h55-35": {
+        "cost_usd": 0.215489,
+        "model": "claude-haiku-5-5",
+        "note": null,
+        "pricing_key": "claude-haiku-5-5",
+        "tokens": {
+          "cache_read_tokens": 1536331,
+          "cache_write_tokens": 106289,
+          "input_tokens": 1642674,
+          "output_tokens": 45145
+        }
+      },
+      "h55-36": {
+        "cost_usd": 0.370716,
+        "model": "claude-haiku-5-5",
+        "note": null,
+        "pricing_key": "claude-haiku-5-5",
+        "tokens": {
+          "cache_read_tokens": 2915244,
+          "cache_write_tokens": 125053,
+          "input_tokens": 3040371,
+          "output_tokens": 43789
+        }
+      },
+      "h55-37": {
+        "cost_usd": 0.190076,
+        "model": "claude-haiku-5-5",
+        "note": null,
+        "pricing_key": "claude-haiku-5-5",
+        "tokens": {
+          "cache_read_tokens": 1348695,
+          "cache_write_tokens": 93980,
+          "input_tokens": 1442723,
+          "output_tokens": 41138
+        }
+      },
+      "h55-38": {
+        "cost_usd": 0.235846,
+        "model": "claude-haiku-5-5",
+        "note": null,
+        "pricing_key": "claude-haiku-5-5",
+        "tokens": {
+          "cache_read_tokens": 1692461,
+          "cache_write_tokens": 110526,
+          "input_tokens": 1803041,
+          "output_tokens": 49603
+        }
+      },
+      "h55-39": {
+        "cost_usd": 0.307474,
+        "model": "claude-haiku-5-5",
+        "note": null,
+        "pricing_key": "claude-haiku-5-5",
+        "tokens": {
+          "cache_read_tokens": 2337981,
+          "cache_write_tokens": 119635,
+          "input_tokens": 2457686,
+          "output_tokens": 46742
+        }
+      },
+      "h55-40": {
+        "cost_usd": 0.213879,
+        "model": "claude-haiku-5-5",
+        "note": null,
+        "pricing_key": "claude-haiku-5-5",
+        "tokens": {
+          "cache_read_tokens": 1579753,
+          "cache_write_tokens": 94317,
+          "input_tokens": 1674130,
+          "output_tokens": 37758
+        }
+      }
+    },
+    "pricing_retrieved_on": null,
+    "unit": "USD"
+  },
+  "criteria": [
+    "C3",
+    "C4",
+    "C5",
+    "C6",
+    "C7"
+  ],
+  "criteria_by_model": {
+    "claude-haiku-4-5": {
+      "control": {
+        "C3": 0.2593,
+        "C4": 0.7256,
+        "C5": 0.0,
+        "C6": 0.9787,
+        "C7": 0.6333
+      },
+      "treatment": {
+        "C3": 0.3148,
+        "C4": 0.7836,
+        "C5": 0.0556,
+        "C6": 1.0,
+        "C7": 0.7111
+      }
+    },
+    "claude-haiku-5-5": {
+      "control": {
+        "C3": 0.8333,
+        "C4": 0.7787,
+        "C5": 0.1667,
+        "C6": 0.8277,
+        "C7": 0.7556
+      },
+      "treatment": {
+        "C3": 0.625,
+        "C4": 0.8569,
+        "C5": 0.125,
+        "C6": 0.7854,
+        "C7": 0.8
+      }
+    }
+  },
+  "effect_size": {
+    "convention": "r = 2*U1/(n1*n2) - 1 with U1 taken for x=treatment (y=control), so positive r means treatment > control; two-sided asymptotic Mann-Whitney U without continuity correction; CI is a percentile bootstrap over resampled runs",
+    "interaction_note": "exploratory: difference of per-model effects r[claude-haiku-4-5] - r[claude-haiku-5-5]; not a tested interaction",
+    "interaction_r": 0.1736,
+    "outcome": "primary_total",
+    "per_model": {
+      "claude-haiku-4-5": {
+        "bootstrap": {
+          "high": 0.5494,
+          "iterations": 1000,
+          "low": -0.2254,
+          "seed": 20261127
+        },
+        "n1": 18,
+        "n2": 18,
+        "note": null,
+        "p": 0.4002,
+        "r": 0.1667,
+        "u": 189.0
+      },
+      "claude-haiku-5-5": {
+        "bootstrap": {
+          "high": 0.3958,
+          "iterations": 1000,
+          "low": -0.3681,
+          "seed": 20261127
+        },
+        "n1": 16,
+        "n2": 18,
+        "note": null,
+        "p": 0.9862,
+        "r": -0.0069,
+        "u": 143.0
+      }
+    },
+    "pooled_note": "unweighted mean of per-model r (not of raw scores)",
+    "pooled_r": 0.0799
+  },
+  "effect_size_minus_c5": {
+    "convention": "r = 2*U1/(n1*n2) - 1 with U1 taken for x=treatment (y=control), so positive r means treatment > control; two-sided asymptotic Mann-Whitney U without continuity correction; CI is a percentile bootstrap over resampled runs",
+    "interaction_note": "exploratory: difference of per-model effects r[claude-haiku-4-5] - r[claude-haiku-5-5]; not a tested interaction",
+    "interaction_r": 0.1265,
+    "outcome": "primary_total_minus_c5",
+    "per_model": {
+      "claude-haiku-4-5": {
+        "bootstrap": {
+          "high": 0.5464,
+          "iterations": 1000,
+          "low": -0.2285,
+          "seed": 20261127
+        },
+        "n1": 18,
+        "n2": 18,
+        "note": null,
+        "p": 0.4367,
+        "r": 0.1543,
+        "u": 187.0
+      },
+      "claude-haiku-5-5": {
+        "bootstrap": {
+          "high": 0.4236,
+          "iterations": 1000,
+          "low": -0.3715,
+          "seed": 20261127
+        },
+        "n1": 16,
+        "n2": 18,
+        "note": null,
+        "p": 0.9038,
+        "r": 0.0278,
+        "u": 148.0
+      }
+    },
+    "pooled_note": "unweighted mean of per-model r (not of raw scores)",
+    "pooled_r": 0.091
+  },
+  "exclusions": {
+    "contamination_categories": {
+      "aptu_coder_pull_request": {
+        "label": "an aptu-coder pull-request URL or aptu-coder pulls/ API path in a tool request or tool result",
+        "number": 2
+      },
+      "issue_1861": {
+        "label": "the number 1861 in a tool request or tool result",
+        "number": 1
+      },
+      "network_outside_fence": {
+        "label": "a tool request containing any of the tokens curl, wget, git fetch, git pull, cargo fetch, fetch(",
+        "number": 3
+      }
+    },
+    "excluded": [
+      {
+        "contamination_hits": 1,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.016,
+          "element_query_draft": 0.0321
+        },
+        "reason": "contamination",
+        "run_id": "h45-13"
+      },
+      {
+        "contamination_hits": 3,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0214,
+          "element_query_draft": 0.0321
+        },
+        "reason": "contamination",
+        "run_id": "h45-33"
+      },
+      {
+        "contamination_hits": 1,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0214,
+          "element_query_draft": 0.0321
+        },
+        "reason": "contamination",
+        "run_id": "h45-34"
+      },
+      {
+        "contamination_hits": 1,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.016,
+          "element_query_draft": 0.0321
+        },
+        "reason": "contamination",
+        "run_id": "h45-40"
+      },
+      {
+        "contamination_hits": 1,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0321,
+          "element_query_draft": 0.0321
+        },
+        "reason": "contamination",
+        "run_id": "h55-13"
+      },
+      {
+        "contamination_hits": 1,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0321,
+          "element_query_draft": 0.0321
+        },
+        "reason": "contamination",
+        "run_id": "h55-14"
+      },
+      {
+        "contamination_hits": 1,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0321,
+          "element_query_draft": 0.0321
+        },
+        "reason": "contamination",
+        "run_id": "h55-16"
+      },
+      {
+        "contamination_hits": 1,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0374,
+          "element_query_draft": 0.0321
+        },
+        "reason": "contamination",
+        "run_id": "h55-17"
+      },
+      {
+        "contamination_hits": 1,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0374,
+          "element_query_draft": 0.0428
+        },
+        "reason": "contamination",
+        "run_id": "h55-20"
+      },
+      {
+        "contamination_hits": 1,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0321,
+          "element_query_draft": 0.0321
+        },
+        "reason": "contamination",
+        "run_id": "h55-28"
+      }
+    ],
+    "kept": [
+      "h45-01",
+      "h45-02",
+      "h45-03",
+      "h45-04",
+      "h45-05",
+      "h45-06",
+      "h45-07",
+      "h45-08",
+      "h45-09",
+      "h45-10",
+      "h45-11",
+      "h45-12",
+      "h45-14",
+      "h45-15",
+      "h45-16",
+      "h45-17",
+      "h45-18",
+      "h45-19",
+      "h45-20",
+      "h45-21",
+      "h45-22",
+      "h45-23",
+      "h45-24",
+      "h45-25",
+      "h45-26",
+      "h45-27",
+      "h45-28",
+      "h45-29",
+      "h45-30",
+      "h45-31",
+      "h45-32",
+      "h45-35",
+      "h45-36",
+      "h45-37",
+      "h45-38",
+      "h45-39",
+      "h55-01",
+      "h55-02",
+      "h55-03",
+      "h55-04",
+      "h55-05",
+      "h55-06",
+      "h55-07",
+      "h55-08",
+      "h55-09",
+      "h55-10",
+      "h55-11",
+      "h55-12",
+      "h55-15",
+      "h55-18",
+      "h55-19",
+      "h55-21",
+      "h55-22",
+      "h55-23",
+      "h55-24",
+      "h55-25",
+      "h55-26",
+      "h55-27",
+      "h55-29",
+      "h55-30",
+      "h55-31",
+      "h55-32",
+      "h55-33",
+      "h55-34",
+      "h55-35",
+      "h55-36",
+      "h55-37",
+      "h55-38",
+      "h55-39",
+      "h55-40"
+    ],
+    "n_excluded": 10,
+    "n_kept": 70,
+    "overlap_ceiling": 0.7861,
+    "overlap_drafts": [
+      "element_query_draft",
+      "defuse_query_draft"
+    ],
+    "overlap_method": "per draft, |cited \u2229 vocabulary| / |vocabulary|; cited = lowercase snake_case tokens (\\b[a-z]+(?:_[a-z]+)+\\b) of element_query_draft and defuse_query_draft after ';' comments are dropped; vocabulary = named node types and field names of scorer/vendor/tree-sitter-php-node-types.json",
+    "overlap_note": "descriptive only: 147 of the 187 vendored entries are snake_case, so no draft can exceed 0.786; the value is reported per run and is not an exclusion trigger",
+    "per_run": {
+      "h45-01": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.016,
+          "element_query_draft": 0.0267
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h45-02": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0321,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h45-03": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0374,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h45-04": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0267,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h45-05": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0267,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h45-06": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0214,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h45-07": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0214,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h45-08": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0214,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h45-09": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0214,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h45-10": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0267,
+          "element_query_draft": 0.0267
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h45-11": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0214,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h45-12": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.016,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h45-13": {
+        "contamination_hits": [
+          {
+            "category": "network_outside_fence",
+            "match": "curl",
+            "message_index": 59,
+            "number": 3,
+            "run_id": "h45-13",
+            "source": "tool_request",
+            "tool": "shell"
+          }
+        ],
+        "excluded": true,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.016,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": "contamination",
+        "transcript_available": true
+      },
+      "h45-14": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.016,
+          "element_query_draft": 0.0267
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h45-15": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0107,
+          "element_query_draft": 0.0267
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h45-16": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0374,
+          "element_query_draft": 0.0267
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h45-17": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.016,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h45-18": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0214,
+          "element_query_draft": 0.0267
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h45-19": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.016,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h45-20": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.016,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h45-21": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0107,
+          "element_query_draft": 0.0267
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h45-22": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0214,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h45-23": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0214,
+          "element_query_draft": 0.0428
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h45-24": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0214,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h45-25": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0214,
+          "element_query_draft": 0.0374
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h45-26": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0214,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h45-27": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h45-28": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0214,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h45-29": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0214,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h45-30": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0428,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h45-31": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.016,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h45-32": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0321,
+          "element_query_draft": 0.0267
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h45-33": {
+        "contamination_hits": [
+          {
+            "category": "network_outside_fence",
+            "match": "curl",
+            "message_index": 83,
+            "number": 3,
+            "run_id": "h45-33",
+            "source": "tool_request",
+            "tool": "shell"
+          },
+          {
+            "category": "network_outside_fence",
+            "match": "curl",
+            "message_index": 86,
+            "number": 3,
+            "run_id": "h45-33",
+            "source": "tool_request",
+            "tool": "shell"
+          },
+          {
+            "category": "network_outside_fence",
+            "match": "curl",
+            "message_index": 89,
+            "number": 3,
+            "run_id": "h45-33",
+            "source": "tool_request",
+            "tool": "shell"
+          }
+        ],
+        "excluded": true,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0214,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": "contamination",
+        "transcript_available": true
+      },
+      "h45-34": {
+        "contamination_hits": [
+          {
+            "category": "network_outside_fence",
+            "match": "curl",
+            "message_index": 86,
+            "number": 3,
+            "run_id": "h45-34",
+            "source": "tool_request",
+            "tool": "shell"
+          }
+        ],
+        "excluded": true,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0214,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": "contamination",
+        "transcript_available": true
+      },
+      "h45-35": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0267,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h45-36": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0214,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h45-37": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0214,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h45-38": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0374,
+          "element_query_draft": 0.0267
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h45-39": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0214,
+          "element_query_draft": 0.0428
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h45-40": {
+        "contamination_hits": [
+          {
+            "category": "network_outside_fence",
+            "match": "curl",
+            "message_index": 93,
+            "number": 3,
+            "run_id": "h45-40",
+            "source": "tool_request",
+            "tool": "shell"
+          }
+        ],
+        "excluded": true,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.016,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": "contamination",
+        "transcript_available": true
+      },
+      "h55-01": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0321,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h55-02": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0374,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h55-03": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0267,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h55-04": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0214,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h55-05": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0267,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h55-06": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0374,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h55-07": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0267,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h55-08": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0428,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h55-09": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0267,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h55-10": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0321,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h55-11": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0321,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h55-12": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0374,
+          "element_query_draft": 0.0481
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h55-13": {
+        "contamination_hits": [
+          {
+            "category": "network_outside_fence",
+            "match": "curl",
+            "message_index": 41,
+            "number": 3,
+            "run_id": "h55-13",
+            "source": "tool_request",
+            "tool": "shell"
+          }
+        ],
+        "excluded": true,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0321,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": "contamination",
+        "transcript_available": true
+      },
+      "h55-14": {
+        "contamination_hits": [
+          {
+            "category": "network_outside_fence",
+            "match": "curl",
+            "message_index": 26,
+            "number": 3,
+            "run_id": "h55-14",
+            "source": "tool_request",
+            "tool": "shell"
+          }
+        ],
+        "excluded": true,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0321,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": "contamination",
+        "transcript_available": true
+      },
+      "h55-15": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0267,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h55-16": {
+        "contamination_hits": [
+          {
+            "category": "network_outside_fence",
+            "match": "fetch(",
+            "message_index": 76,
+            "number": 3,
+            "run_id": "h55-16",
+            "source": "tool_request",
+            "tool": "shell"
+          }
+        ],
+        "excluded": true,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0321,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": "contamination",
+        "transcript_available": true
+      },
+      "h55-17": {
+        "contamination_hits": [
+          {
+            "category": "issue_1861",
+            "match": "1861",
+            "message_index": 10,
+            "number": 1,
+            "run_id": "h55-17",
+            "source": "tool_result",
+            "tool": null
+          }
+        ],
+        "excluded": true,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0374,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": "contamination",
+        "transcript_available": true
+      },
+      "h55-18": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0428,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h55-19": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0321,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h55-20": {
+        "contamination_hits": [
+          {
+            "category": "network_outside_fence",
+            "match": "fetch(",
+            "message_index": 86,
+            "number": 3,
+            "run_id": "h55-20",
+            "source": "tool_request",
+            "tool": "shell"
+          }
+        ],
+        "excluded": true,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0374,
+          "element_query_draft": 0.0428
+        },
+        "overlap_available": true,
+        "reason": "contamination",
+        "transcript_available": true
+      },
+      "h55-21": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0321,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h55-22": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0267,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h55-23": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0374,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h55-24": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0374,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h55-25": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0374,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h55-26": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0267,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h55-27": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0267,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h55-28": {
+        "contamination_hits": [
+          {
+            "category": "network_outside_fence",
+            "match": "curl",
+            "message_index": 38,
+            "number": 3,
+            "run_id": "h55-28",
+            "source": "tool_request",
+            "tool": "shell"
+          }
+        ],
+        "excluded": true,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0321,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": "contamination",
+        "transcript_available": true
+      },
+      "h55-29": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0374,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h55-30": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0374,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h55-31": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0374,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h55-32": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0267,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h55-33": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0321,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h55-34": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0374,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h55-35": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0267,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h55-36": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0267,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h55-37": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0321,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h55-38": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0374,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h55-39": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0321,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      },
+      "h55-40": {
+        "contamination_hits": [],
+        "excluded": false,
+        "failure_mode": null,
+        "overlap": {
+          "defuse_query_draft": 0.0267,
+          "element_query_draft": 0.0321
+        },
+        "overlap_available": true,
+        "reason": null,
+        "transcript_available": true
+      }
+    },
+    "rule": "a run is excluded when its latency or score record carries failure_mode (reason turn_cap for goose_exit_1, failed_run for any other value) or when contamination.py reports at least one hit over its exported transcript and tool-log rows (reason contamination); the output overlap is a descriptive value and never excludes; no imputation, replacement or re-weighting"
+  },
+  "n_runs": 70,
+  "n_scored": 80,
+  "outcome": {
+    "co_reported": {
+      "computed_for_every_run": true,
+      "field": "primary_total_minus_c5",
+      "label": "primary_total minus C5 = C3 + C4",
+      "range": [
+        0,
+        2
+      ]
+    },
+    "note": "primary_total is taken as the scorer emits it and is never recomputed from the criteria; no criterion is dropped after the main run begins",
+    "primary": {
+      "field": "primary_total",
+      "field_source": "scorer",
+      "label": "primary_total = C3 + C4 + C5",
+      "range": [
+        0,
+        3
+      ]
+    },
+    "record_only": [
+      "total"
+    ],
+    "secondary": [
+      "C6",
+      "C7"
+    ]
+  }
+}

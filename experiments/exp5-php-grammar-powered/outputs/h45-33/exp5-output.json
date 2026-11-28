@@ -1,0 +1,213 @@
+{
+  "started_at": "2026-11-28T00:06:49Z",
+  "finished_at": "2026-11-28T00:20:00Z",
+  "session_id": null,
+  "lens": "scout",
+  "relevant_files": [
+    {
+      "path": "crates/aptu-coder-core/src/languages/mod.rs",
+      "line_range": "1-412",
+      "role": "Language registration hub; LanguageInfo struct definition at lines 48-62; get_language_info() match arms starting at line 66; get_ts_language() at line 280"
+    },
+    {
+      "path": "crates/aptu-coder-core/src/languages/java.rs",
+      "line_range": "1-371",
+      "role": "Reference implementation for ELEMENT_QUERY and DEFUSE_QUERY patterns; extract_inheritance, extract_function_name, find_receiver_type, find_method_for_receiver handlers"
+    },
+    {
+      "path": "crates/aptu-coder-core/src/lang.rs",
+      "line_range": "1-90",
+      "role": "EXTENSION_MAP definition (lines 14-50) and supported_languages() function (lines 75-95)"
+    },
+    {
+      "path": "crates/aptu-coder-core/Cargo.toml",
+      "line_range": "1-60",
+      "role": "Workspace dependencies for tree-sitter-* crates"
+    },
+    {
+      "path": "Cargo.toml",
+      "line_range": "1-60",
+      "role": "Workspace package configuration and tree-sitter-php dependency location"
+    },
+    {
+      "path": "crates/aptu-coder-core/src/languages/kotlin.rs",
+      "line_range": "1-100",
+      "role": "Example of DEFUSE_QUERY with write-site patterns and extract_inheritance implementation for complex inheritance"
+    }
+  ],
+  "conventions": {
+    "commits": "Conventional commits with scope (feat, fix, chore, docs, refactor, ci); signed commits enforced via DCO; format: 'scope: description (#PR)'",
+    "testing": "Unit tests in language module files using tree_sitter::Parser and Query; integration tests in crates/aptu-coder-core/tests/integration_tests.rs; test functions follow pattern test_<feature>_<scenario>",
+    "linting": "cargo clippy with deny-level lints: undocumented_unsafe_blocks, unwrap_used, expect_used (test-code exemptions via cfg_attr); cargo fmt --check; cargo deny check advisories licenses",
+    "error_handling": "thiserror for error types; Option<T> and Result<T,E> patterns; no unwrap/expect in production code (test-only exemptions); bounds checking before string slicing"
+  },
+  "patterns": [
+    "Each language module exports const ELEMENT_QUERY, CALL_QUERY, and optional REFERENCE_QUERY, IMPORT_QUERY, DEFUSE_QUERY as &str",
+    "Tree-sitter queries use capture groups: @function, @class, @call, @type_ref, @import_path, @read.usage, @write.* for def-use sites",
+    "Handler functions take (&Node, &str, ...) parameters; &str is source code for text extraction via node.start_byte()..node.end_byte()",
+    "Language registration requires two match arms: one in get_language_info() with LanguageInfo struct, one in get_ts_language() with tree_sitter::Language",
+    "Inheritance extraction walks child nodes to find base_clause (extends) and class_interface_clause (implements) or equivalent grammar structures",
+    "DEFUSE_QUERY captures write sites (local declarations, assignments) and read sites (identifier usage) for semantic analysis",
+    "Extension mapping is case-insensitive via eq_ignore_ascii_case; one extension can map to one language identifier"
+  ],
+  "related_issues": [
+    {
+      "number": 1864,
+      "title": "Add PHP language support via tree-sitter-php",
+      "relevance": "Primary issue; requests PHP support modeled after Java implementation"
+    }
+  ],
+  "constraints": [
+    "All languages unconditionally compiled in (lang-* feature gates removed); no feature-gating for PHP",
+    "tree-sitter-php must be added to workspace.dependencies in Cargo.toml and to aptu-coder-core's [dependencies]",
+    "DEFUSE_QUERY is required for semantic analysis; must cover local variable declarations, assignments, and identifier reads",
+    "extract_inheritance handler required to support class hierarchy analysis; must walk base_clause and class_interface_clause nodes",
+    "No unsafe code without SAFETY comments; no unwrap/expect in production code",
+    "Tree-sitter queries must compile and match actual PHP grammar node kinds from tree-sitter-php"
+  ],
+  "test_coverage": "Existing language modules have unit tests for ELEMENT_QUERY compilation and matching (test_<lang>_element_query_happy_path), extract_inheritance (test_<lang>_extract_inheritance), extract_function_name, find_receiver_type, find_method_for_receiver. Integration tests in integration_tests.rs verify language registration via get_language_info() and get_ts_language(). Test coverage for PHP will need to follow the same patterns for all declaration kinds and inheritance scenarios.",
+  "library_findings": [
+    {
+      "library": "tree-sitter-php",
+      "version": "0.25.2",
+      "relevant_api": "tree_sitter_php::LANGUAGE constant; grammar node kinds: function_definition, method_declaration, class_declaration, interface_declaration, trait_declaration, enum_declaration; inheritance via base_clause (extends) and class_interface_clause (implements) child nodes, not fields",
+      "notes": "MIT licensed; supports PHP 7.0+; grammar distinguishes between function_definition (top-level) and method_declaration (inside class/interface/trait); trait_declaration and interface_declaration have same structure as class_declaration; base_clause and class_interface_clause are sibling nodes, not fields of class_declaration"
+    },
+    {
+      "library": "tree-sitter",
+      "version": "0.27.1",
+      "relevant_api": "tree_sitter::Language, tree_sitter::Query, tree_sitter::Node, tree_sitter::QueryCursor; Node::child_by_field_name(), Node::child(), Node::kind(), Node::start_byte(), Node::end_byte()",
+      "notes": "Core parsing library; used by all language handlers; queries use S-expression syntax with capture groups"
+    }
+  ],
+  "approaches": [
+    {
+      "name": "Approach 1: Minimal PHP support (functions and classes only)",
+      "description": "Add tree-sitter-php dependency, create php.rs with ELEMENT_QUERY covering function_definition and class_declaration, CALL_QUERY for function calls, IMPORT_QUERY for use statements, DEFUSE_QUERY for variable tracking. Register in mod.rs and lang.rs with .php extension. No inheritance handler, no method extraction.",
+      "pros": [
+        "Fastest to implement (5-6 files touched)",
+        "Covers most common use cases",
+        "Minimal test surface",
+        "Matches CSS-level complexity"
+      ],
+      "cons": [
+        "Misses methods, interfaces, traits, enums",
+        "No inheritance analysis (issue explicitly requests it)",
+        "Incomplete compared to Java reference implementation",
+        "Will require follow-up work"
+      ],
+      "complexity": "simple",
+      "files_touched": 5
+    },
+    {
+      "name": "Approach 2: Full PHP support with inheritance (recommended)",
+      "description": "Add tree-sitter-php dependency. Create php.rs with ELEMENT_QUERY covering function_definition, method_declaration, class_declaration, interface_declaration, trait_declaration, enum_declaration. Add CALL_QUERY, IMPORT_QUERY, DEFUSE_QUERY, and extract_inheritance handler that walks base_clause and class_interface_clause nodes. Implement extract_function_name handler. Register in mod.rs (with all LanguageInfo fields) and lang.rs. Add .php extension. Include comprehensive unit tests for all declaration kinds and inheritance scenarios.",
+      "pros": [
+        "Complete feature parity with Java reference",
+        "Covers all PHP declaration kinds",
+        "Supports inheritance analysis (issue requirement)",
+        "Handles methods, interfaces, traits, enums",
+        "Extensible for future semantic handlers"
+      ],
+      "cons": [
+        "More files to modify (7-8)",
+        "Larger test suite required",
+        "More complex ELEMENT_QUERY",
+        "Requires understanding of PHP grammar nuances (base_clause vs field)"
+      ],
+      "complexity": "medium",
+      "files_touched": 8
+    },
+    {
+      "name": "Approach 3: PHP with optional semantic handlers",
+      "description": "Like Approach 2, but defer find_method_for_receiver and find_receiver_type handlers to a follow-up issue. Implement only extract_function_name and extract_inheritance in initial PR. Register with None for those optional handlers. Allows phased delivery: core language support now, advanced semantic analysis later.",
+      "pros": [
+        "Balances completeness with delivery speed",
+        "Unblocks basic PHP analysis immediately",
+        "Semantic handlers can be added incrementally",
+        "Reduces initial review scope"
+      ],
+      "cons": [
+        "Incomplete semantic support (method receiver tracking)",
+        "Requires follow-up work to reach full parity",
+        "May confuse users about what is/isn't supported",
+        "Defers architectural decisions"
+      ],
+      "complexity": "medium",
+      "files_touched": 7
+    }
+  ],
+  "recommendation": "Approach 2 (Full PHP support with inheritance). The issue explicitly requests PHP support and mentions Java as the reference implementation. Java has extract_inheritance, extract_function_name, and full coverage of all declaration kinds. PHP grammar is similar to Java (both have class, interface, method, function, enum), and tree-sitter-php provides all necessary node kinds. The additional complexity is modest (one handler function for inheritance, one for function names, one comprehensive ELEMENT_QUERY). Full support now prevents technical debt and user confusion. The DEFUSE_QUERY is required for semantic analysis and is essential to the value proposition of aptu-coder.",
+  "language_info_struct_citation": "pub struct LanguageInfo {\n    pub name: &'static str,\n    pub language: Language,\n    pub element_query: &'static str,\n    pub call_query: &'static str,\n    pub reference_query: Option<&'static str>,\n    pub import_query: Option<&'static str>,\n    pub impl_query: Option<&'static str>,\n    pub impl_trait_query: Option<&'static str>,\n    pub defuse_query: Option<&'static str>,\n    pub extract_function_name: Option<ExtractFunctionNameHandler>,\n    pub find_method_for_receiver: Option<FindMethodForReceiverHandler>,\n    pub find_receiver_type: Option<FindReceiverTypeHandler>,\n    pub extract_inheritance: Option<ExtractInheritanceHandler>,\n}",
+  "element_query_draft": "(\nfunction_definition\n  name: (name) @function_name) @function\n(method_declaration\n  name: (name) @method_name) @function\n(class_declaration\n  name: (name) @class_name) @class\n(interface_declaration\n  name: (name) @interface_name) @class\n(trait_declaration\n  name: (name) @trait_name) @class\n(enum_declaration\n  name: (name) @enum_name) @class\n",
+  "defuse_query_draft": "(\nassignment_expression left: (variable_name (name) @write.assign))\n(local_variable_declaration (variable_declarator name: (variable_name (name) @write.local)))\n(foreach_statement value: (variable_name (name) @write.foreach))\n(catch_clause (catch_clause_variable (variable_name (name) @write.catch)))\n(name) @read.usage\n",
+  "inheritance_walk_citation": "For a class_declaration node in tree-sitter-php: (1) Iterate through child nodes (not fields) to find base_clause: if found, extract the first named child which is a name node containing the superclass identifier. (2) Iterate through child nodes to find class_interface_clause: iterate through its named children; each name node is an interface identifier. (3) Repeat for trait_declaration and interface_declaration nodes using the same base_clause and class_interface_clause child node patterns. Source: https://github.com/tree-sitter/tree-sitter-php/blob/master/common/define-grammar.js (base_clause and class_interface_clause rules) and https://github.com/tree-sitter/tree-sitter-php/blob/master/php/src/node-types.json (class_declaration, interface_declaration, trait_declaration field definitions showing no parent_class/interfaces fields).",
+  "test_snippets": [
+    {
+      "dimension": "function_declaration",
+      "declaration_kind": "function_definition",
+      "code": "<?php\nfunction greet($name) {\n    return \"Hello, \" . $name;\n}\n",
+      "test_name": "test_php_function_definition_extraction"
+    },
+    {
+      "dimension": "method_declaration",
+      "declaration_kind": "method_declaration",
+      "code": "<?php\nclass Calculator {\n    public function add($a, $b) {\n        return $a + $b;\n    }\n}\n",
+      "test_name": "test_php_method_declaration_extraction"
+    },
+    {
+      "dimension": "class_declaration",
+      "declaration_kind": "class_declaration",
+      "code": "<?php\nclass Animal {\n    public $name;\n    public function speak() {}\n}\n",
+      "test_name": "test_php_class_declaration_extraction"
+    },
+    {
+      "dimension": "interface_declaration",
+      "declaration_kind": "interface_declaration",
+      "code": "<?php\ninterface Drawable {\n    public function draw();\n}\n",
+      "test_name": "test_php_interface_declaration_extraction"
+    },
+    {
+      "dimension": "trait_declaration",
+      "declaration_kind": "trait_declaration",
+      "code": "<?php\ntrait Logger {\n    public function log($msg) {\n        echo $msg;\n    }\n}\n",
+      "test_name": "test_php_trait_declaration_extraction"
+    },
+    {
+      "dimension": "enum_declaration",
+      "declaration_kind": "enum_declaration",
+      "code": "<?php\nenum Status {\n    case Pending;\n    case Active;\n    case Closed;\n}\n",
+      "test_name": "test_php_enum_declaration_extraction"
+    },
+    {
+      "dimension": "class_inheritance_extends",
+      "declaration_kind": "class_declaration with base_clause",
+      "code": "<?php\nclass Dog extends Animal {\n    public function bark() {}\n}\n",
+      "test_name": "test_php_class_extends_inheritance"
+    },
+    {
+      "dimension": "class_inheritance_implements",
+      "declaration_kind": "class_declaration with class_interface_clause",
+      "code": "<?php\nclass Circle implements Drawable, Resizable {\n    public function draw() {}\n    public function resize($factor) {}\n}\n",
+      "test_name": "test_php_class_implements_interfaces"
+    },
+    {
+      "dimension": "defuse_local_variable",
+      "declaration_kind": "local_variable_declaration",
+      "code": "<?php\nfunction test() {\n    $x = 5;\n    $y = $x + 10;\n    echo $y;\n}\n",
+      "test_name": "test_php_defuse_local_variable_write_read"
+    }
+  ],
+  "wiring_summary": {
+    "workspace_dependency_tree_sitter_php": "Add tree-sitter-php = \"0.25.2\" to [workspace.dependencies] in Cargo.toml",
+    "core_crate_dependency_tree_sitter_php": "Add tree-sitter-php = { workspace = true } to [dependencies] in crates/aptu-coder-core/Cargo.toml",
+    "languages_mod_rs_public_module": "Add pub mod php; to crates/aptu-coder-core/src/languages/mod.rs after line 9 (after other pub mod declarations)",
+    "languages_mod_rs_get_language_info_match_arm": "Add match arm for \"php\" in get_language_info() function (around line 66-280) with LanguageInfo struct containing php::ELEMENT_QUERY, php::CALL_QUERY, php::REFERENCE_QUERY, php::IMPORT_QUERY, php::DEFUSE_QUERY, php::extract_function_name, php::extract_inheritance",
+    "languages_mod_rs_get_ts_language_match_arm": "Add match arm for \"php\" in get_ts_language() function (around line 280-330) returning tree_sitter_php::LANGUAGE.into()",
+    "lang_rs_extension_map": "Add (\"php\", \"php\") entry to EXTENSION_MAP array in crates/aptu-coder-core/src/lang.rs (around line 14-50)",
+    "lang_rs_supported_languages": "Add \"php\" to the string slice returned by supported_languages() function in crates/aptu-coder-core/src/lang.rs (around line 75-95)",
+    "php_module_file": "Create crates/aptu-coder-core/src/languages/php.rs with ELEMENT_QUERY, CALL_QUERY, REFERENCE_QUERY, IMPORT_QUERY, DEFUSE_QUERY constants and extract_function_name, extract_inheritance handler functions"
+  },
+  "latency_seconds": 793,
+  "message_count": 12
+}

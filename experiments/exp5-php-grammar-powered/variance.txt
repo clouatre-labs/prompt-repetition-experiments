@@ -1,0 +1,72 @@
+{
+  "C3": {
+    "n": 80,
+    "min": 0.0,
+    "max": 1.0,
+    "mean": 0.5292,
+    "variance": 0.2422
+  },
+  "C4": {
+    "n": 80,
+    "min": 0.4286,
+    "max": 1.0,
+    "mean": 0.7888,
+    "variance": 0.0213
+  },
+  "C5": {
+    "n": 80,
+    "min": 0.0,
+    "max": 1.0,
+    "mean": 0.075,
+    "variance": 0.0694
+  },
+  "C6": {
+    "n": 80,
+    "min": 0.4793,
+    "max": 1.0,
+    "mean": 0.8931,
+    "variance": 0.0165
+  },
+  "C7": {
+    "n": 80,
+    "min": 0.0,
+    "max": 0.8,
+    "mean": 0.7225,
+    "variance": 0.0285
+  },
+  "C7.workspace_dependency": {
+    "n": 80,
+    "min": 0.0,
+    "max": 1.0,
+    "mean": 0.9125,
+    "variance": 0.0798
+  },
+  "C7.unconditional_dependency": {
+    "n": 80,
+    "min": 0.0,
+    "max": 1.0,
+    "mean": 0.925,
+    "variance": 0.0694
+  },
+  "C7.extension_map_entry": {
+    "n": 80,
+    "min": 0.0,
+    "max": 1.0,
+    "mean": 0.875,
+    "variance": 0.1094
+  },
+  "C7.mod_registration": {
+    "n": 80,
+    "min": 0.0,
+    "max": 0.0,
+    "mean": 0.0,
+    "variance": 0.0
+  },
+  "C7.match_arms": {
+    "n": 80,
+    "min": 0.0,
+    "max": 1.0,
+    "mean": 0.9,
+    "variance": 0.09
+  }
+}

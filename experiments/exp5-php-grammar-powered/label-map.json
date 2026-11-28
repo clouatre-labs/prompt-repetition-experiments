@@ -1,0 +1,806 @@
+{
+  "sealed_at": "2026-11-27T23:35:31+00:00",
+  "assignments": {
+    "h45-01": {
+      "group": "control",
+      "model": "claude-haiku-4-5",
+      "goose_session_id": "20261127_95",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h45-02": {
+      "group": "treatment",
+      "model": "claude-haiku-4-5",
+      "goose_session_id": "20261127_96",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h45-03": {
+      "group": "control",
+      "model": "claude-haiku-4-5",
+      "goose_session_id": "20261127_97",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h45-04": {
+      "group": "treatment",
+      "model": "claude-haiku-4-5",
+      "goose_session_id": "20261127_98",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h45-05": {
+      "group": "control",
+      "model": "claude-haiku-4-5",
+      "goose_session_id": "20261127_99",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h45-06": {
+      "group": "treatment",
+      "model": "claude-haiku-4-5",
+      "goose_session_id": "20261127_100",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h45-07": {
+      "group": "control",
+      "model": "claude-haiku-4-5",
+      "goose_session_id": "20261127_101",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h45-08": {
+      "group": "treatment",
+      "model": "claude-haiku-4-5",
+      "goose_session_id": "20261127_102",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h45-09": {
+      "group": "control",
+      "model": "claude-haiku-4-5",
+      "goose_session_id": "20261127_103",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h45-10": {
+      "group": "treatment",
+      "model": "claude-haiku-4-5",
+      "goose_session_id": "20261127_104",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h45-11": {
+      "group": "control",
+      "model": "claude-haiku-4-5",
+      "goose_session_id": "20261127_105",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h45-12": {
+      "group": "treatment",
+      "model": "claude-haiku-4-5",
+      "goose_session_id": "20261127_106",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h45-13": {
+      "group": "control",
+      "model": "claude-haiku-4-5",
+      "goose_session_id": "20261127_107",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h45-14": {
+      "group": "treatment",
+      "model": "claude-haiku-4-5",
+      "goose_session_id": "20261127_108",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h45-15": {
+      "group": "control",
+      "model": "claude-haiku-4-5",
+      "goose_session_id": "20261127_109",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h45-16": {
+      "group": "treatment",
+      "model": "claude-haiku-4-5",
+      "goose_session_id": "20261127_110",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h45-17": {
+      "group": "control",
+      "model": "claude-haiku-4-5",
+      "goose_session_id": "20261127_111",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h45-18": {
+      "group": "treatment",
+      "model": "claude-haiku-4-5",
+      "goose_session_id": "20261127_112",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h45-19": {
+      "group": "control",
+      "model": "claude-haiku-4-5",
+      "goose_session_id": "20261127_113",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h45-20": {
+      "group": "treatment",
+      "model": "claude-haiku-4-5",
+      "goose_session_id": "20261127_114",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h45-21": {
+      "group": "control",
+      "model": "claude-haiku-4-5",
+      "goose_session_id": "20261127_115",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h45-22": {
+      "group": "treatment",
+      "model": "claude-haiku-4-5",
+      "goose_session_id": "20261127_116",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h45-23": {
+      "group": "control",
+      "model": "claude-haiku-4-5",
+      "goose_session_id": "20261127_117",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h45-24": {
+      "group": "treatment",
+      "model": "claude-haiku-4-5",
+      "goose_session_id": "20261127_118",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h45-25": {
+      "group": "control",
+      "model": "claude-haiku-4-5",
+      "goose_session_id": "20261127_119",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h45-26": {
+      "group": "treatment",
+      "model": "claude-haiku-4-5",
+      "goose_session_id": "20261127_120",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h45-27": {
+      "group": "control",
+      "model": "claude-haiku-4-5",
+      "goose_session_id": "20261128_1",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h45-28": {
+      "group": "treatment",
+      "model": "claude-haiku-4-5",
+      "goose_session_id": "20261128_2",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h45-29": {
+      "group": "control",
+      "model": "claude-haiku-4-5",
+      "goose_session_id": "20261128_3",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h45-30": {
+      "group": "treatment",
+      "model": "claude-haiku-4-5",
+      "goose_session_id": "20261128_4",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h45-31": {
+      "group": "control",
+      "model": "claude-haiku-4-5",
+      "goose_session_id": "20261128_5",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h45-32": {
+      "group": "treatment",
+      "model": "claude-haiku-4-5",
+      "goose_session_id": "20261128_6",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h45-33": {
+      "group": "control",
+      "model": "claude-haiku-4-5",
+      "goose_session_id": "20261128_7",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h45-34": {
+      "group": "treatment",
+      "model": "claude-haiku-4-5",
+      "goose_session_id": "20261128_8",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h45-35": {
+      "group": "control",
+      "model": "claude-haiku-4-5",
+      "goose_session_id": "20261128_9",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h45-36": {
+      "group": "treatment",
+      "model": "claude-haiku-4-5",
+      "goose_session_id": "20261128_10",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h45-37": {
+      "group": "control",
+      "model": "claude-haiku-4-5",
+      "goose_session_id": "20261128_11",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h45-38": {
+      "group": "treatment",
+      "model": "claude-haiku-4-5",
+      "goose_session_id": "20261128_12",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h45-39": {
+      "group": "control",
+      "model": "claude-haiku-4-5",
+      "goose_session_id": "20261128_13",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h45-40": {
+      "group": "treatment",
+      "model": "claude-haiku-4-5",
+      "goose_session_id": "20261128_14",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h55-01": {
+      "group": "control",
+      "model": "claude-haiku-5-5",
+      "goose_session_id": "20261128_15",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h55-02": {
+      "group": "treatment",
+      "model": "claude-haiku-5-5",
+      "goose_session_id": "20261128_16",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h55-03": {
+      "group": "control",
+      "model": "claude-haiku-5-5",
+      "goose_session_id": "20261128_17",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h55-04": {
+      "group": "treatment",
+      "model": "claude-haiku-5-5",
+      "goose_session_id": "20261128_18",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h55-05": {
+      "group": "control",
+      "model": "claude-haiku-5-5",
+      "goose_session_id": "20261128_19",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h55-06": {
+      "group": "treatment",
+      "model": "claude-haiku-5-5",
+      "goose_session_id": "20261128_20",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h55-07": {
+      "group": "control",
+      "model": "claude-haiku-5-5",
+      "goose_session_id": "20261128_21",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h55-08": {
+      "group": "treatment",
+      "model": "claude-haiku-5-5",
+      "goose_session_id": "20261128_22",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h55-09": {
+      "group": "control",
+      "model": "claude-haiku-5-5",
+      "goose_session_id": "20261128_23",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h55-10": {
+      "group": "treatment",
+      "model": "claude-haiku-5-5",
+      "goose_session_id": "20261128_24",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h55-11": {
+      "group": "control",
+      "model": "claude-haiku-5-5",
+      "goose_session_id": "20261128_25",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h55-12": {
+      "group": "treatment",
+      "model": "claude-haiku-5-5",
+      "goose_session_id": "20261128_26",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h55-13": {
+      "group": "control",
+      "model": "claude-haiku-5-5",
+      "goose_session_id": "20261128_27",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h55-14": {
+      "group": "treatment",
+      "model": "claude-haiku-5-5",
+      "goose_session_id": "20261128_28",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h55-15": {
+      "group": "control",
+      "model": "claude-haiku-5-5",
+      "goose_session_id": "20261128_29",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h55-16": {
+      "group": "treatment",
+      "model": "claude-haiku-5-5",
+      "goose_session_id": "20261128_30",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h55-17": {
+      "group": "control",
+      "model": "claude-haiku-5-5",
+      "goose_session_id": "20261128_31",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h55-18": {
+      "group": "treatment",
+      "model": "claude-haiku-5-5",
+      "goose_session_id": "20261128_32",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h55-19": {
+      "group": "control",
+      "model": "claude-haiku-5-5",
+      "goose_session_id": "20261128_33",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h55-20": {
+      "group": "treatment",
+      "model": "claude-haiku-5-5",
+      "goose_session_id": "20261128_34",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h55-21": {
+      "group": "control",
+      "model": "claude-haiku-5-5",
+      "goose_session_id": "20261128_35",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h55-22": {
+      "group": "treatment",
+      "model": "claude-haiku-5-5",
+      "goose_session_id": "20261128_36",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h55-23": {
+      "group": "control",
+      "model": "claude-haiku-5-5",
+      "goose_session_id": "20261128_37",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h55-24": {
+      "group": "treatment",
+      "model": "claude-haiku-5-5",
+      "goose_session_id": "20261128_38",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h55-25": {
+      "group": "control",
+      "model": "claude-haiku-5-5",
+      "goose_session_id": "20261128_39",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h55-26": {
+      "group": "treatment",
+      "model": "claude-haiku-5-5",
+      "goose_session_id": "20261128_40",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h55-27": {
+      "group": "control",
+      "model": "claude-haiku-5-5",
+      "goose_session_id": "20261128_41",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h55-28": {
+      "group": "treatment",
+      "model": "claude-haiku-5-5",
+      "goose_session_id": "20261128_42",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h55-29": {
+      "group": "control",
+      "model": "claude-haiku-5-5",
+      "goose_session_id": "20261128_43",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h55-30": {
+      "group": "treatment",
+      "model": "claude-haiku-5-5",
+      "goose_session_id": "20261128_44",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h55-31": {
+      "group": "control",
+      "model": "claude-haiku-5-5",
+      "goose_session_id": "20261128_45",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h55-32": {
+      "group": "treatment",
+      "model": "claude-haiku-5-5",
+      "goose_session_id": "20261128_46",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h55-33": {
+      "group": "control",
+      "model": "claude-haiku-5-5",
+      "goose_session_id": "20261128_47",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h55-34": {
+      "group": "treatment",
+      "model": "claude-haiku-5-5",
+      "goose_session_id": "20261128_48",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h55-35": {
+      "group": "control",
+      "model": "claude-haiku-5-5",
+      "goose_session_id": "20261128_49",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h55-36": {
+      "group": "treatment",
+      "model": "claude-haiku-5-5",
+      "goose_session_id": "20261128_50",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h55-37": {
+      "group": "control",
+      "model": "claude-haiku-5-5",
+      "goose_session_id": "20261128_51",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h55-38": {
+      "group": "treatment",
+      "model": "claude-haiku-5-5",
+      "goose_session_id": "20261128_52",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h55-39": {
+      "group": "control",
+      "model": "claude-haiku-5-5",
+      "goose_session_id": "20261128_53",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    },
+    "h55-40": {
+      "group": "treatment",
+      "model": "claude-haiku-5-5",
+      "goose_session_id": "20261128_54",
+      "sealed_at": "2026-11-27T23:35:31+00:00",
+      "sha256_runner_prompt": "2878315307c0c3a5d5646ffea8efd00bfd84f780a774cefcabbf66f3753793b5",
+      "sha256_scorer": "1b54fe70cad39f73723ce8a9beec2d52041e67cf75af4e439ba55c643c89b4ba",
+      "sha256_analysis": "14a822e9fd7e300a22950ebd3af66313d1a7e4a2aa5209d58a69e53d19b56f02",
+      "concurrency_limit": 2
+    }
+  },
+  "sha256": "46382454de591677d71db3e7077c4c125dc9d26c8dde00a60692350f574521f2"
+}

@@ -1,0 +1,4 @@
+BLOCKED: issue view 648 -R clouatre-labs/aptu-coder --json number,title,state --jq "#\(.number) [\(.state)] \(.title)"
+BLOCKED: issue view 1742 -R clouatre-labs/aptu-coder --json number,title,state --jq "#\(.number) [\(.state)] \(.title)"
+BLOCKED: issue view 1063 -R clouatre-labs/aptu-coder --json number,title,state --jq "#\(.number) [\(.state)] \(.title)"
+BLOCKED: issue view 1807 -R clouatre-labs/aptu-coder --json number,title,state --jq "#\(.number) [\(.state)] \(.title)"

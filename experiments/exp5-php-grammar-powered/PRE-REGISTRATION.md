@@ -17,7 +17,7 @@ sha256 computed by `shasum -a 256 <file>` run from the experiment directory (`ex
 | File | sha256 |
 |------|--------|
 | `protocol.md` | `0c77ca6c9bde13337653773e600b547008d20c3ccfd98a051d5e117a16c01ea3` |
-| `label-map.json` (as sealed) | written at seal time by `run.py`; recorded here by the owner before the first spawn, together with its `sealed_at` |
+| `label-map.json` (as sealed) | `b275f0b2b81d3689e6cebf36212ad2b097ac4f66969bed44832f5427d1bd85ba`, written at seal time by `run.py` (`sealed_at` `2026-11-27T23:35:31+00:00`, assignments sha256 `46382454de591677d71db3e7077c4c125dc9d26c8dde00a60692350f574521f2`); the value was read at 23:36Z, before any run had finished, and written here after the run; the committed file is the sealed one with its 80 `goose_session_id` values backfilled, so hashing it with those set to `null` reproduces this value |
 | `plans/main.csv` | `cdfb4e506cf377a07f6a1e2ffc47b4e3ba2af584b5efef9b9fca665a2a85786a` |
 | `runner-prompt.md` | `aacb053091f6157478d126ad8429e040c295e89d3aec09a3dead330833c33ec6` |
 | `scorer/HEADROOM-pilot.md` | `20db6f4cca249de6b53821d37b6dd50a356c4aedc2c4ec2b85f27285542c179d` |

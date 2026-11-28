@@ -1,0 +1,5 @@
+BLOCKED: issue view 1742 --repo clouatre-labs/aptu-coder --json title,state,closedAt --jq .title+" | "+.state
+BLOCKED: issue view 648 --repo clouatre-labs/aptu-coder --json title,state --jq .title+" | "+.state
+BLOCKED: issue view 1063 --repo clouatre-labs/aptu-coder --json title,state --jq .title+" | "+.state
+BLOCKED: issue view 1807 --repo clouatre-labs/aptu-coder --json title,state --jq .title+" | "+.state
+BLOCKED: issue view 1514 --repo clouatre-labs/aptu-coder --json title,state --jq .title+" | "+.state
