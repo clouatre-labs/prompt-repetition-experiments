@@ -1,6 +1,6 @@
 {
   "title": "Prompt Repetition Experiments",
-  "description": "30 agent sessions (3,707 messages) across three pre-registered controlled experiments testing whether prompt repetition improves LLM-agent task completion on structured software-engineering tasks. Null results across all three experiments; identifies ceiling effects and rubric-runner co-design failure as distinct evaluation failure modes. Supplementary dataset for: Clouatre, H. (2026). Ceiling Effects and Convergence: Null Results for Instruction Repetition in LLM-Agent Pipelines. Preprint: https://doi.org/10.5281/zenodo.20039271",
+  "description": "Pilot series (Exp1 to Exp4, exploratory) and a pre-registered confirmatory experiment (Exp5) testing whether prompt repetition, a verbatim second copy of the instructions, improves the task success of non-reasoning LLM agents in multi-step pipelines. Exp5 runs two models with n=20 per arm and model under executable scoring and finds no effect. Identifies ceiling effects, rubric-runner co-design failure and judge disagreement as evaluation failure modes. Version 1.1.0 holds the Exp5 pre-registration; version 1.2.0 adds the Exp5 main-run data. Supplementary dataset for: Clouatre, H. (2026). Ceiling Effects and Convergence: Null Results for Instruction Repetition in LLM-Agent Pipelines. Preprint: https://doi.org/10.5281/zenodo.20039271",
   "upload_type": "dataset",
   "access_right": "open",
   "license": "Apache-2.0",
